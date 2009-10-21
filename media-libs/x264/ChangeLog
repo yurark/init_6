@@ -1,0 +1,54 @@
+# ChangeLog for media-libs/x264
+# Copyright 2006-2009 Berkano Overlay; distributed under the GPL version 2
+
+  29 Apr 2009; Ben de Groot <yngwin@gentoo.org>; x264-9999.ebuild:
+  Drop keywords in live ebuilds
+
+  30 Dec 2008; Ben de Groot <yngwin@gentoo.org>; x264-9999.ebuild:
+  Removed gtk useflag, as that option is no longer offered.
+
+  21 Oct 2008; Ben de Groot <yngwin@gentoo.org>; x264-9999.ebuild:
+  Rekeywording live svn ebuild, as newer stuff is also unmasked in portage.
+
+  20 Oct 2008; Ben de Groot <yngwin@gentoo.org>; -x264-0.0.20080819.ebuild,
+  +x264-0.0.20080819-r99.ebuild:
+  Adding revbump to not conflict with stable ebuild in portage
+
+  08 Oct 2008; Ben de Groot <yngwin@gentoo.org>; x264-9999.ebuild:
+  Add sed to use new git command style in version.sh
+
+  16 Sep 2008; Ben de Groot <yngwin@gentoo.org>; x264-9999.ebuild:
+  Dropping keywords for api/abi breaking version
+
+  16 Sep 2008; Ben de Groot <yngwin@gentoo.org>; x264-9999.ebuild:
+  Patches applied upstream
+
+  24 Aug 2008; Ben de Groot <yngwin@gentoo.org>; +x264-0.0.20080819.ebuild,
+  x264-9999.ebuild:
+  Adding snapshot ebuild with psyrdo and psytrellis patches. Dropping ~mips.
+  Fixing patching on current svn by adding -l option.
+
+  12 Jul 2008; Ben de Groot <yngwin@gentoo.org>;
+  +files/x264-psyrdo-0.5.diff, x264-9999.ebuild:
+  Updated psy-rdo patch
+
+  10 Jul 2008; Ben de Groot <yngwin@gentoo.org>;
+  +files/x264_psy_rdo.r889.diff, x264-9999.ebuild:
+  Add psy-rdo patch and useflag. For more info see
+  http://forum.doom9.org/showthread.php?t=138293
+
+  16 Apr 2008; Ben de Groot <yngwin@gentoo.org>; x264-9999.ebuild:
+  Adjust dep as x86 needs yasm-0.7.0 now.
+
+  14 Apr 2008; Ben de Groot <yngwin@gentoo.org>; x264-9999.ebuild:
+  Fixing DEPEND, nasm seems to work no longer (bug 217630).
+
+  07 Apr 2008; Ben de Groot <yngwin@gentoo.org>; x264-9999.ebuild:
+  Updating block to !media-video/x264-encoder, as x264-svn is removed from
+  portage. And install all docs.
+
+  25 Mar 2008; Ben de Groot <yngwin@gentoo.org>; +files/x264-nostrip.patch,
+  +x264-9999.ebuild:
+  Initial commit. Moved from x264-svn, which it blocks, because x264 is now
+  using git. Also updated the homepage.
+

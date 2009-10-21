@@ -1,0 +1,225 @@
+# ChangeLog for media-video/mplayer
+# Copyright 2006-2009 Berkano Overlay; distributed under the GPL version 2
+
+  29 Apr 2009; Ben de Groot <yngwin@gentoo.org>; mplayer-99999999.ebuild:
+  Drop keywords in live ebuilds
+
+  29 Apr 2009; Ben de Groot <yngwin@gentoo.org>; mplayer-99999999.ebuild:
+  Add app-arch/rar as satisfying unrar dep, make app-arch/unrar default
+
+  23 Mar 2009; Ben de Groot <yngwin@gentoo.org>; mplayer-99999999.ebuild:
+  Drop strip-flags
+
+* mplayer-99999999 (14 Mar 2009)
+
+  14 Mar 2009; Ben de Groot <yngwin@gentoo.org> -mplayer-1.0_rc2_p27960-r1,
+  -mplayer-1.0_rc2_p28348, -mplayer-9999-r21, +mplayer-99999999:
+  Bump to trump portage version, and sync it with the official ebuild
+
+* mplayer-1.0_rc2_p28348 (14 Feb 2009)
+
+  14 Feb 2009; Ben de Groot <yngwin@gentoo.org> mplayer-1.0_rc2_p28348:
+  New vdpau prepatched snapshot
+
+  26 Jan 2009; Ben de Groot <yngwin@gentoo.org>;
+  +files/disable-version-rebranding-2009-01.patch, mplayer-9999-r21.ebuild:
+  Update patch
+
+  29 Dec 2008; Ben de Groot <yngwin@gentoo.org>;
+  +mplayer-1.0_rc2_p27960-r1.ebuild, -mplayer-2008.0103.ebuild,
+  mplayer-9999-r21.ebuild, -files/truehd-20071218.patch,
+  -files/truehd-20080107.patch, -files/mplayer-vdpau-libavcodec.patch,
+  -files/mplayer-vdpau-libavutil.patch, -files/mplayer-vdpau-mplayer.patch:
+  Add new vdpau patched version, update live ebuild to not use vdpau (patches
+  dont apply), and remove the patches from filesdir which we no longer use.
+
+  14 Dec 2008; Ben de Groot <yngwin@gentoo.org>;
+  +mplayer-1.0_rc2_p27960.ebuild:
+  Adding mplayer-1.0_rc2_p27960.ebuild which uses a tarball prepatched with
+  nVidia's vdpau patches.
+
+  04 Dec 2008; Ben de Groot <yngwin@gentoo.org>;
+  files/mplayer-vdpau-libavcodec.patch, files/mplayer-vdpau-libavutil.patch,
+  files/mplayer-vdpau-mplayer.patch:
+  Updating vdpau patches to upstream version 3139462, with minor fixes.
+
+  02 Dec 2008; Ben de Groot <yngwin@gentoo.org>; -mplayer-9999-r20.ebuild,
+  +mplayer-9999-r21.ebuild:
+  Change srt useflag back to ass in compliance with portage version.
+
+  20 Nov 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r20.ebuild:
+  Add teletext to USE, fix vdpau configure flag logic.
+
+  19 Nov 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r20.ebuild,
+  +files/README-vdpau.txt, -files/ffmpeg-icc.patch,
+  +files/mplayer-vdpau-libavcodec.patch,
+  +files/mplayer-vdpau-libavutil.patch, +files/mplayer-vdpau-mplayer.patch,
+  +files/nellymoserenc.patch:
+  Remove icc patch. Add vdpau patches from nVidia, updated by Civilus and me.
+
+  06 Nov 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r20.ebuild,
+  -files/startupvol.patch:
+  Dropping volume patch+useflag, as this has been accepted upstream. Fixing
+  fontconfig useflag QA issue.
+
+  21 Oct 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r20.ebuild,
+  +files/startupvol.patch:
+  Adding startup volume patch from smplayer svn repo. Update x264 dependency.
+
+  16 Oct 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r20.ebuild:
+  Remove no longer used nvidia useflag
+
+  20 Sep 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r20.ebuild:
+  Adjusting for midentify renaming
+
+  14 Sep 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r20.ebuild:
+  Re-enabling a52 useflag by default, more useflag tweaking.
+
+  06 Sep 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r20.ebuild,
+  +files/ffmpeg-icc.patch:
+  Adding icc patch and useflag
+
+  06 Sep 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r20.ebuild:
+  Removing eac3 patching and useflag, as this is now part of the internal ac3
+  codec.
+
+  03 Sep 2008; Ben de Groot <yngwin@gentoo.org>; -mplayer-9999-r19.ebuild,
+  +mplayer-9999-r20.ebuild:
+  Updating some deps, fix the changed faad configure option.
+
+  20 Aug 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r19.ebuild:
+  Re-adding live svn eac3 patching and eac3 useflag, as well as config
+  tweak.
+
+  19 Aug 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r19.ebuild:
+  Splitting useflags for dirac and schroedinger implementations.
+
+  16 Aug 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r19.ebuild:
+  Various ebuild updates
+
+  08 Jun 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r19.ebuild,
+  -files/libswscale-sparc.patch:
+  Removing sparc patch that seems no longer needed.
+
+  07 Jun 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r19.ebuild,
+  +files/libswscale-sparc.patch:
+  Updated vidix configure options that were changed upstream. Incorporated a
+  number of changes from the offial ebuild in portage.
+
+  28 May 2008; Ben de Groot <yngwin@gentoo.org>;
+  files/disable-version-rebranding.patch:
+  Updated versioning patch again
+
+  30 Apr 2008; Ben de Groot <yngwin@gentoo.org>;
+  files/disable-version-rebranding.patch:
+  Updating disable-version-rebranding.patch again.
+
+  29 Apr 2008; Ben de Groot <yngwin@gentoo.org>;
+  files/disable-version-rebranding.patch:
+  Updating disable-version-rebranding.patch
+
+  12 Apr 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r19.ebuild:
+  Removed color-console useflag, as that option is no longer present.
+
+  08 Apr 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r19.ebuild:
+  Adjust dep to only x264 in 9999-r19 ebuild, as x264-svn is no longer in the
+  tree.
+
+  08 Apr 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-2008.0103.ebuild:
+  Fix x264 dependency.
+
+  25 Mar 2008; Ben de Groot <yngwin@gentoo.org>; mplayer-9999-r19.ebuild:
+  Adjust x264 dep. Added warning about unsupported gtk gui.
+
+  22 Mar 2008; Ben de Groot <yngwin@gentoo.org>; -mplayer-9999-r18.ebuild,
+  mplayer-9999-r19.ebuild, +files/truehd-20080107.patch:
+  Removing old ebuild. Updating TrueHD patch.
+
+  05 Jan 2008; Ben de Groot (yngwin) <ben@berkano.net>; +files/eac3-id.conf,
+  +mplayer-2008.0103.ebuild, +mplayer-9999-r19.ebuild, -files/eac3v4.patch,
+  +files/truehd-20071218.patch:
+  Adding new ebuild for mplayer svn snapshot, prepatched with E-AC3 and TrueHD
+  patches. Updated live svn ebuild also has the latest patches, but may not
+  compile. Only the 9999-r19 ebuild has useflags for eac3 and truehd.
+
+  05 Jan 2008; Ben de Groot (yngwin) <ben@berkano.net>; mplayer-9999-r18.ebuild:
+  Fixing unrarlib -> unrarexec. The eac3 patch currently doesn't apply.
+
+  13 Dec 2007; Ben de Groot (yngwin) <ben@berkano.net>; -files/eac3v3.patch,
+  mplayer-9999-r18.ebuild, +files/eac3v4.patch:
+  Updated eac3 patch and put it behind eac3 useflag.
+
+  05 Dec 2007; Ben de Groot (yngwin) <ben@berkano.net>; -files/eac3v2.patch,
+  -mplayer-9999-r17.ebuild, +files/eac3v3.patch, mplayer-9999-r18.ebuild:
+  Remove old ebuild and add new eac3 patch to current ebuild. Patch is from
+  http://www.db-instable.org/misc/
+
+  02 Dec 2007; Ben de Groot (yngwin) <ben@berkano.net>;
+  mplayer-9999-r18.ebuild:
+  Removing eac3 patch, which no longer applies. Not in the mood to fix :)
+
+  30 Nov 2007; Ben de Groot (yngwin) <ben@berkano.net>;
+  mplayer-9999-r18.ebuild:
+  Re-adding dts useflag and dependancy.
+
+  25 Nov 2007; Ben de Groot (yngwin) <ben@berkano.net>;
+  files/mplayer.desktop:
+  Fixing mplayer.desktop for Nautilus (hopefully).
+
+  12 Nov 2007; Ben de Groot (yngwin) <ben@berkano.net>; +files/eac3v2.patch,
+  +mplayer-9999-r18.ebuild:
+  Updated ebuild, adding eac3v2.patch.
+
+  18 Oct 2007; Ben de Groot (yngwin) <ben@berkano.net>;
+  mplayer-9999-r17.ebuild, -files/pulseaudio.patch:
+  Removed pulseaudio patch, which has (finally) been applied upstream.
+
+  01 Oct 2007; Ben de Groot (yngwin) <ben@berkano.net>;
+  mplayer-9999-r17.ebuild, -files/xshape.patch:
+  Remove xshape.patch which has finally been applied upstream.
+
+  13 Sep 2007; Ben de Groot (yngwin) <ben@berkano.net>;
+  -mplayer-9999-r13.ebuild, -mplayer-9999-r14.ebuild,
+  -mplayer-9999-r15.ebuild, -mplayer-9999-r16.ebuild,
+  mplayer-9999-r17.ebuild:
+  Removing older ebuilds. Updating r17, removing no longer valid --disable-dga
+  flag.
+
+  22 Jul 2007; Ben de Groot (yngwin) <ben@berkano.net>;
+  mplayer-9999-r17.ebuild:
+  Adjust configure option for nut.
+
+  22 Jun 2007; Ben de Groot; -mplayer-9999-r18.ebuild:
+  Removing -r18 as dts is actually not an option at this time.
+
+  22 Jun 2007; Ben de Groot; +mplayer-9999-r18.ebuild:
+  Adding dts useflag.
+
+  22 May 2007; Ben de Groot; +mplayer-9999-r17.ebuild:
+  Replacing amr useflag with amrnb and amrwb, now using external libs.
+
+  22 May 2007; Ben de Groot; +mplayer-9999-r16.ebuild:
+  Removed dts useflag and dependency on libdts, as this is no longer used. It
+  now uses the internal codec in libavcodec.
+
+  20 Mar 2007; Ben de Groot; mplayer-9999-r15.ebuild,
+  +files/mplayer.desktop, ,files/pulseaudio.patch:
+  Updated 9999-r15 ebuild with corrected pulseaudio patch.
+
+  20 Mar 2007; Ben de Groot; +mplayer-9999-r15.ebuild,
+  +files/pulseaudio.patch:
+  Updated mplayer subversion ebuild, with some changes incorporated from
+  beandog's pre-release snapshot ebuild. Work started on pulseaudio patch.
+
+  23 Feb 2007  Ben de Groot
+  Added ~sparc keyword to mplayer-9999-r14.
+
+  22 Feb 2007  Ben de Groot
+  Added mplayer-9999-r14.ebuild incorporating some changes suggested by
+  weedy in http://forums.gentoo.org/viewtopic-p-3920042.html - I made
+  dvdread non-optional when USE=dvd. This compiles now, but USE=live
+  still gives me problems on ~amd64.
+
+  21 Feb 2007  Ben de Groot
+  Initial import from previous overlay. Ebuild by me, based on the ebuilds
+  in the portage tree and the kpex-media overlay.

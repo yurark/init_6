@@ -1,0 +1,49 @@
+# Copyright 1999-2009 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/net-libs/libsoup/libsoup-2.26.3-r1.ebuild,v 1.1 2009/07/27 04:43:00 dirtyepic Exp $
+
+EAPI="2"
+
+inherit eutils autotools gnome2 git
+
+DESCRIPTION="An HTTP library implementation in C"
+HOMEPAGE="http://www.gnome.org/"
+EGIT_REPO_URI="git://git.gnome.org/libsoup"
+EGIT_PROJECT="libsoup"
+SRC_URI=""
+
+LICENSE="LGPL-2"
+SLOT="2.4"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
+# Do NOT build with --disable-debug/--enable-debug=no - gnome2.eclass takes care of that
+IUSE="debug doc gnome ssl"
+
+RDEPEND=">=dev-libs/glib-2.15.3
+	>=dev-libs/libxml2-2
+	gnome? (
+		net-libs/libproxy
+		>=gnome-base/gconf-2
+		dev-db/sqlite:3 )
+	ssl? ( >=net-libs/gnutls-1 )"
+DEPEND="${RDEPEND}
+	>=dev-util/pkgconfig-0.9
+	doc? ( >=dev-util/gtk-doc-1 )"
+
+DOCS="AUTHORS NEWS README"
+
+pkg_setup() {
+	G2CONF="${G2CONF}
+		--disable-static
+		$(use_with gnome)
+		$(use_enable ssl)"
+}
+
+src_prepare() {
+	gnome2_src_prepare
+
+	# Fix test to follow POSIX (for x86-fbsd)
+	# No patch to prevent having to eautoreconf
+	sed -e 's/\(test.*\)==/\1=/g' -i configure.in || die "sed failed"
+
+	./autogen.sh
+}

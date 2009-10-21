@@ -1,0 +1,16 @@
+--- mplayer/Makefile.orig	2009-01-26 20:41:18.000000000 +0100
++++ mplayer/Makefile	2009-01-26 20:42:40.000000000 +0100
+@@ -834,13 +834,6 @@
+ help_mp.h: help/help_mp-en.h $(HELP_FILE)
+ 	help/help_create.sh $(HELP_FILE) $(CHARSET)
+ 
+-# rebuild version.h each time the working copy is updated
+-ifeq ($(wildcard .svn/entries),.svn/entries)
+-version.h: .svn/entries
+-endif
+-version.h: version.sh
+-	./$< `$(CC) -dumpversion`
+-
+ %(EXESUF): %.c
+ 
+ 

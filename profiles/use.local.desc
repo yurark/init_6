@@ -1,0 +1,13 @@
+gnustep-base/gnustep-back-art:glx - enable support for glx
+gnustep-base/gnustep-back-art:xim - enable support for xim
+gnustep-base/gnustep-back-art:doc - build documentation for GNUstep
+gnustep-base/gnustep-back-xlib:glx - enable support for glx
+gnustep-base/gnustep-back-xlib:xim - enable support for xim
+gnustep-base/gnustep-back-xlib:doc - build documentation for GNUstep
+gnustep-base/gnustep-base:doc - build documentation for GNUstep
+gnustep-base/gnustep-gui:jpeg - enable support for jpeg
+gnustep-base/gnustep-gui:png - enable support for png
+gnustep-base/gnustep-gui:ungif - enable support for ungif
+gnustep-base/gnustep-gui:gsnd - enable support for sound server, require audiofile library
+gnustep-base/gnustep-gui:doc - build documentation for GNUstep
+gnustep-base/gnustep-make:doc - build documentation for GNUstep

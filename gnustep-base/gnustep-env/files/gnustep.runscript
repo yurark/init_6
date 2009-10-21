@@ -1,0 +1,46 @@
+#!/sbin/runscript
+#
+# (c) 2003 Dennis Leeuw
+# License: GPL version 2 or any newer version
+#
+# Modifications, truncation, and gentoo-ification:
+# Copyright 2004 Gentoo Technologies, Inc.
+
+GNUSTEP_SYSTEM_ROOT="/usr/GNUstep/System"
+. ${GNUSTEP_SYSTEM_ROOT}/Library/Makefiles/GNUstep.sh
+TOOLS="${GNUSTEP_SYSTEM_ROOT}/Tools"
+
+start() {
+	ebegin "Starting "
+
+	if [ -x $TOOLS/gdomap ]; then 
+		ebegin "gdomap "
+		$TOOLS/gdomap
+	fi
+	if [ -x $TOOLS/gdnc ]; then
+		ebegin "gdnc "
+		$TOOLS/gdnc
+	fi
+	if [ -x $TOOLS/gnustep_sndd ]; then 
+		ebegin "gnustep_sndd"
+		$TOOLS/gnustep_sndd
+	fi
+
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping "
+
+	ebegin "gdomap "
+	killall gdomap
+	
+	ebegin "gdnc "
+	killall gdnc
+
+	ebegin "gnustep_sndd"
+	killall gnustep_sndd
+
+	eend $?
+}
+
