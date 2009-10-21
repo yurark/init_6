@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-wireless/gnome-bluetooth/gnome-bluetooth-2.27.90.ebuild,v 1.1 2009/09/05 21:01:55 nirbheek Exp $
+# $Header: $
 
 EAPI="2"
 

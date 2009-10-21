@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-admin/syslog-ng/syslog-ng-3.0.4.ebuild,v 1.2 2009/09/06 16:27:49 mr_bones_ Exp $
+# $Header: $
 
 EAPI=2
 inherit fixheadtails eutils

@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /gnome-extra/yelp/yelp-9999.ebuild,v 1.2 2009/06/20 10:54:43 eva Exp $
+# $Header: $
 
 EAPI="1"
 

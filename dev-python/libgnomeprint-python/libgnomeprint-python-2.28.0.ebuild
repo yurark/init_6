@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/libgnomeprint-python/libgnomeprint-python-2.26.0.ebuild,v 1.3 2009/10/10 17:32:10 grobian Exp $
+# $Header: $
 
 G_PY_PN="gnome-python-desktop"
 G_PY_BINDINGS="gnomeprint gnomeprintui"

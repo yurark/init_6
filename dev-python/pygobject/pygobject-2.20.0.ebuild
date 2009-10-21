@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/pygobject/pygobject-2.18.0-r2.ebuild,v 1.3 2009/10/11 15:56:08 arfrever Exp $
+# $Header: $
 
 EAPI="2"
 SUPPORT_PYTHON_ABIS="1"

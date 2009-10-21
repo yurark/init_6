@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-libs/webkit-gtk/webkit-gtk-9999.ebuild,v 1.1 2009/06/19 17:26:25 mrpouet Exp $
+# $Header: $
 
 EAPI="2"
 

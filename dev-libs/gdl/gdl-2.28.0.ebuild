@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-libs/gdl/gdl-2.26.2.ebuild,v 1.2 2009/07/06 09:26:51 aballier Exp $
+# $Header: $
 
 inherit gnome2
 

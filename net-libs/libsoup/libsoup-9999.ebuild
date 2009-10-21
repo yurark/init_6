@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-libs/libsoup/libsoup-2.26.3-r1.ebuild,v 1.1 2009/07/27 04:43:00 dirtyepic Exp $
+# $Header: $
 
 EAPI="2"
 

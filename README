@@ -44,10 +44,25 @@ gnome-extra/gnome-games-extra-data/gnome-games-extra-data-2.28.0.ebuild
 gnome-extra/gnome-games/gnome-games-2.28.0.ebuild
 gnome-extra/gnome-packagekit/gnome-packagekit-2.28.0.ebuild
 gnome-extra/gnome-user-docs/gnome-user-docs-2.28.0.ebuild
-gnome-extra/yelp/yelp-9999.ebuild #trunk webkit 
+gnome-extra/yelp/yelp-9999.ebuild #unstable trunk webkit 
 net-analyzer/gnome-netstatus/gnome-netstatus-2.28.0.ebuild
 net-analyzer/gnome-nettool/gnome-nettool-2.28.0.ebuild
 net-wireless/gnome-bluetooth/gnome-bluetooth-2.28.0.ebuild
+media-libs/gst-plugins-base/gst-plugins-base-0.10.25.ebuild
+media-libs/gstreamer/gstreamer-0.10.25.ebuild
+media-plugins/gst-plugins-alsa/gst-plugins-alsa-0.10.25.ebuild
+media-plugins/gst-plugins-cdparanoia/gst-plugins-cdparanoia-0.10.25.ebuild
+media-plugins/gst-plugins-gio/gst-plugins-gio-0.10.25.ebuild
+media-plugins/gst-plugins-gnomevfs/gst-plugins-gnomevfs-0.10.25.ebuild
+media-plugins/gst-plugins-libvisual/gst-plugins-libvisual-0.10.25.ebuild
+media-plugins/gst-plugins-ogg/gst-plugins-ogg-0.10.25.ebuild
+media-plugins/gst-plugins-pango/gst-plugins-pango-0.10.25.ebuild
+media-plugins/gst-plugins-theora/gst-plugins-theora-0.10.25.ebuild
+media-plugins/gst-plugins-v4l/gst-plugins-v4l-0.10.25.ebuild
+media-plugins/gst-plugins-vorbis/gst-plugins-vorbis-0.10.25.ebuild
+media-plugins/gst-plugins-x/gst-plugins-x-0.10.25.ebuild
+media-plugins/gst-plugins-xvideo/gst-plugins-xvideo-0.10.25.ebuild
+media-video/cheese/cheese-2.28.0.ebuild
 x11-wm/metacity/metacity-2.28.0.ebuild
 x11-wm/mutter/mutter-9999.ebuild
 
@@ -106,25 +121,10 @@ sys-devel/llvm/llvm-9999.ebuild
 virtual/gnustep-back/gnustep-back-9999.ebuild
 
 #codecs 
-media-libs/gst-plugins-base/gst-plugins-base-0.10.25.ebuild
-media-libs/gstreamer/gstreamer-0.10.25.ebuild
 media-libs/libdvdnav/libdvdnav-9999.ebuild
 media-libs/libdvdread/libdvdread-9999.ebuild
 media-libs/libmpd/libmpd-9999.ebuild
 media-libs/x264/x264-9999.ebuild
-media-plugins/gst-plugins-alsa/gst-plugins-alsa-0.10.25.ebuild
-media-plugins/gst-plugins-cdparanoia/gst-plugins-cdparanoia-0.10.25.ebuild
-media-plugins/gst-plugins-gio/gst-plugins-gio-0.10.25.ebuild
-media-plugins/gst-plugins-gnomevfs/gst-plugins-gnomevfs-0.10.25.ebuild
-media-plugins/gst-plugins-libvisual/gst-plugins-libvisual-0.10.25.ebuild
-media-plugins/gst-plugins-ogg/gst-plugins-ogg-0.10.25.ebuild
-media-plugins/gst-plugins-pango/gst-plugins-pango-0.10.25.ebuild
-media-plugins/gst-plugins-theora/gst-plugins-theora-0.10.25.ebuild
-media-plugins/gst-plugins-v4l/gst-plugins-v4l-0.10.25.ebuild
-media-plugins/gst-plugins-vorbis/gst-plugins-vorbis-0.10.25.ebuild
-media-plugins/gst-plugins-x/gst-plugins-x-0.10.25.ebuild
-media-plugins/gst-plugins-xvideo/gst-plugins-xvideo-0.10.25.ebuild
-media-video/cheese/cheese-2.28.0.ebuild
 media-video/ffmpeg/ffmpeg-9999.ebuild
 
 media-video/handbrake/handbrake-9999.ebuild

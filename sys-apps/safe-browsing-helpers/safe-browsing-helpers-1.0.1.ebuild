@@ -1,5 +1,6 @@
-# Copyright 2007 SabayonLinux
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: $
 
 DESCRIPTION="SabayonLinux (Gentoo compatbile) Tor/Privoxy configuration tool"
 HOMEPAGE="http://www.sabayonlinux.org/"

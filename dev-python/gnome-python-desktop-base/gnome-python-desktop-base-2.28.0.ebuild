@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/gnome-python-desktop-base/gnome-python-desktop-base-2.26.0.ebuild,v 1.3 2009/10/10 17:11:24 grobian Exp $
+# $Header: $
 
 inherit eutils gnome2 versionator
 

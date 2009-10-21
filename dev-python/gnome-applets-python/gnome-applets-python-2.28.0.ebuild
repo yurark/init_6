@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/gnome-applets-python/gnome-applets-python-2.26.0.ebuild,v 1.3 2009/10/08 03:23:40 tester Exp $
+# $Header: $
 
 G_PY_PN="gnome-python-desktop"
 G_PY_BINDINGS="applet"

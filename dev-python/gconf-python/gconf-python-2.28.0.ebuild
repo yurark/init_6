@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/gconf-python/gconf-python-2.26.1.ebuild,v 1.3 2009/10/10 17:05:40 grobian Exp $
+# $Header: $
 
 G_PY_PN="gnome-python"
 
