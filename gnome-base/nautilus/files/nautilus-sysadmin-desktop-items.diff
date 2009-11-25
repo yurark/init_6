@@ -1,0 +1,1933 @@
+Support desktop items defined by the sysadmin
+
+This adds a GConf key /apps/nautilus/desktop/predefined_items_dir which points to
+a directory which holds .desktop files.  These files will be shown in the user's desktop.
+
+Git repository at http://gitorious.org/projects/nautilus/repos/mainline - branch sysadmin-desktop-items
+
+diff --git a/libnautilus-private/apps_nautilus_preferences.schemas.in b/libnautilus-private/apps_nautilus_preferences.schemas.in
+index ca45081..c180132 100644
+--- a/libnautilus-private/apps_nautilus_preferences.schemas.in
++++ b/libnautilus-private/apps_nautilus_preferences.schemas.in
+@@ -1072,5 +1072,21 @@ most cases, this should be left alone. -->Sans 10</default>
+       </locale>
+     </schema>
+ 
++    <schema>
++      <key>/schemas/apps/nautilus/desktop/predefined_items_dir</key>
++      <applyto>/apps/nautilus/desktop/predefined_items_dir</applyto>
++      <owner>nautilus</owner>
++      <type>string</type>
++      <locale name="C">
++      	<short>Directory for storing predefined desktop items</short>
++	<long>
++	  Desktop files (*.desktop) which appear in this directory
++	  will be shown on the user's desktop.  System administrators
++	  can use this feature to define desktop shortcuts which
++	  appear for users.
++	</long>
++      </locale>
++    </schema>
++
+   </schemalist>  
+ </gconfschemafile>
+diff --git a/libnautilus-private/nautilus-debug-log.c b/libnautilus-private/nautilus-debug-log.c
+index f4ce320..ad84b4b 100644
+--- a/libnautilus-private/nautilus-debug-log.c
++++ b/libnautilus-private/nautilus-debug-log.c
+@@ -222,6 +222,14 @@ nautilus_debug_log_with_uri_list (gboolean is_milestone, const char *domain, con
+ 				  const char *format, ...)
+ {
+ 	va_list args;
++	GList node;
++
++	if (!uris) {
++		node.data = "[no files]";
++		node.prev = NULL;
++		node.next = NULL;
++		uris = &node;
++	}
+ 
+ 	va_start (args, format);
+ 	nautilus_debug_logv (is_milestone, domain, uris, format, args);
+@@ -235,6 +243,7 @@ nautilus_debug_log_with_file_list (gboolean is_milestone, const char *domain, GL
+ 	va_list args;
+ 	GList *uris;
+ 	GList *l;
++	GList node;
+ 
+ 	uris = NULL;
+ 
+@@ -260,11 +269,20 @@ nautilus_debug_log_with_file_list (gboolean is_milestone, const char *domain, GL
+ 
+ 	uris = g_list_reverse (uris);
+ 
++	if (!uris) {
++		node.data = "[no files]";
++		node.prev = NULL;
++		node.next = NULL;
++		uris = &node;
++	}
++
+ 	va_start (args, format);
+ 	nautilus_debug_logv (is_milestone, domain, uris, format, args);
+ 	va_end (args);
+ 
+-	eel_g_list_free_deep (uris);
++	if (uris != &node) {
++		eel_g_list_free_deep (uris);
++	}
+ }
+ 
+ gboolean
+diff --git a/libnautilus-private/nautilus-debug-log.h b/libnautilus-private/nautilus-debug-log.h
+index ad0152e..2976a1f 100644
+--- a/libnautilus-private/nautilus-debug-log.h
++++ b/libnautilus-private/nautilus-debug-log.h
+@@ -27,10 +27,13 @@
+ 
+ #include <glib.h>
+ 
+-#define NAUTILUS_DEBUG_LOG_DOMAIN_USER		"USER"   /* always enabled */
+-#define NAUTILUS_DEBUG_LOG_DOMAIN_ASYNC		"async"	 /* when asynchronous notifications come in */
+-#define NAUTILUS_DEBUG_LOG_DOMAIN_GLOG          "GLog"	 /* used for GLog messages; don't use it yourself */
+-#define NAUTILUS_DEBUG_LOG_DOMAIN_LOCKDOWN	"lockdown"	/* when things get *not* done due to lockdown */
++#define NAUTILUS_DEBUG_LOG_DOMAIN_USER			"USER"			/* always enabled */
++#define NAUTILUS_DEBUG_LOG_DOMAIN_ASYNC			"async"			/* when asynchronous notifications come in */
++#define NAUTILUS_DEBUG_LOG_DOMAIN_GLOG			"GLog"			/* used for GLog messages; don't use it yourself */
++#define NAUTILUS_DEBUG_LOG_DOMAIN_LOCKDOWN		"lockdown"		/* when things get *not* done due to lockdown */
++#define NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS 	"desktop-items"		/* used for predefined desktop items (this is useful for sysadmins) */
++#define NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS	"debug-desktop-items"	/* debugging the machinery for predefined desktop items */
++#define NAUTILUS_DEBUG_LOG_DOMAIN_ICON_POSITIONS	"icon-positions"	/* debugging where icon positions get loaded/saved */
+ 
+ void nautilus_debug_log (gboolean is_milestone, const char *domain, const char *format, ...);
+ 
+diff --git a/libnautilus-private/nautilus-desktop-directory.c b/libnautilus-private/nautilus-desktop-directory.c
+index 0c5333e..f8970ef 100644
+--- a/libnautilus-private/nautilus-desktop-directory.c
++++ b/libnautilus-private/nautilus-desktop-directory.c
+@@ -24,34 +24,83 @@
+    Author: Alexander Larsson <alexl@redhat.com>
+ */
+ 
++/* Note that we use two debug domains here:
++ *   NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS       - "desktop-items"
++ *   NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS - "debug-desktop-items"
++ *
++ * The first one is logged as a milestone during initialization, and is actually useful to the sysadmin if he wants to
++ * debug his predefined desktop items:  the log will contain info on which items are defined to be mandatory or not.
++ *
++ * The second one is internal to Nautilus, and is used for debugging purposes only (it traces the code flow among the
++ * interesting parts of this source file).
++ */
++
+ #include <config.h>
+ #include "nautilus-desktop-directory.h"
+ 
++#include "nautilus-debug-log.h"
+ #include "nautilus-directory-private.h"
+ #include "nautilus-file.h"
+ #include "nautilus-file-private.h"
+ #include "nautilus-file-utilities.h"
+ #include "nautilus-global-preferences.h"
+ #include <eel/eel-glib-extensions.h>
++#include <glib/gi18n.h>
+ #include <gtk/gtk.h>
++#include <libgnome/gnome-desktop-item.h>
+ #include <libgnome/gnome-macros.h>
+ 
+ struct NautilusDesktopDirectoryDetails {
+ 	NautilusDirectory *real_directory;
++	NautilusDirectory *predefined_items_dir;
+ 	GHashTable *callbacks;
+ 	GHashTable *monitors;
++
++	/* We store the "combined" files from the real_directory and the
++	 * predefined_items_dir in the name_to_pairs_hash table.
++	 *
++	 * The hash table maps strings (file names) to FilePair structs.  The
++	 * strings live in the "name" field of those structs, to make memory
++	 * management easier (i.e. the keys in the hash table need not to be
++	 * memory-managed separately).
++	 *
++	 * We use the hash to answer the question, "do we already have a file
++	 * with this name?", as the predefined items override the user's items
++	 * (or vice-versa) based on matching filenames.
++	 *
++	 * The file_to_pairs_hash answers the question, "do we have a pair
++	 * (which one?) for the specified file?".
++	 *
++	 * Within a FilePair in name_to_pairs_hash, both files are ref'ed.
++	 *
++	 * Within file_to_pairs_hash, the "key" file is *NOT* ref'ed, since it
++	 * is already ref'ed by a corresponding FilePair.
++	 */
++	GHashTable *name_to_pairs_hash;
++	GHashTable *file_to_pairs_hash;
++
++	eel_boolean_bit files_are_combined : 1;
++	eel_boolean_bit initializing : 1;
++	eel_boolean_bit real_directory_pending : 1;
++	eel_boolean_bit predefined_items_dir_pending : 1;
+ };
+ 
++/* Structs of this type are stored in NautilusDesktopDirectory->name_to_pairs_hash */
++typedef struct {
++	char *name;
++
++	NautilusFile *user_file;
++	NautilusFile *predefined_file;
++
++	gboolean predefined_overrides_user;
++} FilePair;
++
+ typedef struct {
+ 	NautilusDesktopDirectory *desktop_dir;
+ 	NautilusDirectoryCallback callback;
+ 	gpointer callback_data;
+ 
+-	NautilusFileAttributes wait_for_attributes;
+-	gboolean wait_for_file_list;
+-
+ 	GList *non_ready_directories;
+-	GList *merged_file_list;
+ } MergedCallback;
+ 
+ 
+@@ -64,24 +113,50 @@ typedef struct {
+ } MergedMonitor;
+ 
+ static void desktop_directory_changed_callback (gpointer data);
++static GList *desktop_get_file_list (NautilusDirectory *directory);
++
++static gboolean directories_are_done_loading (NautilusDesktopDirectory *directory);
++static void predefined_items_dir_changed_callback (gpointer data);
++
++static void forward_files_changed_cover (NautilusDirectory *directory, GList *files, gpointer callback_data);
+ 
+ GNOME_CLASS_BOILERPLATE (NautilusDesktopDirectory, nautilus_desktop_directory,
+ 			 NautilusDirectory, NAUTILUS_TYPE_DIRECTORY)
+ 
++static gboolean
++pair_shows_file (FilePair *pair, NautilusFile *file)
++{
++	return ((file == pair->user_file && !pair->predefined_overrides_user)
++		|| (file == pair->predefined_file && pair->predefined_overrides_user));
++}
+ 
+ static gboolean
+ desktop_contains_file (NautilusDirectory *directory,
+ 		       NautilusFile *file)
+ {
+ 	NautilusDesktopDirectory *desktop;
++	FilePair *pair;
++	gboolean result;
++	char *uri;
+ 
+ 	desktop = NAUTILUS_DESKTOP_DIRECTORY (directory);
+ 
+-	if (nautilus_directory_contains_file (desktop->details->real_directory, file)) {
+-		return TRUE;
++	pair = g_hash_table_lookup (desktop->details->file_to_pairs_hash, file);
++
++	if (pair != NULL) {
++		result = pair_shows_file (pair, file);
++	} else {
++		result = file->details->directory == directory; /* this is just for desktop links from NautilusDesktopLinkMonitor */
+ 	}
+ 
+-	return file->details->directory == directory;
++	uri = nautilus_file_get_uri (file);
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++			    "desktop_contains_file (%s): %d",
++			    uri,
++			    result);
++	g_free (uri);
++
++	return result;
+ }
+ 
+ static guint
+@@ -114,15 +189,72 @@ merged_callback_destroy (MergedCallback *merged_callback)
+ 	g_assert (NAUTILUS_IS_DESKTOP_DIRECTORY (merged_callback->desktop_dir));
+ 
+ 	g_list_free (merged_callback->non_ready_directories);
+-	nautilus_file_list_free (merged_callback->merged_file_list);
+ 	g_free (merged_callback);
+ }
+ 
+ static void
++add_file_from_pair_to_list_cb (gpointer key, gpointer value, gpointer data)
++{
++	FilePair *pair;
++	GList **list_ptr;
++	NautilusFile *file;
++
++	pair = value;
++	list_ptr = data;
++
++	file = pair->predefined_overrides_user ? pair->predefined_file : pair->user_file;
++	nautilus_file_ref (file);
++
++	*list_ptr = g_list_prepend (*list_ptr, file);
++}
++
++static GList *
++get_combined_files (NautilusDesktopDirectory *desktop)
++{
++	GList *combined;
++
++	combined = NULL;
++	g_hash_table_foreach (desktop->details->name_to_pairs_hash, add_file_from_pair_to_list_cb, &combined);
++	return combined;
++}
++
++static GList *
++get_desktop_links (NautilusDesktopDirectory *desktop, gboolean include_tentative_files)
++{
++	if (include_tentative_files) {
++		return nautilus_file_list_copy (NAUTILUS_DIRECTORY (desktop)->details->file_list);
++	} else {
++		/* This is because nautilus-directory.c:real_get_file_list() stripts out the tentative files */
++		return GNOME_CALL_PARENT_WITH_DEFAULT (NAUTILUS_DIRECTORY_CLASS, get_file_list, (NAUTILUS_DIRECTORY (desktop)), NULL);
++	}
++}
++
++static GList *
++get_file_list (NautilusDesktopDirectory *desktop, gboolean include_tentative_files)
++{
++	GList *combined_file_list;
++	GList *file_list_from_desktop_links;
++
++	combined_file_list = get_combined_files (desktop);
++
++	file_list_from_desktop_links = get_desktop_links (desktop, include_tentative_files);
++
++	combined_file_list = g_list_concat (combined_file_list, file_list_from_desktop_links);
++
++	return combined_file_list;
++
++}
++
++static void
+ merged_callback_check_done (MergedCallback *merged_callback)
+ {
++	NautilusDesktopDirectory *desktop;
++	GList *files;
++
++	desktop = merged_callback->desktop_dir;
++
+ 	/* Check if we are ready. */
+-	if (merged_callback->non_ready_directories != NULL) {
++	if (merged_callback->non_ready_directories != NULL || !desktop->details->files_are_combined) {
+ 		return;
+ 	}
+ 
+@@ -130,10 +262,18 @@ merged_callback_check_done (MergedCallback *merged_callback)
+ 	g_hash_table_steal (merged_callback->desktop_dir->details->callbacks, merged_callback);
+ 
+ 	/* We are ready, so do the real callback. */
+-	(* merged_callback->callback) (NAUTILUS_DIRECTORY (merged_callback->desktop_dir),
+-				       merged_callback->merged_file_list,
++
++	files = get_file_list (desktop, TRUE);
++
++	nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS, files,
++					   "merged_callback_check_done: we are done; calling callback with files");
++
++	(* merged_callback->callback) (NAUTILUS_DIRECTORY (desktop),
++				       files,
+ 				       merged_callback->callback_data);
+ 
++	nautilus_file_list_free (files);
++
+ 	/* And we are done. */
+ 	merged_callback_destroy (merged_callback);
+ }
+@@ -144,7 +284,330 @@ merged_callback_remove_directory (MergedCallback *merged_callback,
+ {
+ 	merged_callback->non_ready_directories = g_list_remove
+ 		(merged_callback->non_ready_directories, directory);
+-	merged_callback_check_done (merged_callback);
++}
++
++static FilePair *
++create_file_pair (NautilusDesktopDirectory *desktop, NautilusFile *file, gboolean is_predefined, gboolean *is_new_pair)
++{
++	char *name;
++	FilePair *pair;
++
++	/* Sanity check */
++
++	pair = g_hash_table_lookup (desktop->details->file_to_pairs_hash, file);
++	g_assert (pair == NULL);
++
++	/* Create the pair or add to it */
++
++	name = nautilus_file_get_name (file);
++
++	pair = g_hash_table_lookup (desktop->details->name_to_pairs_hash, name);
++
++	nautilus_file_ref (file);
++
++	if (pair == NULL) {
++		if (is_new_pair) {
++			*is_new_pair = TRUE;
++		}
++
++		pair = g_slice_new (FilePair);
++
++		pair->name            = name;
++		pair->user_file       = is_predefined ? NULL : file;
++		pair->predefined_file = is_predefined ? file : NULL;
++
++		pair->predefined_overrides_user = FALSE; /* we don't know yet */
++
++		g_hash_table_insert (desktop->details->name_to_pairs_hash, name, pair);
++	} else {
++		if (is_new_pair) {
++			*is_new_pair = FALSE;
++		}
++
++		g_free (name);
++
++		if (is_predefined) {
++			g_assert (pair->predefined_file == NULL);
++			pair->predefined_file = file;
++		} else {
++			g_assert (pair->user_file == NULL);
++			pair->user_file = file;
++		}
++	}
++
++	g_hash_table_insert (desktop->details->file_to_pairs_hash, file, pair);
++
++	return pair;
++}
++
++static void
++log_pair (FilePair *pair, gboolean is_new_pair)
++{
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++			    "%s pair %p: %s - predefined=%p user=%p predefined_overrides_user=%d",
++			    is_new_pair ? "New" : "Existing",
++			    pair,
++			    pair->name,
++			    pair->predefined_file,
++			    pair->user_file,
++			    pair->predefined_overrides_user);
++}
++
++static void
++create_file_pairs_for_directory (NautilusDesktopDirectory *desktop, NautilusDirectory *directory, gboolean is_predefined)
++{
++	GList *list;
++	GList *l;
++
++	if (directory == NULL) {
++		return;
++	}
++
++	list = nautilus_directory_get_file_list (directory);
++
++	nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS, list,
++					   "create_file_pairs_for_directory(): Creating pairs for files");
++
++	for (l = list; l; l = l->next) {
++		FilePair *pair;
++		gboolean is_new_pair;
++
++		pair = create_file_pair (desktop, NAUTILUS_FILE (l->data), is_predefined, &is_new_pair);
++		log_pair (pair, is_new_pair);
++	}
++
++	nautilus_file_list_free (list);
++}
++
++static char *
++get_file_contents (NautilusFile *file, gsize *length, GError **error)
++{
++	GFile *location;
++	char *path;
++	char *contents;
++
++	location = nautilus_file_get_location (file);
++	path = g_file_get_path (location);
++	contents = NULL;
++
++	if (path == NULL) {
++		char *uri;
++
++		uri = g_file_get_uri (location);
++		g_set_error (error,
++			     G_IO_ERROR,
++			     G_IO_ERROR_FAILED,
++			     _("Cannot read remote item: %s"),
++			     uri);
++		g_free (uri);
++			     
++		goto out;
++	}
++
++	if (!g_file_get_contents (path, &contents, length, error)) {
++		contents = NULL;
++	}
++
++out:
++	return contents;
++}
++
++static gboolean
++predefined_desktop_item_is_mandatory (GnomeDesktopItem *item)
++{
++	/* If the desktop item does not have X-XDG-Is-Mandatory defined, then we
++	 * assume it to be mandatory.  This is so that the sysadmin can just
++	 * copy existing .desktop files into the directory for predefined items,
++	 * and assume that they will override anything the user tries to use.
++	 */
++	return (!gnome_desktop_item_attr_exists (item, "X-XDG-Is-Mandatory")
++		|| gnome_desktop_item_get_boolean (item, "X-XDG-Is-Mandatory"));
++}
++
++static gboolean
++predefined_file_should_override_user_file (NautilusDesktopDirectory *desktop, NautilusFile *predefined, NautilusFile *user)
++{
++	gsize predefined_length;
++	char *predefined_contents;
++	char *predefined_uri;
++	char *user_uri;
++	GnomeDesktopItem *predefined_item;
++	GError *error;
++	gboolean should_override;
++	time_t predefined_mtime, user_mtime;
++	const char *reason;
++
++	should_override = FALSE;
++	reason = "the predefined item is not mandatory";
++
++	predefined_uri = nautilus_file_get_uri (predefined);
++	user_uri = nautilus_file_get_uri (user);
++	predefined_item = NULL;
++
++	/* Can we discard either file trivially? */
++
++	if (!nautilus_file_is_mime_type (predefined, "application/x-desktop")) {
++		reason = "predefined items which are not .desktop files always override user items";
++		should_override = TRUE;
++		goto out;
++	}
++
++	if (!nautilus_file_is_mime_type (user, "application/x-desktop")) {
++		reason = "predefined items always override user items that are not .desktop files";
++		should_override = TRUE;
++		goto out;
++	}
++
++	/* Read the predefined .desktop file */
++
++	/* FIXME: reading the file asynchronously is left as an exercise for the reader */
++
++	error = NULL;
++	predefined_contents = get_file_contents (predefined, &predefined_length, &error);
++	if (predefined_contents == NULL) {
++		/* can't determine contents trivially?  let it override the user's stuff, anyway */
++		nautilus_directory_emit_load_error (NAUTILUS_DIRECTORY (desktop), error);
++		nautilus_debug_log (desktop->details->initializing, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++				    "Error reading predefined item %s: %s",
++				    predefined_uri,
++				    error->message);
++		g_error_free (error);
++
++		reason = "user items will not override predefined items that have with errors";
++		should_override = TRUE;
++		goto out;
++	}
++
++	predefined_item = gnome_desktop_item_new_from_string (predefined_uri,
++							      predefined_contents,
++							      predefined_length,
++							      GNOME_DESKTOP_ITEM_LOAD_NO_TRANSLATIONS,
++							      &error);
++
++	if (predefined_item == NULL) {
++		/* can't read desktop file?  let it override the user's stuff, anyway */
++		nautilus_directory_emit_load_error (NAUTILUS_DIRECTORY (desktop), error);
++		nautilus_debug_log (desktop->details->initializing, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++				    "Error parsing predefined item %s: %s",
++				    predefined_uri,
++				    error->message);
++		g_error_free (error);
++
++		reason = "user items will not override predefined items that have with errors";
++		should_override = TRUE;
++		goto out;
++	}
++
++	/* Mandatory? */
++
++	if (predefined_desktop_item_is_mandatory (predefined_item)) {
++		reason = "the predefined item is mandatory (include \"X-XDG-Is-Mandatory=false\" to make it non-mandatory)";
++		should_override = TRUE;
++		goto out;
++	}
++
++	/* Not mandatory.  But if the predefined item is newer than the user's, then it overrides the user's. */
++
++	predefined_mtime = nautilus_file_get_mtime (predefined);
++	user_mtime = nautilus_file_get_mtime (user);
++
++	if (predefined_mtime > user_mtime) {
++		reason = "the predefined item is newer than the user item";
++		should_override = TRUE;
++		goto out;
++	}
++
++out:
++
++	if (predefined_item != NULL) {
++		gnome_desktop_item_unref (predefined_item);
++	}
++
++	nautilus_debug_log (desktop->details->initializing, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++			    "Predefined item %s %s override user item %s because %s",
++			    predefined_uri,
++			    should_override ? "will" : "will not",
++			    user_uri,
++			    reason);
++
++	g_free (predefined_uri);
++	g_free (user_uri);
++
++	return should_override;
++}
++
++static void
++resolve_overrides_in_file_pair (NautilusDesktopDirectory *desktop, FilePair *pair)
++{
++	if (pair->user_file != NULL && pair->predefined_file != NULL) {
++		pair->predefined_overrides_user = predefined_file_should_override_user_file (desktop, pair->predefined_file, pair->user_file);
++	} else {
++		char *predefined_uri, *user_uri;
++
++		pair->predefined_overrides_user = pair->predefined_file != NULL;
++		g_assert (pair->predefined_overrides_user || pair->user_file != NULL);
++
++		predefined_uri = pair->predefined_file ? nautilus_file_get_uri (pair->predefined_file) : NULL;
++		user_uri = pair->user_file ? nautilus_file_get_uri (pair->user_file) : NULL;
++
++		nautilus_debug_log (desktop->details->initializing, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++				    "%s %s is used as it has no counterpart",
++				    pair->predefined_overrides_user ? "Predefined item" : "User item",
++				    predefined_uri ? predefined_uri : user_uri);
++
++		g_free (predefined_uri);
++		g_free (user_uri);
++	}
++}
++
++static void
++find_overriden_files_cb (gpointer key, gpointer value, gpointer data)
++{
++	NautilusDesktopDirectory *desktop;
++	FilePair *pair;
++
++	desktop = NAUTILUS_DESKTOP_DIRECTORY (data);
++	pair = value;
++
++	resolve_overrides_in_file_pair (desktop, pair);
++}
++
++static void
++combine_real_and_predefined_directories (NautilusDesktopDirectory *desktop)
++{
++	g_assert (directories_are_done_loading (desktop));
++
++	if (desktop->details->files_are_combined) {
++		return;
++	}
++
++	desktop->details->files_are_combined = TRUE;
++
++	/* 1. Create pairs for the files */
++
++	create_file_pairs_for_directory (desktop, desktop->details->real_directory, FALSE);
++	create_file_pairs_for_directory (desktop, desktop->details->predefined_items_dir, TRUE);
++
++	/* 2. Figure out which files get overriden */
++
++	g_hash_table_foreach (desktop->details->name_to_pairs_hash, find_overriden_files_cb, desktop);
++
++	desktop->details->initializing = FALSE;
++}
++
++static const char *
++get_debug_dirname (NautilusDesktopDirectory *desktop, NautilusDirectory *directory)
++{
++	if (directory == NAUTILUS_DIRECTORY (desktop)) {
++		return "desktop directory";
++	} else if (directory == desktop->details->real_directory) {
++		return "real directory";
++	} else if (directory == desktop->details->predefined_items_dir) {
++		return "predefined items directory";
++	} else {
++		g_assert_not_reached ();
++		return NULL;
++	}
+ }
+ 
+ static void
+@@ -153,6 +616,8 @@ directory_ready_callback (NautilusDirectory *directory,
+ 			  gpointer callback_data)
+ {
+ 	MergedCallback *merged_callback;
++	NautilusDesktopDirectory *desktop;
++	const char *dirname;
+ 
+ 	g_assert (NAUTILUS_IS_DIRECTORY (directory));
+ 	g_assert (callback_data != NULL);
+@@ -160,13 +625,13 @@ directory_ready_callback (NautilusDirectory *directory,
+ 	merged_callback = callback_data;
+ 	g_assert (g_list_find (merged_callback->non_ready_directories, directory) != NULL);
+ 
+-	/* Update based on this call. */
+-	merged_callback->merged_file_list = g_list_concat
+-		(merged_callback->merged_file_list,
+-		 nautilus_file_list_copy (files));
++	desktop = merged_callback->desktop_dir;
++
++	dirname = get_debug_dirname (desktop, directory);
+ 
+ 	/* Check if we are ready. */
+ 	merged_callback_remove_directory (merged_callback, directory);
++	merged_callback_check_done (merged_callback);
+ }
+ 
+ static void
+@@ -179,6 +644,12 @@ desktop_call_when_ready (NautilusDirectory *directory,
+ 	NautilusDesktopDirectory *desktop;
+ 	MergedCallback search_key, *merged_callback;
+ 
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++			    "desktop_call_when_ready (file_attributes=0x%x, wait_for_file_list=%d, callback=%p)",
++			    (int) file_attributes,
++			    (int) wait_for_file_list,
++			    callback);
++
+ 	desktop = NAUTILUS_DESKTOP_DIRECTORY (directory);
+ 
+ 	/* Check to be sure we aren't overwriting. */
+@@ -194,36 +665,49 @@ desktop_call_when_ready (NautilusDirectory *directory,
+ 	merged_callback->desktop_dir = desktop;
+ 	merged_callback->callback = callback;
+ 	merged_callback->callback_data = callback_data;
+-	merged_callback->wait_for_attributes = file_attributes;
+-	merged_callback->wait_for_file_list = wait_for_file_list;
++
++	/* The three non-ready directories are ourselves, the real_directory and the predefined_items_dir */
++
+ 	merged_callback->non_ready_directories = g_list_prepend
+ 			(merged_callback->non_ready_directories, directory);
+ 	merged_callback->non_ready_directories = g_list_prepend
+ 			(merged_callback->non_ready_directories, desktop->details->real_directory);
+ 
+-
+-	merged_callback->merged_file_list = g_list_concat (NULL,
+-							   nautilus_file_list_copy (directory->details->file_list));
++	if (desktop->details->predefined_items_dir != NULL) {
++		merged_callback->non_ready_directories = g_list_prepend
++			(merged_callback->non_ready_directories, desktop->details->predefined_items_dir);
++	}
+ 
+ 	/* Put it in the hash table. */
+ 	g_hash_table_insert (desktop->details->callbacks,
+ 			     merged_callback, merged_callback);
+ 
+-	/* Now tell all the directories about it. */
++	/* Now tell all the directories about it.  We always pass TRUE for
++	 * wait_for_file_list since *we* can't know which files to proxy until
++	 * we have all the ones from the child directories.
++	 */
+ 	nautilus_directory_call_when_ready
+ 		(desktop->details->real_directory,
+-		 merged_callback->wait_for_attributes,
+-		 merged_callback->wait_for_file_list,
++		 file_attributes,
++		 TRUE,
+ 		 directory_ready_callback, merged_callback);
++
++	if (desktop->details->predefined_items_dir != NULL) {
++		nautilus_directory_call_when_ready
++			(desktop->details->predefined_items_dir,
++			 file_attributes,
++			 TRUE,
++			 directory_ready_callback, merged_callback);
++	}
++
+ 	nautilus_directory_call_when_ready_internal
+ 		(directory,
+ 		 NULL,
+-		 merged_callback->wait_for_attributes,
+-		 merged_callback->wait_for_file_list,
++		 file_attributes,
++		 FALSE, /* ... but the desktop directory doesn't support wait_for_file_list = TRUE */
+ 		 directory_ready_callback,
+ 		 NULL,
+ 		 merged_callback);
+-	
+ }
+ 
+ static void
+@@ -235,6 +719,10 @@ desktop_cancel_callback (NautilusDirectory *directory,
+ 	MergedCallback search_key, *merged_callback;
+ 	GList *node;
+ 
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++			    "desktop_cancel_callback (callback=%p)",
++			    callback);
++
+ 	desktop = NAUTILUS_DESKTOP_DIRECTORY (directory);
+ 
+ 	/* Find the entry in the table. */
+@@ -267,15 +755,19 @@ merged_monitor_destroy (MergedMonitor *monitor)
+ 	/* Call through to the real directory remove calls. */
+ 	nautilus_directory_file_monitor_remove (desktop->details->real_directory, monitor);
+ 
++	if (desktop->details->predefined_items_dir != NULL) {
++		nautilus_directory_file_monitor_remove (desktop->details->predefined_items_dir, monitor);
++	}
++
+ 	nautilus_directory_monitor_remove_internal (NAUTILUS_DIRECTORY (desktop), NULL, monitor);
+ 	
+ 	g_free (monitor);
+ }
+ 
+ static void
+-build_merged_callback_list (NautilusDirectory *directory,
+-			    GList *file_list,
+-			    gpointer callback_data)
++build_file_list_cb (NautilusDirectory *directory,
++		    GList *file_list,
++		    gpointer callback_data)
+ {
+ 	GList **merged_list;
+ 
+@@ -285,6 +777,66 @@ build_merged_callback_list (NautilusDirectory *directory,
+ }
+ 
+ static void
++add_file_monitor_and_emit_paired_files (NautilusDesktopDirectory *desktop,
++					NautilusDirectory *directory,
++					MergedMonitor *monitor,
++					gboolean monitor_hidden_files,
++					gboolean monitor_backup_files,
++					NautilusFileAttributes file_attributes,
++					NautilusDirectoryCallback callback,
++					gpointer callback_data)
++{
++	GList *unpaired_files;
++	GList *l;
++	GList *paired_files;
++
++	if (directory == NULL) {
++		return;
++	}
++
++	unpaired_files = NULL;
++
++	nautilus_directory_file_monitor_add (directory,
++					     monitor,
++					     monitor_hidden_files,
++					     monitor_backup_files,
++					     file_attributes,
++					     build_file_list_cb, &unpaired_files);
++
++	/* For each of those files from the directory, pick the ones that are being used in one of our pairs */
++
++	paired_files = NULL;
++
++	for (l = unpaired_files; l; l = l->next) {
++		NautilusFile *file;
++		FilePair *pair;
++
++		file = NAUTILUS_FILE (l->data);
++		pair = g_hash_table_lookup (desktop->details->file_to_pairs_hash, file);
++
++		if (pair == NULL) {
++			continue; /* maybe we haven't been notified yet about that file; we'll handle it later anyway */
++		}
++
++		if (pair_shows_file (pair, file)) {
++			paired_files = g_list_prepend (paired_files, file);
++		}
++	}
++
++	if (callback != NULL) {
++		nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS, paired_files,
++						   "add_file_monitor_and_emit_paired_files: calling callback %p on directory files",
++						   callback);
++
++		(* callback) (NAUTILUS_DIRECTORY (desktop), paired_files, callback_data);
++	}
++
++	nautilus_file_list_free (unpaired_files);
++	g_list_free (paired_files);
++
++}
++
++static void
+ desktop_monitor_add (NautilusDirectory *directory,
+ 		    gconstpointer client,
+ 		    gboolean monitor_hidden_files,
+@@ -295,7 +847,14 @@ desktop_monitor_add (NautilusDirectory *directory,
+ {
+ 	NautilusDesktopDirectory *desktop;
+ 	MergedMonitor *monitor;
+-	GList *merged_callback_list;
++
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++			    "desktop_monitor_add (client=%p, monitor_hidden_files=%d, monitor_backup_files=%d, file_attributes=0x%x, callback=%p)",
++			    client,
++			    (int) monitor_hidden_files,
++			    (int) monitor_backup_files,
++			    (int) file_attributes,
++			    callback);
+ 
+ 	desktop = NAUTILUS_DESKTOP_DIRECTORY (directory);
+ 
+@@ -315,25 +874,40 @@ desktop_monitor_add (NautilusDirectory *directory,
+ 	monitor->monitor_backup_files = monitor_backup_files;
+ 	monitor->monitor_attributes = file_attributes;
+ 	
+-	/* Call through to the real directory add calls. */
+-	merged_callback_list = NULL;
+-
+-	/* Call up to real dir */
+-	nautilus_directory_file_monitor_add
+-		(desktop->details->real_directory, monitor,
+-		 monitor_hidden_files, monitor_backup_files,
+-		 file_attributes,
+-		 build_merged_callback_list, &merged_callback_list);
+-	
+-	/* Handle the desktop part */
+-	merged_callback_list = g_list_concat (merged_callback_list,
+-					      nautilus_file_list_copy (directory->details->file_list));
++	/* Call through to the real directories' add calls. */
++
++	add_file_monitor_and_emit_paired_files (desktop,
++						desktop->details->real_directory,
++						monitor,
++						monitor_hidden_files,
++						monitor_backup_files,
++						file_attributes,
++						callback,
++						callback_data);
++
++	add_file_monitor_and_emit_paired_files (desktop,
++						desktop->details->predefined_items_dir,
++						monitor,
++						monitor_hidden_files,
++						monitor_backup_files,
++						file_attributes,
++						callback,
++						callback_data);
++
++	/* Call the callback on our desktop links */
+ 
+-	
+ 	if (callback != NULL) {
+-		(* callback) (directory, merged_callback_list, callback_data);
++		GList *desktop_link_files;
++
++		desktop_link_files = get_desktop_links (desktop, TRUE);
++
++		nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS, desktop_link_files,
++						   "desktop_monitor_add: calling callback %p on desktop link files",
++						   callback);
++
++		(* callback) (NAUTILUS_DIRECTORY (desktop), desktop_link_files, callback_data);
++		nautilus_file_list_free (desktop_link_files);
+ 	}
+-	nautilus_file_list_free (merged_callback_list);
+ }
+ 
+ static void
+@@ -342,6 +916,10 @@ desktop_monitor_remove (NautilusDirectory *directory,
+ {
+ 	NautilusDesktopDirectory *desktop;
+ 	MergedMonitor *monitor;
++
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++			    "desktop_monitor_remove (client=%p)",
++			    client);
+ 	
+ 	desktop = NAUTILUS_DESKTOP_DIRECTORY (directory);
+ 
+@@ -354,55 +932,143 @@ desktop_monitor_remove (NautilusDirectory *directory,
+ }
+ 
+ static void
++free_file_pair (FilePair *pair)
++{
++	g_free (pair->name);
++	pair->name = NULL;
++
++	nautilus_file_unref (pair->user_file);
++	nautilus_file_unref (pair->predefined_file);
++
++	pair->user_file = NULL;
++	pair->predefined_file = NULL;
++
++	g_slice_free (FilePair, pair);
++}
++
++static void
++free_file_pair_cb (gpointer key, gpointer value, gpointer data)
++{
++	FilePair *pair;
++
++	pair = value;
++	g_assert ((char *) key == pair->name);
++
++	free_file_pair (pair);
++}
++
++static void
++destroy_pair_hashes (NautilusDesktopDirectory *desktop)
++{
++	g_hash_table_foreach (desktop->details->name_to_pairs_hash, free_file_pair_cb, NULL);
++	g_hash_table_destroy (desktop->details->name_to_pairs_hash);
++
++	g_hash_table_destroy (desktop->details->file_to_pairs_hash); /* its keys/values were already freed by the call above */
++
++	desktop->details->name_to_pairs_hash = NULL;
++	desktop->details->file_to_pairs_hash = NULL;
++}
++
++static void
++create_pair_hashes (NautilusDesktopDirectory *desktop)
++{
++	g_assert (desktop->details->name_to_pairs_hash == NULL);
++	g_assert (desktop->details->file_to_pairs_hash == NULL);
++
++	desktop->details->name_to_pairs_hash = g_hash_table_new (g_str_hash, g_str_equal);
++	desktop->details->file_to_pairs_hash = g_hash_table_new (g_direct_hash, g_direct_equal);
++}
++
++static void
++invalidate_combined_files (NautilusDesktopDirectory *desktop)
++{
++	destroy_pair_hashes (desktop);
++	create_pair_hashes (desktop);
++
++	desktop->details->files_are_combined = FALSE;
++}
++
++static void
+ desktop_force_reload (NautilusDirectory *directory)
+ {
+ 	NautilusDesktopDirectory *desktop;
+ 
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++			    "desktop_force_reload(): invalidating files");
++
+ 	desktop = NAUTILUS_DESKTOP_DIRECTORY (directory);
+ 
++	invalidate_combined_files (desktop);
++
++	/* Set the pending flags before we start reloading any of the directories */
++
++	desktop->details->real_directory_pending = TRUE;
++
++	if (desktop->details->predefined_items_dir != NULL) {
++		desktop->details->predefined_items_dir_pending = TRUE;
++	}
++
++	/* Reload! */
++
+ 	nautilus_directory_force_reload (desktop->details->real_directory);
+ 
+-	/* We don't invalidate the files in desktop, since they are always
+-	   up to date. (And we don't ever want to mark them invalid.) */
++	if (desktop->details->predefined_items_dir != NULL) {
++		nautilus_directory_force_reload (desktop->details->predefined_items_dir);
++	}
++
++	/* We don't invalidate the "fake" files in desktop (for Home, Computer,
++	   volumes, etc.), since they are always up to date. (And we don't ever
++	   want to mark them invalid.) */
+ }
+ 
+ static gboolean
+ desktop_are_all_files_seen (NautilusDirectory *directory)
+ {
+ 	NautilusDesktopDirectory *desktop;
++	gboolean result;
+ 
+ 	desktop = NAUTILUS_DESKTOP_DIRECTORY (directory);
+ 
+-	if (!nautilus_directory_are_all_files_seen (desktop->details->real_directory)) {
+-		return FALSE;
+-	}
++	result = desktop->details->files_are_combined;
++
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++			    "desktop_are_all_files_seen(): %d",
++			    result);
+ 
+-	return TRUE;
++	return result;
+ }
+ 
+ static gboolean
+ desktop_is_not_empty (NautilusDirectory *directory)
+ {
+ 	NautilusDesktopDirectory *desktop;
++	gboolean result;
+ 
+ 	desktop = NAUTILUS_DESKTOP_DIRECTORY (directory);
+ 
+-	if (nautilus_directory_is_not_empty (desktop->details->real_directory)) {
+-		return TRUE;
++	if (g_hash_table_size (desktop->details->name_to_pairs_hash) != 0) {
++		result = TRUE;
++	} else {
++		result = directory->details->file_list != NULL; /* this is just for desktop links from NautilusDesktopLinkMonitor */
+ 	}
+ 
+-	return directory->details->file_list != NULL;
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++			    "desktop_is_not_empty(): %d",
++			    result);
++
++	return result;
+ }
+ 
+ static GList *
+ desktop_get_file_list (NautilusDirectory *directory)
+ {
+-	GList *real_dir_file_list, *desktop_dir_file_list;
+-	real_dir_file_list = nautilus_directory_get_file_list
+-				(NAUTILUS_DESKTOP_DIRECTORY (directory)->details->real_directory);
+-	desktop_dir_file_list = GNOME_CALL_PARENT_WITH_DEFAULT
+-				 (NAUTILUS_DIRECTORY_CLASS, get_file_list, (directory), NULL);
+-	return g_list_concat (real_dir_file_list, desktop_dir_file_list);
++	GList *result;
++
++	result = get_file_list (NAUTILUS_DESKTOP_DIRECTORY (directory), FALSE);
++	nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS, result,
++					   "desktop_get_file_list(): returning list of files");
++
++	return result;
+ }
+ 
+ NautilusDirectory *
+@@ -412,7 +1078,6 @@ nautilus_desktop_directory_get_real_directory (NautilusDesktopDirectory *desktop
+ 	return desktop->details->real_directory;
+ }
+ 
+-
+ static void
+ desktop_finalize (GObject *object)
+ {
+@@ -422,39 +1087,455 @@ desktop_finalize (GObject *object)
+ 
+ 	nautilus_directory_unref (desktop->details->real_directory);
+ 
++	if (desktop->details->predefined_items_dir != NULL) {
++		nautilus_directory_unref (desktop->details->predefined_items_dir);
++	}
++
+ 	g_hash_table_destroy (desktop->details->callbacks);
+ 	g_hash_table_destroy (desktop->details->monitors);
++
++	destroy_pair_hashes (desktop);
++
+ 	g_free (desktop->details);
+ 
+ 	eel_preferences_remove_callback (NAUTILUS_PREFERENCES_DESKTOP_IS_HOME_DIR,
+ 					 desktop_directory_changed_callback,
+ 					 desktop);
++	eel_preferences_remove_callback (NAUTILUS_PREFERENCES_DESKTOP_PREDEFINED_ITEMS_DIR,
++					 predefined_items_dir_changed_callback,
++					 desktop);
+ 	
+ 	G_OBJECT_CLASS (parent_class)->finalize (object);
+ }
+ 
+ static void
+-done_loading_callback (NautilusDirectory *real_directory,
+-		       NautilusDesktopDirectory *desktop)
++load_error_callback (NautilusDirectory *directory, GError *error, NautilusDesktopDirectory *desktop)
++{
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++			    "Error while loading %s: %s",
++			    get_debug_dirname (desktop, directory),
++			    error->message);
++
++	nautilus_directory_emit_load_error (NAUTILUS_DIRECTORY (desktop), error);
++}
++
++static gboolean
++directories_are_done_loading (NautilusDesktopDirectory *desktop)
+ {
+-     nautilus_directory_emit_done_loading (NAUTILUS_DIRECTORY (desktop));
++	gboolean real_is_done;
++	gboolean predefined_is_done;
++
++	real_is_done = !desktop->details->real_directory_pending;
++
++	predefined_is_done = (desktop->details->predefined_items_dir == NULL || !desktop->details->predefined_items_dir_pending);
++
++	return real_is_done && predefined_is_done;
+ }
+ 
++static void
++emit_pending_callback_cb (gpointer key, gpointer value, gpointer data)
++{
++	MergedCallback *merged_callback;
++
++	merged_callback = key;
++	merged_callback_check_done (merged_callback);
++}
+ 
+ static void
+-forward_files_added_cover (NautilusDirectory *real_directory,
++emit_pending_callbacks (NautilusDesktopDirectory *desktop)
++{
++	g_hash_table_foreach (desktop->details->callbacks, emit_pending_callback_cb, desktop);
++}
++
++static void
++done_loading_callback (NautilusDirectory *directory,
++		       NautilusDesktopDirectory *desktop)
++{
++	if (directory == desktop->details->real_directory) {
++		desktop->details->real_directory_pending = FALSE;
++	} else if (directory == desktop->details->predefined_items_dir) {
++		desktop->details->predefined_items_dir_pending = FALSE;
++	} else {
++		g_assert_not_reached ();
++	}
++
++	if (directories_are_done_loading (desktop)) {
++		nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++				    "done_loading_callback(): %s and all directories are done; will combine files, emit callbacks, and emit done_loading",
++				    get_debug_dirname (desktop, directory));
++
++		combine_real_and_predefined_directories (desktop);
++		emit_pending_callbacks (desktop);
++		nautilus_directory_emit_done_loading (NAUTILUS_DIRECTORY (desktop));
++	} else {
++		nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++				    "done_loading_callback(): %s is done loading, but not all dirs are ready yet",
++				    get_debug_dirname (desktop, directory));
++	}
++}
++
++static void
++forward_files_added_cover (NautilusDirectory *directory,
+ 			   GList *files,
+ 			   gpointer callback_data)
+ {
+-	nautilus_directory_emit_files_added (NAUTILUS_DIRECTORY (callback_data), files);
++	NautilusDesktopDirectory *desktop;
++	gboolean is_predefined_dir;
++	GList *l;
++	GList *files_removed;
++	GList *files_added;
++
++	desktop = NAUTILUS_DESKTOP_DIRECTORY (callback_data);
++
++	nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS, files,
++					   "forward_files_added_cover(): files got added to %s. files_are_combined=%d",
++					   get_debug_dirname (desktop, directory),
++					   desktop->details->files_are_combined);
++
++	if (!desktop->details->files_are_combined) {
++		return;
++	}
++
++	if (directory == desktop->details->real_directory) {
++		is_predefined_dir = FALSE;
++	} else if (directory == desktop->details->predefined_items_dir) {
++		is_predefined_dir = TRUE;
++	} else {
++		g_assert_not_reached ();
++	}
++
++	files_removed = NULL;
++	files_added = NULL;
++
++	for (l = files; l; l = l->next) {
++		NautilusFile *file;
++		FilePair *pair;
++		gboolean is_new_pair;
++		gboolean predefined_was_being_used;
++		char *uri;
++
++		file = NAUTILUS_FILE (l->data);
++
++		uri = nautilus_file_get_uri (file);
++
++		nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++				    "File added to %s: %s -- determining if it gets overriden",
++				    is_predefined_dir ? "predefined items" : "user items",
++				    uri);
++
++		pair = g_hash_table_lookup (desktop->details->file_to_pairs_hash, file);
++		if (pair != NULL) {
++			GList node;
++
++			/* Sometimes we get a files-added signal from one of the
++			 * child directories, even though the file in question
++			 * *has* already been emitted by a files-changed signal.
++			 * In that case, we already know about the file and
++			 * should not create a new pair for it.  We'll handle
++			 * that case as if the file had just been changed.
++			 */
++
++			node.data = file;
++			node.prev = NULL;
++			node.next = NULL;
++
++			nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++					    "Got 'added' for %s but we already knew about it; will consider it as a file that changed",
++					    uri);
++			forward_files_changed_cover (directory, &node, desktop);
++			g_free (uri);
++			continue;
++		}
++
++		pair = create_file_pair (desktop, NAUTILUS_FILE (l->data), is_predefined_dir, &is_new_pair);
++		log_pair (pair, is_new_pair);
++		predefined_was_being_used = pair->predefined_overrides_user;
++
++		resolve_overrides_in_file_pair (desktop, pair);
++
++		if (is_new_pair) {
++			nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++					    "%s will appear in the user's desktop (it has no %s counterpart)",
++					    uri,
++					    is_predefined_dir ? "user" : "predefined");
++
++			files_added = g_list_prepend (files_added, file);
++		} else {
++			gboolean log_replacement;
++
++			log_replacement = FALSE;
++			if (predefined_was_being_used) {
++				g_assert (!is_predefined_dir && file == pair->user_file);
++
++				if (!pair->predefined_overrides_user) {
++					log_replacement = TRUE;
++					files_removed = g_list_prepend (files_removed, pair->predefined_file);
++					files_added = g_list_prepend (files_added, pair->user_file);
++				}
++			} else {
++				g_assert (is_predefined_dir && file == pair->predefined_file);
++
++				if (pair->predefined_overrides_user) {
++					log_replacement = TRUE;
++					files_removed = g_list_prepend (files_removed, pair->user_file);
++					files_added = g_list_prepend (files_added, pair->predefined_file);
++				}
++			}
++
++			if (log_replacement) {
++				nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++						    "%s replaces what was in the user's desktop",
++						    uri);
++			}
++		}
++
++		g_free (uri);
++	}
++
++	nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS, files_removed,
++					   "forward_files_added_cover: emitting removed files");
++	nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS, files_added,
++					   "forward_files_added_cover: emitting added files");
++
++	nautilus_directory_emit_files_changed (NAUTILUS_DIRECTORY (desktop), files_removed);
++	nautilus_directory_emit_files_added (NAUTILUS_DIRECTORY (desktop), files_added);
++
++	g_list_free (files_removed);
++	g_list_free (files_added);
+ }
+ 
+ static void
+-forward_files_changed_cover (NautilusDirectory *real_directory,
++forward_files_changed_cover (NautilusDirectory *directory,
+ 			     GList *files,
+ 			     gpointer callback_data)
+ {
+-	nautilus_directory_emit_files_changed (NAUTILUS_DIRECTORY (callback_data), files);
++	NautilusDesktopDirectory *desktop;
++	gboolean is_predefined_dir;
++	GList *l;
++	GList *files_changed;
++	GList *files_added;
++
++	desktop = NAUTILUS_DESKTOP_DIRECTORY (callback_data);
++
++	nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS, files,
++					   "forward_files_changed_cover(): files got changed in %s.  files_are_combined=%d",
++					   get_debug_dirname (desktop, directory),
++					   desktop->details->files_are_combined);
++
++	if (!desktop->details->files_are_combined) {
++		return;
++	}
++
++	if (directory == desktop->details->real_directory) {
++		is_predefined_dir = FALSE;
++	} else if (directory == desktop->details->predefined_items_dir) {
++		is_predefined_dir = TRUE;
++	} else {
++		g_assert_not_reached ();
++	}
++
++	files_changed = NULL;
++	files_added = NULL;
++
++	for (l = files; l; l = l->next) {
++		NautilusFile *file;
++		FilePair *pair;
++		char *uri;
++
++		file = NAUTILUS_FILE (l->data);
++		uri = nautilus_file_get_uri (file);
++
++		nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++				    "File changed in %s: %s -- determining if it gets overriden",
++				    is_predefined_dir ? "predefined items" : "user items",
++				    uri);
++
++		pair = g_hash_table_lookup (desktop->details->file_to_pairs_hash, file);
++
++		if (pair == NULL) {
++			GList node;
++
++			/* Huh, we didn't know about that file?  Act as if it had been added. */
++
++			node.data = file;
++			node.prev = NULL;
++			node.next = NULL;
++
++			if (nautilus_directory_contains_file (directory, file)) {
++				nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++						    "Trying to add %s as a new file",
++						    uri);
++				forward_files_added_cover (directory, &node, callback_data);
++			} else {
++				nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++						    "Ignoring %s - it no longer exists in its directory",
++						    uri);
++			}
++		} else {
++			gboolean predefined_was_being_used;
++
++			predefined_was_being_used = pair->predefined_overrides_user;
++
++			if (nautilus_directory_contains_file (directory, file)) {
++				char *name;
++				gboolean same_name;
++
++				name = nautilus_file_get_name (file);
++				same_name = strcmp (name, pair->name) == 0;
++				g_free (name);
++
++				if (same_name) {
++					/* The file still belongs within its pair */
++					resolve_overrides_in_file_pair (desktop, pair);
++
++					if (predefined_was_being_used == pair->predefined_overrides_user) {
++						if (pair_shows_file (pair, file)) {
++							nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++									    "%s is still shown; will emit changed for it",
++									    uri);
++							files_changed = g_list_prepend (files_changed, file);
++						} else {
++							/* Otherwise we weren't exposing the file anyway, so the caller
++							 * doesn't need to know that it changed.
++							 */
++							nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++									    "%s changed but wasn't being shown anyway; will ignore it",
++									    uri);
++						}
++					} else {
++						NautilusFile *changed;
++						NautilusFile *added;
++						char *added_uri;
++
++						if (predefined_was_being_used) {
++							changed = pair->user_file;		/* "got removed from our view" */
++							added = pair->predefined_file;
++						} else {
++							changed = pair->predefined_file;	/* as above */
++							added = pair->user_file;
++						}
++
++						added_uri = nautilus_file_get_uri (added);
++						nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++								    "%s is no longer shown; will emit it as changed and emit its pair %s as added",
++								    uri,
++								    added_uri);
++						g_free (added_uri);
++
++						files_changed = g_list_prepend (files_changed, changed);
++						files_added = g_list_prepend (files_added, added);
++					}
++				} else {
++					GList node;
++					NautilusFile *remaining_file;
++
++					nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++							    "%s changed name from %s; will emit changed for it, and call files_added to move it to a new pair",
++							    uri,
++							    pair->name);
++
++					/* The file no longer belongs in this pair */
++
++					g_hash_table_remove (desktop->details->file_to_pairs_hash, file);
++
++					if (file == pair->predefined_file) {
++						pair->predefined_file = NULL;
++						pair->predefined_overrides_user = FALSE;
++						remaining_file = pair->user_file;
++					} else {
++						g_assert (file == pair->user_file);
++						pair->user_file = NULL;
++						pair->predefined_overrides_user = TRUE;
++						remaining_file = pair->predefined_file;
++					}
++
++					if (remaining_file == NULL) {
++						g_hash_table_remove (desktop->details->name_to_pairs_hash, pair->name);
++						free_file_pair (pair);
++					} else {
++						files_added = g_list_prepend (files_added, remaining_file);
++					}
++
++					node.data = file;
++					node.prev = NULL;
++					node.next = NULL;
++					nautilus_directory_emit_files_changed (NAUTILUS_DIRECTORY (desktop), &node);
++
++					/* Re-insert the file in a new pair */
++
++					node.data = file;
++					node.prev = NULL;
++					node.next = NULL;
++					forward_files_added_cover (directory, &node, callback_data);
++
++					nautilus_file_unref (file); /* as it was referenced in the old pair */
++				}
++			} else {
++				NautilusFile *remaining_file;
++
++				nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS,
++						    "%s no longer exists in the %s directory; will emit changed for it",
++						    uri,
++						    get_debug_dirname (desktop, directory));
++
++				/* The file no longer exists in its directory
++				 * (it got deleted or something), so we'll
++				 * remove it from our pair.
++				 */
++
++				files_changed = g_list_prepend (files_changed, file);
++				g_hash_table_remove (desktop->details->file_to_pairs_hash, file);
++
++				if (file == pair->predefined_file) {
++					pair->predefined_file = NULL;
++					pair->predefined_overrides_user = FALSE;
++					remaining_file = pair->user_file;
++				} else {
++					g_assert (file == pair->user_file);
++					pair->user_file = NULL;
++					pair->predefined_overrides_user = TRUE;
++					remaining_file = pair->predefined_file;
++				}
++
++				nautilus_file_unref (file);
++
++				if (remaining_file == NULL) {
++					g_hash_table_remove (desktop->details->name_to_pairs_hash, pair->name);
++					free_file_pair (pair);
++				}
++			}
++		}
++
++		g_free (uri);
++	}
++
++	nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS, files_changed,
++					   "forward_files_changed_cover: emitting changed files");
++	nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS, files_added,
++					   "forward_files_changed_cover: emitting added files");
++
++	nautilus_directory_emit_files_changed (NAUTILUS_DIRECTORY (desktop), files_changed);
++	nautilus_directory_emit_files_added (NAUTILUS_DIRECTORY (desktop), files_added);
++
++	g_list_free (files_changed);
++	g_list_free (files_added);
++}
++
++static void
++discard_directory (NautilusDesktopDirectory *desktop, NautilusDirectory *dir)
++{
++	if (dir == NULL) {
++		return;
++	}
++
++	g_hash_table_foreach_remove (desktop->details->callbacks, (GHRFunc) gtk_true, NULL);
++	g_hash_table_foreach_remove (desktop->details->monitors, (GHRFunc) gtk_true, NULL);
++
++	g_signal_handlers_disconnect_by_func (dir, done_loading_callback, desktop);
++	g_signal_handlers_disconnect_by_func (dir, forward_files_added_cover, desktop);
++	g_signal_handlers_disconnect_by_func (dir, forward_files_changed_cover, desktop);
++
++	nautilus_directory_unref (dir);
+ }
+ 
+ static void
+@@ -464,17 +1545,10 @@ update_desktop_directory (NautilusDesktopDirectory *desktop)
+ 	char *desktop_uri;
+ 	NautilusDirectory *real_directory;
+ 
+-	real_directory = desktop->details->real_directory;
+-	if (real_directory != NULL) {
+-		g_hash_table_foreach_remove (desktop->details->callbacks, (GHRFunc) gtk_true, NULL);
+-		g_hash_table_foreach_remove (desktop->details->monitors, (GHRFunc) gtk_true, NULL);
++	invalidate_combined_files (desktop);
+ 
+-		g_signal_handlers_disconnect_by_func (real_directory, done_loading_callback, desktop);
+-		g_signal_handlers_disconnect_by_func (real_directory, forward_files_added_cover, desktop);
+-		g_signal_handlers_disconnect_by_func (real_directory, forward_files_changed_cover, desktop);
+-
+-		nautilus_directory_unref (real_directory);
+-	}
++	discard_directory (desktop, desktop->details->real_directory);
++	desktop->details->real_directory = NULL;
+ 
+ 	desktop_path = nautilus_get_desktop_directory ();
+ 	desktop_uri = g_filename_to_uri (desktop_path, NULL, NULL);
+@@ -482,6 +1556,8 @@ update_desktop_directory (NautilusDesktopDirectory *desktop)
+ 	g_free (desktop_uri);
+ 	g_free (desktop_path);
+ 
++	g_signal_connect_object (real_directory, "load_error",
++				 G_CALLBACK (load_error_callback), desktop, 0);
+ 	g_signal_connect_object (real_directory, "done_loading",
+ 				 G_CALLBACK (done_loading_callback), desktop, 0);
+ 	g_signal_connect_object (real_directory, "files_added",
+@@ -490,6 +1566,7 @@ update_desktop_directory (NautilusDesktopDirectory *desktop)
+ 				 G_CALLBACK (forward_files_changed_cover), desktop, 0);
+ 
+ 	desktop->details->real_directory = real_directory;
++	desktop->details->real_directory_pending = TRUE;
+ }
+ 
+ static void
+@@ -500,8 +1577,64 @@ desktop_directory_changed_callback (gpointer data)
+ }
+ 
+ static void
++update_predefined_items_dir (NautilusDesktopDirectory *desktop)
++{
++	NautilusDirectory *predefined_items_dir;
++	char *dirname;
++	char *uri;
++
++	invalidate_combined_files (desktop);
++
++	discard_directory (desktop, desktop->details->predefined_items_dir);
++	desktop->details->predefined_items_dir = NULL;
++
++	dirname = eel_preferences_get (NAUTILUS_PREFERENCES_DESKTOP_PREDEFINED_ITEMS_DIR);
++	if (dirname == NULL || *dirname == 0) {
++		nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++				    "The predefined_items_dir key is not set; will not have predefined desktop items");
++		g_free (dirname);
++		return;
++	}
++
++	nautilus_debug_log (desktop->details->initializing, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++			    "Using predefined_items_dir = %s", dirname);
++
++	uri = g_filename_to_uri (dirname, NULL, NULL);
++	predefined_items_dir = nautilus_directory_get_by_uri (uri);
++	g_free (uri);
++	g_free (dirname);
++
++	g_signal_connect_object (predefined_items_dir, "load_error",
++				 G_CALLBACK (load_error_callback), desktop, 0);
++	g_signal_connect_object (predefined_items_dir, "done_loading",
++				 G_CALLBACK (done_loading_callback), desktop, 0);
++	g_signal_connect_object (predefined_items_dir, "files_added",
++				 G_CALLBACK (forward_files_added_cover), desktop, 0);
++	g_signal_connect_object (predefined_items_dir, "files_changed",
++				 G_CALLBACK (forward_files_changed_cover), desktop, 0);
++
++	desktop->details->predefined_items_dir = predefined_items_dir;
++	desktop->details->predefined_items_dir_pending = TRUE;
++}
++
++static void
++predefined_items_dir_changed_callback (gpointer data)
++{
++	NautilusDesktopDirectory *desktop = NAUTILUS_DESKTOP_DIRECTORY (data);
++
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++			    "GConf key for the path for predefined desktop items changed; refreshing...");
++
++	update_predefined_items_dir (desktop);
++	nautilus_directory_force_reload (NAUTILUS_DIRECTORY (desktop));
++}
++
++static void
+ nautilus_desktop_directory_instance_init (NautilusDesktopDirectory *desktop)
+ {
++	nautilus_debug_log (TRUE, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++			    "Creating the NautilusDesktopDirectory");
++
+ 	desktop->details = g_new0 (NautilusDesktopDirectoryDetails, 1);
+ 
+ 	desktop->details->callbacks = g_hash_table_new_full
+@@ -510,11 +1643,19 @@ nautilus_desktop_directory_instance_init (NautilusDesktopDirectory *desktop)
+ 	desktop->details->monitors = g_hash_table_new_full (NULL, NULL,
+ 							    NULL, (GDestroyNotify)merged_monitor_destroy);
+ 
++	create_pair_hashes (desktop);
++
++	desktop->details->initializing = TRUE;
++
+ 	update_desktop_directory (NAUTILUS_DESKTOP_DIRECTORY (desktop));
++	update_predefined_items_dir (desktop);
+ 
+ 	eel_preferences_add_callback (NAUTILUS_PREFERENCES_DESKTOP_IS_HOME_DIR,
+ 				      desktop_directory_changed_callback,
+ 				      desktop);
++	eel_preferences_add_callback (NAUTILUS_PREFERENCES_DESKTOP_PREDEFINED_ITEMS_DIR,
++				      predefined_items_dir_changed_callback,
++				      desktop);
+ }
+ 
+ static void
+diff --git a/libnautilus-private/nautilus-desktop-icon-file.c b/libnautilus-private/nautilus-desktop-icon-file.c
+index 3802dd9..120df10 100644
+--- a/libnautilus-private/nautilus-desktop-icon-file.c
++++ b/libnautilus-private/nautilus-desktop-icon-file.c
+@@ -26,6 +26,7 @@
+ #include <config.h>
+ #include "nautilus-desktop-icon-file.h"
+ 
++#include "nautilus-debug-log.h"
+ #include "nautilus-directory-notify.h"
+ #include "nautilus-directory-private.h"
+ #include "nautilus-file-attributes.h"
+@@ -291,6 +292,9 @@ nautilus_desktop_icon_file_new (NautilusDesktopLink *link)
+ 	list.prev = NULL;
+ 	nautilus_directory_emit_files_added (directory, &list);
+ 
++	nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DEBUG_DESKTOP_ITEMS, &list,
++					   "Created desktop icon file and notified directory:");
++
+ 	return icon_file;
+ }
+ 
+diff --git a/libnautilus-private/nautilus-desktop-link-monitor.c b/libnautilus-private/nautilus-desktop-link-monitor.c
+index 9abdd64..976ccd8 100644
+--- a/libnautilus-private/nautilus-desktop-link-monitor.c
++++ b/libnautilus-private/nautilus-desktop-link-monitor.c
+@@ -23,6 +23,7 @@
+ */
+ 
+ #include <config.h>
++#include "nautilus-debug-log.h"
+ #include "nautilus-desktop-link-monitor.h"
+ #include "nautilus-desktop-link.h"
+ #include "nautilus-desktop-icon-file.h"
+@@ -356,6 +357,9 @@ nautilus_desktop_link_monitor_init (gpointer object, gpointer klass)
+ 	GList *l, *mounts;
+ 	GMount *mount;
+ 
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++			    "Initializing desktop link monitor with all its links");
++
+ 	monitor = NAUTILUS_DESKTOP_LINK_MONITOR (object);
+ 
+ 	the_link_monitor = monitor;
+diff --git a/libnautilus-private/nautilus-directory-async.c b/libnautilus-private/nautilus-directory-async.c
+index cbe0419..ba67a75 100644
+--- a/libnautilus-private/nautilus-directory-async.c
++++ b/libnautilus-private/nautilus-directory-async.c
+@@ -24,6 +24,7 @@
+ 
+ #include <config.h>
+ 
++#include "nautilus-debug-log.h"
+ #include "nautilus-directory-metafile.h"
+ #include "nautilus-directory-notify.h"
+ #include "nautilus-directory-private.h"
+@@ -1039,6 +1040,15 @@ directory_load_done (NautilusDirectory *directory,
+ 		     GError *error)
+ {
+ 	GList *node;
++	char *uri;
++
++	uri = nautilus_directory_get_uri (directory);
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_ASYNC,
++			    "Directory %p (%s): directory_load_done: %s",
++			    directory,
++			    uri,
++			    error ? error->message : "success");
++	g_free (uri);
+ 
+ 	directory->details->directory_loaded = TRUE;
+ 	directory->details->directory_loaded_sent_notification = FALSE;
+diff --git a/libnautilus-private/nautilus-directory.c b/libnautilus-private/nautilus-directory.c
+index 9e6e435..b5d75e1 100644
+--- a/libnautilus-private/nautilus-directory.c
++++ b/libnautilus-private/nautilus-directory.c
+@@ -25,6 +25,7 @@
+ #include <config.h>
+ #include "nautilus-directory-private.h"
+ 
++#include "nautilus-debug-log.h"
+ #include "nautilus-directory-metafile.h"
+ #include "nautilus-directory-notify.h"
+ #include "nautilus-file-attributes.h"
+@@ -1593,6 +1594,8 @@ nautilus_directory_schedule_position_set (GList *position_setting_list)
+ 	char str[64];
+ 
+ 	for (p = position_setting_list; p != NULL; p = p->next) {
++		GList node;
++
+ 		item = (NautilusFileChangesQueuePosition *) p->data;
+ 
+ 		file = nautilus_file_get (item->location);
+@@ -1608,6 +1611,12 @@ nautilus_directory_schedule_position_set (GList *position_setting_list)
+ 			 NULL,
+ 			 str);
+ 
++		node.data = file;
++		node.prev = NULL;
++		node.next = NULL;
++		nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_ICON_POSITIONS, &node,
++						   "Directory - saving icon position to \"%s\"", str);
++
+ 		if (item->set) {
+ 			g_snprintf (str, sizeof (str), "%d", item->screen);
+ 		} else {
+diff --git a/libnautilus-private/nautilus-global-preferences.h b/libnautilus-private/nautilus-global-preferences.h
+index e3de760..d414bed 100644
+--- a/libnautilus-private/nautilus-global-preferences.h
++++ b/libnautilus-private/nautilus-global-preferences.h
+@@ -214,6 +214,7 @@ typedef enum
+ #define NAUTILUS_PREFERENCES_DESKTOP_VOLUMES_VISIBLE	   "desktop/volumes_visible"
+ #define NAUTILUS_PREFERENCES_DESKTOP_NETWORK_VISIBLE       "desktop/network_icon_visible"
+ #define NAUTILUS_PREFERENCES_DESKTOP_NETWORK_NAME          "desktop/network_icon_name"
++#define NAUTILUS_PREFERENCES_DESKTOP_PREDEFINED_ITEMS_DIR  "desktop/predefined_items_dir"
+ 
+ void nautilus_global_preferences_init                      (void);
+ char *nautilus_global_preferences_get_default_folder_viewer_preference_as_iid (void);
+diff --git a/src/file-manager/fm-directory-view.c b/src/file-manager/fm-directory-view.c
+index 78d5044..5eafc70 100644
+--- a/src/file-manager/fm-directory-view.c
++++ b/src/file-manager/fm-directory-view.c
+@@ -8264,14 +8264,11 @@ load_directory (FMDirectoryView *view,
+ 
+ 	view->details->reported_load_error = FALSE;
+ 
+-	/* FIXME bugzilla.gnome.org 45062: In theory, we also need to monitor metadata here (as
+-         * well as doing a call when ready), in case external forces
+-         * change the directory's file metadata.
+-	 */
+ 	attributes = 
+ 		NAUTILUS_FILE_ATTRIBUTE_INFO |
+ 		NAUTILUS_FILE_ATTRIBUTE_MOUNT |
+-		NAUTILUS_FILE_ATTRIBUTE_FILESYSTEM_INFO;
++		NAUTILUS_FILE_ATTRIBUTE_FILESYSTEM_INFO |
++		NAUTILUS_FILE_ATTRIBUTE_METADATA;
+ 	view->details->metadata_for_directory_as_file_pending = TRUE;
+ 	view->details->metadata_for_files_in_directory_pending = TRUE;
+ 	nautilus_file_call_when_ready
+diff --git a/src/file-manager/fm-icon-view.c b/src/file-manager/fm-icon-view.c
+index a5186d6..827ad5e 100644
+--- a/src/file-manager/fm-icon-view.c
++++ b/src/file-manager/fm-icon-view.c
+@@ -42,6 +42,7 @@
+ #include <gtk/gtk.h>
+ #include <glib/gi18n.h>
+ #include <gio/gio.h>
++#include <libnautilus-private/nautilus-debug-log.h>
+ #include <libnautilus-private/nautilus-directory-background.h>
+ #include <libnautilus-private/nautilus-directory.h>
+ #include <libnautilus-private/nautilus-dnd.h>
+@@ -236,6 +237,7 @@ get_stored_icon_position_callback (NautilusIconContainer *container,
+ 	char *position_string, *scale_string;
+ 	gboolean position_good;
+ 	char c;
++	GList node;
+ 
+ 	g_assert (NAUTILUS_IS_ICON_CONTAINER (container));
+ 	g_assert (NAUTILUS_IS_FILE (file));
+@@ -252,6 +254,13 @@ get_stored_icon_position_callback (NautilusIconContainer *container,
+ 	position_good = sscanf
+ 		(position_string, " %d , %d %c",
+ 		 &position->x, &position->y, &c) == 2;
++
++	node.data = file;
++	node.prev = NULL;
++	node.next = NULL;
++	nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_ICON_POSITIONS, &node,
++					   "get_stored_icon_position_callback(): read icon position as \"%s\"", position_string);
++
+ 	g_free (position_string);
+ 
+ 	/* If it is the desktop directory, maybe the gnome-libs metadata has information about it */
+@@ -2274,11 +2283,20 @@ icon_position_changed_callback (NautilusIconContainer *container,
+ 
+ 	/* Store the new position of the icon in the metadata. */
+ 	if (!fm_icon_view_using_auto_layout (icon_view)) {
++		GList node;
++
+ 		position_string = g_strdup_printf
+ 			("%d,%d", position->x, position->y);
+ 		nautilus_file_set_metadata
+ 			(file, NAUTILUS_METADATA_KEY_ICON_POSITION, 
+ 			 NULL, position_string);
++
++		node.data = file;
++		node.prev = NULL;
++		node.next = NULL;
++		nautilus_debug_log_with_file_list (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_ICON_POSITIONS, &node,
++						   "icon_position_changed_callback() - saving icon position to \"%s\"", position_string);
++
+ 		g_free (position_string);
+ 	}
+ 
+diff --git a/src/nautilus-desktop-window.c b/src/nautilus-desktop-window.c
+index 6871bde..ea0fc61 100644
+--- a/src/nautilus-desktop-window.c
++++ b/src/nautilus-desktop-window.c
+@@ -33,6 +33,7 @@
+ #include <eel/eel-gtk-macros.h>
+ #include <eel/eel-vfs-extensions.h>
+ #include <libgnome/gnome-macros.h>
++#include <libnautilus-private/nautilus-debug-log.h>
+ #include <libnautilus-private/nautilus-file-utilities.h>
+ #include <libnautilus-private/nautilus-icon-names.h>
+ #include <gio/gio.h>
+@@ -118,6 +119,9 @@ nautilus_desktop_window_new (NautilusApplication *application,
+ 	width_request = gdk_screen_get_width (screen);
+ 	height_request = gdk_screen_get_height (screen);
+ 
++	nautilus_debug_log (TRUE, NAUTILUS_DEBUG_LOG_DOMAIN_DESKTOP_ITEMS,
++			    "Initializing desktop window with size %dx%d", width_request, height_request);
++
+ 	window = NAUTILUS_DESKTOP_WINDOW
+ 		(gtk_widget_new (nautilus_desktop_window_get_type(),
+ 				 "app", application,

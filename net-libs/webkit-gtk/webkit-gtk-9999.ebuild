@@ -18,26 +18,22 @@ EGIT_BOOTSTRAP="NOCONFIGURE=1 ./autogen.sh"
 LICENSE="LGPL-2 LGPL-2.1 BSD"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~ia64 ~ppc ~sparc ~x86"
-IUSE="coverage debug -doc +gstreamer -geolocation pango ruby websockets"
+IUSE="3D-transforms coverage -debug -doc filters -geolocation +gstreamer -introspection jit mathml pango shared-workers sqlite svg soup websockets -wml xslt"
 
 RDEPEND="
-	dev-libs/libxml2
-	dev-libs/libxslt
+	>=x11-libs/gtk+-2.8
+	>=dev-libs/icu-3.8.1-r1
+	>=net-misc/curl-7.15
 	media-libs/jpeg
 	media-libs/libpng
-	x11-libs/cairo
-
-	>=x11-libs/gtk+-2.10
-	>=dev-libs/icu-3.8.1-r1
-	>=net-libs/libsoup-2.27.4
-	>=dev-db/sqlite-3
-	>=app-text/enchant-0.22
-	>=sys-devel/flex-2.5.33
-
-	gnome-keyring? ( >=gnome-base/gnome-keyring-2.26.0 )
+	dev-libs/libxml2
+	sqlite? ( >=dev-db/sqlite-3 )
 	gstreamer? (
-		media-libs/gstreamer:0.10
-		media-libs/gst-plugins-base:0.10 )
+		>=media-libs/gst-plugins-base-0.10
+		>=gnome-base/gnome-vfs-2.0
+		)
+	soup? ( >=net-libs/libsoup-2.23.1 )
+	xslt? ( dev-libs/libxslt )
 	pango? ( >=x11-libs/pango-1.12 )
 	!pango? (
 		media-libs/freetype:2
@@ -45,30 +41,53 @@ RDEPEND="
 	geolocation? ( x11-libs/geoclue )
 "
 DEPEND="${RDEPEND}
-	sys-devel/gettext
 	dev-util/gperf
 	dev-util/pkgconfig
-	doc? ( >=dev-util/gtk-doc-1.10 )"
+	doc? ( >=dev-util/gtk-doc-1.10 )
+	virtual/perl-Text-Balanced"
 
 S="${WORKDIR}/${MY_P}"
 
+pkg_setup() {
+	ewarn "This is a huge package. If you do not have at least 1.25GB of free"
+	ewarn "disk space in ${PORTAGE_TMPDIR} and also in ${DISTDIR} then"
+	ewarn "you should abort this installation now and free up some space."
+}
+
 src_configure() {
+	# Add files missing from tarball...
+	# https://bugs.webkit.org/show_bug.cgi?id=31102
+	#for file in JSCore-1.0.gir JSCore-1.0.typelib; do
+	#	cp "${FILESDIR}/$file" "${S}/WebKit/gtk/" || die "Error copying $file"
+	#done
+
+
 	# It doesn't compile on alpha without this in LDFLAGS
 	use alpha && append-ldflags "-Wl,--no-relax"
 
 	local myconf
 
-	myconf="
-		$(use_enable gstreamer video)
-		$(use_enable debug)
-		$(use_enable coverage)
-		$(use_enable ruby)
-		$(use_enable websockets web_sockets)
-		--enable-filters
-		--enable-geolocation
-		--enable-3D-transforms
-		--enable-shared-workers
-	"
+	myconf="$(use_enable 3D-transforms) \
+		$(use_enable coverage) \
+		$(use_enable debug) \
+		$(use_enable doc gtk-doc) \
+		$(use_enable filters) \
+		$(use_enable geolocation) \
+		$(use_enable gstreamer video) \
+		$(use_enable introspection) \
+		$(use_enable jit) \
+		$(use_enable mathml) \
+		$(use_enable shared-workers) \
+		$(use_enable sqlite database) \
+		$(use_enable sqlite dom-storage) \
+		$(use_enable sqlite icon-database) \
+		$(use_enable sqlite offline-web-applications) \
+		$(use_enable svg) \
+		$(use_enable svg filters) \
+		$(use_enable websockets web-sockets) \
+		$(use_enable wml) \
+		$(use_enable xslt) \
+"
 
 	# USE-flag controlled font backend because upstream default is freetype
 	# Remove USE-flag once font-backend becomes pango upstream
@@ -87,3 +106,4 @@ src_install() {
 	emake DESTDIR="${D}" install || die "Install failed"
 	dodoc WebKit/gtk/{NEWS,ChangeLog} || die "dodoc failed"
 }
+

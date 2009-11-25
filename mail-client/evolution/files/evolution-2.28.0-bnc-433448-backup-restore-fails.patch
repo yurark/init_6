@@ -1,0 +1,20 @@
+Index: plugins/backup-restore/backup.c
+===================================================================
+--- plugins/backup-restore/backup.c.orig
++++ plugins/backup-restore/backup.c
+@@ -35,6 +35,7 @@
+ #define EVOUSERDATADIR_MAGIC "#EVO_USERDATADIR#"
+ 
+ #define EVOLUTION "evolution"
++#define PKILL "/usr/bin/pkill"
+ #define EVOLUTION_DIR "$HOME/.evolution/"
+ #define EVOLUTION_DIR_BACKUP "$HOME/.evolution-old/"
+ #define GCONF_DUMP_FILE "backup-restore-gconf.xml"
+@@ -252,6 +253,7 @@ restore (const char *filename)
+ 
+ 	replace_in_file (GCONF_DUMP_PATH, EVOUSERDATADIR_MAGIC, e_get_user_data_dir ());
+ 
++	run_cmd (PKILL " gconf");
+ 	run_cmd ("gconftool-2 --load " GCONF_DUMP_PATH);
+ 
+ 	CANCEL (complete);

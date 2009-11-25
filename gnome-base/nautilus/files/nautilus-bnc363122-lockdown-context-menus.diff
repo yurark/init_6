@@ -1,0 +1,118 @@
+https://bugzilla.novell.com/show_bug.cgi?id=363122
+
+Add a way to disable context menus in Nautilus's file views, for
+quick-and-dirty kiosks.
+
+This adds an /apps/nautilus/lockdown/disable_context_menus GConf key;
+if set to true, it will disable all the contextual menus on file views.
+
+Index: nautilus-2.23.4/libnautilus-private/apps_nautilus_preferences.schemas.in
+===================================================================
+--- nautilus-2.23.4.orig/libnautilus-private/apps_nautilus_preferences.schemas.in
++++ nautilus-2.23.4/libnautilus-private/apps_nautilus_preferences.schemas.in
+@@ -1019,6 +1019,21 @@ most cases, this should be left alone. -
+          </long>
+       </locale>
+     </schema>
+-        
++
++    <schema>
++      <key>/schemas/apps/nautilus/lockdown/disable_context_menus</key>
++      <applyto>/apps/nautilus/lockdown/disable_context_menus</applyto>
++      <owner>nautilus</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++         <short>Disable context menus in file views</short>
++         <long>
++          Set this to true if you are deploying a kiosk and don't want users
++          to access the context menu in file views.
++         </long>
++      </locale>
++    </schema>
++
+   </schemalist>  
+ </gconfschemafile>
+Index: nautilus-2.23.4/libnautilus-private/nautilus-debug-log.h
+===================================================================
+--- nautilus-2.23.4.orig/libnautilus-private/nautilus-debug-log.h
++++ nautilus-2.23.4/libnautilus-private/nautilus-debug-log.h
+@@ -30,6 +30,7 @@
+ #define NAUTILUS_DEBUG_LOG_DOMAIN_USER		"USER"   /* always enabled */
+ #define NAUTILUS_DEBUG_LOG_DOMAIN_ASYNC		"async"	 /* when asynchronous notifications come in */
+ #define NAUTILUS_DEBUG_LOG_DOMAIN_GLOG          "GLog"	 /* used for GLog messages; don't use it yourself */
++#define NAUTILUS_DEBUG_LOG_DOMAIN_LOCKDOWN	"lockdown"	/* when things get *not* done due to lockdown */
+ 
+ void nautilus_debug_log (gboolean is_milestone, const char *domain, const char *format, ...);
+ 
+Index: nautilus-2.23.4/libnautilus-private/nautilus-global-preferences.c
+===================================================================
+--- nautilus-2.23.4.orig/libnautilus-private/nautilus-global-preferences.c
++++ nautilus-2.23.4/libnautilus-private/nautilus-global-preferences.c
+@@ -229,6 +229,10 @@ typedef struct
+  * YOU SHOULD EDIT THE SCHEMAS FILE TO CHANGE DEFAULTS.
+  */
+ static const PreferenceDefault preference_defaults[] = {
++	{ NAUTILUS_LOCKDOWN_DISABLE_CONTEXT_MENUS,
++	  PREFERENCE_BOOLEAN,
++	  GINT_TO_POINTER (FALSE)
++	},
+ 	{ NAUTILUS_PREFERENCES_EXIT_WITH_LAST_WINDOW,
+ 	  PREFERENCE_BOOLEAN,
+ 	  GINT_TO_POINTER (FALSE)
+Index: nautilus-2.23.4/libnautilus-private/nautilus-global-preferences.h
+===================================================================
+--- nautilus-2.23.4.orig/libnautilus-private/nautilus-global-preferences.h
++++ nautilus-2.23.4/libnautilus-private/nautilus-global-preferences.h
+@@ -30,6 +30,8 @@
+ 
+ G_BEGIN_DECLS
+ 
++#define NAUTILUS_LOCKDOWN_DISABLE_CONTEXT_MENUS			"lockdown/disable_context_menus"
++
+ /* Which theme is active */
+ #define NAUTILUS_PREFERENCES_THEME				"/desktop/gnome/file_views/icon_theme"
+ 
+Index: nautilus-2.23.4/src/file-manager/fm-directory-view.c
+===================================================================
+--- nautilus-2.23.4.orig/src/file-manager/fm-directory-view.c
++++ nautilus-2.23.4/src/file-manager/fm-directory-view.c
+@@ -7568,6 +7568,12 @@ fm_directory_view_pop_up_selection_conte
+ {
+ 	g_assert (FM_IS_DIRECTORY_VIEW (view));
+ 
++	if (eel_preferences_get_boolean (NAUTILUS_LOCKDOWN_DISABLE_CONTEXT_MENUS)) {
++		nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_LOCKDOWN,
++				    "Ignoring request to pop up the context menu for the view's selection");
++		return;
++	}
++
+ 	/* Make the context menu items not flash as they update to proper disabled,
+ 	 * etc. states by forcing menus to update now.
+ 	 */
+@@ -7597,6 +7603,12 @@ fm_directory_view_pop_up_background_cont
+ {
+ 	g_assert (FM_IS_DIRECTORY_VIEW (view));
+ 
++	if (eel_preferences_get_boolean (NAUTILUS_LOCKDOWN_DISABLE_CONTEXT_MENUS)) {
++		nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_LOCKDOWN,
++				    "Ignoring request to pop up the context menu for the view's background");
++		return;
++	}
++
+ 	/* Make the context menu items not flash as they update to proper disabled,
+ 	 * etc. states by forcing menus to update now.
+ 	 */
+@@ -7704,6 +7716,12 @@ fm_directory_view_pop_up_location_contex
+ 
+ 	g_assert (FM_IS_DIRECTORY_VIEW (view));
+ 
++	if (eel_preferences_get_boolean (NAUTILUS_LOCKDOWN_DISABLE_CONTEXT_MENUS)) {
++		nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DOMAIN_LOCKDOWN,
++				    "Ignoring request to pop up the context menu for the view");
++		return;
++	}  
++
+ 	if (location != NULL) {
+ 		file = nautilus_file_get_by_uri (location);
+ 	} else {

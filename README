@@ -2,7 +2,49 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+25 Ноября 2009
 
+Добавлено/изменено
+
+app-cdr/brasero/brasero-2.28.2
+app-editors/vtg/vtg-0.4.1
+app-emulation/playonlinux/playonlinux-3.7
+app-emulation/wine/wine-1.1.32
+app-portage/packagekit/packagekit-0.5.2
+dev-games/mygui/mygui-9999 #for openmw-9999
+dev-lang/seed/seed-0.6
+dev-lang/vala/vala-0.7.2
+dev-python/pygtk/pygtk-2.16.0-r1
+games-puzzle/neverball/neverball-9999
+games-rpg/openmw/openmw-9999
+gnome-base/gnome-applets/gnome-applets-2.28.0-r0
+gnome-base/libbonoboui/libbonoboui-2.24.2
+gnome-base/nautilus/nautilus-2.28.1
+gnome-extra/evolution-data-server/evolution-data-server-2.28.1
+gnome-extra/evolution-exchange/evolution-exchange-2.28.1
+gnome-extra/gnome-globalmenu/gnome-globalmenu-0.7.8
+gnome-extra/nautilus-dropbox/nautilus-dropbox-0.6.1
+gnome-extra/zeitgeist/zeitgeist-0.2.1
+mail-client/evolution/evolution-2.28.1
+media-fonts/font-bitstream-speedo/font-bitstream-speedo-1.0.0
+media-fonts/font-daewoo-misc:
+media-fonts/font-dec-misc/font-dec-misc-1.0.0
+media-fonts/font-jis-misc/font-jis-misc-1.0.0
+media-fonts/font-misc-cyrillic/font-misc-cyrillic-1.0.0
+media-fonts/font-screen-cyrillic/font-screen-cyrillic-1.0.1
+media-fonts/font-sony-misc/font-sony-misc-1.0.0
+media-libs/clutter/clutter-1.0.8
+media-libs/clutter-gst/clutter-gst-0.10.0
+media-libs/clutter-gtk/clutter-gtk-0.10.2
+net-libs/webkit-gtk/webkit-gtk-9999
+net-p2p/transmission/transmission-1.76
+net-p2p/transmission/transmission-9999
+www-client/chromium/chromium-9999
+www-client/epiphany/epiphany-2.29.1
+x11-apps/fusion-icon/fusion-icon-9999
+x11-themes/gtk-engines-aurora/gtk-engines-aurora-1.0
+
+21 Октября 2009
 
 app-admin/syslog-ng/syslog-ng-3.0.4.ebuild
 

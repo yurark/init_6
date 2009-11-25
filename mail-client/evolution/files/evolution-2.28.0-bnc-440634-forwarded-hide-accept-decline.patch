@@ -1,0 +1,33 @@
+Index: plugins/itip-formatter/itip-formatter.c
+===================================================================
+--- plugins/itip-formatter/itip-formatter.c	(revision 36884)
++++ plugins/itip-formatter/itip-formatter.c	(working copy)
+@@ -1955,6 +1955,12 @@
+ 	      !em_utils_folder_is_outbox (folder, uri) &&
+ 	      !em_utils_folder_is_drafts (folder, uri);
+ 
++	/*FIXME: GW needs to set the drafts_folder_uri and sent_folder_uri properly.
++	  A workaround till then */
++	if (res && (!g_ascii_strcasecmp (folder->name, _("Sent")) ||
++		!g_ascii_strcasecmp (folder->name, _("Sent Items"))))
++		res = 0;
++
+ 	g_free (uri);
+ 
+ 	return res;
+@@ -2000,6 +2006,15 @@
+ 
+ 	response_enabled = in_proper_folder (((EMFormat*)efh)->folder);
+ 
++	/* Do not display Accept/Decline Buttons if its a forwarded meeting request */
++	if (response_enabled) {
++		CamelMimeMessage *msg = info->msg;
++		const char *subject = camel_mime_message_get_subject (msg);
++
++		if (!g_ascii_strncasecmp (subject, _("[Fwd: "), 6))
++			response_enabled = 0;
++	}
++	
+ 	if (!response_enabled) {
+ 		itip_view_set_mode (ITIP_VIEW (info->view), ITIP_VIEW_MODE_HIDE_ALL);
+ 	} else {

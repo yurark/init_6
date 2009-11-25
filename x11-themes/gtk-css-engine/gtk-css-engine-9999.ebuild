@@ -6,8 +6,8 @@ EAPI="2"
 
 inherit git eutils
 
-DESCRIPTION="GTK+2 css engine and themes"
-HOMEPAGE="http://www.gtk.org/"
+DESCRIPTION="Theme engine with CSS support for the Gtk+ toolkit"
+HOMEPAGE="http://git.gnome.org/cgit/gtk-css-engine/"
 EGIT_REPO_URI="git://git.gnome.org/gtk-css-engine"
 EGIT_PROJECT="gtk-css-engine"
 EGIT_BOOTSTRAP="./autogen.sh"

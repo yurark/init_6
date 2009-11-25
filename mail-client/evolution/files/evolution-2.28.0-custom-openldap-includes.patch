@@ -1,0 +1,12 @@
+diff -ur evolution-2.27.4.1/configure.ac evolution-2.27.4.1.patched/configure.ac
+--- evolution-2.27.4.1/configure.ac	2009-07-15 11:25:24.000000000 +0200
++++ evolution-2.27.4.1.patched/configure.ac	2009-07-22 10:25:16.000000000 +0200
+@@ -558,7 +558,7 @@
+ 
+ SAVE_CFLAGS="$CFLAGS"
+ SAVE_LIBS="$LIBS"
+-LDAP_CFLAGS="$LDAP_CFLAGS -DLDAP_DEPRECATED"
++LDAP_CFLAGS="$LDAP_CFLAGS -DLDAP_DEPRECATED -I$with_openldap/include"
+ CFLAGS="$CFLAGS $LDAP_CFLAGS"
+ LIBS="$LIBS $LDAP_LIBS"
+ AC_CHECK_FUNCS(ldap_ntlm_bind)

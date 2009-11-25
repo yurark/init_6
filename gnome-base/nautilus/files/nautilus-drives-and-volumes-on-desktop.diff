@@ -1,0 +1,1592 @@
+2007-10-24  Federico Mena Quintero  <federico@novell.com>
+
+	Finish fixing https://bugzilla.novell.com/show_bug.cgi?id=335411 -
+	Nautilus crashes when it gets a "volume-mounted" signal for a
+	volume that is already mounted.
+
+	* libnautilus-private/nautilus-desktop-link-monitor.c
+	(link_corresponds_to_drive): Oops, check that the link_drive is
+	not NULL before comparing it.  We may get a NULL link_drive if the
+	link corresponds to a volume without a drive (e.g. a network volume).
+
+2007-10-23  Federico Mena Quintero  <federico@novell.com>
+
+	* libnautilus-private/nautilus-desktop-link-monitor.c
+	(link_corresponds_to_drive): Use gnome_vfs_drive_compare(), not
+	pointer equality, to see if drives are the same.  Apparently
+	gnome-vfs can feed us with different GnomeVFSDrive* objects that
+	really refer to the same drive.
+	(find_link_for_volume): Likewise, for volumes.
+
+	* libnautilus-private/nautilus-desktop-link.c
+	(nautilus_desktop_link_update_from_volume): Likewise.
+
+2007-10-22  Federico Mena Quintero  <federico@novell.com>
+
+	* libnautilus-private/nautilus-debug-log.h
+	(NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES): Add a "drives-volumes" log domain.
+
+	* libnautilus-private/nautilus-desktop-link-monitor.c
+	(refresh_volume_links): Log the drives/volumes we find (milestone
+	or not milestone depending on whether we are initializing
+	Nautilus).
+	(create_drive_link): Log when we create a desktop link for a
+	drive.
+	(create_volume_link): Likewise, for a volume.
+	(drive_connected_callback): Log when a drive gets connected (not
+	milestone).
+	(drive_disconnected_callback): Likewise, when a drive gets disconnected.
+	(volume_mounted_callback): Likewise, when a volume gets mounted.
+	(volume_unmounted_callback): Likewise, when a volume gets unmounted.
+
+2007-10-22  Federico Mena Quintero  <federico@novell.com>
+
+	* libnautilus-private/nautilus-debug-log.h
+	(NAUTILUS_DEBUG_LOG_DESKTOP_LINKS): Add a "desktop-links" log
+	domain.
+
+	* libnautilus-private/nautilus-desktop-link-monitor.c
+	(nautilus_desktop_link_monitor_init): Log initialization of the
+	desktop link monitor (milestone).
+	(create_link_and_add_preference): Log initialization of each link
+	type (milestone).
+	(update_link_visibility): Log changes in link visibility (non-milestone).
+
+2007-05-24  Hans Petter Jansson  <hpj@novell.com>
+
+	Fix https://bugzilla.novell.com/show_bug.cgi?id=276193, unable
+	to right-click after accessing files on CD via GUI. The problem
+	was that Nautilus was crashing under some circumstances when
+	unmounting/ejecting a CD. It was caused by some of the code
+	previously introduced by this patch.
+
+	The fix consists of ignoring the desktop link we are currently
+	repopulating when scanning the list of desktop links to uniquefy
+	the new filename for this link.
+
+	* libnautilus-private/nautilus-desktop-link-monitor.[ch]
+	(nautilus_desktop_link_monitor_make_filename_unique): Add a
+	"skip_link" argument that will make the algorithm skip the
+	provided desktop link when considering non-unique filenames.
+	(volume_file_name_used): Skip the link passed from caller,
+	if any.
+
+2006-11-08  Federico Mena Quintero  <federico@novell.com>
+
+	Fix https://bugzilla.novell.com/show_bug.cgi?id=215351, the icon
+	for a floppy drive disappears after unmounting the floppy.  Also,
+	unmounting an NFS volume makes the icon disappear.
+
+	Fix the little bug where a recently-unmounted drive still
+	shows an "Unmount Volume" menu item.
+
+	* libnautilus-private/nautilus-desktop-link-monitor.c
+	(drive_has_volumes_apart_from): New function; checks whether a
+	drive has any mounted volumes apart from a given one.  We need
+	this to check that corresponds to a volume that is being
+	unmounted, since within the volume_unmounted callback, the drive
+	still thinks it is mounted (as the volume in question has not been
+	removed from it yet).
+	(should_show_drive): Check whether the drive has any volumes left
+	over aside from the volume being unmounted.
+	(volume_unmounted_callback): Pass the volume to should_show_drive().
+
+	* libnautilus-private/nautilus-desktop-icon-file.c
+	(update_info_from_link): If the link acquires a volume, remove the
+	drive from the corresponding NautilusFile.  And the converse: if
+	the link acquires a drive, remove the volume from the
+	corresponding NautilusFile.  Files can have volumes XOR drives, or
+	none.  This fixes the bug where you mount a drive, then umount the
+	corresponding volume, and the menu on the drive icon still shows
+	"unmount volume".
+
+	* libnautilus-private/nautilus-desktop-link.c
+	(nautilus_desktop_link_update_from_volume): Removed spurious
+	comment.
+
+2006-11-07  Federico Mena Quintero  <federico@novell.com>
+
+	Deal with a race condition when mounting drives.  The callback
+	from gnome_vfs_drive_mount() can be called before the
+	GnomeVFSVolumeMonitor is notified that the drive is actually
+	mounted.
+
+	* src/file-manager/fm-directory-view.c (ActivateParameters):
+	Replace the "pending_mounts" counter with a list of
+	drives_being_mounted.
+	(DriveBeingMounted): New struct used as a closure for a drive
+	being mounted, or a drive waiting for its corresponding
+	NautilusFile to be notified of changes from the volume monitor.
+	(cancel_activate): Replace pending_mounts with
+	drives_being_mounted.
+	(activate_activation_uris_ready_callback): Don't use the
+	not_yet_mounted list.  Instead, build the list of
+	parameters->drives_being_mounted out of DriveBeingMounted
+	structures.  Mount the drives directly here (instead of using
+	g_list_foreach()) so that we can pass a DriveBeingMounted closure
+	to gnome_vfs_drive_mount().
+	(fm_directory_view_activate_files): Replace pending_mounts with
+	drives_being_mounted.
+	(try_to_finish_drive_activation): New function.  Moved the code to
+	finish activation of drives from
+	activation_drive_mounted_callback() to here.
+	(activation_drive_mounted_callback): This is our "drive was
+	mounted" callback, but the GnomeVFSDrive itself may not think that
+	it is mounted yet.  This is a race condition where the
+	GnomeVFSVolumeMonitor has not been notified yet.  In this case,
+	wait until the corresponding NautilusFile changes; we'll check
+	again that the drive is mounted in the "changed" callback.
+	(activation_file_changed_after_drive_mounted): New callback for
+	NautilusFile::changed.  This gets called when a NautilusFile
+	changes after a drive was reported as being mounted.  Here, we try
+	to finish the drive activation.
+
+2006-10-05  Federico Mena Quintero  <federico@novell.com>
+
+	Support displaying drive icons in the desktop, even if the drives
+	are not mounted.  Do this only for drives which are supposed to be
+	user-visible (i.e. those that do not support media checks and so
+	we cannot know when the user inserts media in them).
+
+	Also, support drives with multiple partitions, which will lead to
+	multiple volumes for the same drive.
+
+	To do this, we add several things:
+
+	1. The ability for NautilusDesktopLink to represent a drive as
+	well as a volume.
+
+	2. The ability to "transform" a NautilusDesktopLink which
+	represented a drive, into one that represents a volume.  This
+	happens when a drive is mounted.
+
+	3. Keep the invariant that drives are only displayed if they are
+	unmounted and user visible.  If they are mounted, they get
+	replaced with volume links.
+
+	* libnautilus-private/nautilus-desktop-link-monitor.c (struct
+	NautilusDesktopLinkMonitorDetails): Added "connected_id" and
+	"disconnected_id" fields for the signal IDs of GnomeVFSDrive.
+	(volume_delete_dialog): Added message about not being able to move
+	a drive to the trash.  Support drives or volumes.
+	(should_show_drive): New utility function.  Drives are shown if
+	they are user-visible, they are not mounted, and the preference to
+	show desktop volumes is turned on.
+	(should_show_volume): New utility function.  Volumes are shown if
+	they are user visible and the preference to show desktop volumes
+	is turned on.
+	(create_drive_link): New utility function; creates a
+	NautilusDesktopLink for a GnomeVFSDrive.
+	(create_volume_link): Use should_show_volume().
+	(link_corresponds_to_drive): New function.  A NautilusDesktopLink
+	corresponds to a drive if it represents the drive itself, or if it
+	represents a volume relative to that drive.
+	(find_unique_link_for_drive): New function.  Returns the
+	NautilusDesktopLink in the desktop that corresponds uniquely to a
+	given drive; if there is more than one volume link for a drive
+	(e.g. a drive with multiple partitions), returns NULL.
+	(drive_connected_callback): New callback.  When a drive is
+	connected, we create a link for it if appropriate.
+	(drive_disconnected_callback): New callback.  When a drive is
+	disconnected, we remove all the links that correspond to it:  a
+	single drive link for an unmounted drive, or one or more volume
+	links for a mounted drive.
+	(volume_mounted_callback): If the volume has a drive, and there is
+	an existing link for that drive, update the link to represent the
+	volume instead.  Otherwise, create volume link as usual.
+	(find_link_for_volume): New utility function; returns the link on
+	the desktop which corresponds to a particular volume.
+	(volume_unmounted_callback): If unmounting a volume would yield a
+	drive that is user visible, transform the corresponding link from
+	representing the volume, into one that represents the drive.
+	Otherwise, remove the link as usual.
+	(refresh_volume_links): New function; does the initial population
+	of the links for drives and volumes.
+	(desktop_volumes_visible_changed): New callback; use
+	refresh_volume_links().
+	(nautilus_desktop_link_monitor_init): Use refresh_volume_links()
+	instead of doing things by hand here.  Also, connect to
+	"drive_connected" and "drive_disconnected" on the volume monitor.
+
+	* libnautilus-private/nautilus-desktop-icon-file.c
+	(update_info_from_link): Accept a drive or a volume, not just
+	volumes.
+
+	* libnautilus-private/nautilus-desktop-link.h
+	(nautilus_desktop_link_new_from_drive_or_volume): New prototype.
+	Replaces nautilus_desktop_link_new_from_volume().
+	(nautilus_desktop_link_get_drive_or_volume): New prototype.
+	Replaces nautilus_desktop_link_get_volume().
+	(nautilus_desktop_link_update_from_volume): New prototype.
+
+	* libnautilus-private/nautilus-desktop-link.c (struct
+	NautilusDesktopLinkDetails): Replaced the "volume" field with
+	"drive_or_volume".
+	(reread_drive_or_volume): Refresh the link as appropriate from a
+	drive or a volume.
+	(desktop_link_finalize): Unref the drive or volume appropriately.
+	(nautilus_desktop_link_new_from_drive_or_volume): Replacement for
+	nautilus_desktop_link_new_from_volume().
+	(nautilus_desktop_link_get_drive_or_volume): Replacement for
+	nautilus_desktop_link_get_volume().
+	(nautilus_desktop_link_update_from_volume): New public function;
+	replaces nautilus_desktop_link_new_from_volume().  Updates the
+	link's information from a volume.  This does the actual
+	transformation of a link from a drive to volume when an unmounted
+	drive gets first mounted, and vice-versa.
+
+diff --git a/libnautilus-private/nautilus-debug-log.h b/libnautilus-private/nautilus-debug-log.h
+index 801610d..85a0253 100644
+--- a/libnautilus-private/nautilus-debug-log.h
++++ b/libnautilus-private/nautilus-debug-log.h
+@@ -29,6 +29,8 @@
+ 
+ #define NAUTILUS_DEBUG_LOG_DOMAIN_USER		"USER"   /* always enabled */
+ #define NAUTILUS_DEBUG_LOG_DOMAIN_ASYNC		"async"	 /* when asynchronous notifications come in */
++#define NAUTILUS_DEBUG_LOG_DESKTOP_LINKS	"desktop-links"		/* Desktop links in general */
++#define NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES	"drives-volumes"	/* desktop link monitoring of drives/volumes */
+ #define NAUTILUS_DEBUG_LOG_DOMAIN_GLOG          "GLog"	 /* used for GLog messages; don't use it yourself */
+ 
+ void nautilus_debug_log (gboolean is_milestone, const char *domain, const char *format, ...);
+diff --git a/libnautilus-private/nautilus-desktop-icon-file.c b/libnautilus-private/nautilus-desktop-icon-file.c
+index 733be41..9e00f5a 100644
+--- a/libnautilus-private/nautilus-desktop-icon-file.c
++++ b/libnautilus-private/nautilus-desktop-icon-file.c
+@@ -179,7 +179,7 @@ update_info_from_link (NautilusDesktopIconFile *icon_file)
+ 	NautilusFile *file;
+ 	GnomeVFSFileInfo *file_info;
+ 	NautilusDesktopLink *link;
+-	GnomeVFSVolume *volume;
++	GObject *drive_or_volume;
+ 	
+ 	file = NAUTILUS_FILE (icon_file);
+ 	
+@@ -216,9 +216,25 @@ update_info_from_link (NautilusDesktopIconFile *icon_file)
+ 		GNOME_VFS_FILE_INFO_FIELDS_ACCESS |
+ 		GNOME_VFS_FILE_INFO_FIELDS_LINK_COUNT;
+ 
+-	volume = nautilus_desktop_link_get_volume (link);
+-	nautilus_file_set_volume (file, volume);
+-	gnome_vfs_volume_unref (volume);
++	drive_or_volume = nautilus_desktop_link_get_drive_or_volume (link);
++
++	if (GNOME_IS_VFS_VOLUME (drive_or_volume)) {
++		GnomeVFSVolume *volume;
++
++		volume = GNOME_VFS_VOLUME (drive_or_volume);
++		nautilus_file_set_volume (file, volume);
++		gnome_vfs_volume_unref (volume);
++
++		nautilus_file_set_drive (file, NULL);
++	} else {
++		GnomeVFSDrive *drive;
++
++		drive = GNOME_VFS_DRIVE (drive_or_volume);
++		nautilus_file_set_drive (file, drive);
++		gnome_vfs_drive_unref (drive);
++
++		nautilus_file_set_volume (file, NULL);
++	}
+ 	
+ 	file->details->file_info_is_up_to_date = TRUE;
+ 
+diff --git a/libnautilus-private/nautilus-desktop-link-monitor.c b/libnautilus-private/nautilus-desktop-link-monitor.c
+index 6469c6a..b636983 100644
+--- a/libnautilus-private/nautilus-desktop-link-monitor.c
++++ b/libnautilus-private/nautilus-desktop-link-monitor.c
+@@ -27,6 +27,7 @@
+ #include "nautilus-desktop-link.h"
+ #include "nautilus-desktop-icon-file.h"
+ #include "nautilus-directory.h"
++#include "nautilus-debug-log.h"
+ #include "nautilus-desktop-directory.h"
+ #include "nautilus-global-preferences.h"
+ 
+@@ -52,13 +53,14 @@ struct NautilusDesktopLinkMonitorDetails {
+ 	NautilusDesktopLink *trash_link;
+ 	NautilusDesktopLink *network_link;
+ 
++	gulong connected_id;
++	gulong disconnected_id;
+ 	gulong mount_id;
+ 	gulong unmount_id;
+ 	
+ 	GList *volume_links;
+ };
+ 
+-
+ static void nautilus_desktop_link_monitor_init       (gpointer              object,
+ 						      gpointer              klass);
+ static void nautilus_desktop_link_monitor_class_init (gpointer              klass);
+@@ -69,6 +71,8 @@ EEL_CLASS_BOILERPLATE (NautilusDesktopLinkMonitor,
+ 
+ static NautilusDesktopLinkMonitor *the_link_monitor = NULL;
+ 
++static void refresh_volume_links (NautilusDesktopLinkMonitor *monitor, gboolean is_initialization);
++
+ static void
+ destroy_desktop_link_monitor (void)
+ {
+@@ -104,41 +108,48 @@ static void
+ volume_delete_dialog (GtkWidget *parent_view,
+                       NautilusDesktopLink *link)
+ {
+-	GnomeVFSVolume *volume;
++	GObject *drive_or_volume;
+ 	char *dialog_str;
++	char *detail_str;
+ 	char *display_name;
+ 
+-	volume = nautilus_desktop_link_get_volume (link);
++	drive_or_volume = nautilus_desktop_link_get_drive_or_volume (link);
++	if (drive_or_volume == NULL)
++		return;
++
++	display_name = nautilus_desktop_link_get_display_name (link);
+ 
+-	if (volume != NULL) {
+-		display_name = nautilus_desktop_link_get_display_name (link);
++	if (GNOME_IS_VFS_VOLUME (drive_or_volume)) {
+ 		dialog_str = g_strdup_printf (_("You cannot move the volume \"%s\" to the trash."),
+ 					      display_name);
+-		g_free (display_name);
+-
+-		if (eject_for_type (gnome_vfs_volume_get_device_type (volume))) {
+-			eel_run_simple_dialog
+-				(parent_view, 
+-				 FALSE,
+-				 GTK_MESSAGE_ERROR,
+-				 dialog_str,
+-				 _("If you want to eject the volume, please use \"Eject\" in the "
+-				   "popup menu of the volume."),
+-				 GTK_STOCK_OK, NULL);
++
++		if (eject_for_type (gnome_vfs_volume_get_device_type (GNOME_VFS_VOLUME (drive_or_volume)))) {
++			detail_str = _("If you want to eject the volume, please use \"Eject\" in the "
++				       "popup menu of the volume.");
+ 		} else {
+-			eel_run_simple_dialog
+-				(parent_view, 
+-				 FALSE,
+-				 GTK_MESSAGE_ERROR,
+-				 dialog_str,
+-				 _("If you want to unmount the volume, please use \"Unmount Volume\" in the "
+-				   "popup menu of the volume."),
+-				 GTK_STOCK_OK, NULL);
++			detail_str = _("If you want to unmount the volume, please use \"Unmount Volume\" in the "
++				       "popup menu of the volume.");
+ 		}
++	} else {
++		dialog_str = g_strdup_printf (_("You cannot move the drive \"%s\" to the trash."),
++					      display_name);
+ 
+-		gnome_vfs_volume_unref (volume);
+-		g_free (dialog_str);
++		detail_str = NULL;
+ 	}
++
++	eel_run_simple_dialog (parent_view, FALSE, GTK_MESSAGE_ERROR,
++			       dialog_str,
++			       detail_str,
++			       NULL, GTK_STOCK_OK, NULL);
++
++	if (GNOME_IS_VFS_VOLUME (drive_or_volume)) {
++		gnome_vfs_volume_unref (GNOME_VFS_VOLUME (drive_or_volume));
++	} else {
++		gnome_vfs_drive_unref (GNOME_VFS_DRIVE (drive_or_volume));
++	}
++
++	g_free (display_name);
++	g_free (dialog_str);
+ }
+ 
+ void
+@@ -161,6 +172,7 @@ nautilus_desktop_link_monitor_delete_link (NautilusDesktopLinkMonitor *monitor,
+ 
+ static gboolean
+ volume_file_name_used (NautilusDesktopLinkMonitor *monitor,
++		       NautilusDesktopLink *skip_link,
+ 		       const char *name)
+ {
+ 	GList *l;
+@@ -168,6 +180,9 @@ volume_file_name_used (NautilusDesktopLinkMonitor *monitor,
+ 	gboolean same;
+ 
+ 	for (l = monitor->details->volume_links; l != NULL; l = l->next) {
++		if (l->data == skip_link)
++			continue;
++
+ 		other_name = nautilus_desktop_link_get_file_name (l->data);
+ 		same = strcmp (name, other_name) == 0;
+ 		g_free (other_name);
+@@ -182,6 +197,7 @@ volume_file_name_used (NautilusDesktopLinkMonitor *monitor,
+ 
+ char *
+ nautilus_desktop_link_monitor_make_filename_unique (NautilusDesktopLinkMonitor *monitor,
++						    NautilusDesktopLink *skip_link,
+ 						    const char *filename)
+ {
+ 	char *unique_name;
+@@ -189,39 +205,398 @@ nautilus_desktop_link_monitor_make_filename_unique (NautilusDesktopLinkMonitor *
+ 	
+ 	i = 2;
+ 	unique_name = g_strdup (filename);
+-	while (volume_file_name_used (monitor, unique_name)) {
++	while (volume_file_name_used (monitor, skip_link, unique_name)) {
+ 		g_free (unique_name);
+ 		unique_name = g_strdup_printf ("%s.%d", filename, i++);
+ 	}
+ 	return unique_name;
+ }
+ 
++static gboolean
++drive_has_volumes_apart_from (GnomeVFSDrive *drive, GnomeVFSVolume *possibly_last_volume)
++{
++	GList *volumes;
++	GList *l;
++	gboolean has_other_volumes;
++
++	has_other_volumes = FALSE;
++
++	volumes = gnome_vfs_drive_get_mounted_volumes (drive);
++
++	for (l = volumes; l; l = l->next) {
++		GnomeVFSVolume *volume;
++
++		volume = GNOME_VFS_VOLUME (l->data);
++		if (volume != possibly_last_volume)
++			has_other_volumes = TRUE;
++
++		gnome_vfs_volume_unref (volume);
++	}
++
++	g_list_free (volumes);
++
++	return has_other_volumes;
++}
++
++static gboolean
++should_show_drive (GnomeVFSDrive *drive, GnomeVFSVolume *possibly_last_volume)
++{
++	gboolean should_show;
++
++	if (possibly_last_volume)
++		should_show = !drive_has_volumes_apart_from (drive, possibly_last_volume);
++	else
++		should_show = !gnome_vfs_drive_is_mounted (drive);
++
++	return (gnome_vfs_drive_is_user_visible (drive)
++		&& should_show
++		&& eel_preferences_get_boolean (NAUTILUS_PREFERENCES_DESKTOP_VOLUMES_VISIBLE));
++}
++
++static gboolean
++should_show_volume (GnomeVFSVolume *volume)
++{
++	return (gnome_vfs_volume_is_user_visible (volume)
++		&& eel_preferences_get_boolean (NAUTILUS_PREFERENCES_DESKTOP_VOLUMES_VISIBLE));
++}
++
++static char *
++get_human_readable_drive_id (GnomeVFSDrive *drive)
++{
++	char *id;
++
++	id = gnome_vfs_drive_get_hal_udi (drive);
++	if (!id) {
++		id = gnome_vfs_drive_get_device_path (drive);
++
++		if (!id) {
++			id = gnome_vfs_drive_get_activation_uri (drive);
++
++			if (!id) {
++				id = "\"unknown\""; /* goddamnit */
++			}
++		}
++	}
++
++	return id;
++}
++
++static void
++create_drive_link (NautilusDesktopLinkMonitor *monitor,
++		   GnomeVFSDrive *drive,
++		   gboolean is_initialization)
++{
++	NautilusDesktopLink *link;
++	char *id;
++
++	if (!should_show_drive (drive, NULL)) {
++		id = get_human_readable_drive_id (drive);
++		nautilus_debug_log (is_initialization, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++				    "    * Not creating desktop link for drive %s (%p)",
++				    id,
++				    drive);
++		g_free (id);
++
++		return;
++	}
++
++	link = nautilus_desktop_link_new_from_drive_or_volume (G_OBJECT (drive));
++	monitor->details->volume_links = g_list_prepend (monitor->details->volume_links, link);
++
++	id = get_human_readable_drive_id (drive);
++	nautilus_debug_log (is_initialization, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++			    "    * Creating desktop link for drive %s (%p)",
++			    id,
++			    drive);
++	g_free (id);
++}
++
++static char *
++get_human_readable_volume_id (GnomeVFSVolume *volume)
++{
++	char *id;
++
++	id = gnome_vfs_volume_get_hal_udi (volume);
++	if (!id) {
++		id = gnome_vfs_volume_get_device_path (volume);
++
++		if (!id) {
++			id = gnome_vfs_volume_get_activation_uri (volume);
++
++			if (!id) {
++				id = "\"unknown\""; /* goddamnit */
++			}
++		}
++	}
++
++	return id;
++}
++
+ static void
+ create_volume_link (NautilusDesktopLinkMonitor *monitor,
+-		    GnomeVFSVolume *volume)
++		    GnomeVFSVolume *volume,
++		    gboolean is_initialization)
+ {
+ 	NautilusDesktopLink *link;
++	char *id;
++	char *link_name;
+ 
+ 	link = NULL;
+ 
+-	if (!gnome_vfs_volume_is_user_visible (volume)) {
++	if (!should_show_volume (volume)) {
++		id = get_human_readable_volume_id (volume);
++		nautilus_debug_log (is_initialization, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++				    "    * Not creating desktop link for volume %s (%p)",
++				    id,
++				    volume);
++		g_free (id);
+ 		return;
+ 	}
+ 
+-	if (eel_preferences_get_boolean (NAUTILUS_PREFERENCES_DESKTOP_VOLUMES_VISIBLE)) {
+-		link = nautilus_desktop_link_new_from_volume (volume);
+-		monitor->details->volume_links = g_list_prepend (monitor->details->volume_links, link);
++	link = nautilus_desktop_link_new_from_drive_or_volume (G_OBJECT (volume));
++	monitor->details->volume_links = g_list_prepend (monitor->details->volume_links, link);
++
++	id = get_human_readable_volume_id (volume);
++	link_name = nautilus_desktop_link_get_display_name (link);
++	nautilus_debug_log (is_initialization, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++			    "    * Creating desktop link \"%s\" for volume %s (%p)",
++			    link_name,
++			    id,
++			    volume);
++	g_free (id);
++	g_free (link_name);
++}
++
++static gboolean
++link_corresponds_to_drive (NautilusDesktopLink *link,
++			   GnomeVFSDrive *drive)
++{
++	GObject *drive_or_volume;
++	gboolean same;
++
++	drive_or_volume = nautilus_desktop_link_get_drive_or_volume (link);
++	same = FALSE;
++
++	if (GNOME_IS_VFS_DRIVE (drive_or_volume)) {
++		GnomeVFSDrive *link_drive;
++
++		link_drive = GNOME_VFS_DRIVE (drive_or_volume);
++
++		if (gnome_vfs_drive_compare (link_drive, drive) == 0) {
++			same = TRUE;
++		}
++
++		gnome_vfs_drive_unref (link_drive);
++	} else {
++		GnomeVFSVolume *link_volume;
++		GnomeVFSDrive *link_drive;
++
++		link_volume = GNOME_VFS_VOLUME (drive_or_volume);
++		link_drive = gnome_vfs_volume_get_drive (link_volume);
++
++		if (link_drive && gnome_vfs_drive_compare (link_drive, drive) == 0) {
++			same = TRUE;
++		}
++
++		if (link_drive) {
++			gnome_vfs_drive_unref (link_drive);
++		}
++
++		gnome_vfs_volume_unref (link_volume);
++	}
++
++	return same;
++}
++
++static NautilusDesktopLink *
++find_unique_link_for_drive (NautilusDesktopLinkMonitor *monitor,
++			    GnomeVFSDrive *drive)
++{
++	GList *l;
++	NautilusDesktopLink *first_volume_link_for_drive;
++
++	first_volume_link_for_drive = NULL;
++
++	for (l = monitor->details->volume_links; l; l = l->next) {
++		NautilusDesktopLink *link;
++
++		link = NAUTILUS_DESKTOP_LINK (l->data);
++
++		if (link_corresponds_to_drive (link, drive)) {
++			if (first_volume_link_for_drive == NULL) {
++				first_volume_link_for_drive = link;
++			} else {
++				return NULL; /* We know that we have more than
++					      * one link for volumes that belong
++					      * to the same drive, so there is
++					      * no unique link for the drive.
++					      */
++			}
++		}
++	}
++
++	return first_volume_link_for_drive;
++}
++
++static void
++drive_connected_callback (GnomeVFSVolumeMonitor *volume_monitor,
++			  GnomeVFSDrive *drive,
++			  NautilusDesktopLinkMonitor *monitor)
++{
++	NautilusDesktopLink *link;
++	char *id;
++
++	id = get_human_readable_drive_id (drive);
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++			    "Drive %s (%p) got connected",
++			    id,
++			    drive);
++	g_free (id);
++
++	link = find_unique_link_for_drive (monitor, drive);
++
++	if (link) {
++		id = get_human_readable_drive_id (drive);
++		nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++				    "Not creating a desktop link for drive %s (%p) since there is already a link for it",
++				    id,
++				    drive);
++		g_free (id);
++		
++		return; /* huh, we already have a link for that drive... */
+ 	}
++
++	create_drive_link (monitor, drive, FALSE);
+ }
+ 
++static void
++drive_disconnected_callback (GnomeVFSVolumeMonitor *volume_monitor,
++			     GnomeVFSDrive *drive,
++			     NautilusDesktopLinkMonitor *monitor)
++{
++	GList *l;
++	char *id;
++
++	id = get_human_readable_drive_id (drive);
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++			    "Drive %s (%p) got disconnected",
++			    id,
++			    drive);
++
++	/* Remove all the links that correspond to that drive, even if they have
++	 * mounted volumes.
++	 */
+ 
++	l = monitor->details->volume_links;
++
++	while (l) {
++		GList *next;
++		NautilusDesktopLink *link;
++
++		next = l->next;
++		link = NAUTILUS_DESKTOP_LINK (l->data);
++
++		if (link_corresponds_to_drive (link, drive)) {
++			char *link_name;
++
++			link_name = nautilus_desktop_link_get_display_name (link);
++
++			g_object_unref (link);
++			monitor->details->volume_links = g_list_remove_link (monitor->details->volume_links, l);
++			g_list_free_1 (l);
++
++			nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++					    "Removing desktop link \"%s\" corresponding to drive %s (%p)",
++					    link_name,
++					    id,
++					    drive);
++			g_free (link_name);
++		}
++
++		l = next;
++	}
++
++	g_free (id);
++}
+ 
+ static void
+ volume_mounted_callback (GnomeVFSVolumeMonitor *volume_monitor,
+ 			 GnomeVFSVolume *volume, 
+ 			 NautilusDesktopLinkMonitor *monitor)
+ {
+-	create_volume_link (monitor, volume);
++	GnomeVFSDrive *drive;
++	char *id;
++
++	id = get_human_readable_volume_id (volume);
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++			    "Volume %s (%p) got mounted",
++			    id,
++			    volume);
++
++	drive = gnome_vfs_volume_get_drive (volume);
++
++	if (drive) {
++		NautilusDesktopLink *link;
++
++		/* We may have an existing link for the drive, which needs to be
++		 * updated for the volume.  Or we may have several volumes
++		 * within the same drive; in this case, we need to create a
++		 * completely new link.
++		 */
++
++		link = find_unique_link_for_drive (monitor, drive);
++		gnome_vfs_drive_unref (drive);
++
++		if (link) {
++			char *link_name;
++
++			link_name = nautilus_desktop_link_get_display_name (link);
++			nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++					    "    * Updating existing desktop link \"%s\" for mounted volume %s (%p)",
++					    link_name,
++					    id,
++					    volume);
++			g_free (link_name);
++
++			nautilus_desktop_link_update_from_volume (link, volume);
++		} else {
++			create_volume_link (monitor, volume, FALSE);
++		}
++	} else {
++		create_volume_link (monitor, volume, FALSE);
++	}
++
++	g_free (id);
++}
++
++static NautilusDesktopLink *
++find_link_for_volume (NautilusDesktopLinkMonitor *monitor,
++		      GnomeVFSVolume             *volume)
++{
++	GList *l;
++
++	for (l = monitor->details->volume_links; l != NULL; l = l->next) {
++		NautilusDesktopLink *link;
++		GObject *drive_or_volume;
++		gboolean same;
++
++		link = NAUTILUS_DESKTOP_LINK (l->data);
++		drive_or_volume = nautilus_desktop_link_get_drive_or_volume (link);
++
++		same = FALSE;
++
++		if (GNOME_IS_VFS_VOLUME (drive_or_volume)) {
++			same = (gnome_vfs_volume_compare (GNOME_VFS_VOLUME (drive_or_volume), volume) == 0);
++			gnome_vfs_volume_unref (GNOME_VFS_VOLUME (drive_or_volume));
++		} else {
++			gnome_vfs_drive_unref (GNOME_VFS_DRIVE (drive_or_volume));
++		}
++
++		if (same)
++			return link;
++	}
++
++	return NULL;
+ }
+ 
+ 
+@@ -230,25 +605,63 @@ volume_unmounted_callback (GnomeVFSVolumeMonitor *volume_monitor,
+ 			   GnomeVFSVolume *volume, 
+ 			   NautilusDesktopLinkMonitor *monitor)
+ {
+-	GList *l;
+ 	NautilusDesktopLink *link;
+-	GnomeVFSVolume *other_volume;
++	GnomeVFSDrive *drive;
++	gboolean remove_link;
++	char *id;
++	char *link_name = NULL;
++
++	id = get_human_readable_volume_id (volume);
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++			    "Volume %s (%p) got unmounted",
++			    id,
++			    volume);
++
++	link = find_link_for_volume (monitor, volume);
++	if (!link) {
++		nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++				    "    * No desktop link for volume %s (%p); not doing anything",
++				    id,
++				    volume);
++		goto out;
++	}
+ 
+-	link = NULL;
+-	for (l = monitor->details->volume_links; l != NULL; l = l->next) {
+-		other_volume = nautilus_desktop_link_get_volume (l->data);
+-		if (volume == other_volume) {
+-			gnome_vfs_volume_unref (other_volume);
+-			link = l->data;
+-			break;
++	link_name = nautilus_desktop_link_get_display_name (link);
++
++	remove_link = FALSE;
++
++	drive = gnome_vfs_volume_get_drive (volume);
++	if (drive) {
++		if (should_show_drive (drive, volume)) {
++			nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++					    "Updating desktop link \"%s\" from unmounted volume %s (%p)",
++					    link_name,
++					    id,
++					    volume);
++
++			nautilus_desktop_link_update_from_volume (link, volume);
++		} else {
++			remove_link = TRUE;
+ 		}
+-		gnome_vfs_volume_unref (other_volume);
++	} else {
++		remove_link = TRUE;
+ 	}
+ 
+-	if (link) {
++	if (remove_link) {
++		nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++				    "Removing desktop link \"%s\" corresponding to unmounted volume %s (%p)",
++				    link_name,
++				    id,
++				    volume);
++
+ 		monitor->details->volume_links = g_list_remove (monitor->details->volume_links, link);
+ 		g_object_unref (link);
+ 	}
++
++	g_free (link_name);
++
++out:
++	g_free (id);
+ }
+ 
+ static void
+@@ -257,7 +670,11 @@ update_link_visibility (NautilusDesktopLinkMonitor *monitor,
+ 			NautilusDesktopLinkType     link_type,
+ 			const char                 *preference_key)
+ {
+-	if (eel_preferences_get_boolean (preference_key)) {
++	gboolean enabled;
++
++	enabled = eel_preferences_get_boolean (preference_key);
++
++	if (enabled) {
+ 		if (*link_ref == NULL) {
+ 			*link_ref = nautilus_desktop_link_new (link_type);
+ 		}
+@@ -267,6 +684,11 @@ update_link_visibility (NautilusDesktopLinkMonitor *monitor,
+ 			*link_ref = NULL;
+ 		}
+ 	}
++
++	nautilus_debug_log (FALSE, NAUTILUS_DEBUG_LOG_DESKTOP_LINKS,
++			    "Desktop link %s got %s",
++			    preference_key,
++			    enabled ? "enabled" : "disabled");
+ }
+ 
+ static void
+@@ -322,53 +744,98 @@ desktop_network_visible_changed (gpointer callback_data)
+ }
+ 
+ static void
+-desktop_volumes_visible_changed (gpointer callback_data)
++refresh_volume_links (NautilusDesktopLinkMonitor *monitor, gboolean is_initialization)
+ {
+ 	GnomeVFSVolumeMonitor *volume_monitor;
+-	NautilusDesktopLinkMonitor *monitor;
+-	GList *l, *volumes;
+ 	
+ 	volume_monitor = gnome_vfs_get_volume_monitor ();
+-	monitor = NAUTILUS_DESKTOP_LINK_MONITOR (callback_data);
++
++	nautilus_debug_log (is_initialization, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++			    "Refreshing drive and volume links");
++
++	/* Free existing links */
++
++	g_list_foreach (monitor->details->volume_links, (GFunc)g_object_unref, NULL);
++	g_list_free (monitor->details->volume_links);
++	monitor->details->volume_links = NULL;
++
++	/* Scan the links again */
+ 
+ 	if (eel_preferences_get_boolean (NAUTILUS_PREFERENCES_DESKTOP_VOLUMES_VISIBLE)) {
+-		if (monitor->details->volume_links == NULL) {
+-			volumes = gnome_vfs_volume_monitor_get_mounted_volumes (volume_monitor);
+-			for (l = volumes; l != NULL; l = l->next) {
+-				create_volume_link (monitor, l->data);
+-				gnome_vfs_volume_unref (l->data);
+-			}
+-			g_list_free (volumes);
++		GList *l;
++		GList *volumes, *drives;
++
++		/* Unmounted drives */
++
++		drives = gnome_vfs_volume_monitor_get_connected_drives (volume_monitor);
++		for (l = drives; l != NULL; l = l->next) {
++			GnomeVFSDrive *drive;
++
++			drive = GNOME_VFS_DRIVE (l->data);
++			create_drive_link (monitor, drive, is_initialization);
++			gnome_vfs_drive_unref (drive);
++		}
++		g_list_free (drives);
++
++		/* Volumes */
++
++		volumes = gnome_vfs_volume_monitor_get_mounted_volumes (volume_monitor);
++		for (l = volumes; l != NULL; l = l->next) {
++			GnomeVFSVolume *volume;
++
++			volume = GNOME_VFS_VOLUME (l->data);
++			create_volume_link (monitor, volume, is_initialization);
++			gnome_vfs_volume_unref (volume);
+ 		}
++		g_list_free (volumes);
+ 	} else {
+-		g_list_foreach (monitor->details->volume_links, (GFunc)g_object_unref, NULL);
+-		g_list_free (monitor->details->volume_links);
+-		monitor->details->volume_links = NULL;
++		nautilus_debug_log (is_initialization, NAUTILUS_DEBUG_LOG_DRIVES_VOLUMES,
++				    "%s is disabled; not creating desktop links for drives/volumes",
++				    NAUTILUS_PREFERENCES_DESKTOP_VOLUMES_VISIBLE);
+ 	}
+ }
+ 
+ static void
++desktop_volumes_visible_changed (gpointer callback_data)
++{
++	NautilusDesktopLinkMonitor *monitor;
++
++	monitor = NAUTILUS_DESKTOP_LINK_MONITOR (callback_data);
++	refresh_volume_links (monitor, FALSE);
++}
++
++static void
+ create_link_and_add_preference (NautilusDesktopLink   **link_ref,
+ 				NautilusDesktopLinkType link_type,
+ 				const char             *preference_key,
+ 				EelPreferencesCallback  callback,
+ 				gpointer                callback_data)
+ {
+-	if (eel_preferences_get_boolean (preference_key)) {
++	gboolean enabled;
++
++	enabled = eel_preferences_get_boolean (preference_key);
++
++	if (enabled) {
+ 		*link_ref = nautilus_desktop_link_new (link_type);
+ 	}
+ 
+ 	eel_preferences_add_callback (preference_key, callback, callback_data);
++
++	nautilus_debug_log (TRUE, NAUTILUS_DEBUG_LOG_DESKTOP_LINKS,
++			    "Desktop link %s is %s",
++			    preference_key,
++			    enabled ? "enabled" : "disabled");
+ }
+ 	     
+ static void
+ nautilus_desktop_link_monitor_init (gpointer object, gpointer klass)
+ {
+ 	NautilusDesktopLinkMonitor *monitor;
+-	GList *l, *volumes;
+-	GnomeVFSVolume *volume;
+ 	GnomeVFSVolumeMonitor *volume_monitor;
+ 
++	nautilus_debug_log (TRUE, NAUTILUS_DEBUG_LOG_DESKTOP_LINKS,
++			    "Initializing desktop link monitor");
++
+ 	monitor = NAUTILUS_DESKTOP_LINK_MONITOR (object);
+ 
+ 	the_link_monitor = monitor;
+@@ -404,22 +871,22 @@ nautilus_desktop_link_monitor_init (gpointer object, gpointer klass)
+ 					desktop_network_visible_changed,
+ 					monitor);
+ 
+-	/* Volume links */
++	/* Drives and volumes */
+ 
+-	volume_monitor = gnome_vfs_get_volume_monitor ();
+-	
+-	volumes = gnome_vfs_volume_monitor_get_mounted_volumes (volume_monitor);
+-	for (l = volumes; l != NULL; l = l->next) {
+-		volume = l->data;
+-		create_volume_link (monitor, volume);
+-		gnome_vfs_volume_unref (volume);
+-	}
+-	g_list_free (volumes);
++	refresh_volume_links (monitor, TRUE);
+ 
+ 	eel_preferences_add_callback (NAUTILUS_PREFERENCES_DESKTOP_VOLUMES_VISIBLE,
+ 				      desktop_volumes_visible_changed,
+ 				      monitor);
+ 
++	volume_monitor = gnome_vfs_get_volume_monitor ();
++
++	monitor->details->connected_id = g_signal_connect_object (volume_monitor, "drive_connected",
++								  G_CALLBACK (drive_connected_callback),
++								  monitor, 0);
++	monitor->details->disconnected_id = g_signal_connect_object (volume_monitor, "drive_disconnected",
++								     G_CALLBACK (drive_disconnected_callback),
++								     monitor, 0);
+ 	monitor->details->mount_id = g_signal_connect_object (volume_monitor, "volume_mounted",
+ 							      G_CALLBACK (volume_mounted_callback), monitor, 0);
+ 	monitor->details->unmount_id = g_signal_connect_object (volume_monitor, "volume_unmounted",
+diff --git a/libnautilus-private/nautilus-desktop-link-monitor.h b/libnautilus-private/nautilus-desktop-link-monitor.h
+index 2c3c23d..1622ced 100644
+--- a/libnautilus-private/nautilus-desktop-link-monitor.h
++++ b/libnautilus-private/nautilus-desktop-link-monitor.h
+@@ -59,6 +59,7 @@ void nautilus_desktop_link_monitor_delete_link (NautilusDesktopLinkMonitor *moni
+ 
+ /* Used by nautilus-desktop-link.c */
+ char * nautilus_desktop_link_monitor_make_filename_unique (NautilusDesktopLinkMonitor *monitor,
++							   NautilusDesktopLink *skip_link,
+ 							   const char *filename);
+ 
+ #endif /* NAUTILUS_DESKTOP_LINK_MONITOR_H */
+diff --git a/libnautilus-private/nautilus-desktop-link.c b/libnautilus-private/nautilus-desktop-link.c
+index e27bac4..9ce77c6 100644
+--- a/libnautilus-private/nautilus-desktop-link.c
++++ b/libnautilus-private/nautilus-desktop-link.c
+@@ -54,8 +54,8 @@ struct NautilusDesktopLinkDetails {
+ 	/* Just for trash icons: */
+ 	gulong trash_state_handler;
+ 
+-	/* Just for volume icons: */
+-	GnomeVFSVolume *volume;
++	/* Just for drive/volume icons */
++	GObject *drive_or_volume;
+ };
+ 
+ static void nautilus_desktop_link_init       (gpointer              object,
+@@ -208,50 +208,105 @@ nautilus_desktop_link_new (NautilusDesktopLinkType type)
+ 	return link;
+ }
+ 
+-NautilusDesktopLink *
+-nautilus_desktop_link_new_from_volume (GnomeVFSVolume *volume)
++static void
++reread_drive_or_volume (NautilusDesktopLink *link)
+ {
+-	NautilusDesktopLink *link;
+-	GnomeVFSDrive *drive;
+ 	char *name, *filename;
++	char *display_name, *activation_uri, *icon;
+ 
+-	link = NAUTILUS_DESKTOP_LINK (g_object_new (NAUTILUS_TYPE_DESKTOP_LINK, NULL));
+-	
+-	link->details->type = NAUTILUS_DESKTOP_LINK_VOLUME;
++	g_assert (link->details->type == NAUTILUS_DESKTOP_LINK_VOLUME);
++	g_assert (link->details->drive_or_volume != NULL);
++
++	g_free (link->details->filename);
++	g_free (link->details->display_name);
++	g_free (link->details->activation_uri);
++	g_free (link->details->icon);
+ 
+-	link->details->volume = gnome_vfs_volume_ref (volume);
++	if (GNOME_IS_VFS_VOLUME (link->details->drive_or_volume)) {
++		GnomeVFSVolume *volume;
++		GnomeVFSDrive *drive;
+ 
+-	/* We try to use the drive name to get somewhat stable filenames
+-	   for metadata */
+-	drive = gnome_vfs_volume_get_drive (volume);
+-	if (drive != NULL) {
+-		name = gnome_vfs_drive_get_display_name (drive);
++		volume = GNOME_VFS_VOLUME (link->details->drive_or_volume);
++
++		/* We try to use the drive name to get somewhat stable filenames
++		   for metadata */
++		drive = gnome_vfs_volume_get_drive (volume);
++		if (drive != NULL) {
++			name = gnome_vfs_drive_get_display_name (drive);
++		} else {
++			name = gnome_vfs_volume_get_display_name (volume);
++		}
++		gnome_vfs_drive_unref (drive);
++
++		display_name = gnome_vfs_volume_get_display_name (volume);
++		activation_uri = gnome_vfs_volume_get_activation_uri (volume);
++		icon = gnome_vfs_volume_get_icon (volume);
+ 	} else {
+-		name = gnome_vfs_volume_get_display_name (volume);
++		GnomeVFSDrive *drive;
++
++		g_assert (GNOME_IS_VFS_DRIVE (link->details->drive_or_volume));
++
++		drive = GNOME_VFS_DRIVE (link->details->drive_or_volume);
++
++		name = gnome_vfs_drive_get_display_name (drive);
++
++		display_name = gnome_vfs_drive_get_display_name (drive);
++		activation_uri = NULL; /* We don't know the activation URI until the drive gets mounted */
++		icon = gnome_vfs_drive_get_icon (drive);
+ 	}
+-	gnome_vfs_drive_unref (drive);
+ 
+ 	filename = g_strconcat (name, ".volume", NULL);
+ 	link->details->filename =
+ 		nautilus_desktop_link_monitor_make_filename_unique (nautilus_desktop_link_monitor_get (),
++								    link,
+ 								    filename);
+ 	g_free (filename);
+ 	g_free (name);
++
++	link->details->display_name = display_name;
++	link->details->activation_uri = activation_uri;
++	link->details->icon = icon;
++}
++
++NautilusDesktopLink *
++nautilus_desktop_link_new_from_drive_or_volume (GObject *object)
++{
++	NautilusDesktopLink *link;
++	gboolean is_volume;
++
++	is_volume = GNOME_IS_VFS_VOLUME (object);
++
++	g_return_val_if_fail (GNOME_IS_VFS_DRIVE (object) || is_volume, NULL);
++
++	link = NAUTILUS_DESKTOP_LINK (g_object_new (NAUTILUS_TYPE_DESKTOP_LINK, NULL));
+ 	
+-	link->details->display_name = gnome_vfs_volume_get_display_name (volume);
+-	
+-	link->details->activation_uri = gnome_vfs_volume_get_activation_uri (volume);
+-	link->details->icon = gnome_vfs_volume_get_icon (volume);
++	link->details->type = NAUTILUS_DESKTOP_LINK_VOLUME;
++
++	if (is_volume) {
++		GnomeVFSVolume *volume;
++
++		volume = gnome_vfs_volume_ref (GNOME_VFS_VOLUME (object));
++		link->details->drive_or_volume = G_OBJECT (volume);
++	} else {
++		GnomeVFSDrive *drive;
+ 
++		drive = gnome_vfs_drive_ref (GNOME_VFS_DRIVE (object));
++		link->details->drive_or_volume = G_OBJECT (drive);
++	}
++
++	reread_drive_or_volume (link);
+ 	create_icon_file (link);
+ 
+ 	return link;
+ }
+ 
+-GnomeVFSVolume *
+-nautilus_desktop_link_get_volume (NautilusDesktopLink *link)
++GObject *
++nautilus_desktop_link_get_drive_or_volume (NautilusDesktopLink *link)
+ {
+-	return gnome_vfs_volume_ref (link->details->volume);
++	if (GNOME_IS_VFS_VOLUME (link->details->drive_or_volume))
++		return G_OBJECT (gnome_vfs_volume_ref (GNOME_VFS_VOLUME (link->details->drive_or_volume)));
++	else
++		return G_OBJECT (gnome_vfs_drive_ref (GNOME_VFS_DRIVE (link->details->drive_or_volume)));
+ }
+ 
+ 
+@@ -416,7 +471,11 @@ desktop_link_finalize (GObject *object)
+ 	}
+ 
+ 	if (link->details->type == NAUTILUS_DESKTOP_LINK_VOLUME) {
+-		gnome_vfs_volume_unref (link->details->volume);
++		if (GNOME_IS_VFS_VOLUME (link->details->drive_or_volume)) {
++			gnome_vfs_volume_unref (GNOME_VFS_VOLUME (link->details->drive_or_volume));
++		} else {
++			gnome_vfs_drive_unref (GNOME_VFS_DRIVE (link->details->drive_or_volume));
++		}
+ 	}
+ 
+ 	g_free (link->details->filename);
+@@ -438,3 +497,61 @@ nautilus_desktop_link_class_init (gpointer klass)
+ 	object_class->finalize = desktop_link_finalize;
+ 
+ }
++
++void
++nautilus_desktop_link_update_from_volume (NautilusDesktopLink *link,
++					  GnomeVFSVolume      *volume)
++{
++	g_return_if_fail (NAUTILUS_IS_DESKTOP_LINK (link));
++	g_return_if_fail (GNOME_IS_VFS_VOLUME (volume));
++
++	g_assert (link->details->type == NAUTILUS_DESKTOP_LINK_VOLUME);
++	g_assert (link->details->drive_or_volume != NULL);
++
++	if (GNOME_IS_VFS_DRIVE (link->details->drive_or_volume)) {
++		GnomeVFSDrive *drive;
++
++		drive = gnome_vfs_volume_get_drive (volume);
++
++		g_assert (gnome_vfs_drive_compare (drive, GNOME_VFS_DRIVE (link->details->drive_or_volume)) == 0);
++		gnome_vfs_drive_unref (drive);
++
++		/* The link is for a drive.  If the new volume is mounted,
++		 * replace the link's object with the volume.  If the new volume
++		 * is unmounted, just refresh the link (who knows why we didn't
++		 * get the mount notification before).
++		 */
++
++		if (gnome_vfs_volume_is_mounted (volume)) {
++			gnome_vfs_drive_unref (GNOME_VFS_DRIVE (link->details->drive_or_volume));
++
++			gnome_vfs_volume_ref (volume);
++			link->details->drive_or_volume = G_OBJECT (volume);
++		}
++
++		/* The link will get updated below */
++	} else {
++		g_assert (GNOME_IS_VFS_VOLUME (link->details->drive_or_volume));
++		g_assert (gnome_vfs_volume_compare (volume, GNOME_VFS_VOLUME (link->details->drive_or_volume)) == 0);
++
++		/* If the volume got unmounted, restore the link's object to the
++		 * corresponding drive.  Otherwise, we shouldn't need to be
++		 * called, but just update the link in that case.
++		 */
++
++		if (!gnome_vfs_volume_is_mounted (volume)) {
++			GnomeVFSDrive *drive;
++
++			drive = gnome_vfs_volume_get_drive (volume);
++
++			gnome_vfs_volume_unref (GNOME_VFS_VOLUME (link->details->drive_or_volume));
++
++			link->details->drive_or_volume = G_OBJECT (drive);
++		}
++
++		/* The link will get updated below */
++	}
++
++	reread_drive_or_volume (link);
++	nautilus_desktop_link_changed (link);
++}
+diff --git a/libnautilus-private/nautilus-desktop-link.h b/libnautilus-private/nautilus-desktop-link.h
+index 578e592..e127500 100644
+--- a/libnautilus-private/nautilus-desktop-link.h
++++ b/libnautilus-private/nautilus-desktop-link.h
+@@ -26,6 +26,7 @@
+ #define NAUTILUS_DESKTOP_LINK_H
+ 
+ #include <libnautilus-private/nautilus-file.h>
++#include <libgnomevfs/gnome-vfs-drive.h>
+ #include <libgnomevfs/gnome-vfs-volume.h>
+ 
+ #define NAUTILUS_TYPE_DESKTOP_LINK \
+@@ -61,7 +62,7 @@ typedef enum {
+ GType   nautilus_desktop_link_get_type (void);
+ 
+ NautilusDesktopLink *   nautilus_desktop_link_new                (NautilusDesktopLinkType  type);
+-NautilusDesktopLink *   nautilus_desktop_link_new_from_volume    (GnomeVFSVolume          *volume);
++NautilusDesktopLink *   nautilus_desktop_link_new_from_drive_or_volume (GObject           *object);
+ NautilusDesktopLinkType nautilus_desktop_link_get_link_type      (NautilusDesktopLink     *link);
+ char *                  nautilus_desktop_link_get_file_name      (NautilusDesktopLink     *link);
+ char *                  nautilus_desktop_link_get_display_name   (NautilusDesktopLink     *link);
+@@ -70,10 +71,12 @@ char *                  nautilus_desktop_link_get_activation_uri (NautilusDeskto
+ gboolean                nautilus_desktop_link_get_date           (NautilusDesktopLink     *link,
+ 								  NautilusDateType         date_type,
+ 								  time_t                  *date);
+-GnomeVFSVolume *        nautilus_desktop_link_get_volume         (NautilusDesktopLink     *link);
++GObject *               nautilus_desktop_link_get_drive_or_volume (NautilusDesktopLink     *link);
+ 
+ gboolean                nautilus_desktop_link_can_rename         (NautilusDesktopLink     *link);
+ gboolean                nautilus_desktop_link_rename             (NautilusDesktopLink     *link,
+ 								  const char              *name);
++void                    nautilus_desktop_link_update_from_volume (NautilusDesktopLink     *link,
++								  GnomeVFSVolume          *volume);
+ 
+ #endif /* NAUTILUS_DESKTOP_LINK_H */
+diff --git a/src/file-manager/fm-directory-view.c b/src/file-manager/fm-directory-view.c
+index 1300d1d..5279c37 100644
+--- a/src/file-manager/fm-directory-view.c
++++ b/src/file-manager/fm-directory-view.c
+@@ -301,11 +301,19 @@ typedef struct {
+ 	NautilusWindowOpenMode mode;
+ 	NautilusWindowOpenFlags flags;
+ 	gboolean mount_success;
+-	unsigned int pending_mounts;
++	GList *drives_being_mounted;
+ 	gboolean cancelled;
+ } ActivateParameters;
+ 
+ typedef struct {
++	ActivateParameters *parameters;
++
++	GnomeVFSDrive *drive;
++	NautilusFile *file;
++	guint file_changed_id;
++} DriveBeingMounted;
++
++typedef struct {
+ 	NautilusFile *file;
+ 	NautilusDirectory *directory;
+ } FileAndDirectory;
+@@ -8277,7 +8285,7 @@ cancel_activate (gpointer callback_data)
+ 
+ 	parameters->cancelled = TRUE;
+ 	
+-	if (parameters->pending_mounts == 0) {
++	if (parameters->drives_being_mounted == NULL) {
+ 		nautilus_file_list_cancel_call_when_ready (parameters->files_handle);
+ 		nautilus_file_list_free (parameters->files);
+ 		g_free (parameters);
+@@ -8649,16 +8657,81 @@ activate_callback (GList *files, gpointer callback_data)
+ }
+ 
+ static void
++try_to_finish_drive_activation (ActivateParameters *parameters)
++{
++	if (parameters->drives_being_mounted != NULL) {
++		/* wait for other mounts to finish... */
++		return;
++	}
++
++	if (parameters->cancelled || !parameters->mount_success) {
++		stop_activate (parameters);
++
++		nautilus_file_list_free (parameters->files);
++		g_free (parameters);
++		return;
++	}
++
++	/* all drives were mounted successfully */
++	activate_activation_uris_ready_callback (parameters->files,
++						 parameters);
++}
++
++static void
++remove_drive_being_mounted (DriveBeingMounted *drive_being_mounted)
++{
++	ActivateParameters *parameters;
++
++	parameters = drive_being_mounted->parameters;
++
++	if (drive_being_mounted->file_changed_id != 0) {
++		g_signal_handler_disconnect (drive_being_mounted->file, drive_being_mounted->file_changed_id);
++	}
++
++	nautilus_file_unref (drive_being_mounted->file);
++	gnome_vfs_drive_unref (drive_being_mounted->drive);
++
++	parameters->drives_being_mounted = g_list_remove (parameters->drives_being_mounted,
++							  drive_being_mounted);
++	g_free (drive_being_mounted);
++}
++
++static void
++activation_file_changed_after_drive_mounted (NautilusFile *file,
++					     gpointer data)
++{
++	DriveBeingMounted *drive_being_mounted;
++	ActivateParameters *parameters;
++
++	drive_being_mounted = data;
++	parameters = drive_being_mounted->parameters;
++
++	if (!gnome_vfs_drive_is_mounted (drive_being_mounted->drive)) {
++		/* Huh?  The NautilusFile changed, but the drive is not mounted
++		 * yet.  So, wait some more until the file gets another change
++		 * and the drive gets mounted.
++		 */
++		return;
++	}
++
++	remove_drive_being_mounted (drive_being_mounted);
++
++	try_to_finish_drive_activation (parameters);
++}
++
++static void
+ activation_drive_mounted_callback (gboolean succeeded,
+ 				   char *error,
+ 				   char *detailed_error,
+ 				   gpointer callback_data)
+ {
++	DriveBeingMounted *drive_being_mounted;
+ 	ActivateParameters *parameters;
+ 
+-	parameters = callback_data;
++	drive_being_mounted = callback_data;
++	parameters = drive_being_mounted->parameters;
+ 
+-	parameters->mount_success &= succeeded;
++	parameters->mount_success = parameters->mount_success && succeeded;
+ 
+ 	if (!succeeded && !parameters->cancelled) {
+ 		if (*error == 0 &&
+@@ -8671,29 +8744,25 @@ activation_drive_mounted_callback (gboolean succeeded,
+ 		}
+ 	}
+ 
+-	if (--parameters->pending_mounts > 0) {
+-		/* wait for other mounts to finish... */
+-		return;
+-	}
+-
+-	if (parameters->cancelled || !parameters->mount_success) {
+-		stop_activate (parameters);
++	if (gnome_vfs_drive_is_mounted (drive_being_mounted->drive)) {
++		remove_drive_being_mounted (drive_being_mounted);
++	} else {
++		/* Here, the drive is already mounted, but
++		 * gnome-vfs-volume-monitor thinks that it is not.  This is
++		 * because gnome-vfs-daemon has not yet notified it.  So we'll
++		 * wait for the NautilusFile to change:  this will happen
++		 * when gnome-vfs-volume-monitor actually picks up and emits the
++		 * volume_mounted notification, and the NautilusDesktopLink
++		 * modifies the NautilusFile.
++		 */
+ 
+-		nautilus_file_list_free (parameters->files);
+-		g_free (parameters);
+-		return;
++		drive_being_mounted->file_changed_id = g_signal_connect (
++			drive_being_mounted->file, "changed",
++			G_CALLBACK (activation_file_changed_after_drive_mounted),
++			drive_being_mounted);
+ 	}
+ 
+-	/* all drives were mounted successfully */
+-	activate_activation_uris_ready_callback (parameters->files,
+-						 parameters);
+-}
+-
+-static void
+-mount_foreach (gpointer drive,
+-	       gpointer callback_data)
+-{
+-	gnome_vfs_drive_mount (drive, activation_drive_mounted_callback, callback_data);
++	try_to_finish_drive_activation (parameters);
+ }
+ 
+ static void
+@@ -8701,7 +8770,6 @@ activate_activation_uris_ready_callback (GList *files_ignore,
+ 					 gpointer callback_data)
+ {
+ 	ActivateParameters *parameters;
+-	GList *not_yet_mounted;
+ 	GList *l, *next;
+ 	NautilusFile *file;
+ 	NautilusFile *actual_file;
+@@ -8710,7 +8778,6 @@ activate_activation_uris_ready_callback (GList *files_ignore,
+ 	char *uri;
+ 	
+ 	parameters = callback_data;
+-	not_yet_mounted = NULL;
+ 
+ 	for (l = parameters->files; l != NULL; l = next) {
+ 		file = NAUTILUS_FILE (l->data);
+@@ -8733,24 +8800,46 @@ activate_activation_uris_ready_callback (GList *files_ignore,
+ 			drive = nautilus_file_get_drive (file);
+ 			if (drive != NULL &&
+ 			    !gnome_vfs_drive_is_mounted (drive)) {
+-				not_yet_mounted = g_list_prepend (not_yet_mounted, drive);
+-				parameters->pending_mounts++;
++				DriveBeingMounted *drive_being_mounted;
++
++				drive_being_mounted = g_new (DriveBeingMounted, 1);
++				drive_being_mounted->parameters = parameters;
++				drive_being_mounted->drive = gnome_vfs_drive_ref (drive);
++				drive_being_mounted->file = nautilus_file_ref (file);
++				drive_being_mounted->file_changed_id = 0;
++
++				parameters->drives_being_mounted = g_list_prepend (parameters->drives_being_mounted,
++										   drive_being_mounted);
+ 			}
+ 		}
+ 	}
+ 
+ 	if (parameters->files == NULL) {
+-		g_assert (not_yet_mounted == NULL);
++		g_assert (parameters->drives_being_mounted == NULL);
+ 
+ 		stop_activate (parameters);
+ 		g_free (parameters);
+ 		return;
+ 	}
+ 
+-	if (not_yet_mounted != NULL) {
+-		not_yet_mounted = g_list_reverse (not_yet_mounted);
+-		g_list_foreach (not_yet_mounted, mount_foreach, callback_data);
+-		g_list_free (not_yet_mounted);
++	if (parameters->drives_being_mounted != NULL) {
++		GList *l;
++
++		parameters->drives_being_mounted = g_list_reverse (parameters->drives_being_mounted);
++
++		for (l = parameters->drives_being_mounted; l; l = l->next) {
++			DriveBeingMounted *drive_being_mounted;
++
++			drive_being_mounted = l->data;
++
++			/* @#$% gnome_vfs_drive_mount() doesn't tell the
++			 * callback *which* drive was mounted.  So, we pass the
++			 * drive as part of the drive_being_mounted closure.
++			 */
++			gnome_vfs_drive_mount (drive_being_mounted->drive,
++					       activation_drive_mounted_callback,
++					       drive_being_mounted);
++		}
+ 
+ 		/* activation_drive_mounted_callback will reveal whether all mounts were successful */
+ 		parameters->mount_success = TRUE;
+@@ -8874,7 +8963,7 @@ fm_directory_view_activate_files (FMDirectoryView *view,
+ 	parameters->mode = mode;
+ 	parameters->flags = flags;
+ 	parameters->mount_success = FALSE;
+-	parameters->pending_mounts = 0;
++	parameters->drives_being_mounted = NULL;
+ 	parameters->cancelled = FALSE;
+ 
+ 	if (file_count == 1) {

@@ -1,0 +1,514 @@
+diff -ruN evolution-2.27.4.1/configure.ac evolution-2.27.4.1.patched//configure.ac
+--- evolution-2.27.4.1/configure.ac	2009-07-15 11:25:24.000000000 +0200
++++ evolution-2.27.4.1.patched//configure.ac	2009-07-22 13:21:18.000000000 +0200
+@@ -903,6 +903,24 @@
+ 	PKG_CHECK_MODULES([MONO], ["mono"])
+ 	AC_DEFINE(ENABLE_MONO,1,[Define if Mono embedding should be enabled])
+ 	MONO_PLUGIN="mono"
++ 	PKG_CHECK_MODULES(MONO_PLATFORM,
++         [glib-sharp-2.0, gtk-sharp-2.0, gconf-sharp-2.0, gnome-sharp-2.0,
++ 	evolution-sharp, ndesk-dbus-1.0, ndesk-dbus-glib-1.0])
++ 	AC_SUBST(MONO_PLATFORM_CFLAGS)
++ 	AC_SUBST(MONO_PLATFORM_LIBS)
++ 	MONO_BASED_PLUGINS=""
++ 	
++ 	dnl Sharepoint account setup
++ 	AC_ARG_ENABLE([icedesktop],
++ 	      AC_HELP_STRING([--enable-icedesktop],
++ 			     [Build sharepoint provider]),
++ 	      [enable_icedesktop=$enableval],[enable_icedesktop=no])
++ 	if test "x${enable_icedesktop}" = "xyes"; then
++ 		PKG_CHECK_MODULES(ICE_DESKTOP, [Novell.IceDesktop, solvent])
++ 		AC_SUBST(ICE_DESKTOP_CFLAGS)
++ 		AC_SUBST(ICE_DESKTOP_LIBS)
++ 		MONO_BASED_PLUGINS="$MONO_BASED_PLUGINS sharepoint-account-setup"
++ 	fi
+ fi
+ AC_SUBST(MONO_CFLAGS)
+ AC_SUBST(MONO_LIBS)
+@@ -1714,7 +1732,7 @@
+ dnl Add any new plugins here
+ plugins_base_always="calendar-file calendar-http $CALENDAR_WEATHER itip-formatter plugin-manager default-source addressbook-file startup-wizard mark-all-read groupwise-features groupwise-account-setup mail-account-disable publish-calendar caldav imap-features google-account-setup webdav-account-setup"
+ 
+-plugins_base="$plugins_base_always $SA_JUNK_PLUGIN $BF_JUNK_PLUGIN $EXCHANGE_PLUGIN $MONO_PLUGIN "
++plugins_base="$plugins_base_always $SA_JUNK_PLUGIN $BF_JUNK_PLUGIN $EXCHANGE_PLUGIN $MONO_PLUGIN $MONO_BASED_PLUGINS"
+ all_plugins_base="$plugins_base_always sa-junk-plugin bogo-junk-plugin exchange-operations mono"
+ 
+ plugins_standard_always="bbdb subject-thread save-calendar select-one-source copy-tool mail-to-task audio-inline mailing-list-actions default-mailer prefer-plain mail-notification attachment-reminder backup-restore email-custom-header templates pst-import vcard-inline"
+@@ -1767,6 +1785,11 @@
+ 	msg_plugins="$msg_plugins (and mono)"
+ fi
+ 
++if test "x${enable_icedesktop}" = "xyes"; then
++	plugins_enabled="$plugins_enabled sharepoint-account-setup"
++	msg_plugins="$msg_plugins (and sharepoint)"
++fi
++
+ 
+ if test "x${enable_python}" = "xyes"; then
+ 	plugins_enabled="$plugins_enabled python"
+@@ -2021,6 +2044,7 @@
+ plugins/tnef-attachments/Makefile
+ plugins/vcard-inline/Makefile
+ plugins/webdav-account-setup/Makefile
++plugins/sharepoint-account-setup/Makefile
+ smime/Makefile
+ smime/lib/Makefile
+ smime/gui/Makefile
+diff -ruN evolution-2.27.4.1/plugins/mono/mono-plugin.c evolution-2.27.4.1.patched//plugins/mono/mono-plugin.c
+--- evolution-2.27.4.1/plugins/mono/mono-plugin.c	2009-07-13 09:45:13.000000000 +0200
++++ evolution-2.27.4.1.patched//plugins/mono/mono-plugin.c	2009-07-22 13:20:43.000000000 +0200
+@@ -81,9 +81,14 @@
+ 	MonoObject *x = NULL, *res;
+ 	gpointer *params;
+ 
+-	g_print ("\n\a epm_invoke in mono-plugin.c in mono plugin loader is called \n\a");
++	g_print ("\n\a epm_invoke in mono-plugin.c in mono plugin loader is called %s \n\a", epm->location);
+ 
+ 	/* we need to do this every time since we may be called from any thread for some uses */
++	if (!domain) {
++		mono_config_parse (NULL);
++		domain = mono_jit_init (epm->location);
++	}
++
+ 	mono_thread_attach(domain);
+ 
+ 	if (p->assembly == NULL) {
+@@ -232,8 +237,6 @@
+ 		type = g_type_register_static(e_plugin_get_type(), "EPluginMono", &info, 0);
+ 		e_plugin_register_type (type);
+ 		d(printf("\nType EPluginMono registered from the mono-plugin-loader\n"));
+-		domain = mono_jit_init("Evolution");
+-		mono_thread_attach(domain);
+ 	}
+ 
+ 	return GUINT_TO_POINTER(type);
+diff -ruN evolution-2.27.4.1/plugins/sharepoint-account-setup/Makefile.am evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/Makefile.am
+--- evolution-2.27.4.1/plugins/sharepoint-account-setup/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/Makefile.am	2009-07-22 13:20:43.000000000 +0200
+@@ -0,0 +1,37 @@
++CSC = gmcs
++
++ASSEMBLY_NAME = SharepointAccountSetup
++TARGET = $(ASSEMBLY)
++ASSEMBLY = $(ASSEMBLY_NAME).dll
++
++@EVO_PLUGIN_RULE@
++
++CSFILES = SharepointSource.cs SharepointAccount.cs SharepointAccountSetup.cs 
++
++EXTRA_DIST = org-gnome-sharepoint-account-setup.eplug.xml \
++	     org-gnome-sharepoint-ui.xml  \
++	     org-gnome-sharepoint-disconnect-ui.xml \
++             $(CSFILES)
++
++ASSEMBLIES = \
++    	  -r:System \
++	  -r:Mono.Posix \
++	  $(ICE_DESKTOP_LIBS)	\
++	  $(MONO_PLATFORM_LIBS) 
++
++CSFLAGS =  -noconfig -codepage:utf8 -warn:4 -debug -d:DEBUG $(ASSEMBLIES)
++
++#endif
++#if ENABLE_RELEASE
++#CSFLAGS =  -noconfig -codepage:utf8 -warn:4
++#endif
++$(ASSEMBLY): $(CSCFILES)
++	       $(CSC) -unsafe /out:$(ASSEMBLY) $(CSFLAGS) /target:library $(ASSEMBLIES) $(CSFILES)
++
++plugin_DATA = $(ASSEMBLY) org-gnome-sharepoint-account-setup.eplug org-gnome-sharepoint-ui.xml org-gnome-sharepoint-disconnect-ui.xml
++
++BUILT_SOURCES = $(ASSEMBLY) org-gnome-sharepoint-account-setup.eplug
++
++all: $(ASSEMBLY)
++
++CLEANFILES = org-gnome-sharepoint-account-setup.eplug $(ASSEMBLY) $(ASSEMBLY).mdb
+diff -ruN evolution-2.27.4.1/plugins/sharepoint-account-setup/org-gnome-sharepoint-account-setup.eplug.xml evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/org-gnome-sharepoint-account-setup.eplug.xml
+--- evolution-2.27.4.1/plugins/sharepoint-account-setup/org-gnome-sharepoint-account-setup.eplug.xml	1970-01-01 01:00:00.000000000 +0100
++++ evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/org-gnome-sharepoint-account-setup.eplug.xml	2009-07-22 13:20:43.000000000 +0200
+@@ -0,0 +1,36 @@
++<?xml version="1.0"?>
++<e-plugin-list>
++    <e-plugin id="org.gnome.evolution.sharepoint.account.setup" type="mono" 
++	_name="Sharepoint account setup" 
++	location="@PLUGINDIR@/SharepointAccountSetup.dll" handler="SharePointAccountSetup">
++	<author name="Chenthill Palanisamy" email="pchenthill@novell.com"/>
++       	<_description>Create a sharepoint account for calendar and tasks</_description>
++
++	    <hook class="org.gnome.evolution.shell.bonobomenu:1.0">
++	    <menu id="org.gnome.evolution.shell" target="shell">
++		<!-- the path to the bonobo menu description -->
++		<ui file="@PLUGINDIR@/org-gnome-sharepoint-ui.xml"/>
++		<item
++		  type="item"
++		  verb="SharepointSetup"
++		  path="/commands/SharepointSetup"
++		  enable="all"
++		  activate="SetupAccount"/>
++ 	     </menu>
++	     </hook>
++
++ 	     <hook class="org.gnome.evolution.shell.bonobomenu:1.0">
++	    <menu id="org.gnome.evolution.shell" target="shell">
++		<!-- the path to the bonobo menu description -->
++		<ui file="@PLUGINDIR@/org-gnome-sharepoint-disconnect-ui.xml"/>
++		<item
++		  type="item"
++		  verb="SharepointDisconnect"
++		  path="/commands/SharepointDisconnect"
++		  enable="all"
++		  activate="RemoveAccount"/>
++ 	     </menu>
++	     </hook>
++
++	</e-plugin>
++</e-plugin-list>
+diff -ruN evolution-2.27.4.1/plugins/sharepoint-account-setup/org-gnome-sharepoint-disconnect-ui.xml evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/org-gnome-sharepoint-disconnect-ui.xml
+--- evolution-2.27.4.1/plugins/sharepoint-account-setup/org-gnome-sharepoint-disconnect-ui.xml	1970-01-01 01:00:00.000000000 +0100
++++ evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/org-gnome-sharepoint-disconnect-ui.xml	2009-07-22 13:20:43.000000000 +0200
+@@ -0,0 +1,16 @@
++<Root>
++  <commands>
++    <cmd name="SharepointDisconnect" _label="Disconnect SharePoint"
++      _tip="Remove sharepoint account"
++      pixtype="stock"
++      pixname="gtk-disconnect"/>
++  </commands>
++
++  <menu>
++    <placeholder name="ActionsPlaceholder">
++       <submenu name="Actions">
++           <menuitem name="SharepointDisconnect" verb="" />
++       </submenu>
++  </placeholder>
++  </menu>
++</Root>
+diff -ruN evolution-2.27.4.1/plugins/sharepoint-account-setup/org-gnome-sharepoint-ui.xml evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/org-gnome-sharepoint-ui.xml
+--- evolution-2.27.4.1/plugins/sharepoint-account-setup/org-gnome-sharepoint-ui.xml	1970-01-01 01:00:00.000000000 +0100
++++ evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/org-gnome-sharepoint-ui.xml	2009-07-22 13:20:43.000000000 +0200
+@@ -0,0 +1,16 @@
++<Root>
++  <commands>
++    <cmd name="SharepointSetup" _label="Connect to SharePoint"
++      _tip="Setup sharepoint account"
++      pixtype="stock"
++      pixname="gtk-connect"/>
++  </commands>
++
++  <menu>
++  <placeholder name="ActionsPlaceholder">
++       <submenu name="Actions">
++           <menuitem name="SharepointSetup" verb="" />
++       </submenu>
++  </placeholder>
++  </menu>
++</Root>
+diff -ruN evolution-2.27.4.1/plugins/sharepoint-account-setup/SharepointAccount.cs evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/SharepointAccount.cs
+--- evolution-2.27.4.1/plugins/sharepoint-account-setup/SharepointAccount.cs	1970-01-01 01:00:00.000000000 +0100
++++ evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/SharepointAccount.cs	2009-07-22 13:20:43.000000000 +0200
+@@ -0,0 +1,165 @@
++// SharepointAccount.cs created with MonoDevelop
++// User: chen at 12:30 PM 10/21/2008
++//
++// To change standard headers go to Edit->Preferences->Coding->Standard Headers
++//
++
++using System;
++using Evolution;
++using NDesk.DBus;
++using Gtk;
++using System.Threading;
++using GLib;
++using Novell.IceDesktop;
++
++namespace Sharepoint
++{
++	
++	
++	public class SharepointAccount
++	{
++		static Novell.IceDesktop.IDaemon deskIceDaemon = null;
++		static org.freedesktop.DBus.IBus sessionBus = null;
++		static ObjectPath DaemonPath = new ObjectPath (Novell.IceDesktop.ServiceName.DaemonPath);
++		static string DaemonNamespace = Novell.IceDesktop.ServiceName.DaemonNamespace;
++		static bool initialized = false;
++		static System.Threading.Thread backgroundThread = null;
++
++		public SharepointAccount()
++		{
++		}
++
++		public void CreateAccount ()
++		{
++			try
++			{
++				if (initialized == false) {
++					BusG.Init ();
++					initialized = true;
++				}
++
++
++				sessionBus = Bus.Session.GetObject<org.freedesktop.DBus.IBus> ("org.freedesktop.DBus",
++						new ObjectPath ("/org/freedesktop/DBus"));
++				sessionBus.NameOwnerChanged += OnDBusNameOwnerChanged;
++
++				// Force the daemon to start up if it's not already running
++				if (Bus.Session.NameHasOwner (DaemonNamespace) == false) 
++				{
++					Bus.Session.StartServiceByName (DaemonNamespace);
++				}
++
++				ConnectToICEcoreDaemon ();
++				try { deskIceDaemon.CheckAuthentication (String.Empty); }	
++				catch (NotAuthenticatedException) 
++				{ return; }
++
++				Console.WriteLine ("****** Authenticated");
++				StartFetchingFolder ();
++
++			}
++			catch (Exception ex)
++			{
++				Console.WriteLine ("Error creating account: {0}", ex.Message);
++				Console.WriteLine (ex.StackTrace);
++				// Change the status text in the AuthDialog
++				return;
++			}
++		}
++
++		public void DeleteAccount ()
++		{
++			// we remove all share calendars. We currently support creating only one sharepoint account
++			SharepointSource spSource = new SharepointSource (CalSourceType.Event, null, null);
++			spSource.DeleteSources ();
++			spSource.Sync ();
++		}
++
++		private static void StartFetchingFolder ()
++		{
++			if (backgroundThread == null)
++			{
++				backgroundThread = new System.Threading.Thread (new ThreadStart (SetupFolders));
++				backgroundThread.IsBackground = true;
++				backgroundThread.Start ();
++			} 
++		}
++
++		private static void SetupFolders ()
++		{
++			Console.WriteLine ("Getting folders ");
++			AccountInfo accountInfo = deskIceDaemon.GetDefaultAccountInfo ();
++			SharepointSource spSource = new SharepointSource (CalSourceType.Event, accountInfo.username,
++			                                                  accountInfo.hostUrl);
++			
++			if (spSource.AccountExists) {
++				Console.WriteLine ("Account already exists");
++				return;
++			}
++
++			FileInfo [] workspaces = deskIceDaemon.EnumerateWorkspaces ();
++			foreach (FileInfo workspace in workspaces) 
++			{
++				FileInfo[] folders = null;
++
++				if (spSource.srcType == CalSourceType.Event)
++					 folders = deskIceDaemon.GetCalendarFolders (string.Empty, workspace.Id);
++				// else get task folders
++					
++
++				if (folders.Length == 0)
++					continue;
++
++				spSource.CreateSources (workspace, folders);
++			}
++			spSource.Sync ();
++			Console.WriteLine ("******* Got folders ");
++			backgroundThread = null;
++			RemoveHandlers ();
++		}
++
++		private static void RemoveHandlers ()
++		{
++			sessionBus.NameOwnerChanged -= OnDBusNameOwnerChanged;
++			deskIceDaemon.Authenticated -= OnAuthenticated;
++		}
++
++		static void OnAuthenticated (string server, string username)
++		{
++			Console.WriteLine ("Auth done\n");
++			StartFetchingFolder ();
++		}
++		
++		static void OnDBusNameOwnerChanged (string serviceName,	string oldOwner, string newOwner)
++		{
++
++			Console.WriteLine ("O/p {0} {1}", serviceName, DaemonNamespace);
++			if (serviceName == null)
++				return;
++			if (serviceName.CompareTo (DaemonNamespace) != 0)
++				return;
++			
++			if (oldOwner != null && oldOwner.Length > 0) {
++				// The daemon just went away
++				// TODO: What should the Navigator do if the ICEcore Daemon suddenly exits?
++				Console.WriteLine ("TODO: What should the Navigator do if the ICEcore Daemon suddenly exits?");
++			} else {
++				// Connect to the new instance of the daemon
++				ConnectToICEcoreDaemon ();
++			}
++		}
++		
++		/// <summary>
++		/// Connect with the ICEcore Daemon and register event handlers.
++		/// </summary>
++		static void ConnectToICEcoreDaemon ()
++		{
++			Console.WriteLine ("Connecting the navigator to the ICEcore Daemon");
++			// Check DBus to see if the Daemon is currently running
++			deskIceDaemon =
++				Bus.Session.GetObject<IDaemon> (DaemonNamespace, DaemonPath);
++			// Set up the daemon event handlers
++			deskIceDaemon.Authenticated += OnAuthenticated;
++		}
++	}
++}
+diff -ruN evolution-2.27.4.1/plugins/sharepoint-account-setup/SharepointAccountSetup.cs evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/SharepointAccountSetup.cs
+--- evolution-2.27.4.1/plugins/sharepoint-account-setup/SharepointAccountSetup.cs	1970-01-01 01:00:00.000000000 +0100
++++ evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/SharepointAccountSetup.cs	2009-07-22 13:20:43.000000000 +0200
+@@ -0,0 +1,22 @@
++using System;
++using Sharepoint;
++using Evolution;
++using GLib;
++using Gtk;
++
++public class SharePointAccountSetup
++{
++	public static IntPtr SetupAccount (IntPtr pluginPtr)
++	{
++		SharepointAccount account = new SharepointAccount ();
++		account.CreateAccount ();
++		return (IntPtr) 0;
++	}
++	
++	public static IntPtr RemoveAccount (IntPtr pluginPtr)
++	{
++		SharepointAccount account = new SharepointAccount ();
++		account.DeleteAccount ();
++		return (IntPtr) 0;
++	}
++}
+diff -ruN evolution-2.27.4.1/plugins/sharepoint-account-setup/SharepointSource.cs evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/SharepointSource.cs
+--- evolution-2.27.4.1/plugins/sharepoint-account-setup/SharepointSource.cs	1970-01-01 01:00:00.000000000 +0100
++++ evolution-2.27.4.1.patched//plugins/sharepoint-account-setup/SharepointSource.cs	2009-07-22 13:20:43.000000000 +0200
+@@ -0,0 +1,97 @@
++// SharepointSource.cs created with MonoDevelop
++// User: chen at 1:38 AM 10/21/2008
++//
++// To change standard headers go to Edit->Preferences->Coding->Standard Headers
++//
++
++using System;
++using Evolution;
++using Novell.IceDesktop;
++using GConf;
++using System.Collections.Generic;
++	
++namespace Sharepoint
++{
++	
++	
++	public class SharepointSource
++	{
++		public CalSourceType srcType;
++		readonly string calPath = "/apps/evolution/calendar/sources";
++		readonly string taskPath = "/apps/evolution/tasks/sources";
++		static Client client;
++		SourceList srcList;
++		readonly string baseUri = "sharepoint://";
++		string username;
++		string hostUrl;
++		
++		public SharepointSource(CalSourceType type, string userName, string hosturl)
++		{
++			srcType = type;
++			client = new Client ();
++			username = userName;
++			hostUrl = hosturl;
++			
++			if (type == CalSourceType.Event)
++				srcList = new SourceList (calPath);
++			else
++				srcList = new SourceList (taskPath);
++		}
++
++		public bool AccountExists
++		{
++			get
++			{
++				foreach (SourceGroup group in srcList.Groups)
++				{
++					if (group.BaseUri == baseUri)
++						return true;
++				}
++
++				return false;
++			}
++		}
++
++		public void CreateSources (FileInfo workspace, FileInfo [] folders)
++		{
++			SourceGroup group = new SourceGroup (workspace.DisplayName, baseUri);
++
++			foreach (FileInfo folder in folders)
++			{
++				Console.WriteLine (workspace.DisplayName + " folder " + folder.DisplayName);
++				string relativeUri = hostUrl + ":" + folder.Id;
++				Source source= new Source (folder.DisplayName, relativeUri);
++				source.SetProperty ("username", username);
++				source.SetProperty ("workspaceid", workspace.Id);
++				source.SetProperty ("Id", folder.Id);
++				source.SetProperty ("Auth","True");
++				group.AddSource (source, -1);
++			}
++			group.SetProperty ("username", username);
++			srcList.AddGroup (group, -1);
++		}
++
++		public void Sync ()
++		{
++			srcList.Sync ();
++		}
++
++		public void DeleteSources ()
++		{
++			List<SourceGroup> groupsToRemove = new List<SourceGroup> ();
++			foreach (SourceGroup group in srcList.Groups)
++			{
++				if (group.BaseUri.StartsWith (baseUri))
++				{
++					/// Currently we remove all sharepoint calendars
++					groupsToRemove.Add (group);
++				}
++			}
++
++			foreach (SourceGroup group in groupsToRemove)
++			{
++				srcList.RemoveGroup (group);
++			}
++		}
++	}
++}
+diff -ruN evolution-2.27.4.1/ui/evolution.xml evolution-2.27.4.1.patched//ui/evolution.xml
+--- evolution-2.27.4.1/ui/evolution.xml	2009-07-13 09:45:14.000000000 +0200
++++ evolution-2.27.4.1.patched//ui/evolution.xml	2009-07-22 13:20:43.000000000 +0200
+@@ -66,6 +66,8 @@
+ 	<placeholder name="ComponentItems"/>
+       </submenu>
+ 
++      <placeholder name="FileNewItems"/>
++
+       <menuitem name="OpenNewWindow" verb="" pixtype="pixbuf"/>
+ 
+       <separator f="" name="eshell4"/>

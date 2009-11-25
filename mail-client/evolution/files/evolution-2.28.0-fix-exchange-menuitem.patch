@@ -1,0 +1,48 @@
+=== modified file 'plugins/exchange-operations/org-gnome-exchange-ab-subscription.xml'
+--- plugins/exchange-operations/org-gnome-exchange-ab-subscription.xml	2007-12-18 20:23:31 +0000
++++ plugins/exchange-operations/org-gnome-exchange-ab-subscription.xml	2007-12-18 20:36:19 +0000
+@@ -1,6 +1,6 @@
+ <Root>
+   <commands>
+-    <cmd name="FolderSubscription" _label="Subscribe to Other User's Contacts"
++    <cmd name="FolderSubscription" _label="Subscribe to Other User's Exchange Contacts"
+       _tip="Subscribe to Other User's Contacts"/>
+   </commands>
+ 
+
+=== modified file 'plugins/exchange-operations/org-gnome-exchange-cal-subscription.xml'
+--- plugins/exchange-operations/org-gnome-exchange-cal-subscription.xml	2007-12-18 20:23:31 +0000
++++ plugins/exchange-operations/org-gnome-exchange-cal-subscription.xml	2007-12-18 20:36:19 +0000
+@@ -1,6 +1,6 @@
+ <Root>
+   <commands>
+-    <cmd name="FolderSubscription" _label="Subscribe to Other User's Calendar"
++    <cmd name="FolderSubscription" _label="Subscribe to Other User's Exchange Calendar"
+       _tip="Subscribe to Other User's Calendar"/>
+   </commands>
+ 
+
+=== modified file 'plugins/exchange-operations/org-gnome-exchange-tasks-subscription.xml'
+--- plugins/exchange-operations/org-gnome-exchange-tasks-subscription.xml	2007-12-18 20:23:31 +0000
++++ plugins/exchange-operations/org-gnome-exchange-tasks-subscription.xml	2007-12-18 20:36:19 +0000
+@@ -1,6 +1,6 @@
+ <Root>
+   <commands>
+-    <cmd name="FolderSubscription" _label="Subscribe to Other User's Tasks"
++    <cmd name="FolderSubscription" _label="Subscribe to Other User's Exchange Tasks"
+       _tip="Subscribe to Other User's Tasks"/>
+   </commands>
+ 
+
+=== modified file 'plugins/exchange-operations/org-gnome-folder-subscription.xml'
+--- plugins/exchange-operations/org-gnome-folder-subscription.xml	2007-12-18 20:23:31 +0000
++++ plugins/exchange-operations/org-gnome-folder-subscription.xml	2007-12-18 20:36:19 +0000
+@@ -1,6 +1,6 @@
+ <Root>
+   <commands>
+-    <cmd name="FolderSubscription" _label="Subscribe to Other User's Folder"
++    <cmd name="FolderSubscription" _label="Subscribe to Other User's Exchange Folder"
+       _tip="Subscribe to Other User's Folder"/>
+   </commands>
+ 
+

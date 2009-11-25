@@ -1,0 +1,38 @@
+diff -upr evolution-2.24.1-old/configure.ac evolution-2.24.1-new/configure.ac
+--- evolution-2.24.1-old/configure.ac	2008-10-19 22:27:24.000000000 -0500
++++ evolution-2.24.1-new/configure.ac	2008-10-26 17:46:09.000000000 -0600
+@@ -1015,6 +1015,9 @@ if test "x${enable_nss}" = "xyes" || tes
+ 				AC_DEFINE(ENABLE_SMIME,1,[Define if SMIME should be enabled])
+ 				msg_smime="yes (Mozilla NSS)"
+ 			fi
++
++                        mozilla_nss="$mozilla_nss nss-shared-helper"
++
+ 			AC_DEFINE(HAVE_NSS,1,[Define if you have NSS])
+ 			AC_DEFINE(HAVE_SSL,1,[Define if you have a supported SSL library])
+ 			AC_DEFINE_UNQUOTED(MOZILLA_NSS_LIB_DIR,"`$PKG_CONFIG --variable=libdir $mozilla_nss`",[Define to the full path of mozilla nss library])
+diff -upr evolution-2.24.1-old/smime/lib/e-cert-db.c evolution-2.24.1-new/smime/lib/e-cert-db.c
+--- evolution-2.24.1-old/smime/lib/e-cert-db.c	2008-10-13 03:33:03.000000000 -0500
++++ evolution-2.24.1-new/smime/lib/e-cert-db.c	2008-10-26 19:15:48.000000000 -0600
+@@ -76,6 +76,7 @@
+ #include "e-util/e-dialog-utils.h"
+ #include "e-util/e-util-private.h"
+ #include <libedataserverui/e-passwords.h>
++#include <nss-shared-helper.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
+@@ -169,7 +170,12 @@ initialize_nss (void)
+ #endif
+ 
+ 	/* we initialize NSS here to make sure it only happens once */
+-	success = (SECSuccess == NSS_InitReadWrite (evolution_dir_path));
++	success = (SECSuccess == nsshelp_open_db ("evolution", evolution_dir_path, 0));
++
++	if (!success) {
++		g_warning ("Opening non-shared cert database");
++		success = (SECSuccess == NSS_InitReadWrite (evolution_dir_path));
++	}
+ 	if (!success) {
+ 		success = (SECSuccess == NSS_Init (evolution_dir_path));
+ 		if (success)

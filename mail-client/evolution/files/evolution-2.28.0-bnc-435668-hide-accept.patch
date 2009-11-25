@@ -1,0 +1,17 @@
+--- plugins/itip-formatter/itip-formatter.c
++++ plugins/itip-formatter/itip-formatter.c
+@@ -1923,6 +1923,14 @@ in_proper_folder (CamelFolder *folder)
+ 	if (!folder)
+ 		return res;
+ 
++
++	/*FIXME Currently there is no other way to identify if its a sent items
++	  folder, so we just compare the folder name */
++	if (!g_ascii_strcasecmp (folder->name, _("Sent")) ||
++		!g_ascii_strcasecmp (folder->name, _("Sent Items")))
++		return FALSE;
++
++
+ 	uri = mail_tools_folder_to_url (folder);
+ 
+ 	res = !(folder->folder_flags & CAMEL_FOLDER_IS_TRASH) &&
