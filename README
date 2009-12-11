@@ -2,6 +2,11 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+12 Декабрь 2009
+
+Кому это интересно к layman теперь добавляется банально: 
+> layman -o 'http://github.com/init6/init_6/raw/master/overlay.xml' -f -k -a init6
+
 08 Декабрь 2009
 
 Добавлено/изменено
