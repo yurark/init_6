@@ -1,0 +1,13 @@
+--- linux-2.6.25/Makefile	2008-04-19 15:38:21.000000000 +0200
++++ linux-2.6.25-hitchhiker-r6/Makefile	2008-05-10 19:39:56.000000000 +0200
+@@ -1,8 +1,8 @@
+ VERSION = 2
+ PATCHLEVEL = 6
+ SUBLEVEL = 25
+-EXTRAVERSION =
+-NAME = Funky Weasel is Jiggy wit it
++EXTRAVERSION = -hh7
++NAME = Reason was out to lunch
+
+ # *DOCUMENTATION*
+ # To see a list of typical targets execute "make help"

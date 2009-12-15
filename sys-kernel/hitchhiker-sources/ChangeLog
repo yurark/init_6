@@ -1,0 +1,195 @@
+# ChangeLog for sys-kernel/hitchhiker-sources
+# Copyright 1999-2009 Berkano Overlay; distributed under the GPL version 2
+
+*hitchhiker-sources-2.6.31-r1 (09 Nov 2009)
+
+  09 Nov 2009; Ben de Groot <yngwin@gentoo.org>
+  +hitchhiker-sources-2.6.31-r1.ebuild:
+  Version bump, includes 2.6.31.5 and latest Gentoo patches.
+
+  20 Jul 2009; Ben de Groot <yngwin@gentoo.org>;
+  -hitchhiker-sources-2.6.28-r3.ebuild,
+  -hitchhiker-sources-2.6.28-r4.ebuild,
+  -hitchhiker-sources-2.6.29-r1.ebuild,
+  -hitchhiker-sources-2.6.30-r1.ebuild,
+  +hitchhiker-sources-2.6.30-r2.ebuild:
+  Remove some old ebuilds. Version bump to include vanilla 2.6.30.2 and latest
+  gentoo patches.
+
+  04 Jul 2009; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.30-r1.ebuild:
+  Version bump, includes 2.6.30.1
+
+  30 Apr 2009; Ben de Groot <yngwin@gentoo.org>;
+  hitchhiker-sources-2.6.29-r2.ebuild:
+  Update description
+
+  30 Apr 2009; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.29-r2.ebuild:
+  New version includes linux 2.6.29.2, aufs2 and tux-on-ice
+
+  03 Apr 2009; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.29-r1.ebuild:
+  Version bump to vanilla 2.6.29.1 and latest patches
+
+  24 Mar 2009; Ben de Groot <yngwin@gentoo.org>;
+  -hitchhiker-sources-2.6.25-r3.ebuild,
+  -hitchhiker-sources-2.6.25-r4.ebuild,
+  -hitchhiker-sources-2.6.25-r5.ebuild,
+  -hitchhiker-sources-2.6.25-r6.ebuild,
+  -hitchhiker-sources-2.6.25-r7.ebuild,
+  -hitchhiker-sources-2.6.25-r8.ebuild,
+  -hitchhiker-sources-2.6.26-r1.ebuild,
+  -hitchhiker-sources-2.6.26-r2.ebuild,
+  -hitchhiker-sources-2.6.26-r3.ebuild,
+  -hitchhiker-sources-2.6.27-r1.ebuild,
+  -hitchhiker-sources-2.6.27-r2.ebuild,
+  -hitchhiker-sources-2.6.27-r3.ebuild,
+  -hitchhiker-sources-2.6.27-r4.ebuild,
+  -hitchhiker-sources-2.6.27-r5.ebuild,
+  -hitchhiker-sources-2.6.27-r6.ebuild,
+  -hitchhiker-sources-2.6.27-r7.ebuild,
+  -hitchhiker-sources-2.6.27-r8.ebuild,
+  -hitchhiker-sources-2.6.28-r1.ebuild,
+  -hitchhiker-sources-2.6.28-r2.ebuild,
+  +hitchhiker-sources-2.6.28-r5.ebuild:
+  Version bump to include vanilla 2.6.28.9. Removing most older versions.
+
+* hitchhiker-sources-2.6.28-r4 (22 Mar 2009)
+
+  22 Mar 2009; Ben de Groot <yngwin@gentoo.org>
+  hitchhiker-sources-2.6.28-r4:
+  Version bump, including vanilla 2.6.28.8 and genpatches 2.6.28-7.
+
+  23 Feb 2009; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.28-r3.ebuild:
+  Version bump, including vanilla 2.6.28.7 and latest Gentoo patches
+
+  27 Jan 2009; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.28-r2.ebuild:
+  Version bump, including vanilla 2.6.28.2, latest Gentoo patches and latest
+  ext4 patches as well as march=native patch
+
+  11 Jan 2009; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.28-r1.ebuild:
+  Version bump
+
+  15 Dec 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.27-r8.ebuild:
+  Version bump to vanilla 2.6.27.9 and genpatches 2.6.27-8
+
+  11 Dec 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.27-r7.ebuild:
+  Bringing kernel patches up to date with vanilla 2.6.27.8 and Gentoo patches
+  2.6.27-7
+
+  21 Nov 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.27-r6.ebuild:
+  Version bump, which adds vanilla 2.6.27.7 bugfix patch.
+
+  19 Nov 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.27-r5.ebuild:
+  Version bump. Includes vanilla 2.6.27.6 and gentoo-patches 2.6.27-5.
+
+  09 Nov 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.27-r4.ebuild:
+  Version bump. Includes vanilla 2.6.27.5 bug fix release.
+
+  26 Oct 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.27-r3.ebuild:
+  Version bump equivalent to vanilla 2.6.27.4
+
+  18 Oct 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.27-r2.ebuild:
+  Version bump. Adding vanilla linux 2.6.27.1 and 2.6.27.2 patches.
+
+  13 Oct 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.27-r1.ebuild:
+  New 2.6.27 version. Ebuild adapted to use separate patches in tarball
+  (genpatches style).
+
+  12 Oct 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.26-r3.ebuild:
+  Version bump to 2.6.26.6 and genpatches-2.6.26-3
+
+  08 Sep 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.26-r2.ebuild:
+  Version bump to 2.6.26.5 with Gentoo patches, as well as squashfs-lzma,
+  aufs, Reiser4, and some Fedora eeepc and wireless patches.
+
+  07 Aug 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.26-r1.ebuild:
+  New version, includes linux-2.6.26.2, genpatches, reiser4, squasfs-lzma, and
+  aufs
+
+  13 Jul 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.25-r8.ebuild, +files/hh-2.6.25-r8-tag.patch,
+  +files/patch-2.6.25.10-11:
+  Version bump, adding linux 2.6.25.11 patch. x86-64 users are strongly
+  recommended to update.
+
+  03 Jul 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.25-r7.ebuild, +files/hh-2.6.25-r7-tag.patch,
+  +files/linux-2.6.25.10.patch:
+  Version bump. Adding incremental linux-2.6.25.10 patch on top of
+  genpatches-2.6.25-7.
+
+  29 Jun 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.25-r6.ebuild, +files/hh-2.6.25-r6-tag.patch:
+  Version bump to genpatches-2.6.25-7
+
+  17 Jun 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.25-r5.ebuild, +files/hh-2.6.25-r5-tag.patch:
+  Version bump: hh5 is equivalent to vanilla 2.6.25.7 with genpatches-2.6.25-6.
+
+  18 May 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.25-r4.ebuild, +files/hh-2.6.25-r4-tag.patch:
+  Version bump
+
+  14 May 2008; Ben de Groot <yngwin@gentoo.org>;
+  -hitchhiker-sources-2.6.24-r1.ebuild,
+  -hitchhiker-sources-2.6.24-r2.ebuild,
+  -hitchhiker-sources-2.6.24-r3.ebuild,
+  -hitchhiker-sources-2.6.24-r4.ebuild,
+  -hitchhiker-sources-2.6.24-r5.ebuild, -files/hh-2.6.24-r3-tag.patch,
+  -files/hh-2.6.24-r4-tag.patch, -files/hh-2.6.24-r5-tag.patch,
+  -files/UDF_2.50-linux-2.6.24.patch.bz2,
+  -hitchhiker-sources-2.6.25-r1.ebuild,
+  -hitchhiker-sources-2.6.25-r2.ebuild, -files/hh-2.6.25-r1-tag.patch,
+  -files/hh-2.6.25-r2-tag.patch, -files/hh-tag.patch,
+  -files/reiser4-new-export_ops-fix.patch, -files/hh-2.6.24-r2-tag.patch:
+  Cleaning out old versions. Upstream recommends only using the latest, for
+  security reasons.
+
+  11 May 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.25-r3.ebuild, +files/hh-2.6.25-r3-tag.patch:
+  Update to genpatches-2.6.25-4. Everyone should update to this version, see
+  http://article.gmane.org/gmane.linux.kernel/678785
+
+  03 May 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.24-r5.ebuild, +files/hh-2.6.24-r5-tag.patch,
+  +hitchhiker-sources-2.6.25-r2.ebuild, +files/hh-2.6.25-r2-tag.patch:
+  New genpatches
+
+  19 Apr 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.24-r4.ebuild, +files/hh-2.6.24-r4-tag.patch,
+  +hitchhiker-sources-2.6.25-r1.ebuild, +files/hh-2.6.25-r1-tag.patch,
+  +files/UDF_2.50-linux-2.6.25rc1.patch.bz2:
+  Version bump because of new genpatches for both 2.6.24 and 2.6.25
+
+  10 Apr 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.24-r3.ebuild, +files/hh-2.6.24-r3-tag.patch:
+  Bump to genpatches-6.
+
+  30 Mar 2008; Ben de Groot <yngwin@gentoo.org>;
+  +files/reiser4-new-export_ops-fix.patch,
+  +hitchhiker-sources-2.6.24-r2.ebuild, +files/hh-2.6.24-r2-tag.patch:
+  Version bump. Now up to date with gentoo-patches-5 i.e. gentoo-sources
+  2.6.24-r4.
+
+  27 Feb 2008; Ben de Groot <yngwin@gentoo.org>;
+  +hitchhiker-sources-2.6.24-r1.ebuild,
+  +files/UDF_2.50-linux-2.6.24.patch.bz2, +files/hh-tag.patch:
+  Initial import. I was tired of patching by hand, so I made an ebuild. Which
+  may also benefit others. The name is of course an homage to Douglas Adams.
+
