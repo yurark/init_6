@@ -2,6 +2,16 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+15 Декабрь 2009
+
+Добавлено/изменено
+
+games-arcade/rocksndiamonds-3.2.6.1
+gnome-base/gdm-2.28.1-r1 # fix USE consolekit http://bugs.gentoo.org/show_bug.cgi?id=296692
+net-firewall/iptables-1.4.6 # bump
+sys-apps/hal-0.5.14 # fix USE consolekit http://bugs.gentoo.org/show_bug.cgi?id=296692
+sys-kernel/hitchhiker-sources
+
 12 Декабрь 2009
 
 Кому это интересно к layman теперь добавляется банально: 
