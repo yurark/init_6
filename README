@@ -10,6 +10,7 @@ dev-libs/glib-2.23.0
 x11-libs/gtk+-2.19.1 
 gnome-base/gvfs-1.5.1 # update to =net-fs/samba-3.4.3 or USE="-samba" emerge =gnome-base/gvfs-1.5.1
 net-wireless/gnome-bluetooth-2.29.3 # + --enable-nautilus-sendto=no --enable-introspection=no
+x11-drivers/nvidia-drivers-190.53 # http://sources.gentoo.org/viewcvs.py/*checkout*/gentoo-x86/x11-drivers/nvidia-drivers/nvidia-drivers-190.53.ebuild?rev=1.1 + http://bugs.gentoo.org/show_bug.cgi?id=297239
 
 16 Декабрь 2009
 
