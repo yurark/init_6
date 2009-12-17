@@ -127,7 +127,7 @@ src_prepare() {
 	gnome2_src_prepare
 
 	# Fix broken smclient option passing
-	epatch "${FILESDIR}/${PN}-2.26.1-smclient-target-detection.patch"
+	#epatch "${FILESDIR}/${PN}-2.26.1-smclient-target-detection.patch"
 
 	intltoolize --force --copy --automake || die "intltoolize failed"
 	eautoreconf

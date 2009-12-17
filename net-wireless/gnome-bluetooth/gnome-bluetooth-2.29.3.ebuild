@@ -33,7 +33,8 @@ DOCS="AUTHORS README NEWS ChangeLog"
 G2CONF="${G2CONF}
 --disable-desktop-update
 --disable-icon-update
---disable-introspection"
+--enable-nautilus-sendto=no 
+--enable-introspection=no"
 
 src_prepare() {
 	# Fix intltoolize broken file, see upstream #577133 and #579464

@@ -2,6 +2,15 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+Добавлено/изменено
+
+17 Декабрь 2009
+
+dev-libs/glib-2.23.0
+x11-libs/gtk+-2.19.1 
+gnome-base/gvfs-1.5.1 # update to =net-fs/samba-3.4.3 or USE="-samba" emerge =gnome-base/gvfs-1.5.1
+net-wireless/gnome-bluetooth-2.29.3 # + --enable-nautilus-sendto=no --enable-introspection=no
+
 16 Декабрь 2009
 
 Добавлено/изменено

@@ -13,7 +13,7 @@ HOMEPAGE="http://www.gnome.org/projects/evolution/"
 LICENSE="GPL-2 FDL-1.1"
 SLOT="2.0"
 KEYWORDS="~alpha ~amd64 ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd"
-IUSE="crypt dbus hal kerberos krb4 ldap mono networkmanager nntp pda profile python ssl gstreamer exchange"
+IUSE="crypt hal kerberos ldap mono networkmanager nntp pda profile python ssl gstreamer exchange"
 # pst
 
 # Pango dependency required to avoid font rendering problems
@@ -34,7 +34,6 @@ RDEPEND=">=dev-libs/glib-2.20
 	>=dev-libs/libgweather-2.25.3
 	>=x11-misc/shared-mime-info-0.22
 	>=gnome-base/gnome-desktop-2.26.0
-	dbus? ( >=dev-libs/dbus-glib-0.74 )
 	hal? ( >=sys-apps/hal-0.5.4 )
 	x11-libs/libnotify
 	pda? (
@@ -47,7 +46,6 @@ RDEPEND=">=dev-libs/glib-2.20
 	networkmanager? ( >=net-misc/networkmanager-0.7 )
 	>=net-libs/libsoup-2.4
 	kerberos? ( virtual/krb5 )
-	krb4? ( app-crypt/mit-krb5[krb4] )
 	>=gnome-base/orbit-2.9.8
 	crypt? ( || (
 				  ( >=app-crypt/gnupg-2.0.1-r2
@@ -80,91 +78,24 @@ pkg_setup() {
 	G2CONF="${G2CONF}
 		--without-kde-applnk-path
 		--enable-plugins=experimental
-		--with-weather
 		$(use_enable ssl nss)
 		$(use_enable ssl smime)
 		$(use_enable mono)
 		$(use_enable nntp)
 		$(use_enable networkmanager nm)
-		$(use_enable dbus)
 		$(use_enable gstreamer audio-inline)
-		$(use_enable exchange)
-		--disable-pst-import
 		$(use_enable pda pilot-conduits)
 		$(use_enable profile profiling)
 		$(use_enable python)
 		$(use_with ldap openldap)
 		$(use_with kerberos krb5 /usr)
-		$(use_with krb4 krb4 /usr)
-		--disable-contacts-map"
+		--disable-contacts-map
+		--disable-pst-import"
 
 	# dang - I've changed this to do --enable-plugins=experimental.  This will
 	# autodetect new-mail-notify and exchange, but that cannot be helped for the
 	# moment.  They should be changed to depend on a --enable-<foo> like mono
 	# is.  This cleans up a ton of crap from this ebuild.
-}
-
-src_prepare() {
-	gnome2_src_prepare
-
-	# Fix timezone offsets on fbsd.  bug #183708
-	# FIXME: bsd needs to be more active at pushing stuff upstream
-	#epatch "${FILESDIR}/${PN}-2.21.3-fbsd.patch"
-
-	# Fix delete keyboard shortcut, bug #????
-	#epatch "${FILESDIR}/${PN}-2.28.0-delete-key.patch"
-
-	# Fix multiple automagic plugins, bug #204300 & bug #271451
-	#epatch "${FILESDIR}/${PN}-2.28.0-automagic-plugins.patch"
-
-	#epatch "${FILESDIR}/${PN}-2.28.0-calendar-sendbutton.patch"
-	#epatch "${FILESDIR}/${PN}-2.28.0-fix-exchange-menuitem.patch"
-	# PATCH-FIX-OPENSUSE evolution-custom-openldap-includes.patch maw@novell.com -- look for ldap includes in %{_libdir}/evoldap/include
-	#epatch "${FILESDIR}/${PN}-2.28.0-evolution-custom-openldap-includes.patch"
-	# PATCH-FEATURE-OPENSUSE evolution-shared-nss-db.patch hpj@novell.com -- Migrate to shared NSS database.
-	#epatch "${FILESDIR}/${PN}-2.28.0-evolution-shared-nss-db.patch"
-	# PATCH-FIX-UPSTREAM  bnc-435668-hide-accept.patch bnc#435668 -- Meetings In SentItems Should Hide Accept/Decline.
-	#epatch "${FILESDIR}/${PN}-2.28.0-bnc-435668-hide-accept.patch"
-	# PATCH-FIX-UPSTREAM bnc-435722-book-uri-long.patch bnc#435722 abharath@suse.de -- Book URI: Spills Into Second Column.
-	#epatch "${FILESDIR}/${PN}-2.28.0-bnc-435722-book-uri-long.patch"
-	# PATCH-FIX-UPSTREAM sharepoint-account-setup.patch pchenthill@suse.de -- This patch allows you to connect to sharepoint servers.
-	#epatch "${FILESDIR}/${PN}-2.28.0-sharepoint-account-setup.patch"
-	# PATCH-FIX-OPENSUSE bnc-433448-backup-restore-fails.patch bnc433448 abharath@suse.de -- Not required upstream.
-	#epatch "${FILESDIR}/${PN}-2.28.0-bnc-433448-backup-restore-fails.patch"
-	# PATCH-FIX-UPSTREAM bnc-210959-evo-accept-ics.patch bnc210959 pchenthill@novell.com -- Patch yet to be pushed upstream.
-	#epatch "${FILESDIR}/${PN}-2.28.0-bnc-210959-evo-accept-ics.patch"
-	# PATCH-FIX-UPSTREAM sp-tasks-setup.diff pchenthill@suse.de -- Patch needs to be upstreamed. 
-	#epatch "${FILESDIR}/${PN}-2.28.0-sp-tasks-setup.patch"
-	# PATCH-FIX-UPSTREAM sp-meetingworkspace-ui.patch pchenthill@suse.de -- Patch needs to be upstreamed.
-	#epatch "${FILESDIR}/${PN}-2.28.0-sp-meetingworkspace-ui.patch"
-	# PATCH-FIX-UPSTREAM bnc-449888-handle-no-workspace.patch bnc449888 pchenthill@suse.de -- Patch needs to be upstreamed.
-	#epatch "${FILESDIR}/${PN}-2.28.0-bnc-449888-handle-no-workspace.patch"
-	# PATCH-FIX-SLED bnc-440634-forwarded-hide-accept-decline.patch bnc440634 abharath@suse.de -- Make GW understand folders better.
-	#epatch "${FILESDIR}/${PN}-2.28.0-bnc-440634-forwarded-hide-accept-decline.patch"
-	# PATCH-NEEDS-REBASE bnc-445996-address-conflict.patch bnc445996 shashish@suse.de -- Needs to be moved out of glade files. (was PATCH-FIX-SLED)
-	#epatch "${FILESDIR}/${PN}-2.28.0-bnc-445996-address-conflict.patch"
-	# PATCH-FIX-SLED sp-process-meetings.diff pchenthill@suse.de -- Fix for bug 449899 (bnc)
-	#epatch "${FILESDIR}/${PN}-2.28.0-sp-process-meetings.patch"
-
-	# FIXME: Fix compilation flags crazyness
-	#sed 's/CFLAGS="$CFLAGS $WARNING_FLAGS"//' \
-	#	-i configure.ac configure || die "sed 1 failed"
-
-	#intltoolize --force --copy --automake || die "intltoolize failed"
-	#eautoreconf
-
-	# Use NSS/NSPR only if 'ssl' is enabled.
-	if use ssl ; then
-		sed -i -e "s|mozilla-nss|nss|
-			s|mozilla-nspr|nspr|" "${S}"/configure || die "sed 1 failed"
-		G2CONF="${G2CONF} --enable-nss=yes"
-	else
-		G2CONF="${G2CONF} --without-nspr-libs --without-nspr-includes \
-			--without-nss-libs --without-nss-includes"
-	fi
-
-	# problems with -O3 on gcc-3.3.1
-	replace-flags -O3 -O2
 }
 
 pkg_postinst() {
