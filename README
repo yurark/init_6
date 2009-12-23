@@ -4,6 +4,32 @@ USE AT YOUR OWN RISK.
 
 Добавлено/изменено
 
+24 Декабрь 2009
+
+app-arch/file-roller-2.29.3
+app-cdr/brasero-2.29.4
+app-text/evince-2.29.4
+dev-libs/atk-1.29.4
+dev-libs/glib-2.23.1 # пока правда не пробовал её собирать... лениво
+dev-libs/gmime-2.5.9 # пока что рано ее ставить. собирается без проблем revdep-rebuild не может пересобрать media-video/totem-2.28.4 
+dev-libs/libxml2-2.7.6
+dev-python/pygobject-2.21.0 # не собирается
+gnome-base/gdm-2.29.4
+gnome-base/gnome-desktop-2.29.4
+gnome-base/gnome-keyring-2.29.4 # пока что рано ее ставить
+gnome-base/nautilus-2.29.1
+gnome-extra/evolution-data-server-2.29.4
+gnome-extra/evolution-exchange-2.29.4
+gnome-extra/gcalctool-5.29.4
+gnome-extra/gnome-color-chooser-0.2.5
+gnome-extra/gnome-games-2.29.4 # при установке ругается на коллизии... можно решить так emerge gnome-extra/gnome-games --unmerge; emerge =gnome-extra/gnome-games-2.24.9
+mail-client/evolution-2.29.4 # не собирается
+net-im/empathy-2.29.4
+net-im/telepathy-mission-control-5.3.2
+net-libs/telepathy-farsight-0.0.12
+net-libs/telepathy-glib-0.9.2
+net-voip/telepathy-gabble-0.9.3
+
 17 Декабрь 2009
 
 dev-libs/glib-2.23.0

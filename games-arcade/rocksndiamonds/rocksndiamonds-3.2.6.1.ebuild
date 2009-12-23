@@ -42,12 +42,12 @@ src_unpack() {
 		rockslevels-dx-1.0.tar.gz
 
 	# make it parallel-friendly.
-	epatch "${FILESDIR}"/${P}-parallel-build.patch
-	sed -i \
-		-e 's:\$(MAKE_CMD):$(MAKE) -C $(SRC_DIR):' \
-		-e '/^MAKE/d' \
-		Makefile \
-		|| die "sed failed"
+#	epatch "${FILESDIR}"/${P}-parallel-build.patch
+#	sed -i \
+#		-e 's:\$(MAKE_CMD):$(MAKE) -C $(SRC_DIR):' \
+#		-e '/^MAKE/d' \
+#		Makefile \
+#		|| die "sed failed"
 
 	cd levels
 	unpack \

@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/nautilus/nautilus-2.28.1.ebuild,v 1.2 2009/11/05 23:40:12 volkmar Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/nautilus/nautilus-2.28.4.ebuild,v 1.1 2009/12/17 23:26:33 eva Exp $
 
 EAPI="2"
 GCONF_DEBUG="no"
@@ -12,11 +12,10 @@ HOMEPAGE="http://www.gnome.org/projects/nautilus/"
 
 LICENSE="GPL-2 LGPL-2 FDL-1.1"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
-IUSE="beagle doc gnome xmp" # tracker
+KEYWORDS="~amd64 ~arm ~hppa ~sh ~x86 ~x86-fbsd"
+IUSE="beagle doc gnome tracker xmp"
 
 # not adding gnome-base/gail because it is in >=gtk+-2.13
-# to be bumped: tracker? ( >=app-misc/tracker-0.7 )
 RDEPEND=">=dev-libs/glib-2.21.3
 	>=gnome-base/gnome-desktop-2.25.5
 	>=x11-libs/pango-1.1.2
@@ -32,6 +31,7 @@ RDEPEND=">=dev-libs/glib-2.21.3
 	beagle? ( || (
 		dev-libs/libbeagle
 		=app-misc/beagle-0.2* ) )
+	tracker? ( >=app-misc/tracker-0.7 )
 	xmp? ( >=media-libs/exempi-2 )"
 
 DEPEND="${RDEPEND}
@@ -79,19 +79,6 @@ src_prepare() {
 
 	# Fix nautilus flipping-out with --no-desktop -- bug 266398
 	epatch "${FILESDIR}/${PN}-2.27.4-change-reg-desktop-file-with-no-desktop.patch"
-	# PATCH-FIX-UPSTREAM nautilus-bgo350950-search-desktop.diff bgo350950 federico@novell.com -- add a desktop file for Nautilus search interface
-	epatch "${FILESDIR}/nautilus-bgo350950-search-desktop.diff"
-	# PATCH-FIX-UPSTREAM nautilus-bnc117333-bgo350962-folder-icon-for-menus-and-windows.diff bnc117333 bgo350962 bgo581584 federico@novell.com - Use a folder icon instead of a file cabinet window
-	epatch "${FILESDIR}/nautilus-bnc117333-bgo350962-folder-icon-for-menus-and-windows.diff"
-	# PATCH-NEEDS-REBASE nautilus-146947-rename-bad-parameters-message.diff bgo350976 bnc146947 federico@novell.com -- The upstream bug is still open, so we need to check if it's still needed (you just need a samba share to test). If yes, we should port the patch to gio
-	#epatch "${FILESDIR}/nautilus-146947-rename-bad-parameters-message.diff"
-	# PATCH-NEEDS-REBASE nautilus-drives-and-volumes-on-desktop.diff bnc335411 federico@novell.com
-	#epatch "${FILESDIR}/nautilus-drives-and-volumes-on-desktop.diff"
-	# PATCH-FIX-OPENSUSE nautilus-bnc363122-lockdown-context-menus.diff bnc363122 federico@novell.com
-	epatch "${FILESDIR}/nautilus-bnc363122-lockdown-context-menus.diff"
-	# PATCH-NEEDS-REBASE nautilus-sysadmin-desktop-items.diff fate305252 federico@novell.com -- Support sysadmin-defined desktop items (was PATCH-FEATURE-OPENSUSE)
-	#epatch "${FILESDIR}/nautilus-sysadmin-desktop-items.diff"
-
 }
 
 src_test() {

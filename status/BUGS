@@ -1,5 +1,24 @@
 GNOME 2.28.0
 
+23 Декабрь 2009
+
+# из gnome-2.29 у себя замаскировал
+
+=dev-libs/glib-2.23.1 # просто лениво собирать
+=gnome-extra/at-spi-1.29.3 # начинаются проблемы с sandbox
+=gnome-extra/evolution-data-server-2.29.3 # собирается без проблем
+=gnome-extra/evolution-data-server-2.29.4 # равно как и этот...
+=mail-client/evolution-2.29.3.2 # не собирается 
+=mail-client/evolution-2.29.4 # не собирается
+=gnome-extra/evolution-exchange-2.29.3 # а этому нужно собранный gnome-extra/evolution соответствующей версии
+=gnome-extra/evolution-exchange-2.29.4 # поэтому пока что замаскировал
+
+=media-video/totem-2.29.2 # хочит не существующий пока что в природе gstreamer-plugins-base-0.10.25.1
+=gnome-base/gnome-keyring-2.29.4 
+=dev-python/pygobject-2.21.0 
+=dev-libs/gmime-2.5.0 # не устанавливает либу. в результате revdep-rebuild после обновления не проходит
+
+
 Не собирается только gnome-base/gnome-panel-2.28.0
 Ну и сами ebuild-ы не фонтан конечно... но по крайней мере они работают.
 
