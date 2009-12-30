@@ -12,8 +12,8 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="doc"
 
-RDEPEND=">=dev-libs/glib-2.19.7
-	>=x11-libs/gtk+-2.16
+RDEPEND=">=dev-libs/glib-2.22
+	>=x11-libs/gtk+-2.18
 	>=gnome-base/gconf-2
         "
 
