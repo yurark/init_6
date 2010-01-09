@@ -2,6 +2,20 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+09 Январь 2010
+
+Добавлено/изменено
+
+app-crypt/seahorse-2.29.4
+app-misc/gnote-0.7.1 
+app-text/gnome-doc-utils-0.19.1
+dev-cpp/glibmm-2.23.0 # просит dev-libs/glib-2.23.2 и x11-libs/gtk+-2.19.2
+gnome-extra/gnome-color-manager-2.29.2
+gnome-extra/yelp-2.29.1
+media-gfx/exiv2-0.19 # не собирается и к тому же оно нужно для media-gfx/gthumb-2.11.1
+media-gfx/gthumb-2.11.1 # с media-gfx/exiv2-0.18.1-r1 вылетает
+x11-libs/gtk+-2.19.2
+
 04 Январь 2010
 
 Добавлено/изменено
