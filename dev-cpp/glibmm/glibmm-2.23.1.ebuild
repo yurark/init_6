@@ -12,8 +12,7 @@ SLOT="2"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE="doc examples test"
 
-RDEPEND=">=dev-libs/libsigc++-2.2
-	>=dev-libs/glib-2.23.2"
+RDEPEND=">=dev-libs/libsigc++-2.2"
 
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig

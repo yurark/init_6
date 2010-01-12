@@ -84,7 +84,6 @@ pkg_setup() {
 		$(use_enable ssl nss)
 		$(use_enable ssl smime)
 		$(use_enable mono)
-		$(use_enable nntp)
 		$(use_enable networkmanager nm)
 		$(use_enable gstreamer audio-inline)
 		$(use_enable pda pilot-conduits)

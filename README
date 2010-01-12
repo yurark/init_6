@@ -33,6 +33,7 @@ x11-libs/gtksourceview-2.9.4
 x11-libs/libxklavier-5.0
 x11-themes/gtk-engines-2.19.0
 media-video/totem-2.29.2 # Победил! C dev-libs/gmime-2.4.11 собирается!
+dev-cpp/glibmm-2.23.1 # Собирается!
 
 09 Январь 2010
 
