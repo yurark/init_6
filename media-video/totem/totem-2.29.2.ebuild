@@ -95,9 +95,10 @@ pkg_setup() {
 		--disable-schemas-install
 		--disable-static
 		--disable-vala
+		--disable-smclient
 		--with-dbus
-		--with-smclient
 		--enable-easy-codec-installation
+		--disable-dependency-tracking
 		$(use_enable nsplugin browser-plugins)"
 
 	# Plugin configuration
@@ -128,6 +129,7 @@ src_prepare() {
 
 	# Fix broken smclient option passing
 	#epatch "${FILESDIR}/${PN}-2.26.1-smclient-target-detection.patch"
+	epatch "${FILESDIR}/${PN}-2.29.2-configure.patch"
 
 	intltoolize --force --copy --automake || die "intltoolize failed"
 	eautoreconf

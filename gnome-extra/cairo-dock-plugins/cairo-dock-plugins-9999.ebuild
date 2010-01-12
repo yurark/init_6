@@ -42,10 +42,13 @@ src_prepare() {
 	eautoreconf -isvf
 }
 src_configure() {
-	econf --disable-dependency-tracking       \
+	econf --disable-dependency-tracking           \
 		--disable-old-gnome-integration       \
-		--enable-scooby-do                   \
-		$(use_enable alsa alsa-mixer)        \
+		--enable-scooby-do		      \
+		--enable-gio-in-gmenu		      \
+		--enable-rssreader                    \
+		--enable-show-desklets                \
+		$(use_enable alsa alsa-mixer)         \
 		$(use_enable compiz compiz-icon)      \
 		$(use_enable exif)                    \
 		$(use_enable gio gio-in-gmenu)        \

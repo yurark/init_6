@@ -1,0 +1,10 @@
+--- configure.in 
++++ configure.in 
+@@ -60,7 +60,7 @@
+ dnl release versions.
+ GST_MAJORMINOR=0.10
+ GST_REQS=0.10.24
+-GSTPLUG_REQS=0.10.25.1
++GSTPLUG_REQS=0.10
+ 
+ HAVE_GSTREAMER=no
