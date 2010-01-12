@@ -2,6 +2,37 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+12 Январь 2010
+
+Добавлено/изменено
+
+app-arch/file-roller-2.29.4
+app-editors/gedit-2.29.4 # не собирается
+app-text/evince-2.29.5
+app-text/gnome-doc-utils-0.19.2
+dev-libs/libgweather-2.29.5
+dev-util/gtk-doc-1.13
+dev-util/gtk-doc-am-1.13
+gnome-base/gnome-keyring-2.29.5 # собирается но другими при сборке не находится 
+gnome-base/libgnomekbd-2.29.5
+gnome-extra/at-spi-1.29.5
+gnome-extra/evolution-data-server-2.29.5
+gnome-extra/evolution-exchange # не собирается
+gnome-extra/gnome-games-2.29.5 # не собирается
+gnome-extra/gnome-media-2.28.5
+gnome-extra/gtkhtml-3.29.5
+gnome-extra/yelp-2.29.2
+mail-client/evolution-2.29.5 # не собирается
+media-gfx/eog-2.29.5
+media-libs/libchamplain-0.4.3
+media-video/cheese-2.29.5
+net-im/empathy-2.29.5
+www-client/epiphany-2.29.5
+x11-libs/gtk+-2.19.3
+x11-libs/gtksourceview-2.9.4
+x11-libs/libxklavier-5.0
+x11-themes/gtk-engines-2.19.0
+
 09 Январь 2010
 
 Добавлено/изменено
