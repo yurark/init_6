@@ -7,7 +7,7 @@ USE AT YOUR OWN RISK.
 Добавлено/изменено
 
 gnome-base/gnome-desktop-2.29.5
-app-editors/gedit-2.29.4
+app-editors/gedit-2.29.4 # не собирается
 gnome-base/gnome-panel-2.29.5
 gnome-extra/gnome-games-2.29.5
 gnome-base/gnome-applets-2.29.5
