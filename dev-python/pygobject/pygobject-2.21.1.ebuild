@@ -1,6 +1,6 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/pygobject/pygobject-2.20.0.ebuild,v 1.2 2009/11/02 16:30:11 grobian Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-python/pygobject/pygobject-2.20.0.ebuild,v 1.4 2010/01/11 16:56:25 arfrever Exp $
 
 EAPI="2"
 SUPPORT_PYTHON_ABIS="1"
@@ -17,7 +17,7 @@ IUSE="doc examples libffi test"
 
 # FIXME: add introspection support
 RDEPEND=">=dev-lang/python-2.4.4-r5
-	>=dev-libs/glib-2.16
+	>=dev-libs/glib-2.20
 	!<dev-python/pygtk-2.13
 	libffi? ( virtual/libffi )"
 DEPEND="${RDEPEND}
@@ -40,13 +40,13 @@ src_prepare() {
 	gnome2_src_prepare
 
 	# Fix FHS compliance, see upstream bug #535524
-#	epatch "${FILESDIR}/${PN}-2.15.4-fix-codegen-location.patch"
+	epatch "${FILESDIR}/${PN}-2.15.4-fix-codegen-location.patch"
 
 	# Do not build tests if unneeded, bug #226345
-#	epatch "${FILESDIR}/${PN}-2.18.0-make_check.patch"
+	epatch "${FILESDIR}/${PN}-2.18.0-make_check.patch"
 
-	# Support installation for multiple Python versions 
-#	epatch "${FILESDIR}/${PN}-2.18.0-support_multiple_python_versions.patch"
+	# Support installation for multiple Python versions
+	epatch "${FILESDIR}/${PN}-2.18.0-support_multiple_python_versions.patch"
 
 	# needed to build on a libtool-1 system, bug #255542
 	rm m4/lt* m4/libtool.m4 ltmain.sh
@@ -98,8 +98,6 @@ src_install() {
 }
 
 pkg_postinst() {
-	python_need_rebuild
-
 	create_symlinks() {
 		alternatives_auto_makesym $(python_get_sitedir)/pygtk.py pygtk.py-[0-9].[0-9]
 		alternatives_auto_makesym $(python_get_sitedir)/pygtk.pth pygtk.pth-[0-9].[0-9]

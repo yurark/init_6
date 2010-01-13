@@ -7,10 +7,33 @@ USE AT YOUR OWN RISK.
 Добавлено/изменено
 
 gnome-base/gnome-desktop-2.29.5
-app-editors/gedit-2.29.4 # не собирается
+app-editors/gedit-2.29.4
 gnome-base/gnome-panel-2.29.5
 gnome-extra/gnome-games-2.29.5
 gnome-base/gnome-applets-2.29.5
+dev-python/brasero-python-2.29.1
+dev-python/bug-buddy-python-2.29.1
+dev-python/evince-python-2.29.1
+dev-python/evolution-python-2.29.1
+dev-python/gnome-applets-python-2.29.1
+dev-python/gnome-desktop-python-2.29.1
+dev-python/gnome-keyring-python-2.29.1
+dev-python/gnome-media-python-2.29.1
+dev-python/gnome-python-2.29.1
+dev-python/gnome-python-base-2.29.1
+dev-python/gnome-python-desktop-2.29.1
+dev-python/gnome-python-desktop-base-2.29.1
+dev-python/gtksourceview-python-2.29.1
+dev-python/libgnomeprint-python-2.29.1
+dev-python/libgtop-python-2.29.1
+dev-python/librsvg-python-2.29.1
+dev-python/libwnck-python-2.29.1
+dev-python/metacity-python-2.29.1
+dev-python/nautilus-cd-burner-python-2.29.1
+dev-python/pygobject-2.21.1 # fix
+dev-python/totem-python-2.29.1
+gnome-base/eel-2.26.0
+gnome-extra/nautilus-cd-burner-2.25.3
 А кроме того почищенно много старья.
 
 12 Январь 2010

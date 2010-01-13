@@ -13,7 +13,7 @@ HOMEPAGE="http://www.gnome.org/projects/evolution/"
 LICENSE="GPL-2 FDL-1.1"
 SLOT="2.0"
 KEYWORDS="~alpha ~amd64 ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd"
-IUSE="crypt hal kerberos ldap mono networkmanager nntp pda profile python ssl gstreamer exchange"
+IUSE="crypt dbus hal kerberos ldap mono networkmanager nntp pda profile python ssl gstreamer exchange"
 # pst
 
 # Pango dependency required to avoid font rendering problems
@@ -37,6 +37,7 @@ RDEPEND=">=dev-libs/glib-2.20
 	>=dev-libs/libgweather-2.25.3
 	>=x11-misc/shared-mime-info-0.22
 	>=gnome-base/gnome-desktop-2.26.0
+	dbus? ( >=dev-libs/dbus-glib-0.74 )
 	hal? ( >=sys-apps/hal-0.5.4 )
 	x11-libs/libnotify
 	pda? (
@@ -85,6 +86,7 @@ pkg_setup() {
 		$(use_enable ssl smime)
 		$(use_enable mono)
 		$(use_enable networkmanager nm)
+		$(use_enable dbus)
 		$(use_enable gstreamer audio-inline)
 		$(use_enable pda pilot-conduits)
 		$(use_enable profile profiling)
