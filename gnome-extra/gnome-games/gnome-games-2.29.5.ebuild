@@ -18,7 +18,6 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE="artworkextra guile opengl sdl test"
 
-#	>=dev-libs/gobject-introspection 0.6.3
 RDEPEND="
 	>=dev-games/libggz-0.0.14
 	>=dev-games/ggz-client-libs-0.0.14
@@ -54,7 +53,10 @@ DEPEND="${RDEPEND}
 	>=gnome-base/gnome-common-2.12.0
 	>=app-text/scrollkeeper-0.3.8
 	>=app-text/gnome-doc-utils-0.10
-	test? ( >=dev-libs/check-0.9.4 )"
+	test? ( >=dev-libs/check-0.9.4 )
+	introspection? (
+		>=dev-libs/gobject-introspection-0.6.4
+		>=dev-libs/gir-repository-0.6.3[pango] )"
 
 # Others are installed below; multiples in this package.
 DOCS="AUTHORS HACKING MAINTAINERS TODO"
@@ -83,6 +85,7 @@ pkg_setup() {
 	#$(use_enable clutter staging)
 	G2CONF="${G2CONF}
 		$(use_enable test tests)
+		$(use_enable introspection)
 		--disable-card-themes-installer
 		--with-scores-group=${GAMES_GROUP}
 		--enable-noregistry=\"${GGZ_MODDIR}\"
@@ -111,20 +114,6 @@ pkg_setup() {
 
 src_prepare() {
 	gnome2_src_prepare
-
-	# disable pyc compiling
-	#mv py-compile py-compile.orig
-	#ln -s $(type -P true) py-compile
-
-	# Fix implicit declaration of yylex.
-	#epatch "${FILESDIR}/${PN}-2.26.3-implicit-declaration.patch"
-
-	# Fix bug #281718 -- *** glibc detected *** gtali: free(): invalid pointer
-	#epatch "${FILESDIR}/${PN}-2.26.3-gtali-invalid-pointer.patch"
-
-	# Fix build failure, conflicting types for 'games_sound_init',
-	# in libgames-support/games_sound.c.
-	#epatch "${FILESDIR}/${P}-conflicting-types-libgames-support.patch"
 
 	# If calling eautoreconf, this ebuild uses libtool-2
 	eautomake

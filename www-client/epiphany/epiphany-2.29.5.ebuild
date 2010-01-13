@@ -64,8 +64,6 @@ pkg_setup() {
 src_prepare() {
 	gnome2_src_prepare
 
-	#epatch "${FILESDIR}/${PN}-2.28.1-user-agent.patch"
-
 	# Make it libtool-1 compatible
 	rm -v m4/lt* m4/libtool.m4 || die "removing libtool macros failed"
 

@@ -2,6 +2,17 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+13 Январь 2010
+
+Добавлено/изменено
+
+gnome-base/gnome-desktop-2.29.5
+app-editors/gedit-2.29.4
+gnome-base/gnome-panel-2.29.5
+gnome-extra/gnome-games-2.29.5
+gnome-base/gnome-applets-2.29.5
+А кроме того почищенно много старья.
+
 12 Январь 2010
 
 Добавлено/изменено
@@ -43,7 +54,7 @@ app-crypt/seahorse-2.29.4
 app-misc/gnote-0.7.1 
 app-text/gnome-doc-utils-0.19.1
 dev-cpp/glibmm-2.23.0 # просит dev-libs/glib-2.23.2 и x11-libs/gtk+-2.19.2
-gnome-extra/gnome-color-manager-2.29.2
+gnome-extra/gnome-color-manager-2.29.2 # gui падает...
 gnome-extra/yelp-2.29.1
 media-gfx/exiv2-0.19 # собирается c USE="xmp"
 media-gfx/gthumb-2.11.1 # с media-gfx/exiv2-0.18.1-r1 вылетает жалуясь на exiv2. с media-gfx/exiv2-0.19 вылетает жалуясь на clutter :)

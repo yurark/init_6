@@ -29,8 +29,7 @@ DEPEND="${RDEPEND}
 src_unpack() {
 	unpack ${A}
 	cd "${S}"
-	#epatch "${FILESDIR}"/${P}-tests.patch
-	#rm -v m4/{libtool,lt*}.m4 || die "libtool compability failed"
+
 	eautoreconf
 }
 

@@ -41,14 +41,6 @@ src_unpack() {
 		rockslevels-sp-1.0.tar.gz \
 		rockslevels-dx-1.0.tar.gz
 
-	# make it parallel-friendly.
-#	epatch "${FILESDIR}"/${P}-parallel-build.patch
-#	sed -i \
-#		-e 's:\$(MAKE_CMD):$(MAKE) -C $(SRC_DIR):' \
-#		-e '/^MAKE/d' \
-#		Makefile \
-#		|| die "sed failed"
-
 	cd levels
 	unpack \
 		rnd_jue-v7.zip \

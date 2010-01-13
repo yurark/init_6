@@ -94,18 +94,6 @@ src_prepare() {
 	sed 's:^\(.*gpm_inhibit_test (test);\)://\1:' -i src/gpm-self-test.c \
 		|| die "sed 3 failed"
 
-	# Skip crazy compilation warnings, bug #263078
-	#epatch "${FILESDIR}/${PN}-2.26.0-gcc44-options.patch"
-
-	# Resurrect cpufreq in capplet, bug #263891
-	#epatch "${WORKDIR}/${P}-cpufreq-libhal-glib.patch"
-	#epatch "${WORKDIR}/${P}-cpufreq-support.patch"
-	#epatch "${WORKDIR}/${P}-cpufreq-ui.patch"
-#	epatch "${WORKDIR}/${PN}-2.26.3-cpufreq-po.patch"
-
-	# Fix uninstalled cpufreq schemas, bug #266995
-	#epatch "${WORKDIR}/${P}-cpufreq-schemas.patch"
-
 	# Make it libtool-1 compatible
 	rm -v m4/lt* m4/libtool.m4 || die "removing libtool macros failed"
 

@@ -82,12 +82,6 @@ pkg_setup() {
 src_prepare() {
 	gnome2_src_prepare
 
-	# Fix sandbox violations, upstream bug #579458
-	#epatch "${FILESDIR}/${PN}-4.0.2-sandbox.patch"
-
-	# Fix automagic libsoup support, upstream bug #584398
-	#epatch "${FILESDIR}/${PN}-4.0.2-libsoup-magic.patch"
-
 	intltoolize --force --copy --automake || die "intltoolize failed"
 	eautoreconf
 }

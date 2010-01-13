@@ -35,11 +35,4 @@ DOCS="AUTHORS ChangeLog HACKING NEWS README"
 src_unpack() {
 	gnome2_src_unpack
 
-	# Use login shell by default (#12900)
-	#epatch "${FILESDIR}"/${PN}-2.22.0-default_shell.patch
-
-	# patch gnome terminal to report as GNOME rather than xterm
-	# This needs to resolve a few bugs (#120294,)
-	# Leave out for now; causing too many problems
-	#epatch ${FILESDIR}/${PN}-2.13.90-TERM-gnome.patch
 }

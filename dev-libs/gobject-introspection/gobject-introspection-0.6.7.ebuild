@@ -32,12 +32,6 @@ G2CONF="${G2CONF}
 src_prepare() {
 	gnome2_src_prepare
 
-	# Fix build failure
-	#epatch "${FILESDIR}/${PN}-0.6.2-gir.patch"
-
-	# Make it libtool-1 compatible, bug #270909
-	#rm -v m4/lt* m4/libtool.m4 || die "removing libtool macros failed"
-
 	eautoreconf
 }
 

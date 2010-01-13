@@ -36,29 +36,6 @@ pkg_setup() {
 src_unpack() {
 	gnome2_src_unpack
 
-	# Fix a typo in services
-	#epatch "${FILESDIR}/${PN}-2.6.0-services.patch"
-
-	# Fix a distro detection in users to use proper variant
-	# of useradd
-	#epatch "${FILESDIR}/${PN}-2.6.0-users.patch"
-
-	# Fix automagic policykit dependency
-	#epatch "${FILESDIR}/${PN}-2.6.0-automagic-polkit.patch"
-
-	# Fix service handling
-	#epatch "${FILESDIR}/${PN}-2.6.0-handle-services.patch"
-
-	# Clean up pid file
-	#epatch "${FILESDIR}/${PN}-2.6.0-cleanup-pid-file.patch"
-
-	# Change default permission, only people in stb-admin is allowed
-	# to speak to the dispatcher.
-	#epatch "${FILESDIR}/${PN}-2.6.0-default-permissions.patch"
-
-	# Apply fix from ubuntu for CVE 2008 4311
-	#epatch "${FILESDIR}/${PN}-2.6.0-cve-2008-4311.patch"
-
 	intltoolize --force --copy --automake || die "intltoolize failed"
 	eautoreconf
 }

@@ -56,32 +56,3 @@ pkg_setup() {
 		$(use_enable spell)
 		$(use_enable xattr attr)"
 }
-
-src_unpack() {
-	gnome2_src_unpack
-
-	# disable pyc compiling
-	#mv "${S}"/py-compile "${S}"/py-compile.orig
-	#ln -s $(type -P true) "${S}"/py-compile
-
-	# Fix intltoolize broken file, see upstream #577133
-	#sed "s:'\^\$\$lang\$\$':\^\$\$lang\$\$:g" -i po/Makefile.in.in \
-	#	|| die "intltool rules fix failed"
-}
-
-src_install() {
-	gnome2_src_install
-
-	# Installed for plugins, but they're dlopen()-ed
-	find "${D}" -name "*.la" -delete || die "remove of la files failed"
-}
-
-pkg_postinst() {
-	gnome2_pkg_postinst
-	use python && python_mod_optimize /usr/$(get_libdir)/gedit-2/plugins
-}
-
-pkg_postrm() {
-	gnome2_pkg_postrm
-	python_mod_cleanup /usr/$(get_libdir)/gedit-2/plugins
-}

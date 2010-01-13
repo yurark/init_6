@@ -83,14 +83,8 @@ src_prepare() {
 	epatch "${FILESDIR}/nautilus-bgo350950-search-desktop.diff"
 	# PATCH-FIX-UPSTREAM nautilus-bnc117333-bgo350962-folder-icon-for-menus-and-windows.diff bnc117333 bgo350962 bgo581584 federico@novell.com - Use a folder icon instead of a file cabinet window
 	epatch "${FILESDIR}/nautilus-bnc117333-bgo350962-folder-icon-for-menus-and-windows.diff"
-	# PATCH-NEEDS-REBASE nautilus-146947-rename-bad-parameters-message.diff bgo350976 bnc146947 federico@novell.com -- The upstream bug is still open, so we need to check if it's still needed (you just need a samba share to test). If yes, we should port the patch to gio
-	#epatch "${FILESDIR}/nautilus-146947-rename-bad-parameters-message.diff"
-	# PATCH-NEEDS-REBASE nautilus-drives-and-volumes-on-desktop.diff bnc335411 federico@novell.com
-	#epatch "${FILESDIR}/nautilus-drives-and-volumes-on-desktop.diff"
 	# PATCH-FIX-OPENSUSE nautilus-bnc363122-lockdown-context-menus.diff bnc363122 federico@novell.com
 	epatch "${FILESDIR}/nautilus-bnc363122-lockdown-context-menus.diff"
-	# PATCH-NEEDS-REBASE nautilus-sysadmin-desktop-items.diff fate305252 federico@novell.com -- Support sysadmin-defined desktop items (was PATCH-FEATURE-OPENSUSE)
-	#epatch "${FILESDIR}/nautilus-sysadmin-desktop-items.diff"
 
 }
 
