@@ -75,7 +75,7 @@ src_prepare() {
 	fi
 
 	# Make it libtool-1 compatible, bug #271652
-	rm -v m4/lt* m4/libtool.m4 || die "removing libtool macros failed"
+	#rm -v m4/lt* m4/libtool.m4 || die "removing libtool macros failed"
 
 	intltoolize --force --copy --automake || die "intltoolize failed"
 	eautoreconf

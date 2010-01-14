@@ -1,0 +1,15 @@
+# gnome-2.29
+
+=gnome-base/gnome-keyring-2.29.5
+
+# evolution
+=gnome-extra/evolution-data-server-2.29.5
+=gnome-extra/evolution-exchange-2.29.5
+=gnome-extra/gnome-color-manager-2.29.2
+=mail-client/evolution-2.29.5
+
+=media-gfx/gthumb-2.11.1
+
+=www-client/epiphany-extensions-2.28.1-r1
+
+=gnome-base/gnome-panel-2.29.5

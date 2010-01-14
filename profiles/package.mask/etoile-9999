@@ -1,13 +1,3 @@
-=gnome-extra/gnome-globalmenu-9999 
-#=gnome-extra/cairo-dock-9999
-#=gnome-extra/cairo-dock-plugins-9999
-=www-client/epiphany-9999
-=www-client/epiphany-extensions-9999
-=gnome-extra/yelp-9999
-#=www-client/midori-9999
-
-=net-libs/libsoup-9999
-
 =gnustep-base/gnustep-back-art-9999
 =gnustep-base/gnustep-back-cairo-9999
 =gnustep-base/gnustep-back-xlib-9999
@@ -44,6 +34,3 @@
 =gnustep-libs/etoile-ui-9999
 =gnustep-apps/melodie-9999
 =gnustep-apps/dictionaryreader-9999
-
-=media-libs/x264-9999
-=media-video/ffmpeg-9999

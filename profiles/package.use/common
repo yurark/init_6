@@ -1,0 +1,56 @@
+app-arch/p7zip rar
+app-dicts/aspell-ru ru-yo
+app-emulation/wine -gsm -gphoto2 oss
+app-misc/gnote applet
+app-office/openoffice java odk templates
+app-portage/layman git
+app-text/djvu -nsplugin
+dev-db/sqlite fts3
+dev-libs/DirectFB fbcon jpeg png truetype
+dev-libs/gir-repository gtk pango atk avahi -babl dbus gconf gnome-keyring -gstreamer gtksourceview -gupnp libnotify libsoup libunique libwnck poppler vte webkit pango
+dev-libs/libunique -introspection
+dev-util/anjuta devhelp glade sourceview
+dev-util/subversion -dso
+games-fps/etqw-bin cdinstall
+games-fps/etqw-data videos
+gnome-extra/cairo-dock-plugins alsa compiz exif gmenu gnome mail nvidia terminal wifi xgamma gio powermanager -rhythmbox -tomboy webkit -xfce xklavier
+gnome-extra/nautilus-sendto pidgin upnp
+gnustep-base/gnustep-base -doc
+gnustep-base/gnustep-make -doc -native-exceptions
+media-gfx/blender blender-game openal
+media-gfx/fontforge pango type3
+media-gfx/gthumb iptc
+media-gfx/splashutils fbcondecor
+media-plugins/alsa-plugins ffmpeg -pulseaudio
+media-sound/pulseaudio X alsa avahi dbus hal tcpd -gnome libsamplerate
+media-video/mplayer -3dnow -3dnowext cdparanoia dga directfb fbcon lzo mmxext -musepack radio ssse3 teletext tga vdpau -pnm -real ftp ggi -gmplayer ladspa libcaca md5sum mng nas nut pnm xanim xvmc
+net-dns/avahi mdnsresponder-compat bookmarks autoipd
+net-im/pidgin bonjour idn -ncurses -tcl -tk -perl -silc
+net-libs/webkit-gtk coverage gstreamer -debug -doc -introspection -pango
+net-nds/openldap sasl
+net-voip/telepathy-connection-managers jabber irc
+net-wireless/wireless-tools multicall
+sys-apps/hal disk-partition
+sys-apps/parted device-mapper
+sys-auth/consolekit policykit
+sys-block/gparted -dmraid fat hfs jfs -kde ntfs reiser4 reiserfs -xfce xfs
+sys-fs/ntfsprogs fuse
+sys-kernel/gentoo-sources symlink
+www-client/midori idn
+www-plugins/adobe-flash -32bit 64bit
+x11-libs/cairo cleartype -ubuntu
+x11-libs/geoclue system-bus
+x11-wm/compiz-fusion unsupported
+media-libs/gd -fontconfig
+media-gfx/exiv2 xmp
+media-video/ogmrip ogm srt
+media-video/handbrake css
+# python
+app-emulation/virtualbox-bin -python
+media-gfx/gimp -python
+media-libs/alsa-lib -python
+dev-util/subversion -python
+net-print/cups -python
+app-arch/rpm -python
+
+dev-db/sqlite extensions

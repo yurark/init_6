@@ -2,6 +2,12 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+14 Январь 2010
+
+Добавлено/изменено
+
+dev-libs/totem-pl-parser-2.28.2 # temp. fix --disable-gmime-i-know-what-im-doing for dev-libs/gmime-2.5.0
+
 13 Январь 2010
 
 Добавлено/изменено

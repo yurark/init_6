@@ -19,7 +19,7 @@ IUSE="doc test"
 
 RDEPEND=">=dev-libs/glib-2.21.6
 	>=x11-libs/gtk+-2.12
-	>=dev-libs/gmime-2.4"
+	>=dev-libs/gmime-2.5"
 DEPEND="${RDEPEND}
 	!<media-video/totem-2.21
 	>=dev-util/intltool-0.35
@@ -42,4 +42,13 @@ src_prepare() {
 		sed "/^TARGET_DIR/i \GTKDOC_REBASE=$(type -P true)" \
 			-i gtk-doc.make || die "sed 2 failed"
 	fi
+}
+
+
+
+pkg_setup() {
+	G2CONF="${G2CONF}
+		--disable-gmime-i-know-what-im-doing"
+
+	# --disable-gmime-i-know-what-im-doing for dev-libs/gmime-2.5.0
 }
