@@ -1,6 +1,6 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-fonts/font-misc-cyrillic/font-misc-cyrillic-1.0.0.ebuild,v 1.16 2009/10/11 11:01:10 nixnut Exp $
+# $Header: $
 
 # Must be before x-modular eclass is inherited
 #SNAPSHOT="yes"

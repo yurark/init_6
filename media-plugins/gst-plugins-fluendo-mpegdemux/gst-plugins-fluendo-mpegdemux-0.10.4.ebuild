@@ -1,6 +1,6 @@
-# Copyright 1999-2006 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-plugins/gst-plugins-fluendo-mpegdemux/gst-plugins-fluendo-mpegdemux-0.10.4.ebuild,v 1.1 2006/04/26 15:16:20 zaheerm Exp $
+# $Header: $
 
 MY_PN=gst-fluendo-mpegdemux
 MY_P=${MY_PN}-${PV}

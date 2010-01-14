@@ -1,6 +1,6 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-admin/gnome-system-tools/gnome-system-tools-2.22.2.ebuild,v 1.1 2009/04/09 22:16:26 eva Exp $
+# $Header: $
 
 inherit autotools eutils gnome2
 

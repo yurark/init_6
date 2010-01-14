@@ -1,5 +1,6 @@
-# Copyright 2004-2009 Sabayon Linux
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: $
 
 ETYPE="sources"
 inherit kernel-2 eutils

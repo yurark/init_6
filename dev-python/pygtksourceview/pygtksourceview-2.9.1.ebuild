@@ -1,6 +1,6 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/pygtksourceview/pygtksourceview-2.8.0.ebuild,v 1.1 2009/10/29 23:29:19 eva Exp $
+# $Header: $
 
 inherit gnome2 flag-o-matic multilib
 

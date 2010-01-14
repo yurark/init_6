@@ -1,6 +1,6 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/gnome-python-desktop/gnome-python-desktop-2.28.0.ebuild,v 1.1 2009/10/31 23:04:54 eva Exp $
+# $Header: $
 
 DESCRIPTION="Meta build which provides python interfacing modules for some GNOME desktop libraries"
 HOMEPAGE="http://pygtk.org/"

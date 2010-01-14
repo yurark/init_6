@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-extra/gnome-media/gnome-media-2.28.1.ebuild,v 1.2 2010/01/07 21:38:38 fauli Exp $
+# $Header: $
 
 EAPI="2"
 GCONF_DEBUG="no"

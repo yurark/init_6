@@ -1,6 +1,6 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-crypt/seahorse-plugins/seahorse-plugins-2.28.1.ebuild,v 1.3 2009/11/28 12:37:36 armin76 Exp $
+# $Header: $
 
 EAPI="2"
 

@@ -1,6 +1,6 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-util/gtk-doc-am/gtk-doc-am-1.11.ebuild,v 1.10 2009/10/26 17:57:11 armin76 Exp $
+# $Header: $
 
 MY_PN="gtk-doc"
 MY_P=${MY_PN}-${PV}
