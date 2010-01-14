@@ -12,6 +12,7 @@ x11-terms/gnome-terminal-2.29.6
 gnome-extra/gnome-utils-2.29.5
 net-libs/libsoup-2.29.5
 net-libs/libsoup-gnome-2.29.5
+gnome-base/gdm-2.29.5
 
 Add my set`s
 
