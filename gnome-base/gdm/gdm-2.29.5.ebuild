@@ -95,7 +95,7 @@ pkg_setup() {
 src_prepare() {
 	gnome2_src_prepare
 
-	intltoolize --force --copy --automake || die "intltoolize failed"
+	#intltoolize --force --copy --automake || die "intltoolize failed"
 	eautoreconf
 }
 
