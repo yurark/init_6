@@ -96,6 +96,7 @@ src_configure() {
 		--enable-xslt \
 		--disable-geolocation \
 		--disable-wml \
+		--enable-xhtmlmp \
 "
 
 	# USE-flag controlled font backend because upstream default is freetype
