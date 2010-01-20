@@ -77,26 +77,17 @@ src_configure() {
 	local myconf
 
 	myconf="
-
 		$(use_enable coverage)
 		$(use_enable debug)
 		$(use_enable gstreamer video)
 		$(use_enable introspection)
 		--enable-3D-transforms \
-		--enable-filters \
-		--enable-jit \
-		--enable-mathml \
-		--enable-shared-workers \
-		--enable-database \
-		--enable-dom-storage \
-		--enable-icon-database \
-		--enable-offline-web-applications \
-		--enable-svg \
-		--enable-web-sockets \
-		--enable-xslt \
-		--disable-geolocation \
-		--disable-wml \
 		--enable-xhtmlmp \
+		--disable-geolocation \
+		--enable-mathml \
+		--disable-wml \
+		--enable-shared-workers \
+		--enable-web-sockets \
 "
 
 	# USE-flag controlled font backend because upstream default is freetype

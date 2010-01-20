@@ -21,13 +21,13 @@ HOMEPAGE="http://www.twotoasts.de/index.php?/pages/midori_summary.html"
 
 LICENSE="LGPL-2"
 SLOT="0"
-IUSE="-doc gnome +html idn libnotify nls +sqlite +unique"
+IUSE="doc gnome html idn libnotify nls +sqlite +unique"
 
 RDEPEND="libnotify? ( x11-libs/libnotify )
-	>=net-libs/libsoup-2.26
+	>=net-libs/libsoup-2.25.2
 	>=net-libs/webkit-gtk-1.1.1
 	dev-libs/libxml2
-	x11-libs/gtk+
+	>=x11-libs/gtk+-2.10:2
 	gnome? ( net-libs/libsoup[gnome] )
 	idn? ( net-dns/libidn )
 	sqlite? ( >=dev-db/sqlite-3.0 )
@@ -68,9 +68,10 @@ src_prepare()
 			fi
 		done
 	fi
+
 	# moving docs to version-specific directory
-	sed -i -e "s:\${DOCDIR}/${PN}:\${DOCDIR}/${PF}/:g" wscript
-	sed -i -e "s:/${PN}/user/midori.html:/${PF}/user/midori.html:g" midori/midori-browser.c
+	sed -i -e "s:\${DOCDIR}/${PN}:\${DOCDIR}/${PF}/:g" wscript || die
+	sed -i -e "s:/${PN}/user/midori.html:/${PF}/user/midori.html:g" midori/midori-browser.c || die
 }
 
 src_configure() {
@@ -78,9 +79,11 @@ src_configure() {
 		--prefix="/usr/" \
 		--libdir="/usr/$(get_libdir)" \
 		--disable-docs \
+		--enable-addons \
 		$(use_enable doc apidocs) \
 		$(use_enable html userdocs) \
 		$(use_enable idn libidn) \
+		$(use_enable libnotify) \
 		$(use_enable nls nls) \
 		$(use_enable sqlite) \
 		$(use_enable unique) \
@@ -88,17 +91,18 @@ src_configure() {
 }
 
 src_compile() {
-	./waf build || die "build failed"
+	NUMJOBS=$(sed -e 's/.*\(\-j[ 0-9]\+\) .*/\1/; s/--jobs=\?/-j/' <<< ${MAKEOPTS})
+	./waf build ${NUMJOBS} || die "build failed"
 }
 
 src_install() {
 	DESTDIR=${D} ./waf install || die "install failed"
-#	rm -r ${D}/usr/share/doc/${PN}
+	rm -r "${D}"/usr/share/doc/${PN}
 	dodoc AUTHORS ChangeLog INSTALL TODO || die "dodoc failed"
 }
 
 pkg_postinst() {
-	#xfconf_pkg_postinst
+	xfconf_pkg_postinst
 	ewarn "Midori tends to crash due to bugs in WebKit."
 	ewarn "Report bugs at http://www.twotoasts.de/bugs"
 	einfo "Updating Icon Cache"
