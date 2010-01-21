@@ -1,10 +1,10 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="2"
 
-inherit gnome2
+inherit eutils gnome2
 
 DESCRIPTION="GNOME webbrowser based on Webkit"
 HOMEPAGE="http://www.gnome.org/projects/epiphany/"
@@ -13,13 +13,12 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="avahi doc networkmanager +nss test"
-# introspection
+#IUSE="avahi doc introspection networkmanager +nss test"
 
 # TODO: add seed support
-# not mature enough
-#	introspection? ( >=dev-libs/gobject-introspection-0.6.2 )
+#	introspection? ( >=dev-libs/gobject-introspection-0.6.7 )
 RDEPEND=">=dev-libs/glib-2.19.7
-	>=x11-libs/gtk+-2.16
+	>=x11-libs/gtk+-2.18.0
 	>=dev-libs/libxml2-2.6.12
 	>=dev-libs/libxslt-1.1.7
 	>=x11-libs/startup-notification-0.5
@@ -27,8 +26,8 @@ RDEPEND=">=dev-libs/glib-2.19.7
 	>=dev-libs/dbus-glib-0.71
 	>=gnome-base/gconf-2
 	>=app-text/iso-codes-0.35
-	>=net-libs/webkit-gtk-1.1.15
-	>=net-libs/libsoup-2.27.91[gnome]
+	>=net-libs/webkit-gtk-1.1.18
+	>=net-libs/libsoup-2.29.4[gnome]
 	>=gnome-base/gnome-keyring-2.26.0
 
 	x11-libs/libICE
@@ -49,8 +48,8 @@ DEPEND="${RDEPEND}
 DOCS="AUTHORS ChangeLog* HACKING MAINTAINERS NEWS README TODO"
 
 pkg_setup() {
+	#	$(use_enable introspection)
 	G2CONF="${G2CONF}
-		--disable-introspection
 		--disable-scrollkeeper
 		--disable-maintainer-mode
 		--with-distributor-name=Gentoo
@@ -58,16 +57,9 @@ pkg_setup() {
 		$(use_enable networkmanager network-manager)
 		$(use_enable nss)
 		$(use_enable test tests)"
-#		$(use_enable introspection)
 }
 
 src_prepare() {
-	gnome2_src_prepare
-
-	# Make it libtool-1 compatible
-	rm -v m4/lt* m4/libtool.m4 || die "removing libtool macros failed"
-
-	intltoolize --force --copy --automake || die "intltoolize failed"
-	eautoreconf
+	cd ${S}
+	epatch ${FILESDIR}/${P}-fix-schemas.patch
 }
-

@@ -1,6 +1,6 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/net-libs/libsoup/libsoup-2.28.2.ebuild,v 1.1 2009/12/17 22:54:42 eva Exp $
 
 EAPI="2"
 
@@ -47,7 +47,7 @@ src_prepare() {
 	# Patch *must* be applied conditionally (see patch for details)
 	if use doc; then
 		# Fix bug 268592 (build fails !gnome && doc)
-		epatch "${FILESDIR}/${PN}-2.26.3-fix-build-without-gnome-with-doc.patch"
-		eautoreconf
+		epatch "${FILESDIR}/${PN}-fix-build-without-gnome-with-doc.patch"
 	fi
+	eautoreconf
 }
