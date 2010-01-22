@@ -93,7 +93,7 @@ virtual/cdrtools
 x11-terms/gnome-terminal
 x11-wm/metacity
 net-libs/gnutls
-mail-mta/ssmtp
+#mail-mta/ssmtp
 x11-themes/gnome-themes
 media-plugins/gst-plugins-lame
 media-plugins/gst-plugins-a52dec
