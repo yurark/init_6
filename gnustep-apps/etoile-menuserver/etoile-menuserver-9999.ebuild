@@ -9,10 +9,10 @@ inherit gnustep-2 subversion
 S="${WORKDIR}/Etoile-${PV}/Services/Private/MenuServer"
 
 DESCRIPTION="Menubar for the Etoile environment"
-HOMEPAGE="http://www.etoile-project.org"
+HOMEPAGE="http://etoileos.com"
 SRC_URI=""
 
-ESVN_REPO_URI="svn://svn.gna.org/svn/etoile/stable"
+ESVN_REPO_URI="svn://svn.gna.org/svn/etoile/trunk/Etoile"
 ESVN_PROJECT="etoile"
 
 LICENSE="GPL-2"

@@ -2,7 +2,7 @@ app-arch/p7zip rar
 app-dicts/aspell-ru ru-yo
 app-emulation/wine -gsm -gphoto2 oss
 app-misc/gnote applet
-app-office/openoffice java odk templates
+app-office/openoffice java odk templates -nsplugin
 app-portage/layman git
 app-text/djvu -nsplugin
 dev-db/sqlite fts3
@@ -54,3 +54,4 @@ net-print/cups -python
 app-arch/rpm -python
 
 dev-db/sqlite extensions
+sys-apps/tuxonice-userui fbsplash

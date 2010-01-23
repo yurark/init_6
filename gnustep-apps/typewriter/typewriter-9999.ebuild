@@ -8,10 +8,10 @@ S="${WORKDIR}/Etoile-${PV}/Services/User/${PN/t/T}"
 
 DESCRIPTION="Etoilé general text editor for plain and rich format text"
 
-HOMEPAGE="http://www.etoile-project.org"
+HOMEPAGE="http://etoileos.com"
 SRC_URI=""
 
-ESVN_REPO_URI="svn://svn.gna.org/svn/etoile/stable"
+ESVN_REPO_URI="svn://svn.gna.org/svn/etoile/trunk/Etoile"
 ESVN_PROJECT="etoile"
 
 LICENSE="BSD"

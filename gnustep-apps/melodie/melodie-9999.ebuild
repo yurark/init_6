@@ -10,10 +10,10 @@ S="${WORKDIR}/Etoile-${PV}/Services/User/Melodie"
 
 DESCRIPTION="Melodie is a music player for Etoile"
 
-HOMEPAGE="http://www.etoile-project.org"
+HOMEPAGE="http://etoileos.com"
 SRC_URI=""
 
-ESVN_REPO_URI="svn://svn.gna.org/svn/etoile/stable"
+ESVN_REPO_URI="svn://svn.gna.org/svn/etoile/trunk/Etoile"
 ESVN_PROJECT="etoile"
 
 LICENSE="BSD"

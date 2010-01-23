@@ -3,7 +3,7 @@
 # $Header: $
 
 DESCRIPTION="Meta-package for the Etoile desktop environment"
-HOMEPAGE="http://www.etoile-project.org"
+HOMEPAGE="http://etoileos.com"
 
 LICENSE="as-is"
 KEYWORDS="~amd64 ~ppc ~x86"

@@ -10,10 +10,10 @@ S="${WORKDIR}/Etoile-${PV}/Languages/Smalltalk"
 
 SQLITE="sqlite-3.6.2"
 DESCRIPTION="Étoilé's Pragmatic Smalltalk, a Smalltalk JIT compiler which generates code binary-compatible with Objective-C"
-HOMEPAGE="http://www.etoile-project.org"
+HOMEPAGE="http://etoileos.com"
 SRC_URI=""
 
-ESVN_REPO_URI="svn://svn.gna.org/svn/etoile/stable"
+ESVN_REPO_URI="svn://svn.gna.org/svn/etoile/trunk/Etoile"
 ESVN_PROJECT="etoile"
 
 LICENSE="BSD"

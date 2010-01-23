@@ -7,10 +7,10 @@ inherit gnustep-2 subversion
 S="${WORKDIR}/Etoile-${PV}/Languages/LanguageKit"
 
 DESCRIPTION="a compiler kit built on top of LLVM for creating dynamic language implementations using an Objective-C runtime for the object model"
-HOMEPAGE="http://www.etoile-project.org"
+HOMEPAGE="http://etoileos.com"
 SRC_URI=""
 
-ESVN_REPO_URI="svn://svn.gna.org/svn/etoile/stable"
+ESVN_REPO_URI="svn://svn.gna.org/svn/etoile/trunk/Etoile"
 ESVN_PROJECT="etoile"
 
 LICENSE="BSD"

@@ -7,10 +7,10 @@ inherit gnustep-2 subversion
 S="${WORKDIR}/Etoile-${PV}/Frameworks/ScriptKit"
 
 DESCRIPTION="lightweight cross-app scripting framework built on top of Distributed Objects"
-HOMEPAGE="http://www.etoile-project.org"
+HOMEPAGE="http://etoileos.com"
 SRC_URI=""
 
-ESVN_REPO_URI="svn://svn.gna.org/svn/etoile/stable"
+ESVN_REPO_URI="svn://svn.gna.org/svn/etoile/trunk/Etoile"
 ESVN_PROJECT="etoile"
 
 LICENSE="LGPL-2.1"
