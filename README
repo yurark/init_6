@@ -2,6 +2,13 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+24 Январь 2010
+
+Добавлено/изменено
+
+app-emulation/virtualbox-modules-3.1.0 # fix for 2.6.33 kernel
+x11-drivers/nvidia-drivers-190.53-r2 # fix for 2.6.33 kernel
+
 22 Январь 2010
 
 Добавлено/изменено
