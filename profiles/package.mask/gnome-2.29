@@ -6,6 +6,10 @@
 =gnome-extra/evolution-data-server-2.29.5
 =gnome-extra/evolution-exchange-2.29.5
 =mail-client/evolution-2.29.5
+=gnome-extra/evolution-data-server-2.29.6
+=gnome-extra/evolution-exchange-2.29.6
+=mail-client/evolution-2.29.6
+
 
 =media-gfx/gthumb-2.11.1
 

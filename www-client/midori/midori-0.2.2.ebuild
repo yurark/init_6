@@ -1,6 +1,6 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/www/viewcvs.gentoo.org/raw_cvs/gentoo-x86/www-client/midori/midori-0.2.2.ebuild,v 1.2 2009/12/29 18:00:16 armin76 Exp $
+# $Header: $
 
 EAPI=2
 inherit xfconf multilib

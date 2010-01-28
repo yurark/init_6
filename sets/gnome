@@ -38,7 +38,7 @@ dev-python/pyorbit
 app-text/hunspell
 dev-games/libggz
 dev-cpp/cairomm
-dev-libs/poppler-glib
+#dev-libs/poppler-glib
 media-libs/freeglut
 gnome-base/gnome-session
 app-arch/file-roller
@@ -110,7 +110,7 @@ media-libs/x264
 net-misc/whois
 dev-cpp/pangomm
 dev-python/dbus-python
-virtual/poppler-glib
+#virtual/poppler-glib
 media-plugins/gst-plugins-cdparanoia
 virtual/glut
 net-libs/libsoup

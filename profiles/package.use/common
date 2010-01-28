@@ -28,7 +28,7 @@ net-dns/avahi mdnsresponder-compat bookmarks autoipd
 net-im/pidgin bonjour idn -ncurses -tcl -tk -perl -silc
 net-libs/webkit-gtk coverage gstreamer -debug -doc -introspection -pango
 net-nds/openldap sasl
-net-voip/telepathy-connection-managers jabber irc
+net-voip/telepathy-connection-managers jabber irc icq
 net-wireless/wireless-tools multicall
 sys-apps/hal disk-partition
 sys-apps/parted device-mapper

@@ -2,6 +2,46 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+28 Январь 2010
+
+Добавлено/изменено
+
+app-text/gnome-doc-utils-0.19.3
+dev-util/gnome-devel-docs-2.29.1
+gnome-extra/gnome-user-docs-2.29.1
+dev-libs/glib-2.23.2
+net-libs/libsoup-2.29.6
+net-libs/libsoup-gnome-2.29.6
+x11-libs/gtk+-2.19.4
+x11-libs/libwnck-2.29.6
+x11-libs/gtksourceview-2.9.5
+dev-libs/totem-pl-parser-2.29.1
+gnome-extra/gcalctool-5.29.6
+gnome-base/gnome-session-2.29.6
+gnome-extra/gtkhtml-3.29.6
+x11-themes/gnome-themes-2.29.6
+gnome-extra/at-spi-1.29.6
+gnome-base/gnome-desktop-2.29.6
+gnome-base/gnome-menus-2.29.6
+app-editors/gedit-2.29.5
+gnome-base/nautilus-2.29.2
+app-arch/file-roller-2.29.5
+media-video/totem-2.29.4
+app-cdr/brasero-2.29.6
+x11-wm/metacity-2.28.1
+gnome-base/gnome-settings-daemon-2.29.6
+app-admin/pessulus-2.29.6
+gnome-base/gnome-panel-2.29.6
+gnome-base/gnome-control-center-2.29.6
+gnome-extra/gnome-games-2.29.6
+net-im/empathy-2.29.6
+net-misc/vinagre-2.29.6
+media-libs/libchamplain-0.5.1 # Filed to build
+gnome-extra/evolution-data-server-2.29.6 # Filed to build
+mail-client/evolution-2.29.6 # Filed to build
+gnome-extra/evolution-exchange-2.29.6 # Filed to build
+gnome-extra/yelp-2.29.3 # Filed to build
+
 24 Январь 2010
 
 Добавлено/изменено
