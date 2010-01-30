@@ -95,8 +95,7 @@ pkg_setup() {
 		$(use_enable python)
 		$(use_with ldap openldap)
 		$(use_with kerberos krb5 /usr)
-		$(use_with krb4 krb4 /usr)
-		--disable-contacts-map"
+		$(use_with krb4 krb4 /usr)"
 
 	# dang - I've changed this to do --enable-plugins=experimental.  This will
 	# autodetect new-mail-notify and exchange, but that cannot be helped for the
@@ -109,9 +108,9 @@ src_prepare() {
 
 	# PATCH-NEEDS-REBASE calendar-sendbutton.patch -- It also needs a proper description and a bug number
 	#epatch "${FILESDIR}/${PN}-2.28.2-calendar-sendbutton.patch"
-	#epatch "${FILESDIR}/${PN}-2.28.2-fix-exchange-menuitem.diff"
+	epatch "${FILESDIR}/${PN}-2.28.2-fix-exchange-menuitem.diff"
 	# PATCH-FIX-OPENSUSE evolution-custom-openldap-includes.patch maw@novell.com -- look for ldap includes in %{_libdir}/evoldap/include
-	#EPATCH_OPTS="-p1" epatch "${FILESDIR}/${PN}-2.28.2-custom-openldap-includes.patch"
+	EPATCH_OPTS="-p1" epatch "${FILESDIR}/${PN}-2.28.2-custom-openldap-includes.patch"
 	# PATCH-FEATURE-OPENSUSE evolution-shared-nss-db.patch hpj@novell.com -- Migrate to shared NSS database.
 	#EPATCH_OPTS="-p1" epatch "${FILESDIR}/${PN}-2.28.2-shared-nss-db.patch"
 	# PATCH-FIX-UPSTREAM  bnc-435668-hide-accept.patch bnc#435668 -- Meetings In SentItems Should Hide Accept/Decline.
@@ -119,17 +118,17 @@ src_prepare() {
 	# PATCH-FIX-UPSTREAM bnc-435722-book-uri-long.patch bnc#435722 abharath@suse.de -- Book URI: Spills Into Second Column.
 	epatch "${FILESDIR}/${PN}-2.28.2-bnc-435722-book-uri-long.patch"
 	# PATCH-FIX-UPSTREAM sharepoint-account-setup.patch pchenthill@suse.de -- This patch allows you to connect to sharepoint servers.
-	#EPATCH_OPTS="-p1" epatch "${FILESDIR}/${PN}-2.28.2-sharepoint-account-setup.patch"
+	EPATCH_OPTS="-p1" epatch "${FILESDIR}/${PN}-2.28.2-sharepoint-account-setup.patch"
 	# PATCH-FIX-OPENSUSE bnc-433448-backup-restore-fails.patch bnc433448 abharath@suse.de -- Not required upstream.
 	epatch "${FILESDIR}/${PN}-2.28.2-bnc-433448-backup-restore-fails.patch"
 	# PATCH-FIX-UPSTREAM bnc-210959-evo-accept-ics.patch bnc210959 pchenthill@novell.com -- Patch yet to be pushed upstream.
-	#epatch "${FILESDIR}/${PN}-2.28.2-bnc-210959-evo-accept-ics.patch"
+	epatch "${FILESDIR}/${PN}-2.28.2-bnc-210959-evo-accept-ics.patch"
 	# PATCH-FIX-UPSTREAM sp-tasks-setup.diff pchenthill@suse.de -- Patch needs to be upstreamed. 
-	#EPATCH_OPTS="-p1" epatch "${FILESDIR}/${PN}-2.28.2-sp-tasks-setup.diff"
+	EPATCH_OPTS="-p1" epatch "${FILESDIR}/${PN}-2.28.2-sp-tasks-setup.diff"
 	# PATCH-FIX-UPSTREAM sp-meetingworkspace-ui.patch pchenthill@suse.de -- Patch needs to be upstreamed.
-	#EPATCH_OPTS="-p1" epatch "${FILESDIR}/${PN}-2.28.2-sp-meetingworkspace-ui.patch"
+	EPATCH_OPTS="-p1" epatch "${FILESDIR}/${PN}-2.28.2-sp-meetingworkspace-ui.patch"
 	# PATCH-FIX-UPSTREAM bnc-449888-handle-no-workspace.patch bnc449888 pchenthill@suse.de -- Patch needs to be upstreamed.
-	#EPATCH_OPTS="-p1" epatch "${FILESDIR}/${PN}-2.28.2-bnc-449888-handle-no-workspace.patch"
+	EPATCH_OPTS="-p1" epatch "${FILESDIR}/${PN}-2.28.2-bnc-449888-handle-no-workspace.patch"
 	# PATCH-FIX-SLED bnc-440634-forwarded-hide-accept-decline.patch bnc440634 abharath@suse.de -- Make GW understand folders better.
 	epatch "${FILESDIR}/${PN}-2.28.2-bnc-440634-forwarded-hide-accept-decline.patch"
 	# PATCH-NEEDS-REBASE bnc-445996-address-conflict.patch bnc445996 shashish@suse.de -- Needs to be moved out of glade files. (was PATCH-FIX-SLED)

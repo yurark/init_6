@@ -1,0 +1,23 @@
+diff -ur evolution-2.27.4.1/configure.ac evolution-2.27.4.1.patched//configure.ac
+--- evolution-2.27.4.1/configure.ac	2009-07-15 11:25:24.000000000 +0200
++++ evolution-2.27.4.1.patched//configure.ac	2009-07-22 14:00:14.000000000 +0200
+@@ -673,8 +673,8 @@
+ 
+ 	CFLAGS_save="$CFLAGS"
+ 	CFLAGS="$CFLAGS $GNOME_PILOT_CFLAGS"
+-	LDFLAGS_save="$LDFLAGS"
+-	LDFLAGS="$GNOME_PILOT_LIBS $LDFLAGS"
++	LIBS_save="$LIBS"
++	LIBS="$LIBS $GNOME_PILOT_LIBS $LDFLAGS"
+ 
+ 	AC_CACHE_CHECK([if pilot-link handles UTF-8 conversions],[ac_cv_pilot_link_utf8],
+ 	AC_RUN_IFELSE([AC_LANG_SOURCE(
+@@ -694,7 +694,7 @@
+ 	)],[ac_cv_pilot_link_utf8=yes],[ac_cv_pilot_link_utf8=no],[ac_cv_pilot_link_utf8=no]))
+ 
+ 	CFLAGS="$CFLAGS_save"
+-	LDFLAGS="$LDFLAGS_save"
++	LIBS="$LIBS_save"
+ 
+ 	if test "$ac_cv_pilot_link_utf8" = no; then
+ 		AC_MSG_ERROR([evolution requires pilot-link to have working UTF-8 conversion routines])

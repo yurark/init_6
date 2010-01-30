@@ -42,9 +42,9 @@ src_prepare() {
 	intltoolize --automake --copy --force || die "intltoolize failed"
 	eautoreconf -isvf
 }
-src_configure() {
-	econf $(use_enable glitz) $(use_enable xcomposite xextend)
-}
+#src_configure() {
+#	econf $(use_enable glitz) $(use_enable xcomposite xextend)
+#}
 src_install() {
 	emake DESTDIR="${D}" install || die "emake install failed"
 }

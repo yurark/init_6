@@ -11,6 +11,10 @@ www-client/epiphany-extensions-2.29.6
 gnome-base/gvfs-1.5.2
 dev-libs/memphis-0.1.0 # Не знаю куда его но пока так... Нужно для media-libs/libchamplain-0.5.1
 media-libs/libchamplain-0.5.1 # Fix ;)
+gnome-extra/cairo-dock-9999.ebuild # Fix
+gnome-extra/evolution-data-server-2.29.6 # Now all evolution build fine ;) Yeeee baby
+mail-client/evolution-2.29.6.ebuild
+gnome-extra/evolution-exchange-2.29.6
 
 28 Январь 2010
 

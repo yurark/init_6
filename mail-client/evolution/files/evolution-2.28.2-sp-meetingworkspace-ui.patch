@@ -1,0 +1,945 @@
+Index: evolution-2.27.2/calendar/gui/dialogs/comp-editor.c
+===================================================================
+--- evolution-2.27.2.orig/calendar/gui/dialogs/comp-editor.c
++++ evolution-2.27.2/calendar/gui/dialogs/comp-editor.c
+@@ -63,6 +63,7 @@
+ #include "../e-cal-popup.h"
+ #include "../calendar-config-keys.h"
+ #include "cal-attachment-select-file.h"
++#include "../e-cal-event.h"
+ #include "widgets/misc/e-attachment-view.h"
+ #include "widgets/misc/e-attachment-paned.h"
+ 
+@@ -100,6 +101,7 @@ struct _CompEditorPrivate {
+ 	/* Manages menus and toolbars */
+ 	GtkUIManager *ui_manager;
+ 
++	GtkWidget *vbox;
+ 	gchar *summary;
+ 
+ 	guint32 attachment_bar_visible : 1;
+@@ -1606,11 +1608,11 @@ comp_editor_init (CompEditor *editor)
+ 
+ 	container = GTK_WIDGET (editor);
+ 
+-	widget = gtk_vbox_new (FALSE, 0);
+-	gtk_container_add (GTK_CONTAINER (container), widget);
+-	gtk_widget_show (widget);
++	priv->vbox = gtk_vbox_new (FALSE, 0);
++	gtk_container_add (GTK_CONTAINER (editor), priv->vbox);
++	gtk_widget_show (priv->vbox);
+ 
+-	container = widget;
++	container = priv->vbox;
+ 
+ 	widget = comp_editor_get_managed_widget (editor, "/main-menu");
+ 	gtk_box_pack_start (GTK_BOX (container), widget, FALSE, FALSE, 0);
+@@ -1955,6 +1957,22 @@ comp_editor_get_ui_manager (CompEditor *
+ 	return editor->priv->ui_manager;
+ }
+ 
++GtkWidget *
++comp_editor_get_vbox (CompEditor *editor)
++{
++	g_return_val_if_fail (IS_COMP_EDITOR (editor), NULL);
++
++	return editor->priv->vbox;
++}
++
++GtkNotebook *
++comp_editor_get_notebook (CompEditor *editor)
++{
++	g_return_val_if_fail (IS_COMP_EDITOR (editor), NULL);
++
++	return editor->priv->notebook;
++}
++
+ GtkAction *
+ comp_editor_get_action (CompEditor *editor,
+                         const gchar *action_name)
+@@ -2112,9 +2130,15 @@ comp_editor_append_page (CompEditor *edi
+ 
+ 	priv->pages = g_list_append (priv->pages, page);
+ 
+-	if (add)
++	if (add){
+ 		gtk_notebook_append_page (priv->notebook, page_widget, label_widget);
+ 
++		ECalEvent *ec_event = e_cal_event_peek ();
++		ECalEventTargetCompEditor *target;
++		target = e_cal_event_target_comp_editor (ec_event, editor);
++		e_event_emit ((EEvent *) ec_event, "editor.append", (EEventTarget *) target);
++	}
++
+ 	/* Listen for things happening on the page */
+ 	g_signal_connect_swapped (
+ 		page, "dates_changed",
+Index: evolution-2.27.2/calendar/gui/dialogs/event-editor.c
+===================================================================
+--- evolution-2.27.2.orig/calendar/gui/dialogs/event-editor.c
++++ evolution-2.27.2/calendar/gui/dialogs/event-editor.c
+@@ -38,6 +38,7 @@
+ #include <e-util/e-util-private.h>
+ #include <evolution-shell-component-utils.h>
+ 
++#include "../e-cal-event.h"
+ #include "event-page.h"
+ #include "recurrence-page.h"
+ #include "schedule-page.h"
+@@ -65,7 +66,7 @@ static const gchar *ui =
+ "<ui>"
+ "  <menubar action='main-menu'>"
+ "    <menu action='view-menu'>"
+-"      <menuitem action='view-type'/>"
++"	<menuitem action='view-type'/>"
+ "      <menuitem action='view-status'/>"
+ "      <menuitem action='view-role'/>"
+ "      <menuitem action='view-rsvp'/>"
+@@ -103,6 +104,17 @@ static gboolean event_editor_send_comp (
+ 
+ G_DEFINE_TYPE (EventEditor, event_editor, TYPE_COMP_EDITOR)
+ 
++
++CompEditorPage*
++event_editor_get_event_page (CompEditor *editor)
++{
++	EventEditorPrivate *priv;
++
++	priv = EVENT_EDITOR_GET_PRIVATE (editor);
++
++	return priv->event_page;	
++}
++
+ static void
+ create_schedule_page (CompEditor *editor)
+ {
+@@ -334,6 +346,11 @@ event_editor_constructor (GType type,
+ 		event_page_set_meeting (priv->event_page, TRUE);
+ 		priv->meeting_shown=TRUE;
+ 	}
++	
++	ECalEvent *ec_event = e_cal_event_peek ();
++	ECalEventTargetCompEditor *target;
++	target = e_cal_event_target_comp_editor (ec_event, editor);
++	e_event_emit ((EEvent *) ec_event, "editor.inited", (EEventTarget *) target);
+ 
+ 	return object;
+ }
+@@ -496,7 +513,6 @@ event_editor_init (EventEditor *ee)
+ 	}
+ 
+ 	/* Hide send options. */
+-	action = comp_editor_get_action (editor, "send-options");
+ 	gtk_action_set_visible (action, FALSE);
+ 
+ 	g_signal_connect (
+Index: evolution-2.27.2/calendar/gui/dialogs/event-editor.h
+===================================================================
+--- evolution-2.27.2.orig/calendar/gui/dialogs/event-editor.h
++++ evolution-2.27.2/calendar/gui/dialogs/event-editor.h
+@@ -68,6 +68,7 @@ GType		event_editor_get_type		(void);
+ CompEditor *	event_editor_new		(ECal *client,
+ 						 CompEditorFlags flags);
+ void		event_editor_show_meeting	(EventEditor *ee);
++CompEditorPage*	event_editor_get_event_page (CompEditor *editor);
+ 
+ G_END_DECLS
+ 
+Index: evolution-2.27.2/calendar/gui/dialogs/event-page.c
+===================================================================
+--- evolution-2.27.2.orig/calendar/gui/dialogs/event-page.c
++++ evolution-2.27.2/calendar/gui/dialogs/event-page.c
+@@ -714,6 +714,26 @@ create_image_event_box (const char *imag
+ 	return box;
+ }
+ 
++GtkWidget *
++event_page_get_toplevel_widget (CompEditorPage *page)
++{
++        EventPagePrivate *priv;
++
++        priv = EVENT_PAGE_GET_PRIVATE (page);
++
++        return priv->main;
++}
++
++GtkWidget *
++get_event_page_widget (EventPage *epage)
++{
++	EventPagePrivate *priv;
++
++        priv = EVENT_PAGE_GET_PRIVATE (epage);
++
++        return priv->hour_selector;
++}
++
+ static void
+ sensitize_widgets (EventPage *epage)
+ {
+Index: evolution-2.27.2/calendar/gui/dialogs/event-page.h
+===================================================================
+--- evolution-2.27.2.orig/calendar/gui/dialogs/event-page.h
++++ evolution-2.27.2/calendar/gui/dialogs/event-page.h
+@@ -110,6 +110,8 @@ void		event_page_add_attendee		(EventPag
+ 						 EMeetingAttendee *attendee);
+ void 		event_page_remove_all_attendees (EventPage *epage);
+ 
++GtkWidget * get_event_page_widget (EventPage *epage);
++
+ G_END_DECLS
+ 
+ #endif
+Index: evolution-2.27.2/calendar/gui/e-cal-event.c
+===================================================================
+--- evolution-2.27.2.orig/calendar/gui/e-cal-event.c
++++ evolution-2.27.2/calendar/gui/e-cal-event.c
+@@ -103,6 +103,16 @@ e_cal_event_target_new_component (ECalEv
+ 	return t;
+ }
+ 
++ECalEventTargetCompEditor *
++e_cal_event_target_comp_editor (ECalEvent *ec_event, struct _CompEditor *editor)
++{
++	ECalEventTargetCompEditor *t = e_event_target_new (&ec_event->event, E_CAL_EVENT_TARGET_COMP_EDITOR, sizeof (*t));
++
++	t->editor = g_object_ref (editor);
++
++	return t;
++}
++
+ /* ********************************************************************** */
+ 
+ static void *eceh_parent_class;
+@@ -112,11 +122,18 @@ static const EEventHookTargetMask eceh_c
+ 	{ NULL },
+ };
+ 
++static const EEventHookTargetMask eceh_compeditor_masks[] = {
++	{ "inited", E_CAL_EVENT_COMPEDITOR_INITED },
++	{ NULL },
++};
++
+ static const EEventHookTargetMap eceh_targets[] = {
+ 	{ "component", E_CAL_EVENT_TARGET_COMPONENT, eceh_component_masks },
++	{ "compeditor", E_CAL_EVENT_TARGET_COMP_EDITOR, eceh_compeditor_masks },
+ 	{ NULL },
+ };
+ 
++
+ static void
+ eceh_finalize (GObject *o)
+ {
+Index: evolution-2.27.2/calendar/gui/e-cal-event.h
+===================================================================
+--- evolution-2.27.2.orig/calendar/gui/e-cal-event.h
++++ evolution-2.27.2/calendar/gui/e-cal-event.h
+@@ -37,7 +37,8 @@ typedef struct _ECalEvent ECalEvent;
+ typedef struct _ECalEventClass ECalEventClass;
+ 
+ enum _e_cal_event_target_t {
+-	E_CAL_EVENT_TARGET_COMPONENT
++	E_CAL_EVENT_TARGET_COMPONENT,
++	E_CAL_EVENT_TARGET_COMP_EDITOR
+ };
+ 
+ /* Flags that describe TARGET_COMPONENT */
+@@ -45,6 +46,11 @@ enum {
+ 	E_CAL_EVENT_COMPONENT_MIGRATION = 1 << 0
+ };
+ 
++
++enum {
++	E_CAL_EVENT_COMPEDITOR_INITED = 1 << 0,
++};
++
+ typedef struct _ECalEventTargetComponent ECalEventTargetComponent;
+ 
+ struct _ECalEventTargetComponent {
+@@ -53,6 +59,14 @@ struct _ECalEventTargetComponent {
+ 	struct _CalendarComponent *component;
+ };
+ 
++
++typedef struct _ECalEventTargetCompEditor ECalEventTargetCompEditor;
++
++struct _ECalEventTargetCompEditor {
++	EEventTarget target;
++	struct _CompEditor *editor;
++};
++
+ struct _ECalEvent {
+ 	EEvent event;
+ 
+@@ -66,6 +80,7 @@ struct _ECalEventClass {
+ GType                     e_cal_event_get_type (void);
+ ECalEvent*                e_cal_event_peek (void);
+ ECalEventTargetComponent* e_cal_event_target_new_component (ECalEvent *ece, struct _CalendarComponent *component, guint32 flags);
++ECalEventTargetCompEditor * e_cal_event_target_comp_editor (ECalEvent *ec_event, struct _CompEditor *editor);
+ 
+ /* ********************************************************************** */
+ 
+Index: evolution-2.27.2/plugins/sharepoint-features/Makefile.am
+===================================================================
+--- /dev/null
++++ evolution-2.27.2/plugins/sharepoint-features/Makefile.am
+@@ -0,0 +1,40 @@
++INCLUDES =					\
++	-I$(top_srcdir)				\
++	-I$(top_builddir)/shell			\
++	-I$(top_srcdir)/widgets			\
++	-I$(top_srcdir)/widgets/misc		\
++	-I$(top_builddir)/calendar/gui		\
++	-I$(top_builddir)/calendar/gui/dialogs	\
++	$(EVOLUTION_CALENDAR_CFLAGS)		\
++	-DEVOLUTION_GLADEDIR=\""$(gladedir)"\"	\
++	-DCONNECTOR_GLADEDIR=\""$(gladedir)"\"	\
++	$(SOURCE_SEL_CFLAGS)
++
++
++@EVO_PLUGIN_RULE@
++
++plugin_DATA = 						\
++	org-gnome-sharepoint-features.eplug
++
++plugin_LTLIBRARIES = liborg-gnome-sharepoint-features.la
++
++liborg_gnome_sharepoint_features_la_SOURCES =		\
++	meeting-workspace.c	
++
++liborg_gnome_sharepoint_features_la_LIBADD =				\
++	$(top_builddir)/e-util/libeutil.la				\
++	$(top_builddir)/calendar/gui/libevolution-calendar.la		\
++	$(top_builddir)/widgets/misc/libemiscwidgets.la			\
++	$(NO_UNDEFINED_REQUIRED_LIBS)					\
++	$(EVOLUTION_CALENDAR_LIBS)
++liborg_gnome_sharepoint_features_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
++
++glade_DATA = meetingworkspaces.glade
++
++EXTRA_DIST = 					\
++	org-gnome-sharepoint-features.eplug.xml	\
++	$(glade_DATA)
++
++BUILT_SOURCES = org-gnome-sharepoint-features.eplug
++
++CLEANFILES = $(BUILT_SOURCES)
+Index: evolution-2.27.2/plugins/sharepoint-features/meetingworkspaces.glade
+===================================================================
+--- /dev/null
++++ evolution-2.27.2/plugins/sharepoint-features/meetingworkspaces.glade
+@@ -0,0 +1,324 @@
++<?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
++<!DOCTYPE glade-interface SYSTEM "http://glade.gnome.org/glade-2.0.dtd">
++
++<glade-interface>
++
++<widget class="GtkDialog" id="meeting-workspace-dialog">
++  <property name="visible">True</property>
++  <property name="title" translatable="yes">Meeting Workspace</property>
++  <property name="type">GTK_WINDOW_TOPLEVEL</property>
++  <property name="window_position">GTK_WIN_POS_NONE</property>
++  <property name="modal">False</property>
++  <property name="resizable">True</property>
++  <property name="destroy_with_parent">False</property>
++  <property name="decorated">True</property>
++  <property name="skip_taskbar_hint">False</property>
++  <property name="skip_pager_hint">False</property>
++  <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
++  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
++  <property name="focus_on_map">True</property>
++  <property name="urgency_hint">False</property>
++  <property name="has_separator">True</property>
++
++  <child internal-child="vbox">
++    <widget class="GtkVBox" id="dialog-vbox1">
++      <property name="visible">True</property>
++      <property name="homogeneous">False</property>
++      <property name="spacing">0</property>
++
++      <child internal-child="action_area">
++	<widget class="GtkHButtonBox" id="dialog-action_area1">
++	  <property name="visible">True</property>
++	  <property name="layout_style">GTK_BUTTONBOX_END</property>
++
++	  <child>
++	    <widget class="GtkButton" id="cancelbutton1">
++	      <property name="visible">True</property>
++	      <property name="can_default">True</property>
++	      <property name="can_focus">True</property>
++	      <property name="label">gtk-cancel</property>
++	      <property name="use_stock">True</property>
++	      <property name="relief">GTK_RELIEF_NORMAL</property>
++	      <property name="focus_on_click">True</property>
++	      <property name="response_id">-6</property>
++	    </widget>
++	  </child>
++
++	  <child>
++	    <widget class="GtkButton" id="okbutton1">
++	      <property name="visible">True</property>
++	      <property name="can_default">True</property>
++	      <property name="can_focus">True</property>
++	      <property name="label">gtk-ok</property>
++	      <property name="use_stock">True</property>
++	      <property name="relief">GTK_RELIEF_NORMAL</property>
++	      <property name="focus_on_click">True</property>
++	      <property name="response_id">-5</property>
++	    </widget>
++	  </child>
++	</widget>
++	<packing>
++	  <property name="padding">0</property>
++	  <property name="expand">False</property>
++	  <property name="fill">True</property>
++	  <property name="pack_type">GTK_PACK_END</property>
++	</packing>
++      </child>
++
++      <child>
++	<widget class="GtkVBox" id="vbox3">
++	  <property name="border_width">12</property>
++	  <property name="visible">True</property>
++	  <property name="homogeneous">False</property>
++	  <property name="spacing">12</property>
++
++	  <child>
++	    <widget class="GtkRadioButton" id="create-radio">
++	      <property name="visible">True</property>
++	      <property name="can_focus">True</property>
++	      <property name="label" translatable="yes">C_reate meeting workspace</property>
++	      <property name="use_underline">True</property>
++	      <property name="relief">GTK_RELIEF_NORMAL</property>
++	      <property name="focus_on_click">True</property>
++	      <property name="active">False</property>
++	      <property name="inconsistent">False</property>
++	      <property name="draw_indicator">True</property>
++	    </widget>
++	    <packing>
++	      <property name="padding">0</property>
++	      <property name="expand">False</property>
++	      <property name="fill">False</property>
++	    </packing>
++	  </child>
++
++	  <child>
++	    <widget class="GtkTable" id="table1">
++	      <property name="border_width">12</property>
++	      <property name="visible">True</property>
++	      <property name="n_rows">2</property>
++	      <property name="n_columns">2</property>
++	      <property name="homogeneous">False</property>
++	      <property name="row_spacing">12</property>
++	      <property name="column_spacing">12</property>
++
++	      <child>
++		<widget class="GtkLabel" id="title-label">
++		  <property name="visible">True</property>
++		  <property name="label" translatable="yes">T_itle:</property>
++		  <property name="use_underline">True</property>
++		  <property name="use_markup">False</property>
++		  <property name="justify">GTK_JUSTIFY_LEFT</property>
++		  <property name="wrap">False</property>
++		  <property name="selectable">False</property>
++		  <property name="xalign">0</property>
++		  <property name="yalign">0.5</property>
++		  <property name="xpad">0</property>
++		  <property name="ypad">0</property>
++		  <property name="mnemonic_widget">title-entry</property>
++		  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
++		  <property name="width_chars">-1</property>
++		  <property name="single_line_mode">False</property>
++		  <property name="angle">0</property>
++		  <accessibility>
++		    <atkrelation target="title-entry" type="label-for"/>
++		  </accessibility>
++		</widget>
++		<packing>
++		  <property name="left_attach">0</property>
++		  <property name="right_attach">1</property>
++		  <property name="top_attach">0</property>
++		  <property name="bottom_attach">1</property>
++		  <property name="x_options">fill</property>
++		  <property name="y_options"></property>
++		</packing>
++	      </child>
++
++	      <child>
++		<widget class="GtkLabel" id="template-label">
++		  <property name="visible">True</property>
++		  <property name="label" translatable="yes">T_emplate:</property>
++		  <property name="use_underline">True</property>
++		  <property name="use_markup">False</property>
++		  <property name="justify">GTK_JUSTIFY_LEFT</property>
++		  <property name="wrap">False</property>
++		  <property name="selectable">False</property>
++		  <property name="xalign">0</property>
++		  <property name="yalign">0.5</property>
++		  <property name="xpad">0</property>
++		  <property name="ypad">0</property>
++		  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
++		  <property name="width_chars">-1</property>
++		  <property name="single_line_mode">False</property>
++		  <property name="angle">0</property>
++		  <accessibility>
++		    <atkrelation target="template-combo" type="label-for"/>
++		  </accessibility>
++		</widget>
++		<packing>
++		  <property name="left_attach">0</property>
++		  <property name="right_attach">1</property>
++		  <property name="top_attach">1</property>
++		  <property name="bottom_attach">2</property>
++		  <property name="x_options">fill</property>
++		  <property name="y_options"></property>
++		</packing>
++	      </child>
++
++	      <child>
++		<widget class="GtkEntry" id="title-entry">
++		  <property name="visible">True</property>
++		  <property name="can_focus">True</property>
++		  <property name="editable">True</property>
++		  <property name="visibility">True</property>
++		  <property name="max_length">0</property>
++		  <property name="text" translatable="yes"></property>
++		  <property name="has_frame">True</property>
++		  <property name="invisible_char">●</property>
++		  <property name="activates_default">False</property>
++		  <accessibility>
++		    <atkrelation target="title-label" type="labelled-by"/>
++		  </accessibility>
++		</widget>
++		<packing>
++		  <property name="left_attach">1</property>
++		  <property name="right_attach">2</property>
++		  <property name="top_attach">0</property>
++		  <property name="bottom_attach">1</property>
++		  <property name="y_options"></property>
++		</packing>
++	      </child>
++
++	      <child>
++		<widget class="GtkComboBoxEntry" id="template-combo">
++		  <property name="visible">True</property>
++		  <property name="items" translatable="yes">Basic Meeting Workspace
++Blank Meeting Workspace
++Decision Meeting Workspace
++Social Meeting Workspace
++Multipage Meeting Workspace</property>
++		  <property name="add_tearoffs">False</property>
++		  <property name="has_frame">True</property>
++		  <property name="focus_on_click">True</property>
++		  <accessibility>
++		    <atkrelation target="template-label" type="labelled-by"/>
++		  </accessibility>
++		</widget>
++		<packing>
++		  <property name="left_attach">1</property>
++		  <property name="right_attach">2</property>
++		  <property name="top_attach">1</property>
++		  <property name="bottom_attach">2</property>
++		  <property name="x_options">fill</property>
++		  <property name="y_options">fill</property>
++		</packing>
++	      </child>
++	    </widget>
++	    <packing>
++	      <property name="padding">0</property>
++	      <property name="expand">True</property>
++	      <property name="fill">True</property>
++	    </packing>
++	  </child>
++
++	  <child>
++	    <widget class="GtkRadioButton" id="link-radio">
++	      <property name="visible">True</property>
++	      <property name="can_focus">True</property>
++	      <property name="label" translatable="yes">_Link to existing workspace</property>
++	      <property name="use_underline">True</property>
++	      <property name="relief">GTK_RELIEF_NORMAL</property>
++	      <property name="focus_on_click">True</property>
++	      <property name="active">False</property>
++	      <property name="inconsistent">False</property>
++	      <property name="draw_indicator">True</property>
++	      <property name="group">create-radio</property>
++	    </widget>
++	    <packing>
++	      <property name="padding">0</property>
++	      <property name="expand">False</property>
++	      <property name="fill">False</property>
++	    </packing>
++	  </child>
++
++	  <child>
++	    <widget class="GtkHBox" id="hbox2">
++	      <property name="border_width">12</property>
++	      <property name="visible">True</property>
++	      <property name="homogeneous">False</property>
++	      <property name="spacing">12</property>
++
++	      <child>
++		<widget class="GtkLabel" id="workspaces-label">
++		  <property name="visible">True</property>
++		  <property name="label" translatable="yes">Wo_rkspaces:</property>
++		  <property name="use_underline">True</property>
++		  <property name="use_markup">False</property>
++		  <property name="justify">GTK_JUSTIFY_LEFT</property>
++		  <property name="wrap">False</property>
++		  <property name="selectable">False</property>
++		  <property name="xalign">0.5</property>
++		  <property name="yalign">0.5</property>
++		  <property name="xpad">0</property>
++		  <property name="ypad">0</property>
++		  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
++		  <property name="width_chars">-1</property>
++		  <property name="single_line_mode">False</property>
++		  <property name="angle">0</property>
++		  <accessibility>
++		    <atkrelation target="workspaces-combo" type="label-for"/>
++		  </accessibility>
++		</widget>
++		<packing>
++		  <property name="padding">0</property>
++		  <property name="expand">False</property>
++		  <property name="fill">False</property>
++		</packing>
++	      </child>
++
++	      <child>
++		<widget class="GtkComboBoxEntry" id="workspaces-combo">
++		  <property name="visible">True</property>
++		  <property name="add_tearoffs">False</property>
++		  <property name="has_frame">True</property>
++		  <property name="focus_on_click">True</property>
++		  <accessibility>
++		    <atkrelation target="workspaces-label" type="labelled-by"/>
++		  </accessibility>
++		</widget>
++		<packing>
++		  <property name="padding">0</property>
++		  <property name="expand">True</property>
++		  <property name="fill">True</property>
++		</packing>
++	      </child>
++	    </widget>
++	    <packing>
++	      <property name="padding">0</property>
++	      <property name="expand">True</property>
++	      <property name="fill">True</property>
++	    </packing>
++	  </child>
++	</widget>
++	<packing>
++	  <property name="padding">0</property>
++	  <property name="expand">True</property>
++	  <property name="fill">True</property>
++	</packing>
++      </child>
++
++      <child>
++	<widget class="GtkStatusbar" id="statusbar">
++	  <property name="visible">True</property>
++	  <property name="has_resize_grip">True</property>
++	</widget>
++	<packing>
++	  <property name="padding">0</property>
++	  <property name="expand">False</property>
++	  <property name="fill">False</property>
++	</packing>
++      </child>
++    </widget>
++  </child>
++</widget>
++
++</glade-interface>
+Index: evolution-2.27.2/plugins/sharepoint-features/org-gnome-sharepoint-features.eplug.xml
+===================================================================
+--- /dev/null
++++ evolution-2.27.2/plugins/sharepoint-features/org-gnome-sharepoint-features.eplug.xml
+@@ -0,0 +1,20 @@
++<e-plugin-list>
++	<e-plugin
++	  type="shlib"
++	  id="org.gnome.evolution.calendar-meeting-workspace"
++	  _name="Create or Link to meeting workspaces"
++ 	  location="@PLUGINDIR@/liborg-gnome-sharepoint-features@SOEXT@">
++
++	  	<_description>Plugin to create or link to a meeting workspace</_description>
++
++		<author name="Chenthill" email="pchenthill@novell.com"/>
++
++		<hook class="org.gnome.evolution.calendar.events:1.0">
++			<event
++			   id="editor.inited"
++			   handle="org_gnome_meeting_workspace"
++			   target="compeditor"
++			/>
++		</hook>
++	</e-plugin>
++</e-plugin-list>
+Index: evolution-2.27.2/plugins/sharepoint-features/meeting-workspace.c
+===================================================================
+--- /dev/null
++++ evolution-2.27.2/plugins/sharepoint-features/meeting-workspace.c
+@@ -0,0 +1,230 @@
++#ifdef HAVE_CONFIG_H
++#include <config.h>
++#endif
++
++#include <gtk/gtk.h>
++#include <e-util/e-plugin.h>
++#include <glib/gi18n.h>
++#include <e-util/e-plugin-ui.h>
++#include <e-util/e-util-private.h>
++#include <e-cal-event.h>
++#include <calendar/gui/dialogs/event-editor.h>
++#include <dbus/dbus-glib.h>
++#include <dbus/dbus-glib-lowlevel.h>
++#include <glade/glade.h>
++
++static void action_meeting_workspace (GtkAction *action, EventEditor *editor);
++void org_gnome_meeting_workspace (EPlugin *ep, ECalEventTargetCompEditor *target);
++
++static const gchar *ui =
++"<ui>"
++"  <toolbar name='main-toolbar'>"
++"    <toolitem action='meeting-workspace'/>"
++"  </toolbar>"
++"</ui>";
++
++static GtkActionEntry meeting_entries[] = {
++        { "meeting-workspace",
++          "stock_people",
++          N_("Meeting Workspace"),
++          NULL,
++          N_("Create or Link to Meeting Workspaces"),
++          G_CALLBACK (action_meeting_workspace) }
++};
++
++typedef struct {
++	GtkWidget *dialog;
++	GtkWidget *title_entry;
++	GtkWidget *template_label;
++	GtkWidget *template_combo;
++	GtkWidget *create_radio;
++	GtkWidget *link_radio;
++	GtkWidget *workspace_label;
++	GtkWidget *workspace_combo;
++	GtkWidget *statusbar;
++	gboolean got_workspaces;
++	guint contextid;
++
++	EventEditor *editor;
++} MeetingWorkspaceWidget;
++
++static DBusGProxy *
++get_dice_dbus_proxy ()
++{
++	GError *err = NULL;
++	DBusGConnection *conn = dbus_g_bus_get (DBUS_BUS_SESSION, &err); 
++	if (!conn) {
++		g_printerr ("Failed to connect: %s\n", err->message);
++		g_error_free (err);
++		return NULL;
++	}
++
++	return dbus_g_proxy_new_for_name (conn, "Novell.ICEDesktop.Daemon", "/Novell/ICEDesktop/Daemon",
++									  "Novell.ICEDesktop.Daemon");
++}
++
++static MeetingWorkspaceWidget *
++setup_widgets (void)
++{
++	char *gladefile;
++	GladeXML *xml;
++	MeetingWorkspaceWidget *mws;
++
++	gladefile = g_build_filename (EVOLUTION_GLADEDIR, "meetingworkspaces.glade", NULL);	
++	xml = glade_xml_new (gladefile, NULL, NULL);
++#define GW(name) glade_xml_get_widget (xml, name)
++	
++	mws = g_new0 (MeetingWorkspaceWidget, 1);
++	mws->dialog = GW("meeting-workspace-dialog");
++	mws->title_entry = GW("title-entry");
++	mws->template_label = GW("template-label");
++	mws->template_combo = GW("template-combo");
++	mws->create_radio = GW("create-radio");
++	mws->link_radio = GW("link-radio");
++	mws->workspace_label = GW("workspaces-label");
++	mws->workspace_combo = GW("workspaces-combo");
++	mws->statusbar = GW("statusbar");
++
++	return mws;
++}
++
++static void
++create_toggled_cb (GtkToggleButton *create_radio, gpointer user_data)
++{
++	gboolean active;
++	MeetingWorkspaceWidget *mws = user_data;
++
++	active = gtk_toggle_button_get_active (create_radio);	
++	
++	gtk_entry_set_editable ((GtkEntry *)mws->title_entry, active);
++	gtk_widget_set_sensitive (mws->template_combo, active);
++}
++
++static void
++link_toggled_cb (GtkToggleButton *link_radio, gpointer user_data)
++{
++	gboolean active;
++	MeetingWorkspaceWidget *mws = user_data;
++	
++	active = gtk_toggle_button_get_active (link_radio);	
++	gtk_widget_set_sensitive (mws->workspace_combo, active);
++
++	if (active && !mws->got_workspaces) {
++		gtk_statusbar_push ((GtkStatusbar *)mws->statusbar, mws->contextid,
++			       	_("Loading Meeting workspaces..."));
++
++		// Get the meeting workspaces and set them
++
++		mws->got_workspaces = TRUE;
++	}
++}
++
++static void
++release_memory (MeetingWorkspaceWidget *mws)
++{
++	
++}
++
++static void
++dialog_response_cb (GtkDialog *dialog, int response_id, gpointer user_data)
++{
++	MeetingWorkspaceWidget *mws = user_data;
++
++	if (response_id == GTK_RESPONSE_OK) {
++		gboolean active;
++		const char *workspace_url = NULL;
++		ECalComponent *comp;
++	
++		active = gtk_toggle_button_get_active ((GtkToggleButton *) mws->link_radio);	
++	
++		if (active) {
++			// Get the workspace from combo box selection
++		} else {
++			// Create the meeting workspace
++			const char *title;
++
++			title = gtk_entry_get_text ((GtkEntry *) mws->title_entry);
++
++			if (!title || !*title) {
++				gtk_statusbar_push ((GtkStatusbar *) mws->statusbar, mws->contextid, 
++						_("Please set a title and press OK."));
++				return;
++			}
++				
++			gtk_statusbar_push ((GtkStatusbar *) mws->statusbar, mws->contextid, 
++						_("Creating Meeting Workspace. Please wait..."));
++			// Create Meeting Workspace
++		}	
++	
++		// Set the workspace url to component
++		comp = comp_editor_get_comp ((CompEditor *) mws->editor);
++	}
++	
++	gtk_widget_destroy (mws->dialog);
++	release_memory (mws);
++}
++
++static void
++init_widgets (MeetingWorkspaceWidget *mws)
++{
++	g_signal_connect((mws->create_radio), "toggled",
++			    G_CALLBACK (create_toggled_cb), mws);
++	
++	g_signal_connect((mws->link_radio), "toggled",
++			    G_CALLBACK (link_toggled_cb), mws);
++	
++	g_signal_connect((mws->dialog), "response",
++			    G_CALLBACK (dialog_response_cb), mws);
++	
++	gtk_widget_set_sensitive (mws->workspace_combo, FALSE);
++
++	gtk_combo_box_set_active ((GtkComboBox *) mws->template_combo, 0);
++
++	mws->contextid = gtk_statusbar_get_context_id ((GtkStatusbar *)mws->statusbar, "Meeting workspace status");
++}
++
++static void 
++action_meeting_workspace (GtkAction *action, EventEditor *editor)
++{
++	MeetingWorkspaceWidget *mws;
++
++	mws = setup_widgets ();
++	init_widgets (mws);
++	mws->editor = editor;
++	
++	gtk_dialog_run ((GtkDialog *) mws->dialog);
++	g_print	("Clicked meeting workspace \n");
++}
++
++void
++org_gnome_meeting_workspace (EPlugin *ep, ECalEventTargetCompEditor *target)
++{
++	GtkActionGroup *action_group;
++        GtkUIManager *manager;
++        GError *error = NULL;
++	CompEditor *editor = target->editor;
++	CompEditorFlags flags;
++	ECal *client;
++	const char *uri;
++
++	client = comp_editor_get_client (editor);
++	uri = e_cal_get_uri (client);
++	flags = comp_editor_get_flags (editor);
++
++	if (!g_str_has_prefix (uri, "sharepoint://"))
++		return;
++
++	if (!(flags & COMP_EDITOR_MEETING && flags & COMP_EDITOR_NEW_ITEM))
++		return;
++
++	action_group = comp_editor_get_action_group (editor, "coordinated");
++        gtk_action_group_add_actions (action_group, meeting_entries,
++                G_N_ELEMENTS (meeting_entries), editor);
++
++        manager = comp_editor_get_ui_manager (editor);
++        gtk_ui_manager_add_ui_from_string (manager, ui, -1, &error);
++        if (error != NULL) {
++                g_critical ("%s: %s", G_STRFUNC, error->message);
++                g_error_free (error);
++        }
++}
+Index: evolution-2.27.2/configure.ac
+===================================================================
+--- evolution-2.27.2.orig/configure.ac
++++ evolution-2.27.2/configure.ac
+@@ -965,6 +965,9 @@ if test "x${enable_mono}" = "xyes"; then
+  	evolution-sharp, ndesk-dbus-1.0, ndesk-dbus-glib-1.0])
+  	AC_SUBST(MONO_PLATFORM_CFLAGS)
+  	AC_SUBST(MONO_PLATFORM_LIBS)
++ 	PKG_CHECK_MODULES(DBUS, dbus-glib-1)
++ 	AC_SUBST(DBUS_CFLAGS)
++ 	AC_SUBST(DBUS_LIBS)
+  	MONO_BASED_PLUGINS=""
+  	
+  	dnl Sharepoint account setup
+@@ -976,7 +979,7 @@ if test "x${enable_mono}" = "xyes"; then
+  		PKG_CHECK_MODULES(ICE_DESKTOP, [Novell.IceDesktop, solvent])
+  		AC_SUBST(ICE_DESKTOP_CFLAGS)
+  		AC_SUBST(ICE_DESKTOP_LIBS)
+- 		MONO_BASED_PLUGINS="$MONO_BASED_PLUGINS sharepoint-account-setup"
++ 		MONO_BASED_PLUGINS="$MONO_BASED_PLUGINS sharepoint-account-setup sharepoint-features"
+  	fi
+ fi
+ AC_SUBST(MONO_CFLAGS)
+@@ -2161,6 +2164,7 @@ plugins/tnef-attachments/Makefile
+ plugins/vcard-inline/Makefile
+ plugins/webdav-account-setup/Makefile
+ plugins/sharepoint-account-setup/Makefile
++plugins/sharepoint-features/Makefile
+ smime/Makefile
+ smime/lib/Makefile
+ smime/gui/Makefile
