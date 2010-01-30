@@ -13,7 +13,7 @@ dev-libs/memphis-0.1.0 # Не знаю куда его но пока так... �
 media-libs/libchamplain-0.5.1 # Fix ;)
 gnome-extra/cairo-dock-9999.ebuild # Fix
 gnome-extra/evolution-data-server-2.29.6 # Now all evolution build fine ;) Yeeee baby
-mail-client/evolution-2.29.6.ebuild
+mail-client/evolution-2.29.6
 gnome-extra/evolution-exchange-2.29.6
 
 28 Январь 2010
