@@ -2,6 +2,16 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+30 Январь 2010
+
+Добавлено/изменено
+
+www-client/epiphany-2.29.6
+www-client/epiphany-extensions-2.29.6
+gnome-base/gvfs-1.5.2
+dev-libs/memphis-0.1.0 # Не знаю куда его но пока так... Нужно для media-libs/libchamplain-0.5.1
+media-libs/libchamplain-0.5.1 # Fix ;)
+
 28 Январь 2010
 
 Добавлено/изменено

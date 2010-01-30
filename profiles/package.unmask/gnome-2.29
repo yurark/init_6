@@ -1,3 +1,4 @@
-=gnome-base/gdm-2.29.4
+=gnome-base/gdm-2.29.6
 =gnome-extra/gnome-games-2.29.5
 =app-editors/gedit-2.29.4
+=x11-libs/pixman-0.17.4
