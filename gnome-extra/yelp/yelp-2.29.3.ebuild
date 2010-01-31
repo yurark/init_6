@@ -15,7 +15,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 IUSE="beagle lzma"
 
 RDEPEND=">=gnome-base/gconf-2
-	>=app-text/gnome-doc-utils-0.19.1
+	>=app-text/gnome-doc-utils-0.17.2
 	>=x11-libs/gtk+-2.10
 	>=dev-libs/glib-2.16
 	>=dev-libs/libxml2-2.6.5
@@ -59,7 +59,7 @@ src_prepare() {
 	gnome2_src_prepare
 
 	# Fix automagic lzma support, bug #266128
-	#epatch "${FILESDIR}/${PN}-2.26.0-automagic-lzma.patch"
+	epatch "${FILESDIR}/${PN}-2.26.0-automagic-lzma.patch"
 
 	intltoolize --force --copy --automake || die "intltoolize failed"
 	eautoreconf

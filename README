@@ -2,6 +2,13 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+31 Январь 2010
+
+Добавлено/изменено
+
+dev-libs/libgnome-keyring-2.29.4
+gnome-base/gnome-keyring-2.29.5 # gnome-keyring-2.29.5 разделили на gnome-keyring-2.29.5 + libgnome-keyring-2.29.4
+
 30 Январь 2010
 
 Добавлено/изменено

@@ -76,8 +76,12 @@ src_configure() {
 		$(use_enable debug)
 		$(use_enable gstreamer video)
 		$(use_enable introspection)
+		--enable-3D-transforms \
+		--enable-xhtmlmp \
+		--disable-geolocation \
+		--disable-wml \
+		--enable-web-sockets \
 		"
-
 	# USE-flag controlled font backend because upstream default is freetype
 	# Remove USE-flag once font-backend becomes pango upstream
 	if use pango; then
@@ -89,6 +93,12 @@ src_configure() {
 	fi
 
 	econf ${myconf}
+}
+
+src_prepare() {
+	cd ${S}
+	epatch ${FILESDIR}/${P}-html5-playbin-source.patch
+	epatch ${FILESDIR}/${P}-html5-cookies.patch
 }
 
 src_compile() {
