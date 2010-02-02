@@ -1,5 +1,7 @@
 # gnome-2.29
 
+=gnome-extra/gnome-color-manager-2.29.3
+
 =media-gfx/gthumb-2.11.1
 
 =gnome-extra/gnome-color-manager-2.29.2
