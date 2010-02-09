@@ -2,6 +2,44 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+09 Февраль 2010
+
+Добавлено/изменено
+
+dev-cpp/glibmm-2.23.2
+app-text/gnome-doc-utils-0.19.4
+dev-util/gnome-devel-docs-2.29.2
+gnome-extra/gnome-user-docs-2.29.2
+dev-libs/glib-2.23.3
+dev-libs/gmime-2.5.1
+net-libs/libsoup-2.29.90
+net-libs/libsoup-gnome-2.29.90
+media-libs/clutter-1.1.10 # Filed to build 
+dev-libs/libgnome-keyring-2.29.90
+gnome-extra/gtkhtml-3.29.90
+gnome-extra/gcalctool-5.29.90
+gnome-extra/at-spi-1.29.90
+gnome-base/gnome-keyring-2.29.90
+gnome-base/gnome-desktop-2.29.90
+dev-libs/libgweather-2.29.90
+gnome-extra/evolution-data-server-2.29.90
+gnome-base/gvfs-1.5.3
+gnome-base/nautilus-2.29.90
+app-arch/file-roller-2.29.90
+app-cdr/brasero-2.29.90
+gnome-extra/gnome-screensaver-2.29.90
+app-crypt/seahorse-2.29.90
+www-client/epiphany-2.29.90 # need webkit >= 1.1.21
+gnome-base/gnome-settings-daemon-2.29.90
+mail-client/evolution-2.29.90
+gnome-extra/evolution-exchange-2.29.90
+gnome-extra/yelp-2.29.4
+gnome-base/gnome-control-center-2.29.90
+media-video/cheese-2.29.90
+net-im/empathy-2.29.90
+net-misc/vinagre-2.29.90
+gnome-extra/deskbar-applet-2.29.90
+
 02 Февраль 2010
 
 Добавлено/изменено
@@ -556,4 +594,3 @@ x11-themes/osx-theme-1.0_rc1
 x11-themes/oxy-cursors-9999
 x11-themes/thewidgetfactory-0.2.1
 x11-themes/ultimate-gnome-icon-theme-0.5.1
-

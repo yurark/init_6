@@ -36,7 +36,7 @@ sys-auth/consolekit policykit
 sys-block/gparted -dmraid fat hfs jfs -kde ntfs reiser4 reiserfs -xfce xfs
 sys-fs/ntfsprogs fuse
 sys-kernel/gentoo-sources symlink
-www-client/midori idn
+www-client/midori idn -unique
 www-plugins/adobe-flash -32bit 64bit
 x11-libs/cairo cleartype -ubuntu
 x11-libs/geoclue system-bus

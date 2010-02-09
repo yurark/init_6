@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI="2"
 
 if [[ ${PV} == 9999* ]]
 then
@@ -14,20 +14,24 @@ else
 	inherit gnome2-utils eutils multilib
 fi
 
-KEYWORDS="~x86 ~amd64"
+inherit xfconf multilib git
 
 DESCRIPTION="A lightweight web browser"
 HOMEPAGE="http://www.twotoasts.de/index.php?/pages/midori_summary.html"
+EGIT_REPO_URI="git://git.xfce.org/apps/midori"
+EGIT_PROJECT="midori"
+SRC_URI=""
 
 LICENSE="LGPL-2"
 SLOT="0"
+KEYWORDS="~x86 ~amd64"
 IUSE="doc gnome html idn libnotify nls +sqlite +unique"
 
 RDEPEND="libnotify? ( x11-libs/libnotify )
 	>=net-libs/libsoup-2.25.2
 	>=net-libs/webkit-gtk-1.1.1
 	dev-libs/libxml2
-	>=x11-libs/gtk+-2.10:2
+	x11-libs/gtk+
 	gnome? ( net-libs/libsoup[gnome] )
 	idn? ( net-dns/libidn )
 	sqlite? ( >=dev-db/sqlite-3.0 )
@@ -40,38 +44,10 @@ DEPEND="${RDEPEND}
 	html? ( dev-python/docutils )
 	nls? ( sys-devel/gettext )"
 
-PATCHES=""
-
-src_unpack()
-{
-	if [[ ${PV} == 9999* ]]
-	then
-		git_src_unpack
-	else
-		unpack ${A}
-	fi
-	cd ${S}
-}
-
-src_prepare()
-{
-	# fixes/updates
-	if [[ x"${PATCHES}" != x ]]
-	then
-		for PATCH in ${PATCHES}
-		do
-			if [[ -f "${FILESDIR}/${PATCH}" ]] 
-			then
-				epatch "${FILESDIR}/${PATCH}" || die "epatch ${PATCH} failed"
-			else
-				die "patch ${FILESDIR}/${PATCH} not found"
-			fi
-		done
-	fi
-
+src_prepare() {
 	# moving docs to version-specific directory
-	sed -i -e "s:\${DOCDIR}/${PN}:\${DOCDIR}/${PF}/:g" wscript || die
-	sed -i -e "s:/${PN}/user/midori.html:/${PF}/user/midori.html:g" midori/midori-browser.c || die
+	sed -i -e "s:\${DOCDIR}/${PN}:\${DOCDIR}/${PF}/:g" wscript
+	sed -i -e "s:/${PN}/user/midori.html:/${PF}/user/midori.html:g" midori/midori-browser.c
 }
 
 src_configure() {
@@ -79,11 +55,9 @@ src_configure() {
 		--prefix="/usr/" \
 		--libdir="/usr/$(get_libdir)" \
 		--disable-docs \
-		--enable-addons \
 		$(use_enable doc apidocs) \
 		$(use_enable html userdocs) \
 		$(use_enable idn libidn) \
-		$(use_enable libnotify) \
 		$(use_enable nls nls) \
 		$(use_enable sqlite) \
 		$(use_enable unique) \
@@ -105,6 +79,4 @@ pkg_postinst() {
 	xfconf_pkg_postinst
 	ewarn "Midori tends to crash due to bugs in WebKit."
 	ewarn "Report bugs at http://www.twotoasts.de/bugs"
-	einfo "Updating Icon Cache"
-	gtk-update-icon-cache -q -f -t ${D}/usr/share/icons/hicolor
 }

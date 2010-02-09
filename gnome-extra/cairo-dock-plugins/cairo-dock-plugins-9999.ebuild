@@ -44,10 +44,11 @@ src_prepare() {
 src_configure() {
 	econf --disable-dependency-tracking           \
 		--disable-old-gnome-integration       \
-		--enable-scooby-do		      \
-		--enable-gio-in-gmenu		      \
+		--enable-scooby-do                    \
+		--enable-gio-in-gmenu                 \
 		--enable-rssreader                    \
 		--enable-show-desklets                \
+		--enable-doncky                       \
 		$(use_enable alsa alsa-mixer)         \
 		$(use_enable compiz compiz-icon)      \
 		$(use_enable exif)                    \
