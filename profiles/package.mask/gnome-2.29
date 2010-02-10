@@ -1,18 +1,11 @@
 # gnome-2.29
 
+=gnome-extra/gnome-color-manager-2.29.2
 =gnome-extra/gnome-color-manager-2.29.3
 
 =media-gfx/gthumb-2.11.1
 
-=gnome-extra/gnome-color-manager-2.29.2
-
-=www-client/epiphany-extensions-2.28.1-r1
-
-=gnome-base/gnome-panel-2.29.5
-
 =app-editors/gedit-2.29.5
-
-=gnome-extra/yelp-2.29.3
 
 =media-libs/clutter-1.1.10
 
