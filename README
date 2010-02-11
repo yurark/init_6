@@ -2,6 +2,26 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+11 Февраль 2010
+
+Добавлено/изменено
+
+app-editors/gedit-2.29.6
+media-libs/gstreamer-0.10.26
+media-libs/gst-plugins-base-0.10.26
+media-libs/gst-plugins-good-0.10.18
+media-plugins/gst-plugins-xvideo-0.10.26
+media-plugins/gst-plugins-ogg-0.10.26
+media-plugins/gst-plugins-gio-0.10.26
+media-plugins/gst-plugins-x-0.10.26
+media-plugins/gst-plugins-alsa-0.10.26
+media-plugins/gst-plugins-vorbis-0.10.26
+media-plugins/gst-plugins-cdparanoia-0.10.26
+media-plugins/gst-plugins-pango-0.10.26
+media-plugins/gst-plugins-theora-0.10.26
+media-plugins/gst-plugins-v4l-0.10.26
+x11-libs/gtk+-2.19.5
+
 09 Февраль 2010
 
 Добавлено/изменено
