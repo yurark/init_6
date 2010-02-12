@@ -13,7 +13,7 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux"
 IUSE="doc examples"
 
-RDEPEND="=x11-libs/gtksourceview-1.8*
+RDEPEND="=x11-libs/gtksourceview-2.9*
 	>=dev-python/libgnomeprint-python-2.25.90
 	!<dev-python/gnome-python-desktop-2.22.0-r10"
 DEPEND="${RDEPEND}"
