@@ -65,8 +65,9 @@ src_configure() {
 }
 
 src_compile() {
-	NUMJOBS=$(sed -e 's/.*\(\-j[ 0-9]\+\) .*/\1/; s/--jobs=\?/-j/' <<< ${MAKEOPTS})
-	./waf build ${NUMJOBS} || die "build failed"
+	#NUMJOBS=$(sed -e 's/.*\(\-j[ 0-9]\+\) .*/\1/; s/--jobs=\?/-j/' <<< ${MAKEOPTS})
+	#./waf build ${NUMJOBS} || die "build failed"
+	./waf
 }
 
 src_install() {

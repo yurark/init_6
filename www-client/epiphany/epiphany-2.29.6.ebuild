@@ -51,8 +51,8 @@ pkg_setup() {
 	#	$(use_enable introspection)
 	G2CONF="${G2CONF}
 		--disable-scrollkeeper
-		--disable-maintainer-mode
 		--with-distributor-name=Gentoo
+		--enable-introspection=no
 		$(use_enable avahi zeroconf)
 		$(use_enable networkmanager network-manager)
 		$(use_enable nss)

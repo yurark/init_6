@@ -18,6 +18,7 @@ IUSE="dbus debug djvu doc dvi gnome gnome-keyring nautilus t1lib tiff"
 # Since 2.26.2, can handle poppler without cairo support. Make it optional ?
 # not mature enough
 #	introspection? ( >=dev-libs/gobject-introspection-0.6 )
+#>=virtual/poppler-glib-0.11[cairo]
 RDEPEND="
 	>=app-text/libspectre-0.2.0
 	>=dev-libs/glib-2.18.0
@@ -29,7 +30,6 @@ RDEPEND="
 	gnome? ( >=gnome-base/gconf-2 )
 	gnome-keyring? ( >=gnome-base/gnome-keyring-2.22.0 )
 	nautilus? ( >=gnome-base/nautilus-2.10 )
-	>=virtual/poppler-glib-0.11[cairo]
 	dvi? (
 		virtual/tex-base
 		t1lib? ( >=media-libs/t1lib-5.0.0 ) )
