@@ -47,6 +47,6 @@ src_prepare() {
 	sed -e 's/\(test.*\)==/\1=/g' -i configure.in configure || die "sed failed"
 
 	# Use lib present on the system
-	epatch "${FILESDIR}"/${PN}-2.28.1-system-lib.patch
+	epatch "${FILESDIR}"/${PN}-system-lib.patch
 	eautoreconf
 }

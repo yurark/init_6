@@ -6,7 +6,7 @@ USE AT YOUR OWN RISK.
 
 Добавлено/изменено
 
-app-editors/gedit-2.29.6
+app-editors/gedit-2.29.6 # Mask
 media-libs/gstreamer-0.10.26
 media-libs/gst-plugins-base-0.10.26
 media-libs/gst-plugins-good-0.10.18

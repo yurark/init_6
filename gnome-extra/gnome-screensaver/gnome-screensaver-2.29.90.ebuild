@@ -1,6 +1,6 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-extra/gnome-screensaver/gnome-screensaver-2.28.0-r1.ebuild,v 1.2 2010/01/24 22:56:15 eva Exp $
+# $Header: $
 
 EAPI="2"
 

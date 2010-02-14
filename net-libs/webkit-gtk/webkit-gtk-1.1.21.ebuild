@@ -28,7 +28,7 @@ RDEPEND="
 	>=x11-libs/gtk+-2.10
 	>=gnome-base/gail-1.8
 	>=dev-libs/icu-3.8.1-r1
-	>=net-libs/libsoup-2.29.3
+	>=net-libs/libsoup-2.29.90
 	>=dev-db/sqlite-3
 	>=app-text/enchant-0.22
 
@@ -76,12 +76,8 @@ src_configure() {
 		$(use_enable debug)
 		$(use_enable gstreamer video)
 		$(use_enable introspection)
-		--enable-3D-transforms \
-		--enable-xhtmlmp \
-		--disable-geolocation \
-		--disable-wml \
-		--enable-web-sockets \
 		"
+
 	# USE-flag controlled font backend because upstream default is freetype
 	# Remove USE-flag once font-backend becomes pango upstream
 	if use pango; then
@@ -93,12 +89,6 @@ src_configure() {
 	fi
 
 	econf ${myconf}
-}
-
-src_prepare() {
-	cd ${S}
-	epatch ${FILESDIR}/${P}-html5-playbin-source.patch
-	epatch ${FILESDIR}/${P}-html5-cookies.patch
 }
 
 src_compile() {
