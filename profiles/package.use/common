@@ -5,7 +5,7 @@ app-misc/gnote applet
 app-office/openoffice java odk templates -nsplugin
 app-portage/layman git
 app-text/djvu -nsplugin
-dev-db/sqlite fts3
+dev-db/sqlite fts3 secure-delete extensions
 dev-libs/DirectFB fbcon jpeg png truetype
 dev-libs/gir-repository gtk pango atk avahi -babl dbus gconf gnome-keyring -gstreamer gtksourceview -gupnp libnotify libsoup libunique libwnck poppler vte webkit pango
 dev-libs/libunique -introspection
@@ -53,5 +53,4 @@ dev-util/subversion -python
 net-print/cups -python
 app-arch/rpm -python
 
-dev-db/sqlite extensions
 sys-apps/tuxonice-userui fbsplash
