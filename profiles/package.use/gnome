@@ -10,3 +10,4 @@ media-plugins/gst-plugins-meta a52 -dvb -esd ffmpeg -mythtv -oss taglib theora
 media-video/ffmpeg -3dnow -3dnowext bindist dirac faac faad gsm hardcoded-tables ieee1394 jpeg2k mmxext network schroedinger speex ssse3 v4l v4l2 vdpau
 net-libs/libproxy webkit
 app-crypt/seahorse ldap
+media-gfx/gimp python
