@@ -58,11 +58,11 @@ perl-core/ExtUtils-CBuilder
 perl-core/ExtUtils-ParseXS
 perl-core/IO-Compress
 perl-core/IO-Zlib
-perl-core/MIME-Base64
+#perl-core/MIME-Base64
 perl-core/Module-Build
 perl-core/Package-Constants
 perl-core/PodParser
-perl-core/Scalar-List-Utils
+#perl-core/Scalar-List-Utils
 perl-core/Test-Harness
 perl-core/digest-base
 perl-core/libnet

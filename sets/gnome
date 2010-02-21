@@ -104,7 +104,7 @@ dev-libs/libassuan
 #sys-apps/devicekit-power
 dev-python/pygtksourceview
 dev-games/ggz-client-libs
-dev-libs/xmlrpc-c
+#dev-libs/xmlrpc-c
 media-libs/xvid
 media-libs/x264
 net-misc/whois
