@@ -1,6 +1,6 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/net-libs/libsoup-gnome/libsoup-gnome-2.28.2.ebuild,v 1.1 2009/12/17 22:55:30 eva Exp $
 
 EAPI="2"
 
@@ -44,7 +44,7 @@ src_prepare() {
 
 	# Fix test to follow POSIX (for x86-fbsd)
 	# No patch to prevent having to eautoreconf
-	sed -e 's/\(test.*\)==/\1=/g' -i configure.in configure || die "sed failed"
+	sed -e 's/\(test.*\)==/\1=/g' -i configure.ac configure || die "sed failed"
 
 	# Use lib present on the system
 	epatch "${FILESDIR}"/${PN}-system-lib.patch

@@ -33,5 +33,5 @@ src_prepare() {
 	gnome2_src_prepare
 
 	# Fix bashisms
-	sed 's/\[\[\(.*\)\]\]/[\1]/g' -i configure.in configure || die "sed failed"
+	#sed 's/\[\[\(.*\)\]\]/[\1]/g' -i configure.in configure || die "sed failed"
 }

@@ -65,7 +65,7 @@ src_prepare() {
 
 	# Fix introspection automagic.
 	# https://bugzilla.gnome.org/show_bug.cgi?id=596506
-	epatch "${FILESDIR}/${PN}-1.26.0-introspection-automagic.patch"
+	#epatch "${FILESDIR}/${PN}-1.26.0-introspection-automagic.patch"
 
 	eautoreconf
 }

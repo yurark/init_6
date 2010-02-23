@@ -20,7 +20,7 @@ RDEPEND=">=gnome-base/gconf-2
 	>=dev-libs/libxml2-2.5.0
 	>=dev-libs/glib-2.18
 	>=x11-libs/gtk+-2.17.1
-	>=x11-libs/gtksourceview-2.5
+	>=x11-libs/gtksourceview-2.9
 	spell? (
 		>=app-text/enchant-1.2
 		>=app-text/iso-codes-0.35
@@ -28,7 +28,7 @@ RDEPEND=">=gnome-base/gconf-2
 	python? (
 		>=dev-python/pygobject-2.15.4
 		>=dev-python/pygtk-2.12
-		>=dev-python/pygtksourceview-2.2
+		>=dev-python/pygtksourceview-2.9.2
 	)"
 
 DEPEND="${RDEPEND}

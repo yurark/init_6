@@ -2,6 +2,49 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+23 Февраль 2010
+
+Добавлено/изменено
+
+app-admin/pessulus-2.29.91
+app-arch/file-roller-2.29.91
+app-cdr/brasero-2.29.91
+app-crypt/seahorse-2.29.91
+app-crypt/seahorse-plugins-2.29.91 #configure: error: This program needs a gtk 2 gecko build
+app-editors/gedit-2.29.7
+app-text/evince-2.29.91
+app-text/gnome-doc-utils-0.19.5
+dev-libs/glib-2.23.4
+dev-libs/libgdata-0.6.2
+dev-libs/libgweather-2.29.91
+dev-python/pygtksourceview-2.9.2
+dev-util/gnome-devel-docs-2.29.3
+gnome-base/gnome-desktop-2.29.91
+gnome-base/gnome-menus-2.29.91
+gnome-base/gnome-panel-2.29.91
+gnome-base/gvfs-1.5.4
+gnome-base/nautilus-2.29.91
+gnome-extra/deskbar-applet-2.29.91
+gnome-extra/evolution-data-server-2.29.91
+gnome-extra/evolution-exchange-2.29.91
+gnome-extra/gcalctool-5.29.91
+gnome-extra/gnome-games-2.29.91
+gnome-extra/gnome-media-2.29.91 # configure: error: Package requirements (gladeui-1.0) were not met: No package 'gladeui-1.0' found
+gnome-extra/gtkhtml-3.29.91
+gnome-extra/yelp-2.29.5
+mail-client/evolution-2.29.91
+media-gfx/eog-2.29.91
+media-gfx/gthumb-2.11.2
+media-video/cheese-2.29.91
+net-im/empathy-2.29.91
+net-misc/vinagre-2.29.91
+www-client/epiphany-2.29.91
+www-client/epiphany-extensions-2.29.91
+x11-libs/gtksourceview-2.9.7
+x11-libs/libwnck-2.29.91
+x11-libs/pango-1.27.1
+x11-themes/gnome-themes-2.29.91
+
 19 Февраль 2010
 
 Добавлено/изменено

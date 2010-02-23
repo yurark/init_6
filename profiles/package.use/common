@@ -54,3 +54,4 @@ net-print/cups -python
 app-arch/rpm -python
 
 sys-apps/tuxonice-userui fbsplash
+net-p2p/transmission sound

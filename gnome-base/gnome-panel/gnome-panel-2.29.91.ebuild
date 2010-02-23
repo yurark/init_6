@@ -75,7 +75,7 @@ src_prepare() {
 	fi
 
 	# Fix missing cflags for clock applet, bug #287853
-	epatch "${FILESDIR}/${P}-clock-applet-missing-cflags.patch"
+	#epatch "${FILESDIR}/${P}-clock-applet-missing-cflags.patch"
 
 	# Fix crashes in various conditions with the new randr code,
 	# import from upstream bug #597101
