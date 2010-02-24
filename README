@@ -22,7 +22,7 @@ dev-util/gnome-devel-docs-2.29.3
 gnome-base/gnome-desktop-2.29.91
 gnome-base/gnome-menus-2.29.91
 gnome-base/gnome-panel-2.29.91
-gnome-base/gvfs-1.5.4
+gnome-base/gvfs-1.5.4 #mask it
 gnome-base/nautilus-2.29.91
 gnome-extra/deskbar-applet-2.29.91
 gnome-extra/evolution-data-server-2.29.91
