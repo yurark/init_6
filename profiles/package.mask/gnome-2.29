@@ -6,8 +6,6 @@
 
 =dev-util/gtk-doc-1.13-r1
 
-=gnome-extra/gnome-media-2.29.91
-
 =app-editors/gedit-2.29.8
 
 =gnome-base/gvfs-1.5.4
@@ -18,7 +16,11 @@
 
 =mail-client/evolution-2.29.92
 =gnome-extra/evolution-exchange-2.29.92
-=gnome-extra/gnome-packagekit-2.29.91
+
 =gnome-extra/gnome-games-2.29.92
+
 =gnome-extra/hamster-applet-2.29.92
+
 =sys-apps/gnome-disk-utility-2.29.90
+
+=media-libs/gst-plugins-good-0.10.21

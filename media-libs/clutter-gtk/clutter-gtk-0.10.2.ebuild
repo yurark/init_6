@@ -4,7 +4,8 @@
 
 EAPI="2"
 
-inherit clutter
+# inherit clutter after gnome2 so that defaults aren't overriden
+inherit gnome2 clutter
 
 DESCRIPTION="Clutter-GTK - GTK+ Integration library for Clutter"
 
@@ -24,12 +25,9 @@ DEPEND="${RDEPEND}
 		>=dev-libs/gir-repository-0.6.3[gtk] )"
 EXAMPLES="examples/{*.c,redhand.png}"
 
-src_configure() {
-	local myconf="--with-flavour=x11
+pkg_setup() {
+	G2CONF="${G2CONF}
+		--with-flavour=x11
 		--enable-maintainer-flags=no
 		$(use_enable introspection)"
-	if ! use debug; then
-		myconf="${myconf} --enable-debug=minimum"
-	fi
-	econf ${myconf}
 }
