@@ -10,6 +10,6 @@
 =media-libs/libdvdnav-9999
 =x11-wm/mutter-9999
 =gnome-extra/yelp-9999
-=www-client/midori-9999
+#=www-client/midori-9999
 #=net-libs/webkit-gtk-9999
 =media-video/mplayer-9999

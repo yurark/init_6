@@ -2,6 +2,56 @@ USE AT YOUR OWN RISK.
 
 И не говорите потом что я вас не предупреждал!
 
+13 Март 2010
+
+Добавлено/изменено
+
+app-arch/file-roller-2.29.92
+app-text/evince-2.29.92
+dev-libs/libgweather-2.29.92
+dev-python/gnome-python-desktop-2.29.92
+gnome-base/gdm-2.29.92
+gnome-base/gnome-control-center-2.29.92
+gnome-base/gnome-desktop-2.29.92
+gnome-base/gnome-keyring-2.29.92
+gnome-base/gnome-menus-2.29.92
+gnome-base/gnome-panel-2.29.92.1
+gnome-base/gnome-session-2.29.92
+gnome-base/gnome-settings-daemon-2.29.92
+gnome-base/libgnomekbd-2.29.92
+gnome-base/nautilus-2.29.92.1
+gnome-extra/evolution-data-server-2.29.92
+gnome-extra/evolution-exchange-2.29.92 #mask
+gnome-extra/gcalctool-5.29.92
+gnome-extra/gnome-color-manager-2.29.4
+gnome-extra/gnome-games-2.29.92 #mask
+gnome-extra/gnome-screensaver-2.29.92
+gnome-extra/gtkhtml-3.29.92.1
+mail-client/evolution-2.29.92 #mask
+media-libs/gst-plugins-base-0.10.28
+media-libs/gst-plugins-good-0.10.21
+media-libs/gstreamer-0.10.28
+media-plugins/gst-plugins-alsa-0.10.28
+media-plugins/gst-plugins-cdparanoia-0.10.28
+media-plugins/gst-plugins-gio-0.10.28
+media-plugins/gst-plugins-gnomevfs-0.10.28
+media-plugins/gst-plugins-libvisual-0.10.28
+media-plugins/gst-plugins-ogg-0.10.28
+media-plugins/gst-plugins-pango-0.10.28
+media-plugins/gst-plugins-theora-0.10.28
+media-plugins/gst-plugins-v4l-0.10.28
+media-plugins/gst-plugins-vorbis-0.10.28
+media-plugins/gst-plugins-x-0.10.28
+media-plugins/gst-plugins-xvideo-0.10.28
+media-video/cheese-2.29.92
+net-im/empathy-2.29.92
+net-misc/vinagre-2.29.92
+www-client/epiphany-2.29.92
+www-client/midori-0.2.4
+x11-libs/gtk+-2.19.7
+x11-themes/gnome-icon-theme-2.29.2
+x11-themes/gnome-themes-2.29.92
+
 01 Март 2010
 
 Добавлено/изменено

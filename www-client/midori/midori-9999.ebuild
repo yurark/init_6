@@ -8,7 +8,7 @@ if [[ ${PV} == 9999* ]]
 then
 	EGIT_REPO_URI="git://git.xfce.org/apps/midori"
 	EGIT_PROJECT="midori"
-	inherit multilib git gnome2-utils eutils
+	inherit eutils xfconf multilib git
 else
 	SRC_URI="http://goodies.xfce.org/releases/midori/${P}.tar.bz2"
 	inherit gnome2-utils eutils multilib
@@ -31,7 +31,7 @@ RDEPEND="libnotify? ( x11-libs/libnotify )
 	>=net-libs/libsoup-2.25.2
 	>=net-libs/webkit-gtk-1.1.1
 	dev-libs/libxml2
-	x11-libs/gtk+
+	>=x11-libs/gtk+-2.10:2
 	gnome? ( net-libs/libsoup[gnome] )
 	idn? ( net-dns/libidn )
 	sqlite? ( >=dev-db/sqlite-3.0 )
@@ -39,6 +39,7 @@ RDEPEND="libnotify? ( x11-libs/libnotify )
 
 DEPEND="${RDEPEND}
 	dev-lang/python
+	dev-util/intltool
 	dev-util/pkgconfig
 	doc? ( dev-util/gtk-doc )
 	html? ( dev-python/docutils )
@@ -46,18 +47,22 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	# moving docs to version-specific directory
-	sed -i -e "s:\${DOCDIR}/${PN}:\${DOCDIR}/${PF}/:g" wscript
-	sed -i -e "s:/${PN}/user/midori.html:/${PF}/user/midori.html:g" midori/midori-browser.c
+	sed -i -e "s:\${DOCDIR}/${PN}:\${DOCDIR}/${PF}/:g" wscript || die
+	sed -i -e "s:/${PN}/user/midori.html:/${PF}/user/midori.html:g" midori/midori-browser.c || die
 }
 
 src_configure() {
+	strip-linguas -i po
+
 	CCFLAGS="${CFLAGS}" LINKFLAGS="${LDFLAGS}" ./waf \
 		--prefix="/usr/" \
 		--libdir="/usr/$(get_libdir)" \
 		--disable-docs \
+		--enable-addons \
 		$(use_enable doc apidocs) \
 		$(use_enable html userdocs) \
 		$(use_enable idn libidn) \
+		$(use_enable libnotify) \
 		$(use_enable nls nls) \
 		$(use_enable sqlite) \
 		$(use_enable unique) \
@@ -65,14 +70,12 @@ src_configure() {
 }
 
 src_compile() {
-	#NUMJOBS=$(sed -e 's/.*\(\-j[ 0-9]\+\) .*/\1/; s/--jobs=\?/-j/' <<< ${MAKEOPTS})
-	#./waf build ${NUMJOBS} || die "build failed"
-	./waf
+	NUMJOBS=$(sed -e 's/.*\(\-j[ 0-9]\+\) .*/\1/; s/--jobs=\?/-j/' <<< ${MAKEOPTS})
+	./waf build ${NUMJOBS} || die "build failed"
 }
 
 src_install() {
 	DESTDIR=${D} ./waf install || die "install failed"
-	rm -r "${D}"/usr/share/doc/${PN}
 	dodoc AUTHORS ChangeLog INSTALL TODO || die "dodoc failed"
 }
 

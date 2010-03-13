@@ -1,7 +1,7 @@
 app-editors/gedit-plugins bookmarks charmap colorpicker showtabbar smartspaces terminal
 app-text/enchant aspell
 gnome-base/gnome-vfs hal
-gnome-base/gvfs hal
+gnome-base/gvfs hal gdu
 gnome-extra/evolution-data-server kerberos ldap
 gnome-extra/gnome-games artworkextra guile
 gnome-extra/gnome-power-manager hal

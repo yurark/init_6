@@ -56,3 +56,6 @@ app-arch/rpm -python
 sys-apps/tuxonice-userui fbsplash
 net-p2p/transmission sound
 media-libs/clutter introspection
+
+net-irc/irssi perl
+net-im/skype qt-static
