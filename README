@@ -24,7 +24,7 @@ gnome-extra/evolution-data-server-2.29.92
 gnome-extra/evolution-exchange-2.29.92 #mask
 gnome-extra/gcalctool-5.29.92
 gnome-extra/gnome-color-manager-2.29.4
-gnome-extra/gnome-games-2.29.92 #mask
+gnome-extra/gnome-games-2.29.92 #mask #build fine. unmask
 gnome-extra/gnome-screensaver-2.29.92
 gnome-extra/gtkhtml-3.29.92.1
 mail-client/evolution-2.29.92 #mask

@@ -22,7 +22,7 @@ DEPEND="${RDEPEND}
 	introspection? (
 		media-libs/clutter[introspection]
 		>=dev-libs/gobject-introspection-0.6.3
-		>=dev-libs/gir-repository-0.6.3[gtk] )"
+		|| ( >=x11-libs/gtk+-2.19.2[introspection] >=dev-libs/gir-repository-0.6.3[gtk] ) )"
 EXAMPLES="examples/{*.c,redhand.png}"
 
 pkg_setup() {
