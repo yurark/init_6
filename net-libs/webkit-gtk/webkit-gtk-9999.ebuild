@@ -76,6 +76,7 @@ src_configure() {
 
 	local myconf
 
+#		--enable-mathml \
 	myconf="
 		$(use_enable coverage)
 		$(use_enable debug)
@@ -84,10 +85,11 @@ src_configure() {
 		--enable-3D-transforms \
 		--enable-xhtmlmp \
 		--disable-geolocation \
-		--enable-mathml \
 		--disable-wml \
-		--enable-shared-workers \
 		--enable-web-sockets \
+		--enable-blob-slice\
+		--enable-indexeddb \
+		--enable-fast-mobile-scrolling \
 "
 
 	# USE-flag controlled font backend because upstream default is freetype

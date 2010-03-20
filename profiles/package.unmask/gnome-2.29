@@ -5,3 +5,5 @@
 =x11-libs/libxklavier-5.0
 =media-libs/libgphoto2-2.4.8
 =app-arch/tar-1.23
+>=dev-libs/gobject-introspection-0.6.5
+=media-libs/gst-plugins-good-0.10.21
