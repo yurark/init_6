@@ -1,6 +1,5 @@
 =gnome-base/gdm-2.29.92
 =gnome-extra/gnome-games-2.29.5
-=app-editors/gedit-2.29.4
 =x11-libs/pixman-0.17.4
 =x11-libs/libxklavier-5.0
 =media-libs/libgphoto2-2.4.8
