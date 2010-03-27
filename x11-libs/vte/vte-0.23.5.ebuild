@@ -14,7 +14,7 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE="debug doc glade python"
 
-RDEPEND=">=dev-libs/glib-2.18.0
+RDEPEND=">=dev-libs/glib-2.22.0
 	>=x11-libs/gtk+-2.14.0
 	>=x11-libs/pango-1.22.0
 	sys-libs/ncurses
@@ -22,7 +22,6 @@ RDEPEND=">=dev-libs/glib-2.18.0
 	python? ( >=dev-python/pygtk-2.4 )
 	x11-libs/libX11
 	x11-libs/libXft"
-
 DEPEND="${RDEPEND}
 	doc? ( >=dev-util/gtk-doc-1.0 )
 	>=dev-util/intltool-0.35
@@ -37,12 +36,6 @@ pkg_setup() {
 		--disable-static
 		$(use_enable debug)
 		$(use_enable glade glade-catalogue)
-		$(use_enable python)"
+		$(use_enable python)
+		--with-html-dir=/usr/share/doc/${PF}/html"
 }
-
-#src_prepare() {
-#	gnome2_src_prepare
-
-	# Fix intltoolize broken file, see upstream #577133
-#	sed "s:'\^\$\$lang\$\$':\^\$\$lang\$\$:g" -i po/Makefile.in.in || die "sed failed"
-#}

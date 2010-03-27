@@ -15,10 +15,15 @@
 =gnome-extra/gnome-power-manager-2.29.91
 
 =mail-client/evolution-2.29.92
-=gnome-extra/evolution-exchange-2.29.92
+#=gnome-extra/evolution-exchange-2.29.92
 
 =gnome-extra/hamster-applet-2.29.92
 
 =sys-apps/gnome-disk-utility-2.29.90
 
 =media-libs/gst-plugins-good-0.10.21
+
+=dev-libs/icu-4.4
+=media-libs/netpbm-10.49.00
+=x11-libs/libwnck-2.29.92
+=app-misc/gnote-0.7.2
