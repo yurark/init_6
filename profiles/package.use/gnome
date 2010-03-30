@@ -11,3 +11,7 @@ media-video/ffmpeg -3dnow -3dnowext bindist dirac faac faad gsm hardcoded-tables
 net-libs/libproxy webkit
 app-crypt/seahorse ldap
 media-gfx/gimp python
+
+app-editors/gedit updater
+net-im/empathy -map
+gnome-extra/gnome-power-manager applets

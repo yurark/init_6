@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI=3
 
 inherit autotools eutils gnome2
 
@@ -11,8 +11,8 @@ HOMEPAGE="http://www.gnome.org/projects/seahorse/index.html"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd"
-IUSE="avahi debug doc ldap libnotify test"
+KEYWORDS="~amd64 ~x86"
+IUSE="avahi debug doc introspection ldap libnotify test"
 
 RDEPEND="
 	>=gnome-base/gconf-2.0
@@ -25,9 +25,8 @@ RDEPEND="
 
 	net-misc/openssh
 	>=app-crypt/gpgme-1.0.0
-	|| (
-		=app-crypt/gnupg-1.4*
-		=app-crypt/gnupg-2.0* )
+	|| ( =app-crypt/gnupg-2.0* 
+		 =app-crypt/gnupg-1.4* )
 
 	avahi? ( >=net-dns/avahi-0.6 )
 	ldap? ( net-nds/openldap )
@@ -38,6 +37,7 @@ DEPEND="${RDEPEND}
 	>=app-text/scrollkeeper-0.3
 	>=dev-util/pkgconfig-0.20
 	>=dev-util/intltool-0.35
+	introspection? ( dev-libs/gobject-introspection )
 	doc? ( >=dev-util/gtk-doc-1.9 )"
 
 DOCS="AUTHORS ChangeLog NEWS README TODO THANKS"
@@ -53,6 +53,7 @@ pkg_setup() {
 		--enable-hkp
 		$(use_enable avahi sharing)
 		$(use_enable debug)
+		$(use_enable introspection)
 		$(use_enable ldap)
 		$(use_enable libnotify)
 		$(use_enable test tests)"
@@ -60,13 +61,7 @@ pkg_setup() {
 
 src_prepare() {
 	gnome2_src_prepare
-
-	# https://bugzilla.gnome.org/show_bug.cgi?id=596691
 	epatch "${FILESDIR}/${PN}-2.28.0-as-needed.patch"
-
-	# Make it libtool-1 compatible
-	rm -v m4/lt* m4/libtool.m4 || die "removing libtool macros failed"
-
 	intltoolize --force --copy --automake || die "intltoolize failed"
 	eautoreconf
 }

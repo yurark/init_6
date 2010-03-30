@@ -2,8 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
-
+EAPI=3
 inherit gnome.org flag-o-matic eutils libtool virtualx
 
 DESCRIPTION="Gimp ToolKit +"
@@ -12,9 +11,8 @@ HOMEPAGE="http://www.gtk.org/"
 LICENSE="LGPL-2"
 SLOT="2"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-IUSE="aqua cups debug doc jpeg jpeg2k tiff test vim-syntax xinerama"
+IUSE="aqua cups debug doc introspection jpeg jpeg2k tiff test vim-syntax xinerama"
 
-# NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
 RDEPEND="!aqua? (
 		x11-libs/libXrender
 		x11-libs/libX11
@@ -41,8 +39,7 @@ RDEPEND="!aqua? (
 	cups? ( net-print/cups )
 	jpeg? ( >=media-libs/jpeg-6b-r9:0 )
 	jpeg2k? ( media-libs/jasper )
-	tiff? ( >=media-libs/tiff-3.9.2 )
-	!<gnome-base/gail-1000"
+	tiff? ( >=media-libs/tiff-3.9.2 )"
 DEPEND="${RDEPEND}
 	>=dev-util/pkgconfig-0.9
 	!aqua? (
@@ -56,13 +53,13 @@ DEPEND="${RDEPEND}
 	doc? (
 		>=dev-util/gtk-doc-1.11
 		~app-text/docbook-xml-dtd-4.1.2 )
+	introspection? ( dev-libs/gobject-introspection )
 	test? (
 		media-fonts/font-misc-misc
 		media-fonts/font-cursor-misc )"
 PDEPEND="vim-syntax? ( app-vim/gtk-syntax )"
 
 set_gtk2_confdir() {
-	# An arch specific config directory is used on multilib systems
 	has_multilib_profile && GTK2_CONFDIR="/etc/gtk-2.0/${CHOST}"
 	GTK2_CONFDIR=${GTK2_CONFDIR:=/etc/gtk-2.0}
 }
@@ -72,23 +69,17 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# use an arch-specific config directory so that 32bit and 64bit versions
-	# dont clash on multilib systems
 	has_multilib_profile && epatch "${FILESDIR}/${PN}-2.8.0-multilib.patch"
 
-	# Don't break inclusion of gtkclist.h, upstream bug 536767
 	epatch "${FILESDIR}/${PN}-2.14.3-limit-gtksignal-includes.patch"
 
-	# add correct framework linking options, for aqua
 	epatch "${FILESDIR}/${PN}-2.18.5-macosx-aqua.patch"
 
-	# -O3 and company cause random crashes in applications. Bug #133469
 	replace-flags -O3 -O2
 	strip-flags
 
 	use ppc64 && append-flags -mminimal-toc
 
-	# Non-working test in gentoo's env
 	sed 's:\(g_test_add_func ("/ui-tests/keys-events.*\):/*\1*/:g' \
 		-i gtk/tests/testing.c || die "sed 1 failed"
 	sed '\%/recent-manager/add%,/recent_manager_purge/ d' \
@@ -97,14 +88,13 @@ src_prepare() {
 }
 
 src_configure() {
-	# png always on to display icons (foser)
 	local myconf="$(use_enable doc gtk-doc) \
 		$(use_with jpeg libjpeg) \
 		$(use_with jpeg2k libjasper) \
 		$(use_with tiff libtiff) \
 		$(use_enable xinerama) \
 		$(use_enable cups cups auto) \
-		--disable-introspection \
+		$(use_enable introspection) \
 		--disable-papi \
 		--with-libpng"
 	if use aqua; then
@@ -113,11 +103,8 @@ src_configure() {
 		myconf="${myconf} --with-gdktarget=x11 --with-xinput"
 	fi
 
-	# Passing --disable-debug is not recommended for production use
 	use debug && myconf="${myconf} --enable-debug=yes"
 
-	# need libdir here to avoid a double slash in a path that libtool doesn't
-	# grok so well during install (// between $EPREFIX and usr ...)
 	econf --libdir="${EPREFIX}/usr/$(get_libdir)" ${myconf}
 }
 
@@ -133,22 +120,17 @@ src_install() {
 	dodir ${GTK2_CONFDIR}
 	keepdir ${GTK2_CONFDIR}
 
-	# see bug #133241
 	echo 'gtk-fallback-icon-theme = "gnome"' > "${T}/gtkrc"
 	insinto ${GTK2_CONFDIR}
 	doins "${T}"/gtkrc
 
-	# Enable xft in environment as suggested by <utx@gentoo.org>
 	echo "GDK_USE_XFT=1" > "${T}"/50gtk2
 	doenvd "${T}"/50gtk2
 
 	dodoc AUTHORS ChangeLog* HACKING NEWS* README* || die "dodoc failed"
 
-	# This has to be removed, because it's multilib specific; generated in
-	# postinst
 	rm "${D%/}${EPREFIX}/etc/gtk-2.0/gtk.immodules"
 
-	# add -framework Carbon to the .pc files
 	use aqua && for i in gtk+-2.0.pc gtk+-quartz-2.0.pc gtk+-unix-print-2.0.pc; do
 		sed -i -e "s:Libs\: :Libs\: -framework Carbon :" "${D%/}${EPREFIX}"/usr/lib/pkgconfig/$i || die "sed failed"
 	done

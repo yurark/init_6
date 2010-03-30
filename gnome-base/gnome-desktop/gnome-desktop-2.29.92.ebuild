@@ -2,14 +2,15 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit eutils gnome2
+EAPI=3
+inherit gnome2
 
 DESCRIPTION="Libraries for the gnome desktop that are not part of the UI"
 HOMEPAGE="http://www.gnome.org/"
 
 LICENSE="GPL-2 FDL-1.1 LGPL-2"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
+KEYWORDS="~amd64 ~x86"
 IUSE="doc"
 
 RDEPEND=">=x11-libs/gtk+-2.14.0
@@ -28,15 +29,16 @@ DEPEND="${RDEPEND}
 PDEPEND=">=dev-python/pygtk-2.8
 	>=dev-python/pygobject-2.14"
 
-# Includes X11/Xatom.h in libgnome-desktop/gnome-bg.c which comes from xproto
-# Includes X11/extensions/Xrandr.h that includes randr.h from randrproto (and
-# eventually libXrandr shouldn't RDEPEND on randrproto)
-
 DOCS="AUTHORS ChangeLog HACKING NEWS README"
 
-pkg_setup() {
-	G2CONF="${G2CONF}
-		--with-gnome-distributor=Gentoo
-		--disable-scrollkeeper
-		--disable-static"
+G2CONF="${G2CONF}
+	--with-gnome-distributor=Gentoo
+	--disable-scrollkeeper
+	--disable-static"
+
+src_prepare() {
+	gnome2_src_prepare
+
+	sed "s:'\^\$\$lang\$\$':\^\$\$lang\$\$:g" -i po/Makefile.in.in \
+		|| die "sed failed"
 }

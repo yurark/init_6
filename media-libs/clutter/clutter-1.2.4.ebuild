@@ -2,8 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
-
+EAPI=3
 inherit autotools clutter
 
 DESCRIPTION="Clutter is a library for creating graphical user interfaces"
@@ -49,13 +48,13 @@ src_configure() {
 	else
 		elog "Using SDL for OpenGL backend"
 		myconf="${myconf} --with-flavour=sdl"
+		ewarn "You have disabled OpenGL, do not report bugs about breakage"
 	fi
 
 	if use gtk; then
 		myconf="${myconf} --with-imagebackend=gdk-pixbuf"
 	else
 		myconf="${myconf} --with-imagebackend=internal"
-		# Internal image backend is experimental
 		ewarn "You have selected the experimental internal image backend"
 	fi
 
@@ -65,19 +64,15 @@ src_configure() {
 			--enable-cogl-debug=minimum"
 	fi
 
-	# FIXME: Tests are interactive, not of use for us
-	# FIXME: Using external json-glib breaks introspection
 	myconf="${myconf}
-		--disable-tests
 		--enable-maintainer-flags=no
 		--enable-xinput
 		--with-json=internal
-		$(use_enable introspection)
-		$(use_enable doc manual)"
+		$(use_enable introspection)"
 	econf ${myconf}
 }
 
 src_prepare() {
-
+	rm -v build/autotools/lt* build/autotools/libtool.m4 || die "removing libtool macros failed"
 	eautoreconf
 }

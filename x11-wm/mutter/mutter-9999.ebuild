@@ -2,14 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
-
+EAPI=3
 inherit autotools gnome2 git
-
-EGIT_REPO_URI="git://git.gnome.org/mutter"
 
 DESCRIPTION="Upcoming GNOME 3 window manager (derived from metacity)"
 HOMEPAGE="http://blogs.gnome.org/metacity/"
+EGIT_REPO_URI="git://git.gnome.org/mutter"
 SRC_URI=""
 
 LICENSE="GPL-2"
@@ -24,7 +22,7 @@ RDEPEND=">=x11-libs/gtk+-2.10
 	>=x11-libs/startup-notification-0.7
 	>=x11-libs/libXcomposite-0.2
 
-	media-libs/clutter:1.0
+	>=media-libs/clutter-1.2
 	x11-libs/libICE
 	x11-libs/libSM
 	x11-libs/libX11
@@ -65,7 +63,6 @@ pkg_setup() {
 
 src_unpack() {
 	git_src_unpack
-
 	cd ${S}
 	intltoolize --force --copy --automake || die
 	eautoreconf

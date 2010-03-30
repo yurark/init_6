@@ -19,8 +19,10 @@ LICENSE="LGPL-2 LGPL-2.1 BSD"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~ia64 ~ppc ~sparc ~x86"
 #IUSE="3D-transforms coverage -debug -doc filters -geolocation +gstreamer -introspection jit mathml pango shared-workers sqlite svg soup websockets -wml xslt"
+#IUSE="coverage debug doc geoclue +gstreamer introspection pango"
 IUSE="coverage debug doc +gstreamer introspection pango"
 
+#	geoclue? ( gnome-extra/geoclue )
 RDEPEND="
 	dev-libs/libxml2
 	dev-libs/libxslt
@@ -29,31 +31,33 @@ RDEPEND="
 	x11-libs/cairo
 
 	>=x11-libs/gtk+-2.10
-	>=gnome-base/gail-1.8
 	>=dev-libs/icu-3.8.1-r1
-	>=net-libs/libsoup-2.27.91
+	>=net-libs/libsoup-2.29.90
 	>=dev-db/sqlite-3
 	>=app-text/enchant-0.22
+
+
 
 	gstreamer? (
 		media-libs/gstreamer:0.10
 		media-libs/gst-plugins-base:0.10 )
 	introspection? (
 		>=dev-libs/gobject-introspection-0.6.2
-		!!dev-libs/gir-repository[webkit]
 		dev-libs/gir-repository[libsoup] )
 	pango? ( >=x11-libs/pango-1.12 )
 	!pango? (
 		media-libs/freetype:2
 		media-libs/fontconfig )
 "
+
 DEPEND="${RDEPEND}
 	>=sys-devel/flex-2.5.33
 	sys-devel/gettext
 	dev-util/gperf
 	dev-util/pkgconfig
 	dev-util/gtk-doc-am
-	doc? ( >=dev-util/gtk-doc-1.10 )"
+	doc? ( >=dev-util/gtk-doc-1.10 )
+"
 
 S="${WORKDIR}/${MY_P}"
 
@@ -76,10 +80,12 @@ src_configure() {
 
 	local myconf
 
+#		$(use_enable geoclue geolocation)
 #		--enable-mathml \
 	myconf="
 		$(use_enable coverage)
 		$(use_enable debug)
+
 		$(use_enable gstreamer video)
 		$(use_enable introspection)
 		--enable-3D-transforms \
