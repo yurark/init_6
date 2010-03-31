@@ -14,10 +14,10 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux"
 IUSE="doc examples"
 
-RDEPEND=">=gnome-base/libgnomeprint-2.2.0
-	>=gnome-base/libgnomeprintui-2.2.0
-	>=dev-python/libgnomecanvas-python-2.25.90
-	!<dev-python/gnome-python-desktop-2.22.0-r10"
+RDEPEND=">=gnome-base/libgnomeprint-2.18.7
+	>=gnome-base/libgnomeprintui-2.18.5
+	>=dev-python/libgnomecanvas-python-2.28.0
+	!<dev-python/gnome-python-desktop-${PV}"
 DEPEND="${RDEPEND}"
 
 EXAMPLES="examples/gnomeprint/*"

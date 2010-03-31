@@ -13,8 +13,8 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE="examples"
 
-RDEPEND=">=app-cdr/brasero-0.9
-	!<dev-python/gnome-python-desktop-2.22.0-r10"
+RDEPEND=">=app-cdr/brasero-${PV}
+	!<dev-python/gnome-python-desktop-${PV}"
 DEPEND="${RDEPEND}"
 
 EXAMPLES="examples/braseroburn/*

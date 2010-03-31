@@ -4,18 +4,17 @@
 
 GCONF_DEBUG="no"
 G_PY_PN="gnome-python-desktop"
-G_PY_BINDINGS="nautilusburn"
+G_PY_BINDINGS="gnomedesktop"
 
 inherit gnome-python-common
 
-DESCRIPTION="Python bindings for Nautilus CD/DVD burning"
-LICENSE="GPL-2"
+DESCRIPTION="Python bindings for some GNOME desktop libraries"
+LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
-IUSE="examples"
+IUSE=""
 
-RDEPEND=">=gnome-extra/nautilus-cd-burner-2.15.3
-	!<dev-python/gnome-python-desktop-2.22.0-r10"
+RDEPEND=">=gnome-base/gnome-desktop-${PV}
+	>=dev-python/gnome-vfs-python-2.28
+	!<dev-python/gnome-python-desktop-${PV}"
 DEPEND="${RDEPEND}"
-
-EXAMPLES="examples/nautilusburn/*"

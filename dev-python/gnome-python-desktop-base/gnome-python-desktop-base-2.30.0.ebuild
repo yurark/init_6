@@ -22,11 +22,11 @@ SLOT="0"
 
 # From the gnome-python-desktop eclass
 RDEPEND="virtual/python
-	>=dev-python/pygtk-2.10.3
-	>=dev-libs/glib-2.6.0
-	>=x11-libs/gtk+-2.4.0
-	!<dev-python/gnome-python-extras-2.13
-	!<dev-python/gnome-python-desktop-2.22.0-r10"
+	>=dev-python/pygtk-2.17.0
+	>=dev-libs/glib-2.24.0
+	>=x11-libs/gtk+-2.20.0
+	!<dev-python/gnome-python-extras-${PV}
+	!<dev-python/gnome-python-desktop-${PV}"
 DEPEND="${RDEPEND}
 	>=dev-util/pkgconfig-0.7"
 

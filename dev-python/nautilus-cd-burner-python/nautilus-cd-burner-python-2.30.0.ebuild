@@ -4,19 +4,18 @@
 
 GCONF_DEBUG="no"
 G_PY_PN="gnome-python-desktop"
-G_PY_BINDINGS="applet"
+G_PY_BINDINGS="nautilusburn"
 
 inherit gnome-python-common
 
-DESCRIPTION="Python bindings for writing GNOME applets"
-LICENSE="LGPL-2.1"
+DESCRIPTION="Python bindings for Nautilus CD/DVD burning"
+LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE="examples"
 
-RDEPEND=">=gnome-base/gnome-panel-2.13.4
-	>=dev-python/libbonobo-python-2.22.0
-	!<dev-python/gnome-python-desktop-2.22.0-r10"
+RDEPEND=">=gnome-extra/nautilus-cd-burner-${PV}
+	!<dev-python/gnome-python-desktop-${PV}"
 DEPEND="${RDEPEND}"
 
-EXAMPLES="examples/applet/*"
+EXAMPLES="examples/nautilusburn/*"

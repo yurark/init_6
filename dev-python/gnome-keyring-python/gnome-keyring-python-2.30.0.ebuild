@@ -4,19 +4,18 @@
 
 GCONF_DEBUG="no"
 G_PY_PN="gnome-python-desktop"
-G_PY_BINDINGS="rsvg"
+G_PY_BINDINGS="gnomekeyring"
 
 inherit gnome-python-common
 
-DESCRIPTION="Python bindings for the librsvg library"
+DESCRIPTION="Python bindings for the interfacing with the GNOME keyring"
 LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE="examples"
 
-RDEPEND=">=gnome-base/librsvg-2.13.93
-	dev-python/pycairo
-	!<dev-python/gnome-python-desktop-2.22.0-r10"
+RDEPEND=">=gnome-base/gnome-keyring-${PV}
+	!<dev-python/gnome-python-desktop-${PV}"
 DEPEND="${RDEPEND}"
 
-EXAMPLES="examples/rsvg/*"
+EXAMPLES="examples/keyring*"

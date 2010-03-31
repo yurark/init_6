@@ -4,15 +4,18 @@
 
 GCONF_DEBUG="no"
 G_PY_PN="gnome-python-desktop"
+G_PY_BINDINGS="wnck"
 
 inherit gnome-python-common
 
-DESCRIPTION="Python bindings for the Metacity window manager"
-LICENSE="GPL-2"
+DESCRIPTION="Python bindings for the libwnck library"
+LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
-IUSE=""
+IUSE="examples"
 
-RDEPEND=">=x11-wm/metacity-2.21.5
-	!<dev-python/gnome-python-desktop-2.22.0-r10"
+RDEPEND=">=x11-libs/libwnck-${PV}
+	!<dev-python/gnome-python-desktop-${PV}"
 DEPEND="${RDEPEND}"
+
+EXAMPLES="examples/wnck_example.py"

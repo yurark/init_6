@@ -14,7 +14,7 @@ SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd"
 IUSE=""
 
-RDEPEND=">=media-video/totem-1.4.0
-	>=dev-python/gnome-vfs-python-2.25.90
-	!<dev-python/gnome-python-desktop-2.22.0-r10"
+RDEPEND=">=media-video/totem-${PV}
+	>=dev-python/gnome-vfs-python-2.28.0
+	!<dev-python/gnome-python-desktop-${PV}"
 DEPEND="${RDEPEND}"

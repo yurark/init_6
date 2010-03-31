@@ -4,15 +4,16 @@
 
 GCONF_DEBUG="no"
 G_PY_PN="gnome-python-desktop"
+G_PY_BINDINGS="bugbuddy"
 
 inherit gnome-python-common
 
-DESCRIPTION="Python bindings for the libwnck library"
+DESCRIPTION="Python bindings for Bug Buddy"
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd"
 IUSE=""
 
-RDEPEND=">=app-text/evince-2.25
-	!<dev-python/gnome-python-desktop-2.22.0-r10"
+RDEPEND=">=gnome-extra/bug-buddy-${PV}
+	!<dev-python/gnome-python-desktop-${PV}"
 DEPEND="${RDEPEND}"
