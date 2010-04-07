@@ -15,7 +15,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-
 IUSE="debug doc pam test"
 # USE=valgrind is probably not a good idea for the tree
 
-RDEPEND=">=dev-libs/libgnome-keyring-2.29.4
+RDEPEND=">=gnome-base/libgnome-keyring-2.29.4
 	>=dev-libs/glib-2.16
 	>=x11-libs/gtk+-2.6
 	gnome-base/gconf

@@ -65,7 +65,7 @@ set_gtk2_confdir() {
 }
 
 pkg_setup() {
-	use prefix || EPREFIX=
+	use prefix #|| EPREFIX=
 }
 
 src_prepare() {
