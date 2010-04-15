@@ -73,7 +73,6 @@ RDEPEND="
 
 	>=media-gfx/eog-2.26.3
 
-	>=www-client/epiphany-2.26.3
 	>=app-arch/file-roller-2.26.3
 	>=gnome-extra/gcalctool-5.26.3
 
