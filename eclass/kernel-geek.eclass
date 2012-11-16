@@ -390,6 +390,8 @@ And may the Force be with you…"
 		# fix module initialisation https://bugs.archlinux.org/task/32122
 	((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/module-symbol-waiting-3.6.patch" "Fix module initialisation https://bugs.archlinux.org/task/32122";
 	((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/module-init-wait-3.6.patch" "Fix module initialisation https://bugs.archlinux.org/task/32122";
+	# add gcc 4.7 support for Kconfig and menuconfig
+	ApplyPatch "${FILESDIR}/fixes/kernel-33-gcc47-0.patch"
 
 ### END OF PATCH APPLICATIONS ###
 
