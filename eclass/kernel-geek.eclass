@@ -3,8 +3,9 @@
 # $Header: $
 
 #
-# Original Author: Andrey Ovcharov <sudormrfhalt@gmail.com>
-# Purpose: kernel-2 replacer.
+# Original Author: © 2011-2012 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Purpose: Installing linux.
+# Apply patches, build the kernel from source.
 #
 # Bugs to sudormrfhalt@gmail.com
 #
@@ -176,7 +177,8 @@ for I in ${SUPPORTED_FEATURES}; do
 done
 
 # default argument to patch
-patch_command='patch -p1 -F1 -s'
+#patch_command='patch -p1 -F1 -s'
+patch_command='patch -p1 -s'
 ExtractApply() {
 	local patch=$1
 	shift
@@ -209,7 +211,8 @@ Handler() {
 		patch_command='patch -p1 --dry-run'
 		if ExtractApply "$patch" &>/dev/null; then
 			# default argument to patch
-			patch_command='patch -p1 -F1 -s'
+			#patch_command='patch -p1 -F1 -s'
+			patch_command='patch -p1 -s'
 			ExtractApply "$patch" &>/dev/null
 		else
 			patch_base_name=$(basename "$patch")
@@ -321,7 +324,7 @@ And may the Force be with you…"
 	for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 	if use_if_iuse "$Current_Patch"; then
 			case ${Current_Patch} in
-				aufs)	ApplyPatch "$FILESDIR/${PV}/$Current_Patch/patch_list" "aufs3 - ${aufs_url}";
+				aufs)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "aufs3 - ${aufs_url}";
 					;;
 				bfq)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Budget Fair Queueing Budget I/O Scheduler - ${bfq_url}";
 					;;
@@ -336,6 +339,7 @@ And may the Force be with you…"
 					;;
 				branding) ApplyPatch "${FILESDIR}/font-8x16-iso-latin-1-v2.patch" "font - CONFIG_FONT_ISO_LATIN_1_8x16 http://sudormrf.wordpress.com/2010/10/23/ka-ping-yee-iso-latin-1%c2%a0font-in-linux-kernel/";
 					ApplyPatch "${FILESDIR}/gentoo-larry-logo-v2.patch" "logo - CONFIG_LOGO_LARRY_CLUT224 https://github.com/init6/init_6/raw/master/sys-kernel/geek-sources/files/larry.png";
+					ApplyPatch "${FILESDIR}/linux-3.6.6-colored-printk.patch" "Colored printk"
 					;;
 				ck)	ApplyPatch "$DISTDIR/patch-${ck_ver}.bz2" "Con Kolivas high performance patchset - ${ck_url}";
 					;;
@@ -387,11 +391,13 @@ And may the Force be with you…"
 	# fixes for 3.6 kernel
 	((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/zram_pagealloc_fix.patch" "zram pagealloc fix http://code.google.com/p/compcache/issues/detail?id=102";
 	((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/gpio-ich_share_ownership_of_GPIO_groups_3.6.patch" "gpio-ich: Share ownership of GPIO groups http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=patch;h=4f600ada70beeb1dfe08e11e871bf31015aa0a3d";
-		# fix module initialisation https://bugs.archlinux.org/task/32122
+	# fix module initialisation https://bugs.archlinux.org/task/32122
 	((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/module-symbol-waiting-3.6.patch" "Fix module initialisation https://bugs.archlinux.org/task/32122";
 	((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/module-init-wait-3.6.patch" "Fix module initialisation https://bugs.archlinux.org/task/32122";
 	# add gcc 4.7 support for Kconfig and menuconfig
-	ApplyPatch "${FILESDIR}/fixes/kernel-33-gcc47-0.patch"
+	ApplyPatch "${FILESDIR}/fixes/kernel-33-gcc47-0.patch" "Fix for kernel-3* and gcc47"
+	# zfs
+	use zfs && ((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/zfs_gpl_blk_queue_flush.patch" "Fix FATAL: modpost: GPL-incompatible module zfs.ko uses GPL-only symbol 'blk_queue_flush'"
 
 ### END OF PATCH APPLICATIONS ###
 
@@ -406,16 +412,23 @@ And may the Force be with you…"
 	use ck && sed -i -e 's/\(^EXTRAVERSION :=.*$\)/# \1/' "Makefile"
 
 	einfo "Copy current config from /proc"
+#	if [ -f /proc/config.gz ] && [ ! -f "/usr/src/linux-${KV_FULL}/.config" ]; then
+#		zcat /proc/config > "/usr/src/linux-${KV_FULL}/.config" || ewarn "Can't copy /proc/config"
+#	fi
 	if [ -e "/usr/src/linux-${KV_FULL}/.config" ]; then
 		ewarn "Kernel config file already exist."
 		ewarn "I will NOT overwrite that."
 	else
-		einfo "Copying kernel config file."
 		zcat /proc/config > .config || ewarn "Can't copy /proc/config"
 	fi
 
 	einfo "Cleanup backups after patching"
 	find '(' -name '*~' -o -name '*.orig' -o -name '.*.orig' -o -name '.gitignore'  -o -name '.*.old' ')' -print0 | xargs -0 -r -l512 rm -f
+
+#	make oldconfig && make prepare
+	einfo "Compile gen_init_cpio"
+	make -C "${WORKDIR}"/linux-"${KV_FULL}"/usr/ gen_init_cpio
+	chmod +x "${WORKDIR}"/linux-"${KV_FULL}"/usr/gen_init_cpio "${WORKDIR}"/linux-"${KV_FULL}"/scripts/gen_initramfs_list.sh
 }
 
 kernel-geek_src_compile() {
@@ -440,7 +453,17 @@ kernel-geek_src_install() {
 	dodir /usr/src
 	echo ">>> Copying sources ..."
 
-	mv ${WORKDIR}/linux* "${D}"/usr/src
+	mv ${WORKDIR}/linux* "${D}"/usr/src;
+
+	dosym /usr/src/linux-${KV_FULL} \
+		"/usr/src/linux" ||
+		die "cannot install kernel symlink"
+#	dosym /usr/src/linux-${KV_FULL} \
+#		"/lib/modules/${KV_FULL}/source" ||
+#		die "cannot install source symlink"
+#	dosym /usr/src/linux-${KV_FULL} \
+#		"/lib/modules/${KV_FULL}/build" ||
+#		die "cannot install build symlink"
 }
 
 kernel-geek_pkg_postinst() {
