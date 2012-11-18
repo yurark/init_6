@@ -40,7 +40,7 @@ KV_FULL="${PVR}${EXTRAVERSION}"
 S="${WORKDIR}"/linux-"${KV_FULL}"
 SLOT="${PV}"
 
-KNOWN_FEATURES="aufs bfq bld branding ck debian deblob fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rt suse uksm vserver zfs"
+KNOWN_FEATURES="aufs bfq bld branding build ck debian deblob fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rt suse uksm vserver zfs"
 
 SRC_URI="http://www.kernel.org/pub/linux/kernel/v3.0/linux-${KMV}.tar.xz"
 
@@ -324,7 +324,7 @@ And may the Force be with you…"
 	for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 	if use_if_iuse "$Current_Patch"; then
 			case ${Current_Patch} in
-				aufs)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "aufs3 - ${aufs_url}";
+				aufs)	ApplyPatch "$FILESDIR/${PV}/$Current_Patch/patch_list" "aufs3 - ${aufs_url}";
 					;;
 				bfq)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Budget Fair Queueing Budget I/O Scheduler - ${bfq_url}";
 					;;
@@ -418,6 +418,7 @@ And may the Force be with you…"
 	if [ -e "/usr/src/linux-${KV_FULL}/.config" ]; then
 		ewarn "Kernel config file already exist."
 		ewarn "I will NOT overwrite that."
+		cp "/usr/src/linux-${KV_FULL}/.config" "${WORKDIR}/linux-${KV_FULL}/.config"
 	else
 		zcat /proc/config > .config || ewarn "Can't copy /proc/config"
 	fi
@@ -429,6 +430,17 @@ And may the Force be with you…"
 	einfo "Compile gen_init_cpio"
 	make -C "${WORKDIR}"/linux-"${KV_FULL}"/usr/ gen_init_cpio
 	chmod +x "${WORKDIR}"/linux-"${KV_FULL}"/usr/gen_init_cpio "${WORKDIR}"/linux-"${KV_FULL}"/scripts/gen_initramfs_list.sh
+
+	cd "${WORKDIR}"/linux-"${KV_FULL}"
+	local GENTOOARCH="${ARCH}"
+	unset ARCH
+	ebegin "kernel: >> Running oldconfig..."
+	make oldconfig </dev/null &>/dev/null
+	eend $? "Failed oldconfig"
+	ebegin "kernel: >> Running modules_prepare..."
+	make modules_prepare &>/dev/null
+	eend $? "Failed modules prepare"
+	ARCH="${GENTOOARCH}"
 }
 
 kernel-geek_src_compile() {
@@ -440,6 +452,8 @@ kernel-geek_src_compile() {
 }
 
 kernel-geek_src_install() {
+	# disable sandbox
+	export SANDBOX_ON=0
 	local version_h_name="usr/src/linux-${KV_FULL}/include/linux"
 	local version_h="${ROOT}${version_h_name}"
 
@@ -457,8 +471,7 @@ kernel-geek_src_install() {
 
 	if [ -h "/usr/src/linux" ]; then
 		unlink "/usr/src/linux"
-	fi
-	if [ -d "/usr/src/linux" ]; then
+	elif [ -d "/usr/src/linux" ]; then
 		mv "/usr/src/linux" "/usr/src/linux-old"
 	fi
 	dosym /usr/src/linux-${KV_FULL} \
@@ -470,6 +483,94 @@ kernel-geek_src_install() {
 #	dosym /usr/src/linux-${KV_FULL} \
 #		"/lib/modules/${KV_FULL}/build" ||
 #		die "cannot install build symlink"
+
+	if use build ; then
+		# Find out some info..
+		eval $(head -n 4 Makefile | sed -e 's/ //g')
+		local ARCH=$(uname -m | sed -e s/i.86/i386/g)
+		local FULLVER=${VERSION}.${PATCHLEVEL}.${SUBLEVEL}${EXTRAVERSION}
+		local MODULESUPPORT=$(grep "CONFIG_MODULES=y" .config 2>/dev/null)
+
+		if [[ -e .config && -e arch/${ARCH}/boot/bzImage ]]; then
+			ISNEWER=$(find .config -newer arch/${ARCH}/boot/bzImage 2>/dev/null)
+		else
+			if ! [[ -e .config ]]; then
+				ISNEWER="noconfig"
+			else
+				ISNEWER="yes"
+			fi
+		fi
+
+		if [[ -e .version ]]; then
+			BUILDNO=$(cat .version)
+		else
+			BUILDNO="0"
+		fi
+
+		ebegin "Beginning installation procedure for \"${FULLVER}\""
+			if [[ ${ISNEWER} == "noconfig" ]]; then
+				ebegin " No kernel config found, searching for best availiable config"
+					if [[ -e /proc/config.gz ]]; then
+						einfo "  Foung config from running kernel, updating to match target kernel"
+							zcat /proc/config.gz > .config
+							true | make oldconfig 2>/dev/null
+					else
+						einfo "  No suitable custom config found, defaulting to defconfig"
+							cp arch/${ARCH}/defconfig .config
+					fi
+				eend $?
+			fi
+
+			if [[ ${ISNEWER} != "" ]]; then
+				ebegin " Kernel build not uptodate, compiling"
+					make bzImage 2>/dev/null
+					if [[ ${MODULESUPPORT} != "" ]]; then
+						einfo "  Module support in kernel detected, building modules"
+							make modules 2>/dev/null
+					fi
+				eend $?
+				BUILDNO=$(cat .version)
+			fi
+
+			ebegin " Merging kernel to system (Buildnumber: ${BUILDNO})"
+				if [[ $(cat /proc/mounts | grep /boot) == "" && $(cat /etc/fstab | grep /boot) != "" ]]; then
+					ebegin "  Boot partition unmounted, mounting"
+						mount /boot
+					eend $?
+				fi
+				einfo "  Copying bzImage to \"/boot/vmlinuz-${FULLVER}-${BUILDNO}\""
+					cp arch/${ARCH}/boot/bzImage /boot/vmlinuz-${FULLVER}-${BUILDNO}
+				einfo "  Copying System.map to \"/boot/System.map-${FULLVER}\""
+					cp System.map /boot/System.map-${FULLVER}
+				einfo "  Copying .config to \"/boot/config-${FULLVER}\""
+					cp .config /boot/config-${FULLVER}
+				if [[ ${MODULESUPPORT} != "" ]]; then
+					einfo "  Installing modules to \"/lib/modules/${FULLVER}/\""
+						make modules_install 2>/dev/null
+				fi
+				ebegin " Editing kernel entry in GRUB"
+					if [[ -e "/etc/grub.d/10_linux" ]]; then
+						grub2-mkconfig -o /boot/grub2/grub.cfg;
+					fi;
+					if [[ -e "/etc/boot.conf" ]]; then
+						boot-update;
+					fi;
+				eend $?
+			eend $?
+
+			if [[ -e /var/lib/module-rebuild/moduledb && $(cat /var/lib/module-rebuild/moduledb | wc -l) -ge 1 ]]; then
+				ebegin " Looking for external kernel modules that need rebuilding"
+					for EXTKERNMOD in $(sed -e 's/.:.://g' /var/lib/module-rebuild/moduledb); do
+						if [[ $(find /boot/vmlinuz-${FULLVER}-${BUILDNO} -newer /var/db/pkg/${EXTKERNMOD}/environment.bz2 2>/dev/null) != "" ]]; then
+							ebegin "  Recompiling outdated module \"${EXTKERNMOD}\""
+								emerge --oneshot =${EXTKERNMOD} 2>/dev/null
+							eend $?
+						fi
+					done
+				eend $?
+			fi
+		eend $?
+	fi
 }
 
 kernel-geek_pkg_postinst() {
