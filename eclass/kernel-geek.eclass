@@ -455,6 +455,12 @@ kernel-geek_src_install() {
 
 	mv ${WORKDIR}/linux* "${D}"/usr/src;
 
+	if [ -h "/usr/src/linux" ]; then
+		unlink "/usr/src/linux"
+	fi
+	if [ -d "/usr/src/linux" ]; then
+		mv "/usr/src/linux" "/usr/src/linux-old"
+	fi
 	dosym /usr/src/linux-${KV_FULL} \
 		"/usr/src/linux" ||
 		die "cannot install kernel symlink"
