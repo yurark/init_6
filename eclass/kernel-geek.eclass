@@ -40,7 +40,7 @@ KV_FULL="${PVR}${EXTRAVERSION}"
 S="${WORKDIR}"/linux-"${KV_FULL}"
 SLOT="${PV}"
 
-KNOWN_FEATURES="aufs bfq bld branding build ck debian deblob fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rt suse uksm vserver zfs"
+KNOWN_FEATURES="aufs bfq bld branding build ck debian deblob fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rt suse symlink uksm vserver zfs"
 
 SRC_URI="http://www.kernel.org/pub/linux/kernel/v3.0/linux-${KMV}.tar.xz"
 
@@ -469,14 +469,16 @@ kernel-geek_src_install() {
 
 	mv ${WORKDIR}/linux* "${D}"/usr/src;
 
-	if [ -h "/usr/src/linux" ]; then
-		unlink "/usr/src/linux"
-	elif [ -d "/usr/src/linux" ]; then
-		mv "/usr/src/linux" "/usr/src/linux-old"
+	if use symlink ; then
+		if [ -h "/usr/src/linux" ]; then
+			unlink "/usr/src/linux"
+		elif [ -d "/usr/src/linux" ]; then
+			mv "/usr/src/linux" "/usr/src/linux-old"
+		fi
+		dosym linux-${KV_FULL} \
+			"/usr/src/linux" ||
+			die "cannot install kernel symlink"
 	fi
-	dosym /usr/src/linux-${KV_FULL} \
-		"/usr/src/linux" ||
-		die "cannot install kernel symlink"
 #	dosym /usr/src/linux-${KV_FULL} \
 #		"/lib/modules/${KV_FULL}/source" ||
 #		die "cannot install source symlink"
