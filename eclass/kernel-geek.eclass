@@ -321,66 +321,72 @@ Otherwise i will use the default value of GEEKSOURCES_PATCHING_ORDER!
 And may the Force be with you…"
 	fi
 
-	for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
+for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 	if use_if_iuse "$Current_Patch"; then
-			case ${Current_Patch} in
-				aufs)	ApplyPatch "$FILESDIR/${PV}/$Current_Patch/patch_list" "aufs3 - ${aufs_url}";
-					;;
-				bfq)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Budget Fair Queueing Budget I/O Scheduler - ${bfq_url}";
-					;;
-				bld)	echo;
-					cd "${T}";
-					unpack "bld-${bld_ver/KMV/$KMV}.tar.bz2";
-					cp "${T}/bld-${bld_ver/KMV/$KMV}/BLD-${KMV}.patch" "${S}/BLD-${KMV}.patch";
-					cd "${S}";
-					ApplyPatch "BLD-${KMV}.patch" "Alternate CPU load distribution technique for Linux kernel scheduler - ${bld_url}";
-					rm -f "BLD-${KMV}.patch";
-					rm -r "${T}/bld-${bld_ver/KMV/$KMV}"; # Clean temp
-					;;
-				branding) ApplyPatch "${FILESDIR}/font-8x16-iso-latin-1-v2.patch" "font - CONFIG_FONT_ISO_LATIN_1_8x16 http://sudormrf.wordpress.com/2010/10/23/ka-ping-yee-iso-latin-1%c2%a0font-in-linux-kernel/";
-					ApplyPatch "${FILESDIR}/gentoo-larry-logo-v2.patch" "logo - CONFIG_LOGO_LARRY_CLUT224 https://github.com/init6/init_6/raw/master/sys-kernel/geek-sources/files/larry.png";
-					ApplyPatch "${FILESDIR}/linux-3.6.6-colored-printk.patch" "Colored printk"
-					;;
-				ck)	ApplyPatch "$DISTDIR/patch-${ck_ver}.bz2" "Con Kolivas high performance patchset - ${ck_url}";
-					;;
-				debian) ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Debian - ${debian_url}";
-					use rt && ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list_rt" "Debian rt - ${debian_url}";
-					;;
-				fedora) ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Fedora - ${fedora_url}";
-					;;
-				genpatches) ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Gentoo patches - ${genpatches_url}";
-					;;
-				grsecurity) ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "GrSecurity patches - ${grsecurity_url}";
-					;;
-				ice)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "TuxOnIce - ${ice_url}";
-					;;
-				imq)	ApplyPatch "${DISTDIR}/patch-imqmq-${imq_ver}.diff.xz" "Intermediate Queueing Device patches - ${imq_url}";
-					;;
-				mageia) ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Mandriva/Mageia - ${mageia_url}";
-					;;
-				pardus) ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Pardus - ${pardus_url}";
-					;;
-				pld)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "PLD - ${pld_url}";
-					;;
-				reiser4) ApplyPatch "${DISTDIR}/reiser4-for-${reiser4_ver}.patch.gz" "Reiser4 - ${reiser4_url}";
-					;;
-				rt)	ApplyPatch "${DISTDIR}/patch-${rt_ver}.patch.xz" "Ingo Molnar's realtime preempt patches - ${rt_url}";
-#					if [ -e "${FILESDIR}/${PV}/$Current_Patch/patch_list" ]
-#						then ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Debian rt - ${debian_url}";
-#					fi
-					;;
-				suse)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "OpenSuSE - ${suse_url}";
-					;;
-				uksm)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Ultra Kernel Samepage Merging - ${uksm_url}";
-					;;
-				vserver) ApplyPatch "${DISTDIR}/patch-${vserver_ver}.diff" "VServer - ${vserver_url}";
-					;;
-				zfs)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "zfs - ${zfs_url}";
-					;;
-			esac
-		else continue
-		fi;
-	done;
+
+		if [ -e "$FILESDIR/${PV}/$Current_Patch/info" ] ; then
+			echo
+			cat "$FILESDIR/${PV}/$Current_Patch/info";
+		fi
+
+		case ${Current_Patch} in
+			aufs)	ApplyPatch "$FILESDIR/${PV}/$Current_Patch/patch_list" "aufs3 - ${aufs_url}";
+				;;
+			bfq)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Budget Fair Queueing Budget I/O Scheduler - ${bfq_url}";
+				;;
+			bld)	echo;
+				cd "${T}";
+				unpack "bld-${bld_ver/KMV/$KMV}.tar.bz2";
+				cp "${T}/bld-${bld_ver/KMV/$KMV}/BLD-${KMV}.patch" "${S}/BLD-${KMV}.patch";
+				cd "${S}";
+				ApplyPatch "BLD-${KMV}.patch" "Alternate CPU load distribution technique for Linux kernel scheduler - ${bld_url}";
+				rm -f "BLD-${KMV}.patch";
+				rm -r "${T}/bld-${bld_ver/KMV/$KMV}"; # Clean temp
+				;;
+			branding) ApplyPatch "${FILESDIR}/font-8x16-iso-latin-1-v2.patch" "font - CONFIG_FONT_ISO_LATIN_1_8x16 http://sudormrf.wordpress.com/2010/10/23/ka-ping-yee-iso-latin-1%c2%a0font-in-linux-kernel/";
+				ApplyPatch "${FILESDIR}/gentoo-larry-logo-v2.patch" "logo - CONFIG_LOGO_LARRY_CLUT224 https://github.com/init6/init_6/raw/master/sys-kernel/geek-sources/files/larry.png";
+				ApplyPatch "${FILESDIR}/linux-3.6.6-colored-printk.patch" "Colored printk"
+				;;
+			ck)	ApplyPatch "$DISTDIR/patch-${ck_ver}.bz2" "Con Kolivas high performance patchset - ${ck_url}";
+				;;
+			debian)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Debian - ${debian_url}";
+				#use rt && ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list_rt" "Debian rt - ${debian_url}";
+				;;
+			fedora)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Fedora - ${fedora_url}";
+				;;
+			genpatches) ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Gentoo patches - ${genpatches_url}";
+				;;
+			grsecurity) ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "GrSecurity patches - ${grsecurity_url}";
+				;;
+			ice)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "TuxOnIce - ${ice_url}";
+				;;
+			imq)	ApplyPatch "${DISTDIR}/patch-imqmq-${imq_ver}.diff.xz" "Intermediate Queueing Device patches - ${imq_url}";
+				;;
+			mageia)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Mandriva/Mageia - ${mageia_url}";
+				;;
+			pardus) ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Pardus - ${pardus_url}";
+				;;
+			pld)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "PLD - ${pld_url}";
+				;;
+			reiser4) ApplyPatch "${DISTDIR}/reiser4-for-${reiser4_ver}.patch.gz" "Reiser4 - ${reiser4_url}";
+				;;
+			rt)	ApplyPatch "${DISTDIR}/patch-${rt_ver}.patch.xz" "Ingo Molnar's realtime preempt patches - ${rt_url}";
+					if [ -e "${FILESDIR}/${PV}/$Current_Patch/patch_list" ]
+						then ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Debian rt - ${debian_url}";
+					fi
+				;;
+			suse)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "OpenSuSE - ${suse_url}";
+				;;
+			uksm)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Ultra Kernel Samepage Merging - ${uksm_url}";
+				;;
+			vserver) ApplyPatch "${DISTDIR}/patch-${vserver_ver}.diff" "VServer - ${vserver_url}";
+				;;
+			zfs)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "zfs - ${zfs_url}";
+				;;
+		esac
+	else continue
+	fi;
+done;
 
 	# Fixes
 	ApplyPatch "${FILESDIR}/fixes/acpi-ec-add-delay-before-write.patch" "Oops: ACPI: EC: input buffer is not empty, aborting transaction - 2.6.32 regression https://bugzilla.kernel.org/show_bug.cgi?id=14733#c41";
