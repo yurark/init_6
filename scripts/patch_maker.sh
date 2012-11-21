@@ -18,10 +18,12 @@
 #
 #  The latest version of this software can be obtained here:
 #
-#  https://github.com/init6/init_6/tree/master/scripts/patch_maker.sh
+#  https://github.com/init6/init_6/blob/master/scripts/patch_maker.sh
 #
 
-ver=0.1
+# Dependencies: portage, layman, init6 overlay, svn, git, lynx, wget, sed, awk, xz
+
+ver=0.2
 
 if [ "$#" -ne 1 ]
 then
@@ -311,14 +313,71 @@ make_patch() {
 
 		git_info;
 	;;
-	zfs)
+	zfs)	if [ -e /etc/portage/make.conf ] ; then
+			if [ -z "${PORTDIR}" ] ; then
+				PORTDIR=$(source /etc/portage/make.conf 2>/dev/null ; echo ${PORTDIR})
+			fi
+			if [ -z "${PORTAGE_TMPDIR}" ] ; then
+				PORTAGE_TMPDIR=$(source /etc/portage/make.conf 2>/dev/null ; echo ${PORTAGE_TMPDIR})
+			fi
+		fi
+
+		ebuild `grep ^storage /etc/layman/layman.cfg|sed "s/.*:.//"`/init6/sys-kernel/geek-sources/geek-sources-"$version".ebuild unpack;
+		mv "$PORTAGE_TMPDIR"/portage/sys-kernel/geek-sources-"$version"/work/linux-"$version"-geek "$PORTAGE_TMPDIR"/portage/a
+		rm -r "$PORTAGE_TMPDIR"/portage/sys-kernel
+		cd "$PORTAGE_TMPDIR"/portage
+		cp -r a b
+
+		unlink /usr/src/linux
+		ln -s "$PORTAGE_TMPDIR"/portage/b /usr/src/linux
+
+		# Prepare kernel sources
+		cd "$PORTAGE_TMPDIR"/portage/b
+		zcat /proc/config.gz > .config
+		make oldconfig && make prepare && make modules_prepare
+
+		ls -1 "$PORTDIR"/sys-kernel/spl | grep ebuild | sed 's/spl-//g' | sed 's/.ebuild//g'
+
+		echo "Please enter sys-kernel/spl release:"
+		read spl_version # the release you want
+		echo "You entered: $spl_version";
+
+		# Integrate SPL
+		env EXTRA_ECONF='--enable-linux-builtin --with-linux='"$PORTAGE_TMPDIR"'/portage/b --with-linux-obj='"$PORTAGE_TMPDIR"'/portage/b' ebuild "$PORTDIR"/sys-kernel/spl/spl-"$spl_version".ebuild clean configure
+		cd "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"/work/spl-"${spl_version//_/-}"
+		./copy-builtin "$PORTAGE_TMPDIR"/portage/b
+		rm -r "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"
+
+		ls -1 "$PORTDIR"/sys-fs/zfs-kmod | grep ebuild | sed 's/zfs-kmod-//g' | sed 's/.ebuild//g'
+
+		echo "Please enter sys-fs/zfs-kmod release:"
+		read zfs_version # the release you want
+		echo "You entered: $zfs_version";
+
+		# Integrate ZFS
+		env EXTRA_ECONF='--with-spl='"$PORTAGE_TMPDIR"'/portage/b --enable-linux-builtin --with-linux='"$PORTAGE_TMPDIR"'/portage/b --with-linux-obj='"$PORTAGE_TMPDIR"'/portage/b' ebuild "$PORTDIR"/sys-fs/zfs-kmod/zfs-kmod-"$zfs_version".ebuild clean configure
+		cd "$PORTAGE_TMPDIR"/portage/sys-fs/zfs-kmod-"$zfs_version"/work/zfs-"${zfs_version//_/-}"
+		./copy-builtin "$PORTAGE_TMPDIR"/portage/b
+		rm -r "$PORTAGE_TMPDIR"/portage/sys-fs/zfs-kmod-"$zfs_version"
+
+		cd "$PORTAGE_TMPDIR"/portage/b
+		make mrproper
+
+		cd "$PORTAGE_TMPDIR"/portage
+		diff -urN a/ b/ > "$CWD"/zfs-builtin-"$version"-`date +"%Y%m%d"`.patch
+
+		cd "$CWD";
+		ls -1 | grep ".patch" | xargs -I{} xz "{}" | xargs -I{} cp "{}" "$CWD";
+		ls -1 "$CWD" | grep ".patch.xz" > "$CWD"/patch_list;
+
+		unlink /usr/src/linux
+		echo "now make eselect kernel list && eselect kernel set <some number>"
 	;;
 	esac
 }
 
 version="$1"
-#patches="aufs bfq debian fedora genpatches grsecurity ice mageia suse zfs";
-patches="aufs debian fedora genpatches grsecurity ice suse";
+patches="aufs bfq debian fedora genpatches grsecurity ice mageia suse zfs";
 for cur_patch in $patches; do
 	make_patch "$cur_patch";
 done;
