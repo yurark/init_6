@@ -6,7 +6,10 @@ EAPI="4"
 GCONF_DEBUG="yes"
 GNOME2_LA_PUNT="yes"
 
-inherit eutils gnome2 multilib toolchain-funcs user
+inherit eutils gnome2 multilib udev user
+if [[ ${PV} = 9999 ]]; then
+	inherit gnome2-live
+fi
 
 DESCRIPTION="Fork of bluez-gnome focused on integration with GNOME"
 HOMEPAGE="http://live.gnome.org/GnomeBluetooth"
@@ -14,7 +17,11 @@ HOMEPAGE="http://live.gnome.org/GnomeBluetooth"
 LICENSE="GPL-2+ LGPL-2.1+ FDL-1.1+"
 SLOT="2"
 IUSE="doc +introspection sendto"
-KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
+if [[ ${PV} = 9999 ]]; then
+	KEYWORDS=""
+else
+	KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
+fi
 
 COMMON_DEPEND=">=dev-libs/glib-2.29.90:2
 	>=x11-libs/gtk+-2.91.3:3[introspection?]
@@ -31,8 +38,6 @@ RDEPEND="${COMMON_DEPEND}
 DEPEND="${COMMON_DEPEND}
 	!net-wireless/bluez-gnome
 	app-text/docbook-xml-dtd:4.1.2
-	app-text/gnome-doc-utils
-	app-text/scrollkeeper
 	dev-libs/libxml2:2
 	>=dev-util/intltool-0.40.0
 	dev-util/gdbus-codegen
@@ -46,7 +51,17 @@ DEPEND="${COMMON_DEPEND}
 #	gnome-base/gnome-common
 #	dev-util/gtk-doc-am
 
+if [[ ${PV} = 9999 ]]; then
+	DEPEND="${DEPEND}
+		app-text/yelp-tools"
+fi
+
 pkg_setup() {
+	enewgroup plugdev
+}
+
+src_prepare() {
+	DOCS="AUTHORS README NEWS ChangeLog"
 	# FIXME: Add geoclue support
 	G2CONF="${G2CONF}
 		$(use_enable introspection)
@@ -57,24 +72,20 @@ pkg_setup() {
 		--disable-icon-update
 		--disable-schemas-compile
 		--disable-static"
-	DOCS="AUTHORS README NEWS ChangeLog"
+	[[ ${PV} != 9999 ]] && G2CONF="${G2CONF} ITSTOOL=$(type -P true)"
 
-	enewgroup plugdev
-}
-
-src_prepare() {
 	# Regenerate gdbus-codegen files to allow using any glib version; bug #436236
-	rm -v lib/bluetooth-client-glue.{c,h} || die
+	if [[ ${PV} != 9999 ]]; then
+		rm -v lib/bluetooth-client-glue.{c,h} || die
+	fi
+
 	gnome2_src_prepare
 }
 
 src_install() {
 	gnome2_src_install
-
-	local udevdir="$($(tc-getPKG_CONFIG) --variable=udevdir udev)"
-	insinto "${udevdir}"/rules.d
-	doins "${FILESDIR}"/80-rfkill.rules
-	doins "${FILESDIR}"/61-gnome-bluetooth-rfkill.rules || die "udev rules installation failed"
+	udev_dorules "${FILESDIR}"/80-rfkill.rules
+	udev_dorules "${FILESDIR}"/61-gnome-bluetooth-rfkill.rules
 }
 
 pkg_postinst() {
