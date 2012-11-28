@@ -21,9 +21,9 @@
 #  https://github.com/init6/init_6/blob/master/scripts/patch_maker.sh
 #
 
-# Dependencies: portage, layman, init6 overlay, svn, git, lynx, wget, sed, awk, xz
+# Dependencies: portage, layman, init6 overlay, svn, git, lynx, wget, sed, awk, xz, dialog
 
-ver=0.2
+ver=0.3
 
 if [ "$#" -ne 1 ]
 then
@@ -378,7 +378,49 @@ make_patch() {
 }
 
 version="$1"
-patches="aufs bfq debian fedora genpatches grsecurity ice mageia suse zfs";
+
+cmd=(dialog --separate-output --checklist "Select patch:" 22 76 16)
+options=(1 "aufs" off
+         2 "bfq" off
+         3 "debian" off
+         4 "fedora" off
+         5 "genpatches" off
+         6 "grsecurity" off
+         7 "ice" off
+         8 "mageia" off
+         9 "suse" off
+         10 "zfs" off
+         0 "All" off)
+choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+clear
+for choice in $choices
+do
+	case $choice in
+	1) patches="aufs"
+	;;
+	2) patches="bfq"
+	;;
+	3) patches="debian"
+	;;
+	4) patches="fedora"
+	;;
+	5) patches="genpatches"
+	;;
+	6) patches="grsecurity"
+	;;
+	7) patches="ice"
+	;;
+	8) patches="mageia"
+	;;
+	9) patches="suse"
+	;;
+	10) patches="zfs"
+	;;
+	0) patches="aufs bfq debian fedora genpatches grsecurity ice mageia suse zfs"
+	;;
+	esac
+done
+
 for cur_patch in $patches; do
 	make_patch "$cur_patch";
 done;
