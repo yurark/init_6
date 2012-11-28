@@ -117,6 +117,7 @@ kmv(){
 #pld		git://github.com/pld-linux/kernel.git
 #suse		git://kernel.opensuse.org/kernel-source.git
 #ice		git://github.com/NigelCunningham/tuxonice-kernel.git
+#spl		git://github.com/zfsonlinux/spl.git
 #zfs		git://github.com/zfsonlinux/zfs.git
 #zen		git://github.com/damentz/zen-kernel.git
 
@@ -343,7 +344,7 @@ make_patch() {
 		echo "You entered: $spl_version";
 
 		# Integrate SPL
-		env EXTRA_ECONF='--enable-linux-builtin --with-linux='"$PORTAGE_TMPDIR"'/portage/b --with-linux-obj='"$PORTAGE_TMPDIR"'/portage/b' ebuild "$PORTDIR"/sys-kernel/spl/spl-"$spl_version".ebuild clean configure
+		env EXTRA_ECONF='--prefix=/ --libdir=/lib64 --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux='"$PORTAGE_TMPDIR"'/portage/b --with-linux-obj='"$PORTAGE_TMPDIR"'/portage/b' ebuild "$PORTDIR"/sys-kernel/spl/spl-"$spl_version".ebuild clean configure
 		cd "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"/work/spl-"${spl_version//_/-}"
 		./copy-builtin "$PORTAGE_TMPDIR"/portage/b
 		rm -r "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"
@@ -355,7 +356,7 @@ make_patch() {
 		echo "You entered: $zfs_version";
 
 		# Integrate ZFS
-		env EXTRA_ECONF='--with-spl='"$PORTAGE_TMPDIR"'/portage/b --enable-linux-builtin --with-linux='"$PORTAGE_TMPDIR"'/portage/b --with-linux-obj='"$PORTAGE_TMPDIR"'/portage/b' ebuild "$PORTDIR"/sys-fs/zfs-kmod/zfs-kmod-"$zfs_version".ebuild clean configure
+		env EXTRA_ECONF='--prefix=/ --libdir=/lib64 --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux='"$PORTAGE_TMPDIR"'/portage/b --with-linux-obj='"$PORTAGE_TMPDIR"'/portage/b --with-spl='"$PORTAGE_TMPDIR"'/portage/b --with-spl-obj='"$PORTAGE_TMPDIR"'/portage/b' ebuild "$PORTDIR"/sys-fs/zfs-kmod/zfs-kmod-"$zfs_version".ebuild clean configure
 		cd "$PORTAGE_TMPDIR"/portage/sys-fs/zfs-kmod-"$zfs_version"/work/zfs-"${zfs_version//_/-}"
 		./copy-builtin "$PORTAGE_TMPDIR"/portage/b
 		rm -r "$PORTAGE_TMPDIR"/portage/sys-fs/zfs-kmod-"$zfs_version"
