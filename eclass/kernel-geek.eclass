@@ -403,7 +403,7 @@ done;
 	# add gcc 4.7 support for Kconfig and menuconfig
 	ApplyPatch "${FILESDIR}/fixes/kernel-33-gcc47-0.patch" "Fix for kernel-3* and gcc47"
 	# zfs
-	use zfs && ((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/zfs_gpl_blk_queue_flush.patch" "Fix FATAL: modpost: GPL-incompatible module zfs.ko uses GPL-only symbol 'blk_queue_flush'"
+#	use zfs && ((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/zfs_gpl_blk_queue_flush.patch" "Fix FATAL: modpost: GPL-incompatible module zfs.ko uses GPL-only symbol 'blk_queue_flush'"
 
 ### END OF PATCH APPLICATIONS ###
 
