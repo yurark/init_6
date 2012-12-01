@@ -33,6 +33,7 @@ In this overlay you will find:
 		pardus - Use Pardus patches --> https://svn.pardus.org.tr/pardus/playground/kaan.aksit/2011/kernel/default
 		pld - USE PLD-Linux patches --> git://github.com/pld-linux/kernel.git
 		reiser4 - Use Reiser4 FS patches --> http://sourceforge.net/projects/reiser4
+		rifs - Use Rotary Interactivity Favor Scheduler patches --> http://code.google.com/p/rifs-scheduler
 		rt - Use Ingo Molnar's realtime preempt patches --> http://www.kernel.org/pub/linux/kernel/projects/rt
 		suse - Use OpenSuSE patches --> git://kernel.opensuse.org/kernel-source.git
 		uksm - Use Ultra Kernel Samepage Merging patches --> http://kerneldedup.org

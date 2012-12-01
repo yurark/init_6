@@ -40,7 +40,7 @@ KV_FULL="${PVR}${EXTRAVERSION}"
 S="${WORKDIR}"/linux-"${KV_FULL}"
 SLOT="${PV}"
 
-KNOWN_FEATURES="aufs bfq bld branding build ck debian deblob fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rt suse symlink uksm vserver zfs"
+KNOWN_FEATURES="aufs bfq bld branding build ck debian deblob fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rifs rt suse symlink uksm vserver zfs"
 
 SRC_URI="http://www.kernel.org/pub/linux/kernel/v3.0/linux-${KMV}.tar.xz"
 
@@ -139,6 +139,9 @@ featureKnown() {
 			HOMEPAGE="${HOMEPAGE} ${reiser4_url}"
 			SRC_URI="${SRC_URI}
 				reiser4?	( ${reiser4_src} )"
+			;;
+		rifs)	rifs_url="http://code.google.com/p/rifs-scheduler"
+			HOMEPAGE="${HOMEPAGE} ${rifs_url}"
 			;;
 		rt)	rt_src="http://www.kernel.org/pub/linux/kernel/projects/rt/${KMV}/patch-${rt_ver/KMV/$KMV}.patch.xz"
 			if [ "${OVERRIDE_rt_src}" != "" ]; then
@@ -311,12 +314,12 @@ kernel-geek_src_prepare() {
 		source "$config_file"
 		ewarn "GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\""
 	else
-		GEEKSOURCES_PATCHING_ORDER="vserver bfq ck genpatches grsecurity ice imq reiser4 rt bld uksm aufs mageia fedora suse debian pardus pld zfs branding";
+		GEEKSOURCES_PATCHING_ORDER="vserver bfq ck genpatches grsecurity ice imq reiser4 rifs rt bld uksm aufs mageia fedora suse debian pardus pld zfs branding";
 		ewarn "The order of patching is defined in file $config_file with the variable GEEKSOURCES_PATCHING_ORDER is its default value:
 GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"
 You are free to choose any order of patching.
 For example, if you like the alphabetical order of patching you must set the variable:
-echo 'GEEKSOURCES_PATCHING_ORDER=\"aufs bfq bld branding ck fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rt suse uksm vserver zfs\"' > $config_file
+echo 'GEEKSOURCES_PATCHING_ORDER=\"aufs bfq bld branding ck fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rifs rt suse uksm vserver zfs\"' > $config_file
 Otherwise i will use the default value of GEEKSOURCES_PATCHING_ORDER!
 And may the Force be with you…"
 	fi
@@ -370,6 +373,8 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				;;
 			reiser4) ApplyPatch "${DISTDIR}/reiser4-for-${reiser4_ver}.patch.gz" "Reiser4 - ${reiser4_url}";
 				;;
+			rifs)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "RIFS scheduler - ${rifs_url}";
+				;;
 			rt)	ApplyPatch "${DISTDIR}/patch-${rt_ver}.patch.xz" "Ingo Molnar's realtime preempt patches - ${rt_url}";
 					if [ -e "${FILESDIR}/${PV}/$Current_Patch/patch_list" ]
 						then ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Debian rt - ${debian_url}";
@@ -390,20 +395,29 @@ done;
 
 	# Fixes
 	ApplyPatch "${FILESDIR}/fixes/acpi-ec-add-delay-before-write.patch" "Oops: ACPI: EC: input buffer is not empty, aborting transaction - 2.6.32 regression https://bugzilla.kernel.org/show_bug.cgi?id=14733#c41";
-	# fix for 3.5 kernel
-	((${PATCHLEVEL} < 6)) && ApplyPatch "${FILESDIR}/fixes/lpc_ich_3.5.1.patch" "Oops: lpc_ich: Resource conflict(s) found affecting iTCO_wdt https://bugzilla.kernel.org/show_bug.cgi?id=44991";
-	# CK fixes for 3.6
-	use ck && if [ ${PATCHLEVEL} = 6 ]; then ApplyPatch "${FILESDIR}/fixes/Fix boot issue with BFS and linux-3.6.patch" "http://ck.kolivas.org/patches/bfs/3.0/3.6/Fix boot issue with BFS and linux-3.6.patch"; fi;
-	# fixes for 3.6 kernel
-	((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/zram_pagealloc_fix.patch" "zram pagealloc fix http://code.google.com/p/compcache/issues/detail?id=102";
-	((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/gpio-ich_share_ownership_of_GPIO_groups_3.6.patch" "gpio-ich: Share ownership of GPIO groups http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=patch;h=4f600ada70beeb1dfe08e11e871bf31015aa0a3d";
-	# fix module initialisation https://bugs.archlinux.org/task/32122
-	((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/module-symbol-waiting-3.6.patch" "Fix module initialisation https://bugs.archlinux.org/task/32122";
-	((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/module-init-wait-3.6.patch" "Fix module initialisation https://bugs.archlinux.org/task/32122";
+
+	if [ ${PATCHLEVEL} = 5 ]; then # fix for 3.5 kernel
+		ApplyPatch "${FILESDIR}/fixes/lpc_ich_3.5.1.patch" "Oops: lpc_ich: Resource conflict(s) found affecting iTCO_wdt https://bugzilla.kernel.org/show_bug.cgi?id=44991";
+	fi;
+
+	use ck && if [ ${PATCHLEVEL} = 6 ]; then # CK fixes for 3.6
+		ApplyPatch "${FILESDIR}/fixes/Fix boot issue with BFS and linux-3.6.patch" "http://ck.kolivas.org/patches/bfs/3.0/3.6/Fix boot issue with BFS and linux-3.6.patch";
+	fi;
+
+	if [ ${PATCHLEVEL} = 6 ]; then # fixes for 3.6 kernel
+		ApplyPatch "${FILESDIR}/fixes/zram_pagealloc_fix.patch" "zram pagealloc fix http://code.google.com/p/compcache/issues/detail?id=102";
+		ApplyPatch "${FILESDIR}/fixes/gpio-ich_share_ownership_of_GPIO_groups_3.6.patch" "gpio-ich: Share ownership of GPIO groups http://git.kernel.org/?p=linux/kernel/git/torvalds/linux.git;a=patch;h=4f600ada70beeb1dfe08e11e871bf31015aa0a3d";
+		# fix module initialisation https://bugs.archlinux.org/task/32122
+		ApplyPatch "${FILESDIR}/fixes/module-symbol-waiting-3.6.patch" "Fix module initialisation https://bugs.archlinux.org/task/32122";
+		ApplyPatch "${FILESDIR}/fixes/module-init-wait-3.6.patch" "Fix module initialisation https://bugs.archlinux.org/task/32122";
+	fi;
+
 	# add gcc 4.7 support for Kconfig and menuconfig
 	ApplyPatch "${FILESDIR}/fixes/kernel-33-gcc47-0.patch" "Fix for kernel-3* and gcc47"
-	# zfs
-	use zfs && ((${PATCHLEVEL} < 7)) && ApplyPatch "${FILESDIR}/fixes/zfs_gpl_blk_queue_flush.patch" "Fix FATAL: modpost: GPL-incompatible module zfs.ko uses GPL-only symbol 'blk_queue_flush'"
+
+	use zfs && if [ ${PATCHLEVEL} = 6 ]; then # zfs
+		ApplyPatch "${FILESDIR}/fixes/zfs_gpl_blk_queue_flush.patch" "Fix FATAL: modpost: GPL-incompatible module zfs.ko uses GPL-only symbol 'blk_queue_flush'"
+	fi;
 
 ### END OF PATCH APPLICATIONS ###
 
