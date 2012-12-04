@@ -308,7 +308,7 @@ kernel-geek_src_prepare() {
 
 ### BRANCH APPLY ###
 
-	local _PATCHDIR="/etc/portage/patches/" # for user patch
+	local _PATCHDIR="/etc/portage/patches" # for user patch
 
 	local config_file="/etc/portage/kernel.conf"
 	if [ -e "$config_file" ]
@@ -351,8 +351,10 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				ApplyPatch "${FILESDIR}/linux-3.6.6-colored-printk.patch" "Colored printk"
 				;;
 			ck)	ApplyPatch "$DISTDIR/patch-${ck_ver}.bz2" "Con Kolivas high performance patchset - ${ck_url}";
-				if [ -e "${FILESDIR}/${PV}/$Current_Patch/patch_list" ] ; then
-					ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "CK Fix";
+				if [ -d "${FILESDIR}/${PV}/$Current_Patch" ] ; then
+					if [ -e "${FILESDIR}/${PV}/$Current_Patch/patch_list" ] ; then
+						ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "CK Fix";
+					fi
 				fi
 				;;
 			debian) ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Debian - ${debian_url}";
@@ -389,18 +391,20 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				;;
 			uksm)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "Ultra Kernel Samepage Merging - ${uksm_url}";
 				;;
-			upatch) if [ -e "${_PATCHDIR}/${CATEGORY}/${PN}/info" ] ; then
-					echo
-					cat "${_PATCHDIR}/${CATEGORY}/${PN}/info";
-				fi
-				if [ -e "${_PATCHDIR}/${CATEGORY}/${PN}/patch_list" ] ; then
-					ApplyPatch "${_PATCHDIR}/${CATEGORY}/${PN}/patch_list" "Applying user patches"
-				else
-					ewarn "File ${_PATCHDIR}/${CATEGORY}/${PN}/patch_list not found!"
-					ewarn "Try to apply the patches if they are there…"
-					for i in `ls ${_PATCHDIR}/${CATEGORY}/${PN}/* | grep '.patch\|.gz\|.bz\|.bz2\|.xz\|.zip\|.Z' 2> /dev/null`; do
-						ApplyPatch "${_PATCHDIR}/${CATEGORY}/${PN}/${i}" "Applying user patches"
-					done
+			upatch) if [ -d "${_PATCHDIR}/${CATEGORY}/${PN}" ] ; then
+					if [ -e "${_PATCHDIR}/${CATEGORY}/${PN}/info" ] ; then
+						echo
+						cat "${_PATCHDIR}/${CATEGORY}/${PN}/info";
+					fi
+					if [ -e "${_PATCHDIR}/${CATEGORY}/${PN}/patch_list" ] ; then
+						ApplyPatch "${_PATCHDIR}/${CATEGORY}/${PN}/patch_list" "Applying user patches"
+					else
+						ewarn "File ${_PATCHDIR}/${CATEGORY}/${PN}/patch_list not found!"
+						ewarn "Try to apply the patches if they are there…"
+						for i in `ls ${_PATCHDIR}/${CATEGORY}/${PN}/* | grep '.patch\|.gz\|.bz\|.bz2\|.xz\|.zip\|.Z' 2> /dev/null`; do
+							ApplyPatch "${_PATCHDIR}/${CATEGORY}/${PN}/${i}" "Applying user patches"
+						done
+					fi
 				fi
 				;;
 			vserver) ApplyPatch "${DISTDIR}/patch-${vserver_ver}.diff" "VServer - ${vserver_url}";
