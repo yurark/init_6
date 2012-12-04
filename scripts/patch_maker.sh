@@ -190,9 +190,7 @@ make_patch() {
 
 		git_info;
 	;;
-	bfq)	cd "$CSD";
-		test -d "$CWD" >/dev/null 2>&1 || mkdir -p "$CWD";
-		cd "$CWD";
+	bfq)	cd "$CWD";
 		url_ls "http://algo.ing.unimo.it/people/paolo/disk_sched/patches";
 
 		echo "Please enter bfq release:"
@@ -325,6 +323,7 @@ make_patch() {
 		cp -r "$CSD" /tmp/suse$$;
 
 		cd /tmp/suse$$;
+		git checkout stable; git pull;
 
 		cp -r patches.*/ "$CWD";
 
