@@ -309,14 +309,19 @@ kernel-geek_src_prepare() {
 ### BRANCH APPLY ###
 
 	local _PATCHDIR="/etc/portage/patches" # for user patch
-
 	local config_file="/etc/portage/kernel.conf"
-	if [ -e "$config_file" ]
-	then
+	local DEFAULT_GEEKSOURCES_PATCHING_ORDER="vserver bfq ck genpatches grsecurity ice imq reiser4 rifs rt bld uksm aufs mageia fedora suse debian pardus pld zfs branding fix upatch";
+	if [ -e "$config_file" ] ; then
 		source "$config_file"
-		ewarn "GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\""
+		if [ "`echo $GEEKSOURCES_PATCHING_ORDER | tr " " "\n"|sort|tr "\n" " "`" == "`echo $DEFAULT_GEEKSOURCES_PATCHING_ORDER | tr " " "\n"|sort|tr "\n" " "`" ] ; then
+			ewarn "Use GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\" from $config_file"
+		else
+			ewarn "Not all USE flag present in GEEKSOURCES_PATCHING_ORDER from $config_file"
+			ewarn "Probably that's the plan. In that case, never mind."
+		fi
+
 	else
-		GEEKSOURCES_PATCHING_ORDER="vserver bfq ck genpatches grsecurity ice imq reiser4 rifs rt bld uksm aufs mageia fedora suse debian pardus pld zfs branding fix upatch";
+		GEEKSOURCES_PATCHING_ORDER="${DEFAULT_GEEKSOURCES_PATCHING_ORDER}";
 		ewarn "The order of patching is defined in file $config_file with the variable GEEKSOURCES_PATCHING_ORDER is its default value:
 GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"
 You are free to choose any order of patching.
@@ -401,8 +406,8 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 					else
 						ewarn "File ${_PATCHDIR}/${CATEGORY}/${PN}/patch_list not found!"
 						ewarn "Try to apply the patches if they are there…"
-						for i in `ls ${_PATCHDIR}/${CATEGORY}/${PN}/* | grep '.patch\|.gz\|.bz\|.bz2\|.xz\|.zip\|.Z' 2> /dev/null`; do
-							ApplyPatch "${_PATCHDIR}/${CATEGORY}/${PN}/${i}" "Applying user patches"
+						for i in `ls ${_PATCHDIR}/${CATEGORY}/${PN}/*.{patch,gz,bz,bz2,xz,zip,Z} 2> /dev/null`; do
+							ApplyPatch "${i}" "Applying user patches"
 						done
 					fi
 				fi
