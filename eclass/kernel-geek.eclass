@@ -81,7 +81,7 @@ featureKnown() {
 			fi
 			ck_url="http://users.on.net/~ckolivas/kernel"
 			HOMEPAGE="${HOMEPAGE} ${ck_url}"
-			DEPEND="${DEPEND} app-arch/lrzip"
+			DEPEND="${DEPEND} >=app-arch/lrzip-0.614"
 			SRC_URI="${SRC_URI}
 				ck?		( ${ck_src} )"
 			;;
