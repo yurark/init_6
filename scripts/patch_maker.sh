@@ -240,7 +240,7 @@ make_patch() {
 
 		cp -r "$CSD" /tmp/fedora$$;
 		cd /tmp/fedora$$;
-		git checkout f17
+		git checkout master
 
 		ls -1 | grep ".patch" | xargs -I{} cp "{}" "$CWD"
 
