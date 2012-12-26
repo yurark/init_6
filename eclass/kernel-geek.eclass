@@ -187,7 +187,7 @@ ExtractApply() {
 	local patch=$1
 	shift
 	case "$patch" in
-	*.gz)  gunzip -dc    < "$patch" | $patch_command ${1+"$@"} ;;
+	*.gz)  gzip -dc      < "$patch" | $patch_command ${1+"$@"} ;;
 	*.bz)  bunzip -dc    < "$patch" | $patch_command ${1+"$@"} ;;
 	*.bz2) bunzip2 -dc   < "$patch" | $patch_command ${1+"$@"} ;;
 	*.lrz) lrunzip -dc   < "$patch" | $patch_command ${1+"$@"} ;;
@@ -211,7 +211,7 @@ Handler() {
 	fi
 	# don't apply patch if it's empty
 	local C=$(wc -l "$patch" | awk '{print $1}')
-	if [ "$C" -gt 9 ]; then
+	if [ "$C" -gt 5 ]; then
 		# test argument to patch
 		patch_command='patch -p1 --dry-run'
 		if ExtractApply "$patch" &>/dev/null; then
