@@ -23,13 +23,12 @@ app-arch/gzip
 app-arch/unzip
 app-arch/xz-utils"
 
-# *.gz -> gunzip -dc -> app-arch/gzip-1.5
-# *.bz -> bunzip -dc  -> ?
-# *.bz2 -> bunzip2 -dc -> app-arch/bzip2-1.0.6-r3
-# *.lrz -> lrunzip -dc -> app-arch/lrzip-0.614 <- only Ck
-# *.xz -> xz -dc -> app-arch/xz-utils-5.0.4-r1
-# *.zip -> unzip -d -> app-arch/unzip-6.0-r3
-# *.Z -> uncompress -c -> app-arch/gzip-1.5
+# *.gz       -> gunzip -dc    -> app-arch/gzip-1.5
+# *.bz|*.bz2 -> bunzip -dc    -> app-arch/bzip2-1.0.6-r3
+# *.lrz      -> lrunzip -dc   -> app-arch/lrzip-0.614 <- now only for ck
+# *.xz       -> xz -dc        -> app-arch/xz-utils-5.0.4-r1
+# *.zip      -> unzip -d      -> app-arch/unzip-6.0-r3
+# *.Z        -> uncompress -c -> app-arch/gzip-1.5
 
 OLDIFS="$IFS"
 VER="${PV}"
@@ -199,13 +198,12 @@ ExtractApply() {
 	local patch=$1
 	shift
 	case "$patch" in
-	*.gz)  gunzip -dc    < "$patch" | $patch_command ${1+"$@"} ;; # app-arch/gzip-1.5
-	*.bz)  bunzip -dc    < "$patch" | $patch_command ${1+"$@"} ;;
-	*.bz2) bunzip2 -dc   < "$patch" | $patch_command ${1+"$@"} ;; # app-arch/bzip2-1.0.6-r3
-	*.lrz) lrunzip -dc   < "$patch" | $patch_command ${1+"$@"} ;; # app-arch/lrzip-0.614
-	*.xz)  xz -dc        < "$patch" | $patch_command ${1+"$@"} ;; # app-arch/xz-utils-5.0.4-r1
-	*.zip) unzip -d      < "$patch" | $patch_command ${1+"$@"} ;; # app-arch/unzip-6.0-r3
-	*.Z)   uncompress -c < "$patch" | $patch_command ${1+"$@"} ;; # app-arch/gzip-1.5
+	*.gz)       gunzip -dc    < "$patch" | $patch_command ${1+"$@"} ;; # app-arch/gzip
+	*.bz|*.bz2) bunzip2 -dc   < "$patch" | $patch_command ${1+"$@"} ;; # app-arch/bzip2
+	*.lrz)      lrunzip -dc   < "$patch" | $patch_command ${1+"$@"} ;; # app-arch/lrzip
+	*.xz)       xz -dc        < "$patch" | $patch_command ${1+"$@"} ;; # app-arch/xz-utils
+	*.zip)      unzip -d      < "$patch" | $patch_command ${1+"$@"} ;; # app-arch/unzip
+	*.Z)        uncompress -c < "$patch" | $patch_command ${1+"$@"} ;; # app-arch/gzip
 	*) $patch_command ${1+"$@"} < "$patch" ;;
 	esac
 }
