@@ -183,7 +183,7 @@ featureKnown() {
 			;;
 		zfs)	zfs_url="http://zfsonlinux.org"
 			HOMEPAGE="${HOMEPAGE} ${zfs_url}"
-			LICENSE="${LICENSE} || ( GPL-2 GPL-3 CDDL )"
+			LICENSE="${LICENSE} GPL-3"
 			RDEPEND="${RDEPEND}
 				zfs?	( sys-fs/zfs[kernel-builtin] )"
 			;;
