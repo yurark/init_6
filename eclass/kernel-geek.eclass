@@ -15,13 +15,7 @@ EXPORT_FUNCTIONS ApplyPatch src_unpack src_prepare src_compile src_install pkg_p
 # No need to run scanelf/strip on kernel sources/headers (bug #134453).
 RESTRICT="mirror binchecks strip"
 
-# Even though xz-utils are in @system, they must still be added to DEPEND; see
-# http://archives.gentoo.org/gentoo-dev/msg_a0d4833eb314d1be5d5802a3b710e0a4.xml
-DEPEND="${DEPEND}
-app-arch/bzip2
-app-arch/gzip
-app-arch/unzip
-app-arch/xz-utils"
+: ${LICENSE:="GPL-2"}
 
 # *.gz       -> gunzip -dc    -> app-arch/gzip-1.5
 # *.bz|*.bz2 -> bunzip -dc    -> app-arch/bzip2-1.0.6-r3
@@ -29,6 +23,14 @@ app-arch/xz-utils"
 # *.xz       -> xz -dc        -> app-arch/xz-utils-5.0.4-r1
 # *.zip      -> unzip -d      -> app-arch/unzip-6.0-r3
 # *.Z        -> uncompress -c -> app-arch/gzip-1.5
+
+# Even though xz-utils are in @system, they must still be added to DEPEND; see
+# http://archives.gentoo.org/gentoo-dev/msg_a0d4833eb314d1be5d5802a3b710e0a4.xml
+DEPEND="${DEPEND}
+app-arch/bzip2
+app-arch/gzip
+app-arch/unzip
+app-arch/xz-utils"
 
 OLDIFS="$IFS"
 VER="${PV}"
@@ -181,6 +183,7 @@ featureKnown() {
 			;;
 		zfs)	zfs_url="http://zfsonlinux.org"
 			HOMEPAGE="${HOMEPAGE} ${zfs_url}"
+			LICENSE="${LICENSE} || ( GPL-2 GPL-3 CDDL )"
 			RDEPEND="${RDEPEND}
 				zfs?	( sys-fs/zfs[kernel-builtin] )"
 			;;
