@@ -6,4 +6,4 @@
 	find -name *-9999.ebuild | \
 	sed -r -e 's|^\./|=|' -e 's|\.ebuild$||' -e 's|/[^/]+-9999$|-9999|' | \
 	sort
-} > profiles/package.mask
+} > ../profiles/package.mask
