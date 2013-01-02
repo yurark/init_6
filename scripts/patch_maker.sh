@@ -23,7 +23,7 @@
 
 # Dependencies: portage, layman, init6 overlay, svn, git, lynx, wget, sed, awk, xz, dialog
 
-ver=0.4
+ver=0.5
 
 if [ "$#" -ne 1 ]
 then
@@ -107,6 +107,12 @@ kmv(){
 	echo "$version" | awk -F. '{ printf("%d.%d\n",$1,$2); }'
 }
 
+git_get_all_branches(){
+	for branch in `git branch -a | grep remotes | grep -v HEAD | grep -v master`; do
+		git branch --track ${branch##*/} $branch
+	done
+}
+
 #aufs		git://aufs.git.sourceforge.net/gitroot/aufs/aufs3-standalone.git
 #bfq		http://algo.ing.unimo.it/people/paolo/disk_sched/patches
 #debian		svn://svn.debian.org/kernel/dists/trunk/linux/debian/patches
@@ -128,19 +134,21 @@ get_or_bump() {
 	if [ -d $CSD ]; then
 		cd "$CSD"
 		if [ -e ".git" ]; then # git
-			git pull
+			git fetch --all
+			git pull --all
 		elif [ -e ".svn" ]; then # subversion
 			svn up
 		fi
 	else
 		case "$patch" in
-		aufs) git clone "git://aufs.git.sourceforge.net/gitroot/aufs/aufs3-standalone.git" "$CSD" ;;
+		aufs) git clone "git://aufs.git.sourceforge.net/gitroot/aufs/aufs3-standalone.git" "$CSD"; cd "$CSD"; git_get_all_branches ;;
 		debian) svn co "svn://svn.debian.org/kernel/dists/trunk/linux/debian/patches" "$CSD" ;;
-		fedora) git clone "git://pkgs.fedoraproject.org/kernel.git" "$CSD" ;;
+		fedora) git clone "git://pkgs.fedoraproject.org/kernel.git" "$CSD"; cd "$CSD"; git_get_all_branches ;;
 		genpatches) svn co "svn://anonsvn.gentoo.org/linux-patches/genpatches-2.6/trunk" "$CSD" ;;
-		grsecurity) "git://git.overlays.gentoo.org/proj/hardened-patchset.git" "$CSD" ;;
+		grsecurity) git clone "git://git.overlays.gentoo.org/proj/hardened-patchset.git" "$CSD"; cd "$CSD"; git_get_all_branches ;;
 		mageia) svn co "svn://svn.mageia.org/svn/packages/cauldron/kernel" "$CSD" ;;
-		suse) git clone "git://kernel.opensuse.org/kernel-source.git" "$CSD" ;;
+		suse) git clone "git://kernel.opensuse.org/kernel-source.git" "$CSD"; cd "$CSD"; git_get_all_branches ;;
+		ice) git clone "git://github.com/NigelCunningham/tuxonice-kernel.git" "$CSD"; cd "$CSD"; git_get_all_branches ;;
 		esac
 	fi
 }
@@ -164,7 +172,12 @@ make_patch() {
 		)
 		dest="$CWD"/aufs3-"$KERN"-`date +"%Y%m%d"`.patch;
 
-		git checkout origin/aufs"$KERN"
+		git branch
+		echo "Please enter $patch branch:"
+		read branch # the branch you want
+		echo "You entered: $branch";
+
+		git checkout origin/"$branch"
 
 		mkdir ../a ../b
 		cp -r {Documentation,fs,include} ../b
@@ -240,7 +253,12 @@ make_patch() {
 
 		cp -r "$CSD" /tmp/fedora$$;
 		cd /tmp/fedora$$;
-		git checkout master
+
+		git branch
+		echo "Please enter $patch branch:"
+		read branch # the branch you want
+		echo "You entered: $branch";
+		git checkout "$branch"
 
 		ls -1 | grep ".patch" | xargs -I{} cp "{}" "$CWD"
 
@@ -324,7 +342,12 @@ make_patch() {
 		cp -r "$CSD" /tmp/suse$$;
 
 		cd /tmp/suse$$;
-		git checkout stable; git pull;
+
+		git branch
+		echo "Please enter $patch branch:"
+		read branch # the branch you want
+		echo "You entered: $branch";
+		git checkout "$branch"
 
 		cp -r patches.*/ "$CWD";
 
@@ -334,7 +357,7 @@ make_patch() {
 
 		git_info;
 	;;
-	zfs)	cd "$CSD";
+	zfs)	#cd "$CSD";
 		test -d "$CWD" >/dev/null 2>&1 || mkdir -p "$CWD";
 		if [ -e /etc/portage/make.conf ] ; then
 			if [ -z "${PORTDIR}" ] ; then
@@ -367,7 +390,8 @@ make_patch() {
 
 		# Integrate SPL
 		env EXTRA_ECONF='--prefix=/ --libdir=/lib64 --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux='"$PORTAGE_TMPDIR"'/portage/b --with-linux-obj='"$PORTAGE_TMPDIR"'/portage/b' ebuild "$PORTDIR"/sys-kernel/spl/spl-"$spl_version".ebuild clean configure
-		cd "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"/work/spl-"${spl_version//_/-}"
+#		cd "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"/work/spl-"${spl_version//_/-}"
+		cd "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"/work/spl-*
 		./copy-builtin "$PORTAGE_TMPDIR"/portage/b
 		rm -r "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"
 
@@ -379,7 +403,8 @@ make_patch() {
 
 		# Integrate ZFS
 		env EXTRA_ECONF='--prefix=/ --libdir=/lib64 --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux='"$PORTAGE_TMPDIR"'/portage/b --with-linux-obj='"$PORTAGE_TMPDIR"'/portage/b --with-spl='"$PORTAGE_TMPDIR"'/portage/b --with-spl-obj='"$PORTAGE_TMPDIR"'/portage/b' ebuild "$PORTDIR"/sys-fs/zfs-kmod/zfs-kmod-"$zfs_version".ebuild clean configure
-		cd "$PORTAGE_TMPDIR"/portage/sys-fs/zfs-kmod-"$zfs_version"/work/zfs-"${zfs_version//_/-}"
+#		cd "$PORTAGE_TMPDIR"/portage/sys-fs/zfs-kmod-"$zfs_version"/work/zfs-"${zfs_version//_/-}"
+		cd "$PORTAGE_TMPDIR"/portage/sys-fs/zfs-kmod-"$zfs_version"/work/zfs-*
 		./copy-builtin "$PORTAGE_TMPDIR"/portage/b
 		rm -r "$PORTAGE_TMPDIR"/portage/sys-fs/zfs-kmod-"$zfs_version"
 
