@@ -441,7 +441,7 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 					else
 						ewarn "File ${_PATCHDIR}/${CATEGORY}/${PN}/patch_list not found!"
 						ewarn "Try to apply the patches if they are there…"
-						for i in `ls ${_PATCHDIR}/${CATEGORY}/${PN}/*.{patch,gz,bz,bz2,xz,zip,Z} 2> /dev/null`; do
+						for i in `ls ${_PATCHDIR}/${CATEGORY}/${PN}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
 							ApplyPatch "${i}" "Applying user patches"
 						done
 					fi
