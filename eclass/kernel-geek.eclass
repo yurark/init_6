@@ -351,6 +351,7 @@ kernel-geek_src_prepare() {
 		if [ "`echo $GEEKSOURCES_PATCHING_ORDER | tr " " "\n"|sort|tr "\n" " "`" == "`echo $DEFAULT_GEEKSOURCES_PATCHING_ORDER | tr " " "\n"|sort|tr "\n" " "`" ] ; then
 			ewarn "Use GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\" from $config_file"
 		else
+			ewarn "Use GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\" from $config_file"
 			ewarn "Not all USE flag present in GEEKSOURCES_PATCHING_ORDER from $config_file"
 			ewarn "Probably that's the plan. In that case, never mind."
 		fi
