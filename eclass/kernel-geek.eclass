@@ -1,9 +1,9 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 #
-# Original Author: © 2011-2012 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Original Author: © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
 # Purpose: Installing linux.
 # Apply patches, build the kernel from source.
 #
@@ -53,7 +53,7 @@ KV_FULL="${PVR}${EXTRAVERSION}"
 S="${WORKDIR}"/linux-"${KV_FULL}"
 SLOT="${PV}"
 
-KNOWN_FEATURES="aufs bfq bld branding build ck debian deblob fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rifs rt suse symlink uksm vserver zfs"
+KNOWN_FEATURES="aufs bfq bld branding build ck debian deblob fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rifs rt suse symlink uksm vserver zen zfs"
 
 SRC_URI="http://www.kernel.org/pub/linux/kernel/v3.0/linux-${KMV}.tar.xz"
 
@@ -180,6 +180,9 @@ featureKnown() {
 			HOMEPAGE="${HOMEPAGE} ${vserver_url}"
 			SRC_URI="${SRC_URI}
 				vserver?	( ${vserver_src} )"
+			;;
+		zen)	zen_url="https://github.com/damentz/zen-kernel"
+			HOMEPAGE="${HOMEPAGE} ${zen_url}"
 			;;
 		zfs)	zfs_url="http://zfsonlinux.org"
 			HOMEPAGE="${HOMEPAGE} ${zfs_url}"
@@ -345,7 +348,7 @@ kernel-geek_src_prepare() {
 
 	local _PATCHDIR="/etc/portage/patches" # for user patch
 	local config_file="/etc/portage/kernel.conf"
-	local DEFAULT_GEEKSOURCES_PATCHING_ORDER="vserver bfq ck genpatches grsecurity ice imq reiser4 rifs rt bld uksm aufs mageia fedora suse debian pardus pld zfs branding fix upatch";
+	local DEFAULT_GEEKSOURCES_PATCHING_ORDER="vserver bfq ck genpatches grsecurity ice imq reiser4 rifs rt bld uksm aufs mageia fedora suse debian pardus pld zen zfs branding fix upatch";
 	if [ -e "$config_file" ] ; then
 		source "$config_file"
 		if [ "`echo $GEEKSOURCES_PATCHING_ORDER | tr " " "\n"|sort|tr "\n" " "`" == "`echo $DEFAULT_GEEKSOURCES_PATCHING_ORDER | tr " " "\n"|sort|tr "\n" " "`" ] ; then
@@ -362,7 +365,7 @@ kernel-geek_src_prepare() {
 GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"
 You are free to choose any order of patching.
 For example, if you like the alphabetical order of patching you must set the variable:
-echo 'GEEKSOURCES_PATCHING_ORDER=\"aufs bfq bld branding ck fedora fix genpatches grsecurity ice imq mageia pardus pld reiser4 rifs rt suse uksm upatch vserver zfs\"' > $config_file
+echo 'GEEKSOURCES_PATCHING_ORDER=\"aufs bfq bld branding ck fedora fix genpatches grsecurity ice imq mageia pardus pld reiser4 rifs rt suse uksm upatch vserver zen zfs\"' > $config_file
 Otherwise i will use the default value of GEEKSOURCES_PATCHING_ORDER!
 And may the Force be with you…"
 	fi
@@ -449,6 +452,8 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				fi
 				;;
 			vserver) ApplyPatch "${DISTDIR}/patch-${vserver_ver}.diff" "VServer - ${vserver_url}";
+				;;
+			zen)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "zen-kernel - ${zen_url}";
 				;;
 			zfs)	ApplyPatch "${FILESDIR}/${PV}/$Current_Patch/patch_list" "zfs - ${zfs_url}";
 				;;
