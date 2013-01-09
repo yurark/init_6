@@ -179,7 +179,8 @@ make_patch() {
 
 		mkdir ../a ../b
 		cp -r {Documentation,fs,include} ../b
-		rm ../b/include/linux/Kbuild
+#		rm ../b/include/linux/Kbuild
+		rm ../b/include/uapi/linux/Kbuild
 		cd ..
 
 		for i in "${dir[@]}";
