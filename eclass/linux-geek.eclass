@@ -3,7 +3,26 @@
 # $Header: $
 
 #
-# Original Author: © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
+#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#  The latest version of this software can be obtained here:
+#
+#  https://github.com/init6/init_6/blob/master/eclass/linux-geek.eclass
+#
+
 # Functional part
 # Purpose: Installing linux.
 # Apply patches, build the kernel from source.
