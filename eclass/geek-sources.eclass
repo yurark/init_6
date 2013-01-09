@@ -22,6 +22,8 @@
 #
 #  https://github.com/init6/init_6/blob/master/eclass/geek-sources.eclass
 #
+#  Wiki: https://github.com/init6/init_6/wiki/geek-sources.eclass
+#
 
 # Logical part
 # Purpose: Installing geek-sources
@@ -334,6 +336,7 @@ geek-sources_src_install() {
 # @DESCRIPTION:
 geek-sources_pkg_postinst() {
 	linux-geek_pkg_postinst
+	einfo "Wiki: https://github.com/init6/init_6/wiki/geek-sources"
 	use uksm && einfo " Do not forget to disable the remote bug reporting feature by echo 0 > /sys/kernel/mm/uksm/usr_spt_enabled
 	more http://kerneldedup.org/en/projects/uksm/uksmdoc/usage/"
 }

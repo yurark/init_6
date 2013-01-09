@@ -22,6 +22,8 @@
 #
 #  https://github.com/init6/init_6/blob/master/eclass/linux-geek.eclass
 #
+#  Wiki: https://github.com/init6/init_6/wiki/linux-geek.eclass
+#
 
 # Functional part
 # Purpose: Installing linux.
