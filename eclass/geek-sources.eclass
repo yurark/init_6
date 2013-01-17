@@ -203,9 +203,10 @@ geek-sources_src_prepare() {
 		else
 			ewarn "Use GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\" from $config_file"
 			ewarn "Not all USE flag present in GEEKSOURCES_PATCHING_ORDER from $config_file"
+			difference=$(echo "$DEFAULT_GEEKSOURCES_PATCHING_ORDER $GEEKSOURCES_PATCHING_ORDER" | awk '{for(i=1;i<=NF;i++){_a[$i]++}for(i in _a){if(_a[i]==1)print i}}' ORS=" ")
+			ewarn "The following flags are missing: $difference"
 			ewarn "Probably that's the plan. In that case, never mind."
 		fi
-
 	else
 		GEEKSOURCES_PATCHING_ORDER="${DEFAULT_GEEKSOURCES_PATCHING_ORDER}";
 		ewarn "The order of patching is defined in file $config_file with the variable GEEKSOURCES_PATCHING_ORDER is its default value:
