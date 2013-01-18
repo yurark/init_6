@@ -146,7 +146,7 @@ get_or_bump() {
 		grsecurity) git clone "git://git.overlays.gentoo.org/proj/hardened-patchset.git" "$CSD"; cd "$CSD"; git_get_all_branches ;;
 		mageia) svn co "svn://svn.mageia.org/svn/packages/cauldron/kernel" "$CSD" ;;
 		suse) git clone "git://kernel.opensuse.org/kernel-source.git" "$CSD"; cd "$CSD"; git_get_all_branches ;;
-		ice) git clone "git://github.com/NigelCunningham/tuxonice-kernel.git" "$CSD"; cd "$CSD"; git_get_all_branches ;;
+#		ice) git clone "git://github.com/NigelCunningham/tuxonice-kernel.git" "$CSD"; cd "$CSD"; git_get_all_branches ;;
 		esac
 	fi
 }
@@ -298,20 +298,21 @@ make_patch() {
 
 		ls -1 "$CWD" | grep ".patch" > "$CWD"/patch_list;
 	;;
-	ice)	cd "$CSD";
+	ice)	#cd "$CSD";
 		test -d "$CWD" >/dev/null 2>&1 || mkdir -p "$CWD";
-		get_or_bump "$patch";
+#		get_or_bump "$patch";
 
-		git checkout vanilla-"$KERN"; git pull;
-		git checkout tuxonice-"$KERN"; git pull;
+#		git checkout vanilla-"$KERN"; git pull;
+#		git checkout tuxonice-"$KERN"; git pull;
 		dest="$CWD"/tuxonice-kernel-"$version"-`date +"%Y%m%d"`.patch;
-		git diff vanilla-"$KERN" tuxonice-"$KERN" > "$dest";
+#		git diff vanilla-"$KERN" tuxonice-"$KERN" > "$dest";
+		wget "https://github.com/NigelCunningham/tuxonice-kernel/compare/vanilla-$KERN...tuxonice-$KERN.diff" -O "$dest"
 		cd "$CWD";
 		ls -1 | grep ".patch" | xargs -I{} xz "{}" | xargs -I{} cp "{}" "$CWD";
 		ls -1 "$CWD" | grep ".patch.xz" > "$CWD"/patch_list;
 
-		cd "$CSD";
-		git_info;
+#		cd "$CSD";
+#		git_info;
 	;;
 	mageia) cd "$CSD";
 		test -d "$CWD" >/dev/null 2>&1 || mkdir -p "$CWD";
