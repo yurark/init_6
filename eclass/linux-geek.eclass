@@ -284,6 +284,9 @@ linux-geek_src_prepare() {
 	einfo "Cleanup backups after patching"
 	find '(' -name '*~' -o -name '*.orig' -o -name '.*.orig' -o -name '.gitignore'  -o -name '.*.old' ')' -print0 | xargs -0 -r -l512 rm -f
 
+	einfo "Remove unneeded architectures"
+	rm -rf "${WORKDIR}"/linux-"${KV_FULL}"/arch/{alpha,arm,arm26,arm64,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,xtensa}
+
 #	make oldconfig && make prepare
 	einfo "Compile gen_init_cpio"
 	make -C "${WORKDIR}"/linux-"${KV_FULL}"/usr/ gen_init_cpio
