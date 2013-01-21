@@ -270,9 +270,6 @@ linux-geek_src_prepare() {
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile
 
 	einfo "Copy current config from /proc"
-#	if [ -f /proc/config.gz ] && [ ! -f "/usr/src/linux-${KV_FULL}/.config" ]; then
-#		zcat /proc/config > "/usr/src/linux-${KV_FULL}/.config" || ewarn "Can't copy /proc/config"
-#	fi
 	if [ -e "/usr/src/linux-${KV_FULL}/.config" ]; then
 		ewarn "Kernel config file already exist."
 		ewarn "I will NOT overwrite that."
@@ -285,9 +282,12 @@ linux-geek_src_prepare() {
 	find '(' -name '*~' -o -name '*.orig' -o -name '.*.orig' -o -name '.gitignore'  -o -name '.*.old' ')' -print0 | xargs -0 -r -l512 rm -f
 
 	einfo "Remove unneeded architectures"
-	rm -rf "${WORKDIR}"/linux-"${KV_FULL}"/arch/{alpha,arm,arm26,arm64,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,xtensa}
+	if use x86 || use amd64; then
+		rm -rf "${WORKDIR}"/linux-"${KV_FULL}"/arch/{alpha,arm,arm26,arm64,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,xtensa}
+	else
+		rm -rf "${WORKDIR}"/linux-"${KV_FULL}"/arch/{avr32,blackfin,c6x,cris,frv,h8300,hexagon,m32r,m68k,m68knommu,microblaze,mn10300,openrisc,score,tile,unicore32,um,v850,xtensa}
+	fi
 
-#	make oldconfig && make prepare
 	einfo "Compile gen_init_cpio"
 	make -C "${WORKDIR}"/linux-"${KV_FULL}"/usr/ gen_init_cpio
 	chmod +x "${WORKDIR}"/linux-"${KV_FULL}"/usr/gen_init_cpio "${WORKDIR}"/linux-"${KV_FULL}"/scripts/gen_initramfs_list.sh
@@ -350,12 +350,6 @@ linux-geek_src_install() {
 			"/usr/src/linux" ||
 			die "cannot install kernel symlink"
 	fi
-#	dosym /usr/src/linux-${KV_FULL} \
-#		"/lib/modules/${KV_FULL}/source" ||
-#		die "cannot install source symlink"
-#	dosym /usr/src/linux-${KV_FULL} \
-#		"/lib/modules/${KV_FULL}/build" ||
-#		die "cannot install build symlink"
 
 	if use build ; then
 		# Find out some info..
