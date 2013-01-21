@@ -450,10 +450,11 @@ linux-geek_pkg_postinst() {
 	einfo " If you are upgrading from a previous kernel, you may be interested "
 	einfo " in the following document:"
 	einfo "   - General upgrade guide: http://www.gentoo.org/doc/en/kernel-upgrade.xml"
-	einfo " ${CATEGORY}/${PN} is UNSUPPORTED by Funtoo or Gentoo Security."
+	einfo " ${CATEGORY}/${PN} is UNSUPPORTED Gentoo Security."
 	einfo " This means that it is likely to be vulnerable to recent security issues."
 	einfo " For specific information on why this kernel is unsupported, please read:"
 	einfo " http://www.gentoo.org/proj/en/security/kernel.xml"
-	echo
+	einfo
 	einfo " Now is the time to configure and build the kernel."
+	einfo
 }

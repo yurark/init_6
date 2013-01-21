@@ -337,7 +337,96 @@ geek-sources_src_install() {
 # @DESCRIPTION:
 geek-sources_pkg_postinst() {
 	linux-geek_pkg_postinst
+	einfo
 	einfo "Wiki: https://github.com/init6/init_6/wiki/geek-sources"
-	use uksm && einfo " Do not forget to disable the remote bug reporting feature by echo 0 > /sys/kernel/mm/uksm/usr_spt_enabled
-	more http://kerneldedup.org/en/projects/uksm/uksmdoc/usage/"
+	einfo
+	einfo "For more info on this patchset, and how to report problems, see:"
+	for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
+		if use_if_iuse $Current_Patch || [[ $Current_Patch == "fix" ]] || [[ $Current_Patch == "upatch" ]] ; then
+			case ${Current_Patch} in
+				aufs)	einfo "aufs3 - ${aufs_url}"
+					if ! has_version sys-fs/aufs-util; then
+						ewarn
+						ewarn "In order to use aufs FS you need to install sys-fs/aufs-util"
+						ewarn
+					fi
+					;;
+				bfq)	einfo "Budget Fair Queueing Budget I/O Scheduler - ${bfq_url}";
+					;;
+				bld)	einfo "Alternate CPU load distribution technique for Linux kernel scheduler - ${bld_url}";
+					;;
+				ck)	einfo "Con Kolivas high performance patchset - ${ck_url}";
+					;;
+				debian)	einfo "Debian - ${debian_url}";
+					;;
+				fedora)	einfo "Fedora - ${fedora_url}";
+					;;
+				genpatches) einfo "Gentoo patches - ${genpatches_url}";
+					;;
+				grsecurity) einfo "GrSecurity patches - ${grsecurity_url}";
+					local GRADM_COMPAT="sys-apps/gradm-2.9.1"
+					ewarn
+					ewarn "Hardened Gentoo provides three different predefined grsecurity level:"
+					ewarn "[server], [workstation], and [virtualization].  Those who intend to"
+					ewarn "use one of these predefined grsecurity levels should read the help"
+					ewarn "associated with the level.  Because some options require >=gcc-4.5,"
+					ewarn "users with more, than one version of gcc installed should use gcc-config"
+					ewarn "to select a compatible version."
+					ewarn
+					ewarn "Users of grsecurity's RBAC system must ensure they are using"
+					ewarn "${GRADM_COMPAT}, which is compatible with ${PF}."
+					ewarn "It is strongly recommended that the following command is issued"
+					ewarn "prior to booting a ${PF} kernel for the first time:"
+					ewarn
+					ewarn "emerge -na =${GRADM_COMPAT}*"
+					ewarn
+					ewarn
+					;;
+				ice)	einfo "TuxOnIce - ${ice_url}";
+					ewarn
+					ewarn "${P} has the following optional runtime dependencies:"
+					ewarn "  sys-apps/tuxonice-userui"
+					ewarn "    provides minimal userspace progress information related to"
+					ewarn "    suspending and resuming process"
+					ewarn "  sys-power/hibernate-script or sys-power/pm-utils"
+					ewarn "    runtime utilites for hibernating and suspending your computer"
+					ewarn
+					ewarn "If there are issues with this kernel, please direct any"
+					ewarn "queries to the tuxonice-users mailing list:"
+					ewarn "http://lists.tuxonice.net/mailman/listinfo/tuxonice-users/"
+					ewarn
+					;;
+				imq)	einfo "Intermediate Queueing Device patches - ${imq_url}";
+					;;
+				mageia) einfo "Mandriva/Mageia - ${mageia_url}";
+					;;
+				pardus) einfo "Pardus - ${pardus_url}";
+					;;
+				pld)	einfo "PLD - ${pld_url}";
+					;;
+				reiser4) einfo "Reiser4 - ${reiser4_url}";
+					if ! has_version sys-fs/reiser4progs; then
+						ewarn
+						ewarn "In order to use Reiser4 FS you need to install sys-fs/reiser4progs"
+						ewarn
+					fi
+					;;
+				rifs)	einfo "RIFS scheduler - ${rifs_url}";
+					;;
+				rt)	einfo "Ingo Molnar's realtime preempt patches - ${rt_url}";
+					;;
+				suse)	einfo "OpenSuSE - ${suse_url}";
+					;;
+				uksm)	einfo "Ultra Kernel Samepage Merging - ${uksm_url}";
+					;;
+				vserver) einfo "VServer - ${vserver_url}";
+					;;
+				zen)	einfo "zen-kernel - ${zen_url}";
+					;;
+				zfs)	einfo "zfs - ${zfs_url}";
+					;;
+				esac
+			else continue
+		fi;
+	done;
 }
