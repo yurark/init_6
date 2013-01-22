@@ -76,17 +76,27 @@ KV_FULL="${PVR}${EXTRAVERSION}"
 S="${WORKDIR}"/linux-"${KV_FULL}"
 SLOT="${PV}"
 
-case "$VERSION" in
-	2) extension="bz2"
-	kurl="http://www.kernel.org/pub/linux/kernel/v${KMV}"
-	SRC_URI="${kurl}/linux-${PV}.tar.${extension}"
+case "$PR" in
+	r0)	case "$VERSION" in
+			2) extension="bz2"
+			kurl="http://www.kernel.org/pub/linux/kernel/v${KMV}"
+			SRC_URI="${kurl}/linux-${PV}.tar.${extension}"
+			;;
+			3) extension="xz"
+			kurl="http://www.kernel.org/pub/linux/kernel/v${VERSION}.0"
+			SRC_URI="${kurl}/linux-${KMV}.tar.${extension}"
+			if [ "${SUBLEVEL}" != "0" ]; then
+				SRC_URI="${SRC_URI} ${kurl}/patch-${PV}.${extension}"
+			fi
+			;;
+		esac
 	;;
-	3) extension="xz"
-	kurl="http://www.kernel.org/pub/linux/kernel/v${VERSION}.0"
-	SRC_URI="${kurl}/linux-${KMV}.tar.${extension}"
-	if [ "${SUBLEVEL}" != "0" ]; then
-		SRC_URI="${SRC_URI} ${kurl}/patch-${PV}.${extension}"
-	fi
+	*)	extension="xz"
+		kurl="http://www.kernel.org/pub/linux/kernel/v${VERSION}.0/testing"
+		SRC_URI="${kurl}/linux-${VERSION}.$((${PATCHLEVEL} - 1)).tar.${extension}"
+		if [ "${SUBLEVEL}" != "0" ]; then
+			SRC_URI="${SRC_URI} ${kurl}/patch-${PVR//r/rc}.${extension}"
+		fi
 	;;
 esac
 
@@ -209,10 +219,16 @@ linux-geek_ApplyPatch() {
 linux-geek_src_unpack() {
 	if [ "${A}" != "" ]; then
 		ebegin "Extract the sources"
-			tar xvJf "${DISTDIR}/linux-${KMV}.tar.${extension}" &>/dev/null
+			case "$PR" in
+			r0) tar xvJf "${DISTDIR}/linux-${KMV}.tar.${extension}" &>/dev/null;;
+			*)  tar xvJf "${DISTDIR}/linux-${VERSION}.$((${PATCHLEVEL} - 1)).tar.${extension}" &>/dev/null;;
+			esac
 		eend $?
 		cd "${WORKDIR}"
-		mv "linux-${KMV}" "${S}"
+		case "$PR" in
+		r0) mv "linux-${KMV}" "${S}";;
+		*)  mv "linux-${VERSION}.$((${PATCHLEVEL} - 1))" "${S}";;
+		esac
 	fi
 	cd "${S}"
 case "$VERSION" in
@@ -222,7 +238,10 @@ case "$VERSION" in
 #	fi
 	;;
 	3) if  [ "${SUBLEVEL}" != "0" ]; then
-		ApplyPatch "${DISTDIR}/patch-${PV}.${extension}" "Update to latest upstream ..."
+		case "$PR" in
+		r0) ApplyPatch "${DISTDIR}/patch-${PV}.${extension}" "Update to latest upstream ...";;
+		*)  ApplyPatch "${DISTDIR}/patch-${PVR//r/rc}.${extension}" "Update to latest upstream ...";;
+		esac
 	fi
 	;;
 esac

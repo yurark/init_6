@@ -4,3 +4,6 @@
 =media-video/mplayer2-9999
 =media-video/mplayer-9999
 =sys-kernel/vanilla-sources-9999
+
+# rc
+=sys-kernel/geek-sources-3.8-r4
