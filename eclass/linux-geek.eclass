@@ -78,27 +78,34 @@ SLOT="${PV}"
 
 case "$PR" in
 	r0)	case "$VERSION" in
-			2) extension="bz2"
+		2)	extension="bz2"
 			kurl="http://www.kernel.org/pub/linux/kernel/v${KMV}"
-			SRC_URI="${kurl}/linux-${PV}.tar.${extension}"
-			;;
-			3) extension="xz"
+			kversion="${PV}"
+		;;
+		3)	extension="xz"
 			kurl="http://www.kernel.org/pub/linux/kernel/v${VERSION}.0"
-			SRC_URI="${kurl}/linux-${KMV}.tar.${extension}"
+			kversion="${KMV}"
 			if [ "${SUBLEVEL}" != "0" ]; then
-				SRC_URI="${SRC_URI} ${kurl}/patch-${PV}.${extension}"
+				pversion="${PV}"
+				pname="patch-${pversion}.${extension}"
+				SRC_URI="${SRC_URI} ${kurl}/${pname}"
 			fi
-			;;
+		;;
 		esac
 	;;
 	*)	extension="xz"
 		kurl="http://www.kernel.org/pub/linux/kernel/v${VERSION}.0/testing"
-		SRC_URI="${kurl}/linux-${VERSION}.$((${PATCHLEVEL} - 1)).tar.${extension}"
+		kversion="${VERSION}.$((${PATCHLEVEL} - 1))"
 		if [ "${SUBLEVEL}" != "0" ]; then
-			SRC_URI="${SRC_URI} ${kurl}/patch-${PVR//r/rc}.${extension}"
+			pversion="${PVR//r/rc}"
+			pname="patch-${pversion}.${extension}"
+			SRC_URI="${SRC_URI} ${kurl}/${pname}"
 		fi
 	;;
 esac
+
+kname="linux-${kversion}.tar.${extension}"
+SRC_URI="${SRC_URI} ${kurl}/${kname}"
 
 # default argument to patch
 #patch_command='patch -p1 -F1 -s'
@@ -219,29 +226,20 @@ linux-geek_ApplyPatch() {
 linux-geek_src_unpack() {
 	if [ "${A}" != "" ]; then
 		ebegin "Extract the sources"
-			case "$PR" in
-			r0) tar xvJf "${DISTDIR}/linux-${KMV}.tar.${extension}" &>/dev/null;;
-			*)  tar xvJf "${DISTDIR}/linux-${VERSION}.$((${PATCHLEVEL} - 1)).tar.${extension}" &>/dev/null;;
-			esac
+			tar xvJf "${DISTDIR}/${kname}" &>/dev/null
 		eend $?
 		cd "${WORKDIR}"
-		case "$PR" in
-		r0) mv "linux-${KMV}" "${S}";;
-		*)  mv "linux-${VERSION}.$((${PATCHLEVEL} - 1))" "${S}";;
-		esac
+		mv "linux-${kversion}" "${S}"
 	fi
 	cd "${S}"
 case "$VERSION" in
 	2) continue
 #	if  [ "${SUBLEVEL}" != "0" ]; then
-#		ApplyPatch "${DISTDIR}/patch-${PV}.${extension}" "Update to latest upstream ..."
+#		ApplyPatch "${DISTDIR}/${pname}" "Update to latest upstream ..."
 #	fi
 	;;
 	3) if  [ "${SUBLEVEL}" != "0" ]; then
-		case "$PR" in
-		r0) ApplyPatch "${DISTDIR}/patch-${PV}.${extension}" "Update to latest upstream ...";;
-		*)  ApplyPatch "${DISTDIR}/patch-${PVR//r/rc}.${extension}" "Update to latest upstream ...";;
-		esac
+		ApplyPatch "${DISTDIR}/${pname}" "Update to latest upstream ..."
 	fi
 	;;
 esac
