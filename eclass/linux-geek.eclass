@@ -32,7 +32,7 @@
 # Bugs to sudormrfhalt@gmail.com
 #
 
-EXPORT_FUNCTIONS ApplyPatch src_unpack use_if_iuse src_prepare src_compile src_install pkg_postinst
+EXPORT_FUNCTIONS ApplyPatch src_unpack src_prepare src_compile src_install pkg_postinst
 
 # No need to run scanelf/strip on kernel sources/headers (bug #134453).
 RESTRICT="mirror binchecks strip"
@@ -249,34 +249,6 @@ esac
 		cp "${DISTDIR}/deblob-check" "${T}/deblob-check" || die "cp deblob-check failed"
 		chmod +x "${T}/deblob-${KMV}" "${T}/deblob-check" || die "chmod deblob scripts failed"
 	fi
-}
-
-# @FUNCTION: in_iuse
-# @USAGE: <flag>
-# @DESCRIPTION:
-# Determines whether the given flag is in IUSE. Strips IUSE default prefixes
-# as necessary.
-#
-# Note that this function should not be used in the global scope.
-in_iuse() {
-	debug-print-function ${FUNCNAME} "${@}"
-	[[ ${#} -eq 1 ]] || die "Invalid args to ${FUNCNAME}()"
-
-	local flag=${1}
-	local liuse=( ${IUSE} )
-
-	has "${flag}" "${liuse[@]#[+-]}"
-}
-
-# @FUNCTION: use_if_iuse
-# @USAGE: <flag>
-# @DESCRIPTION:
-# Return true if the given flag is in USE and IUSE.
-#
-# Note that this function should not be used in the global scope.
-linux-geek_use_if_iuse() {
-	in_iuse $1 || return 1
-	use $1
 }
 
 # @FUNCTION: src_prepare
