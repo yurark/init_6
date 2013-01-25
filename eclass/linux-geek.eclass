@@ -74,7 +74,8 @@ DEFEXTRAVERSION="-geek"
 EXTRAVERSION=${EXTRAVERSION:-$DEFEXTRAVERSION}
 KV_FULL="${PVR}${EXTRAVERSION}"
 S="${WORKDIR}"/linux-"${KV_FULL}"
-SLOT="${PV}"
+SLOT="${PVR}"
+IUSE="symlink build"
 
 case "$PR" in
 	r0)	case "$VERSION" in
@@ -106,6 +107,48 @@ esac
 
 kname="linux-${kversion}.tar.${extension}"
 SRC_URI="${SRC_URI} ${kurl}/${kname}"
+
+# Bug #266157, deblob for libre support
+if [[ -z ${PREDEBLOBBED} ]] ; then
+	if [[ ${DEBLOB_AVAILABLE} == "1" ]] ; then
+		IUSE="${IUSE} deblob"
+		# Reflect that kernels contain firmware blobs unless otherwise
+		# stripped
+		LICENSE="${LICENSE} !deblob? ( freedist )"
+
+		if [[ -n PATCHLEVEL ]]; then
+			DEBLOB_PV="${VERSION}.${PATCHLEVEL}.${SUBLEVEL}"
+		else
+			DEBLOB_PV="${VERSION}.${SUBLEVEL}"
+		fi
+
+		if [[ ${VERSION} -ge 3 ]]; then
+			DEBLOB_PV="${VERSION}.${PATCHLEVEL}"
+		fi
+
+		DEBLOB_A="deblob-${DEBLOB_PV}"
+		DEBLOB_CHECK_A="deblob-check-${DEBLOB_PV}"
+		DEBLOB_HOMEPAGE="http://www.fsfla.org/svnwiki/selibre/linux-libre/"
+		DEBLOB_URI_PATH="download/releases/LATEST-${DEBLOB_PV}.N"
+		if ! has "${EAPI:-0}" 0 1 ; then
+			DEBLOB_CHECK_URI="${DEBLOB_HOMEPAGE}/${DEBLOB_URI_PATH}/deblob-check -> ${DEBLOB_CHECK_A}"
+		else
+			DEBLOB_CHECK_URI="mirror://gentoo/${DEBLOB_CHECK_A}"
+		fi
+		DEBLOB_URI="${DEBLOB_HOMEPAGE}/${DEBLOB_URI_PATH}/${DEBLOB_A}"
+		HOMEPAGE="${HOMEPAGE} ${DEBLOB_HOMEPAGE}"
+
+		SRC_URI="${SRC_URI}
+			deblob? (
+				${DEBLOB_URI}
+				${DEBLOB_CHECK_URI}
+			)"
+	else
+		# We have no way to deblob older kernels, so just mark them as
+		# tainted with non-libre materials.
+		LICENSE="${LICENSE} freedist"
+	fi
+fi
 
 # default argument to patch
 #patch_command='patch -p1 -F1 -s'
@@ -245,9 +288,9 @@ case "$VERSION" in
 esac
 
 	if [[ $DEBLOB_AVAILABLE == 1 ]] && use deblob ; then
-		cp "${DISTDIR}/deblob-${KMV}" "${T}" || die "cp deblob-${KMV} failed"
-		cp "${DISTDIR}/deblob-check" "${T}/deblob-check" || die "cp deblob-check failed"
-		chmod +x "${T}/deblob-${KMV}" "${T}/deblob-check" || die "chmod deblob scripts failed"
+		cp "${DISTDIR}/${DEBLOB_A}" "${T}" || die "cp ${DEBLOB_A} failed"
+		cp "${DISTDIR}/${DEBLOB_CHECK_A}" "${T}/deblob-check" || die "cp ${DEBLOB_CHECK_A} failed"
+		chmod +x "${T}/${DEBLOB_A}" "${T}/deblob-check" || die "chmod deblob scripts failed"
 	fi
 }
 
@@ -303,7 +346,7 @@ linux-geek_src_prepare() {
 linux-geek_src_compile() {
 	if [[ $DEBLOB_AVAILABLE == 1 ]] && use deblob ; then
 		echo ">>> Running deblob script ..."
-		sh "${T}/deblob-${KMV}" --force || \
+		sh "${T}/${DEBLOB_A}" --force || \
 			die "Deblob script failed to run!!!"
 	fi
 }
@@ -365,16 +408,39 @@ linux-geek_src_install() {
 
 		ebegin "Beginning installation procedure for \"${FULLVER}\""
 			if [[ ${ISNEWER} == "noconfig" ]]; then
+				if [[ $(cat /proc/mounts | grep /boot) == "" && $(cat /etc/fstab | grep /boot) != "" ]]; then
+					ebegin "  Boot partition unmounted, mounting"
+						mount /boot
+					eend $?
+				fi
 				ebegin " No kernel config found, searching for best availiable config"
-					if [[ -e /proc/config.gz ]]; then
+					if [[ -e "/proc/config.gz" ]]; then
 						einfo "  Foung config from running kernel, updating to match target kernel"
 							zcat /proc/config.gz > .config
+							true | make oldconfig 2>/dev/null
+					elif [[ -e "/boot/config-${FULLVER}" ]]; then
+						einfo "  Found /boot/config-${FULLVER}"
+							cat "/boot/config-${FULLVER}" > .config
+							true | make oldconfig 2>/dev/null
+					elif [[ -e "/usr/src/linux/.config" ]]; then
+						einfo "  Found /usr/src/linux/.config"
+							cat /usr/src/linux/.config > .config
+							true | make oldconfig 2>/dev/null
+					elif [[ -e "/etc/portage/savedconfig/${CATEGORY}/${PN}/config" ]]; then
+						einfo "  Found /etc/portage/savedconfig/${CATEGORY}/${PN}/config"
+							cat /etc/portage/savedconfig/${CATEGORY}/${PN}/config > .config
 							true | make oldconfig 2>/dev/null
 					else
 						einfo "  No suitable custom config found, defaulting to defconfig"
 							cp arch/${ARCH}/defconfig .config
 					fi
-				eend $?
+				eend $
+				ebegin " No kernel version found"
+					if [[ -e /usr/src/linux/.version ]]; then
+						einfo "  Foung version from running kernel, updating to match target kernel"
+							cat /usr/src/linux/.version > .version
+					fi
+				eend $
 			fi
 
 			if [[ ${ISNEWER} != "" ]]; then
@@ -389,11 +455,6 @@ linux-geek_src_install() {
 			fi
 
 			ebegin " Merging kernel to system (Buildnumber: ${BUILDNO})"
-				if [[ $(cat /proc/mounts | grep /boot) == "" && $(cat /etc/fstab | grep /boot) != "" ]]; then
-					ebegin "  Boot partition unmounted, mounting"
-						mount /boot
-					eend $?
-				fi
 				einfo "  Copying bzImage to \"/boot/vmlinuz-${FULLVER}-${BUILDNO}\""
 					cp arch/${ARCH}/boot/bzImage /boot/vmlinuz-${FULLVER}-${BUILDNO}
 				einfo "  Copying System.map to \"/boot/System.map-${FULLVER}\""
@@ -407,8 +468,7 @@ linux-geek_src_install() {
 				ebegin " Editing kernel entry in GRUB"
 					if [[ -e "/etc/grub.d/10_linux" ]]; then
 						grub2-mkconfig -o /boot/grub2/grub.cfg;
-					fi;
-					if [[ -e "/etc/boot.conf" ]]; then
+					elif [[ -e "/etc/boot.conf" ]]; then
 						boot-update;
 					fi;
 				eend $?

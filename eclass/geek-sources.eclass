@@ -82,15 +82,6 @@ USEKnown() {
 		debian) debian_url="http://anonscm.debian.org/viewvc/kernel/dists/trunk/linux/debian/patches";
 			HOMEPAGE="${HOMEPAGE} ${debian_url}"
 			;;
-		deblob) deblob_src="http://linux-libre.fsfla.org/pub/linux-libre/releases/LATEST-${KMV}.N/deblob-${KMV} http://linux-libre.fsfla.org/pub/linux-libre/releases/LATEST-${KMV}.N/deblob-check"
-			if [ "${OVERRIDE_deblob_src}" != "" ]; then
-				deblob_src="${OVERRIDE_deblob_src}"
-			fi
-			deblob_url="http://linux-libre.fsfla.org/pub/linux-libre/"
-			HOMEPAGE="${HOMEPAGE} ${deblob_url}"
-			SRC_URI="${SRC_URI}
-				deblob?		( ${deblob_src} )"
-			;;
 		fedora) fedora_url="http://pkgs.fedoraproject.org/gitweb/?p=kernel.git;a=summary";
 			HOMEPAGE="${HOMEPAGE} ${fedora_url}"
 			;;
