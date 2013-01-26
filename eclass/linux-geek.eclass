@@ -298,6 +298,8 @@ esac
 # @USAGE:
 # @DESCRIPTION:
 linux-geek_src_prepare() {
+
+	einfo
 	einfo "Set extraversion in Makefile" # manually set extraversion
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile
 
@@ -426,6 +428,10 @@ linux-geek_src_install() {
 						einfo "  Found /usr/src/linux/.config"
 							cat /usr/src/linux/.config > .config
 							true | make oldconfig 2>/dev/null
+					elif [[ -e "/usr/src/linux-${KV_FULL}/.config" ]]; then
+						einfo "  Found /usr/src/linux-${KV_FULL}/.config"
+							cat /usr/src/linux-${KV_FULL}/.config > .config
+							true | make oldconfig 2>/dev/null
 					elif [[ -e "/etc/portage/savedconfig/${CATEGORY}/${PN}/config" ]]; then
 						einfo "  Found /etc/portage/savedconfig/${CATEGORY}/${PN}/config"
 							cat /etc/portage/savedconfig/${CATEGORY}/${PN}/config > .config
@@ -435,15 +441,18 @@ linux-geek_src_install() {
 							cp arch/${ARCH}/defconfig .config
 					fi
 				eend $
-				ebegin " No kernel version found"
-					if [[ -e /usr/src/linux/.version ]]; then
-						einfo "  Foung version from running kernel, updating to match target kernel"
-							cat /usr/src/linux/.version > .version
-					fi
-				eend $
 			fi
 
 			if [[ ${ISNEWER} != "" ]]; then
+				ebegin " No kernel version found"
+					if [[ -e /usr/src/linux/.version ]]; then
+						einfo "  Foung kernel version /usr/src/linux/.version"
+							cat /usr/src/linux/.version > .version
+					elif [[ -e /usr/src/linux-${KV_FULL}/.version ]]; then
+						einfo "  Foung kernel version /usr/src/linux-${KV_FULL}/.version"
+							cat /usr/src/linux-${KV_FULL}/.version > .version
+					fi
+				eend $
 				ebegin " Kernel build not uptodate, compiling"
 					make bzImage 2>/dev/null
 					if [[ ${MODULESUPPORT} != "" ]]; then
