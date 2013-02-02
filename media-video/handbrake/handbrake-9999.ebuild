@@ -22,7 +22,6 @@ LICENSE="GPL-2"
 SLOT="0"
 
 KEYWORDS="~amd64"
-
 IUSE="css gtk gst ffmpeg2"
 RDEPEND="sys-libs/zlib
 	css? ( media-libs/libdvdcss )
@@ -32,7 +31,7 @@ RDEPEND="sys-libs/zlib
 			x11-libs/libnotify
 			media-libs/gstreamer
 			media-libs/gst-plugins-base
-			>=sys-fs/udev-171[gudev]
+			>=virtual/udev-171[gudev]
 	)"
 DEPEND="=sys-devel/automake-1.11*
 	=sys-devel/automake-1.4*
