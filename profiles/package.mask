@@ -6,4 +6,4 @@
 =sys-kernel/vanilla-sources-9999
 
 # rc
-=sys-kernel/geek-sources-3.8-r5
+=sys-kernel/geek-sources-3.8-r6
