@@ -15,6 +15,7 @@ HOMEPAGE="http://handbrake.fr"
 SRC_CONTRIB="http://download.handbrake.fr/handbrake/contrib/"
 SRC_URI="http://iweb.dl.sourceforge.net/project/handbrake/${PV}/${MY_P}.tar.bz2
 	${SRC_CONTRIB}a52dec-0.7.4.tar.gz -> a52dec-0.7.4-${P}.tar.gz
+	${SRC_CONTRIB}bzip2-1.0.6.tar.gz -> bzip2-1.0.6-${P}.tar.gz
 	${SRC_CONTRIB}faac-1.28.tar.gz -> faac-1.28-${P}.tar.gz
 	${SRC_CONTRIB}faad2-2.7.tar.gz -> faad2-2.7-${P}.tar.gz
 	${SRC_CONTRIB}ffmpeg-v0.7-1696-gcae4f4b.tar.bz2 -> ffmpeg-v0.7-1696-gcae4f4b-${P}.tar.bz2
@@ -36,11 +37,10 @@ SRC_URI="http://iweb.dl.sourceforge.net/project/handbrake/${PV}/${MY_P}.tar.bz2
 	${SRC_CONTRIB}libxml2-2.7.7.tar.gz -> libxml2-2.7.7-${P}.tar.gz
 	${SRC_CONTRIB}mp4v2-trunk-r355.tar.bz2 -> mp4v2-trunk-r355-${P}.tar.bz2
 	${SRC_CONTRIB}mpeg2dec-0.5.1.tar.gz -> mpeg2dec-0.5.1-${P}.tar.gz
+	${SRC_CONTRIB}pthreads-w32-cvs20100909.tar.bz2 -> pthreads-w32-cvs20100909-${P}.tar.bz2
 	${SRC_CONTRIB}x264-r2146-bcd41db.tar.gz -> x264-r2146-bcd41db-${P}.tar.gz
 	${SRC_CONTRIB}yasm-1.1.0.tar.gz -> yasm-1.1.0-${P}.tar.gz
-	${SRC_CONTRIB}zlib-1.2.3.tar.gz -> zlib-1.2.3-${P}.tar.gz
-	${SRC_CONTRIB}bzip2-1.0.6.tar.gz -> bzip2-1.0.6-${P}.tar.gz
-	${SRC_CONTRIB}pthreads-w32-cvs20100909.tar.bz2 -> pthreads-w32-cvs20100909-${P}.tar.bz2"
+	${SRC_CONTRIB}zlib-1.2.3.tar.gz -> zlib-1.2.3-${P}.tar.gz"
 
 unset SRC_CONTRIB
 

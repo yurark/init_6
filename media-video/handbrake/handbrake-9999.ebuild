@@ -7,7 +7,7 @@ EAPI="2"
 RESTRICT="mirror"
 
 #ESVN_REPO_URI="svn://svn.handbrake.fr/HandBrake/trunk"
-EGIT_REPO_URI="git://github.com/HandBrake/HandBrake.git"
+EGIT_REPO_URI="git://github.com/HandBrake/HandBrakeMirror.git"
 EGIT_PROJECT="HandBrake"
 
 AUTOMAKE_VERSION="1.11"
