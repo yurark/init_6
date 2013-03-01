@@ -35,6 +35,7 @@ In this overlay you will find:
 		reiser4 - Use Reiser4 FS patches --> http://sourceforge.net/projects/reiser4
 		rifs - Use Rotary Interactivity Favor Scheduler patches --> http://code.google.com/p/rifs-scheduler
 		rt - Use Ingo Molnar's realtime preempt patches --> http://www.kernel.org/pub/linux/kernel/projects/rt
+		rtai - Use RealTime Application Interface for Linux patches --> https://www.rtai.org
 		suse - Use OpenSuSE patches --> git://kernel.opensuse.org/kernel-source.git
 		uksm - Use Ultra Kernel Samepage Merging patches --> http://kerneldedup.org
 		vserver - VServer provides virtualization for GNU/Linux systems --> http://linux-vserver.org/Welcome_to_Linux-VServer.org
