@@ -70,6 +70,9 @@ USEKnown() {
 				bld?		( ${bld_src} )"
 			;;
 		ck)	ck_src="http://ck.kolivas.org/patches/3.0/${KMV}/${ck_ver/KMV/$KMV}/patch-${ck_ver/KMV/$KMV}.lrz"
+			if [ "${VERSION}" -eq "3" -o "${PATCHLEVEL}" -eq "8" ]; then
+				ck_src="http://ck.kolivas.org/patches/3.0/${KMV}/patch-${ck_ver/KMV/$KMV}.lrz"
+			fi
 			if [ "${OVERRIDE_ck_src}" != "" ]; then
 				ck_src="${OVERRIDE_ck_src}"
 			fi
