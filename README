@@ -39,6 +39,7 @@ In this overlay you will find:
 		suse - Use OpenSuSE patches --> git://kernel.opensuse.org/kernel-source.git
 		uksm - Use Ultra Kernel Samepage Merging patches --> http://kerneldedup.org
 		vserver - VServer provides virtualization for GNU/Linux systems --> http://linux-vserver.org/Welcome_to_Linux-VServer.org
+		xenomai - Xenomai real-time framework for Linux - http://www.xenomai.org
 		zen - Use zen-kernel patches --> https://github.com/damentz/zen-kernel
 		zfs - The native Linux kernel port of the ZFS filesystem --> http://zfsonlinux.org
 	sys-kernel/rh-sources Full sources including the Red Hat Enterprise Linux sources patchset for the 2.6 kernel tree

@@ -36,7 +36,7 @@ inherit linux-geek
 
 EXPORT_FUNCTIONS src_unpack src_prepare src_compile src_install pkg_postinst
 
-KNOWN_USES="aufs bfq bld branding build ck debian deblob fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rifs rt suse symlink uksm vserver zen zfs"
+KNOWN_USES="aufs bfq bld branding build ck debian deblob fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rifs rt rtai suse symlink uksm vserver xenomai zen zfs"
 
 # internal function
 #
@@ -159,6 +159,12 @@ USEKnown() {
 			SRC_URI="${SRC_URI}
 				vserver?	( ${vserver_src} )"
 			;;
+		xenomai) xenomai_src="http://download.gna.org/adeos/patches/v3.x/x86/ipipe-core-${xenomai_ver/KMV/$KMV}-x86-3.patch"
+			xenomai_url="http://www.xenomai.org"
+			HOMEPAGE="${HOMEPAGE} ${xenomai_url}"
+			SRC_URI="${SRC_URI}
+				xenomai?	( ${xenomai_src} )"
+			;;
 		zen)	zen_url="https://github.com/damentz/zen-kernel"
 			HOMEPAGE="${HOMEPAGE} ${zen_url}"
 			;;
@@ -219,7 +225,7 @@ geek-sources_src_prepare() {
 
 	local _PATCHDIR="/etc/portage/patches" # for user patch
 	local config_file="/etc/portage/kernel.conf"
-	local DEFAULT_GEEKSOURCES_PATCHING_ORDER="vserver bfq ck genpatches grsecurity ice imq reiser4 rifs rt rtai bld uksm aufs mageia fedora suse debian pardus pld zfs branding fix zen upatch";
+	local DEFAULT_GEEKSOURCES_PATCHING_ORDER="vserver bfq ck genpatches grsecurity ice imq reiser4 rifs rt rtai xenomai bld uksm aufs mageia fedora suse debian pardus pld zfs branding fix zen upatch";
 	if [ -e "${config_file}" ] ; then
 		source "${config_file}"
 		if [ "`echo ${GEEKSOURCES_PATCHING_ORDER} | tr " " "\n"|sort|tr "\n" " "`" == "`echo ${DEFAULT_GEEKSOURCES_PATCHING_ORDER} | tr " " "\n"|sort|tr "\n" " "`" ] ; then
@@ -237,7 +243,7 @@ geek-sources_src_prepare() {
 GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"
 You are free to choose any order of patching.
 For example, if you like the alphabetical order of patching you must set the variable:
-echo 'GEEKSOURCES_PATCHING_ORDER=\"aufs bfq bld branding ck fedora fix genpatches grsecurity ice imq mageia pardus pld reiser4 rifs rt rtai suse uksm upatch vserver zen zfs\"' > ${config_file}
+echo 'GEEKSOURCES_PATCHING_ORDER=\"aufs bfq bld branding ck fedora fix genpatches grsecurity ice imq mageia pardus pld reiser4 rifs rt rtai suse uksm upatch vserver xenomai zen zfs\"' > ${config_file}
 Otherwise i will use the default value of GEEKSOURCES_PATCHING_ORDER!
 And may the Force be with you…"
 	fi
@@ -327,6 +333,8 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				fi
 				;;
 			vserver) ApplyPatch "${DISTDIR}/patch-${vserver_ver}.diff" "VServer - ${vserver_url}";
+				;;
+			xenomai) ApplyPatch "${DISTDIR}/ipipe-core-${xenomai_ver/KMV/$KMV}-x86-3.patch" "Xenomai - ${xenomai_url}";
 				;;
 			zen)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "zen-kernel - ${zen_url}";
 				;;
@@ -447,6 +455,8 @@ geek-sources_pkg_postinst() {
 					;;
 				vserver) einfo "VServer - ${vserver_url}";
 					;;
+				xenomai) einfo "Xenomai: Real-Time Framework for Linux - ${xenomai_url}";
+					;;
 				zen)	einfo "zen-kernel - ${zen_url}";
 					;;
 				zfs)	einfo "zfs - ${zfs_url}";
@@ -456,3 +466,4 @@ geek-sources_pkg_postinst() {
 		fi;
 	done;
 }
+
