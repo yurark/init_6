@@ -61,7 +61,7 @@ RDEPEND+="
 	sys-libs/ncurses
 	app-arch/bzip2
 	sys-libs/zlib
-	>=media-video/ffmpeg-0.10.3
+	>=virtual/ffmpeg-0.10.3
 	!bindist? (
 		x86? (
 			win32codecs? ( media-libs/win32codecs )
@@ -73,7 +73,7 @@ RDEPEND+="
 	bidi? ( dev-libs/fribidi )
 	bluray? ( >=media-libs/libbluray-0.2.1 )
 	bs2b? ( media-libs/libbs2b )
-	cdio? ( dev-libs/libcdio )
+	cdio? ( || ( dev-libs/libcdio-paranoia <dev-libs/libcdio-0.90[-minimal] ) )
 	cdparanoia? ( !cdio? ( media-sound/cdparanoia ) )
 	dga? ( x11-libs/libXxf86dga )
 	directfb? ( dev-libs/DirectFB )
@@ -162,7 +162,7 @@ DEPEND="${RDEPEND}
 SLOT="0"
 LICENSE="GPL-2"
 if [[ ${PV} != *9999* ]]; then
-	KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~sparc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
+	KEYWORDS="alpha amd64 arm hppa ia64 ppc ppc64 sparc x86 ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x86-solaris"
 else
 	KEYWORDS=""
 fi
@@ -183,8 +183,8 @@ REQUIRED_USE="bindist? ( !faac !win32codecs )
 	ggi? ( X )
 	xinerama? ( X )
 	dga? ( X )
-	opengl? ( X )
-	osdmenu? ( X )
+	opengl? ( || ( X aqua ) )
+	osdmenu? ( || ( X aqua ) )
 	vdpau? ( X )
 	vidix? ( X )
 	xscreensaver? ( X )
@@ -194,6 +194,8 @@ REQUIRED_USE="bindist? ( !faac !win32codecs )
 PATCHES=(
 	"${FILESDIR}/${PN}-1.0_rc4-pkg-config.patch"
 	"${FILESDIR}/${P}-ffmpeg.patch"
+	"${FILESDIR}/${P}-libav-0.8.patch"
+	"${FILESDIR}/${P}-codecid.patch"
 )
 
 pkg_setup() {
@@ -258,7 +260,19 @@ src_prepare() {
 	# fix path to bash executable in configure scripts
 	sed -i -e "1c\#!${EPREFIX}/bin/bash" configure version.sh || die
 
+	if has_version dev-libs/libcdio-paranoia; then
+		sed -i \
+			-e 's:cdio/cdda.h:cdio/paranoia/cdda.h:' \
+			-e 's:cdio/paranoia.h:cdio/paranoia/paranoia.h:' \
+			configure stream/stream_cdda.c || die
+	fi
+
 	base_src_prepare
+	if has_version '>=media-video/libav-9_rc' || has_version '>=media-video/ffmpeg-1.1' ; then
+		epatch "${FILESDIR}/${P}-libav-9.patch" \
+			"${FILESDIR}/${P}-planaraudio.patch" \
+			"${FILESDIR}/${P}-missingbreak.patch"
+	fi
 }
 
 src_configure() {
@@ -439,12 +453,6 @@ src_configure() {
 
 	# internal
 	use real || myconf+=" --disable-real"
-
-	# Real binary codec support only available on x86, amd64
-	if use real; then
-		use x86 && myconf+=" --codecsdir=/opt/RealPlayer/codecs"
-		use amd64 && myconf+=" --codecsdir=/usr/$(get_libdir)/codecs"
-	fi
 	myconf+=" $(use_enable win32codecs win32dll)"
 
 	################
