@@ -6,4 +6,4 @@
 =sys-kernel/vanilla-sources-9999
 
 # Mask - kernel mainline 2013-03-17
-=sys-kernel/geek-sources-3.9-r3
+=sys-kernel/geek-sources-3.9-r4
