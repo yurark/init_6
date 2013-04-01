@@ -36,7 +36,7 @@ inherit linux-geek
 
 EXPORT_FUNCTIONS src_unpack src_prepare src_compile src_install pkg_postinst
 
-KNOWN_USES="aufs bfq bld branding build ck debian deblob fedora genpatches grsecurity ice imq mageia pardus pld reiser4 rifs rt rtai suse symlink uksm vserver xenomai zen zfs"
+KNOWN_USES="aufs bfq bld branding build ck debian deblob fedora genpatches grsecurity ice imq lqx mageia pardus pax pf phc pld reiser4 rifs rt rtai scst suse symlink uksm vserver xenomai zen zfs";
 
 # internal function
 #
@@ -91,7 +91,7 @@ USEKnown() {
 		genpatches) genpatches_url="http://dev.gentoo.org/~mpagano/genpatches";
 			HOMEPAGE="${HOMEPAGE} ${genpatches_url}"
 			;;
-		grsecurity) grsecurity_url="http://grsecurity.net http://www.gentoo.org/proj/en/hardened"
+		grsecurity) grsecurity_url="http://grsecurity.net"
 			HOMEPAGE="${HOMEPAGE} ${grsecurity_url}"
 			RDEPEND="${RDEPEND}
 				grsecurity?	( >=sys-apps/gradm-2.2.2 )"
@@ -111,11 +111,41 @@ USEKnown() {
 			SRC_URI="${SRC_URI}
 				imq?		( ${imq_src} )"
 			;;
+		lqx)	lqx_src="http://liquorix.net/sources/${lqx_ver/KMV/$KMV}.patch.gz"
+			if [ "${OVERRIDE_lqx_src}" != "" ]; then
+				lqx_src="${OVERRIDE_lqx_src}"
+			fi
+			lqx_url="http://liquorix.net"
+			HOMEPAGE="${HOMEPAGE} ${lqx_url}"
+			SRC_URI="${SRC_URI}
+				lqx?			( ${lqx_src} )"
+			;;
 		mageia) mageia_url="http://svnweb.mageia.org/packages/cauldron/kernel/current"
 			HOMEPAGE="${HOMEPAGE} ${mageia_url}"
 			;;
 		pardus) pardus_url="https://svn.pardus.org.tr/pardus/playground/kaan.aksit/2011/kernel/default/kernel"
 			HOMEPAGE="${HOMEPAGE} ${pardus_url}"
+			;;
+		pax)	pax_src="http://grsecurity.net/test/pax-linux-${pax_ver/KMV/$KMV}.patch"
+			if [ "${OVERRIDE_pax_src}" != "" ]; then
+				pax_src="${OVERRIDE_pax_src}"
+			fi
+			pax_url="http://pax.grsecurity.net"
+			HOMEPAGE="${HOMEPAGE} ${pax_url}"
+			SRC_URI="${SRC_URI}
+				pax?			( ${pax_src} )"
+			;;
+		pf)	pf_src="http://pf.natalenko.name/sources/${KMV}/patch-${pf_ver/KMV/$KMV}.bz2"
+			if [ "${OVERRIDE_pf_src}" != "" ]; then
+				pf_src="${OVERRIDE_pf_src}"
+			fi
+			pf_url="http://pf.natalenko.name"
+			HOMEPAGE="${HOMEPAGE} ${pf_url}"
+			SRC_URI="${SRC_URI}
+				pf?			( ${pf_src} )"
+			;;
+		phc)	phc_url="http://www.linux-phc.org"
+			HOMEPAGE="${HOMEPAGE} ${phc_url}"
 			;;
 		pld)	pld_url="http://cvs.pld-linux.org/cgi-bin/viewvc.cgi/cvs/packages/kernel/?pathrev=MAIN"
 			HOMEPAGE="${HOMEPAGE} ${pld_url}"
@@ -143,6 +173,9 @@ USEKnown() {
 			;;
 		rtai)	rtai_url="https://www.rtai.org"
 			HOMEPAGE="${HOMEPAGE} ${rtai_url}"
+			;;
+		scst)	scs_url="http://scst.sourceforge.net"
+			HOMEPAGE="${HOMEPAGE} ${scst_url}"
 			;;
 		suse)	suse_url="http://kernel.opensuse.org/cgit/kernel-source"
 			HOMEPAGE="${HOMEPAGE} ${suse_url}"
@@ -185,6 +218,8 @@ done
 # @USAGE:
 # @DESCRIPTION:
 geek-sources_src_unpack() {
+	use lqx && SKIP_UPDATE="1";
+	use pf && SKIP_UPDATE="1";
 	linux-geek_src_unpack
 }
 
@@ -225,7 +260,7 @@ geek-sources_src_prepare() {
 
 	local _PATCHDIR="/etc/portage/patches" # for user patch
 	local config_file="/etc/portage/kernel.conf"
-	local DEFAULT_GEEKSOURCES_PATCHING_ORDER="vserver bfq ck genpatches grsecurity ice imq reiser4 rifs rt rtai xenomai bld uksm aufs mageia fedora suse debian pardus pld zfs branding fix zen upatch";
+	local DEFAULT_GEEKSOURCES_PATCHING_ORDER="pax lqx pf phc scst vserver bfq ck genpatches grsecurity ice imq reiser4 rifs rt rtai xenomai bld uksm aufs mageia fedora suse debian pardus pld zfs branding fix zen upatch";
 	if [ -e "${config_file}" ] ; then
 		source "${config_file}"
 		if [ "`echo ${GEEKSOURCES_PATCHING_ORDER} | tr " " "\n"|sort|tr "\n" " "`" == "`echo ${DEFAULT_GEEKSOURCES_PATCHING_ORDER} | tr " " "\n"|sort|tr "\n" " "`" ] ; then
@@ -243,7 +278,7 @@ geek-sources_src_prepare() {
 GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"
 You are free to choose any order of patching.
 For example, if you like the alphabetical order of patching you must set the variable:
-echo 'GEEKSOURCES_PATCHING_ORDER=\"aufs bfq bld branding ck fedora fix genpatches grsecurity ice imq mageia pardus pld reiser4 rifs rt rtai suse uksm upatch vserver xenomai zen zfs\"' > ${config_file}
+echo 'GEEKSOURCES_PATCHING_ORDER=\"aufs bfq bld branding build ck debian deblob fedora genpatches grsecurity ice imq lqx mageia pardus pax pf phc pld reiser4 rifs rt rtai scst suse symlink uksm vserver xenomai zen zfs\"' > ${config_file}
 Otherwise i will use the default value of GEEKSOURCES_PATCHING_ORDER!
 And may the Force be with you…"
 	fi
@@ -295,9 +330,17 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				;;
 			imq)	ApplyPatch "${DISTDIR}/patch-imqmq-${imq_ver}.diff.xz" "Intermediate Queueing Device patches - ${imq_url}";
 				;;
+			lqx)	ApplyPatch "${DISTDIR}/${lqx_ver/KMV/$KMV}.patch.gz" "Liquorix patches - ${lqx_url}";
+				;;
 			mageia) ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "Mandriva/Mageia - ${mageia_url}";
 				;;
 			pardus) ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "Pardus - ${pardus_url}";
+				;;
+			pax)	ApplyPatch "${DISTDIR}/pax-linux-${pax_ver/KMV/$KMV}.patch" "PAX patches - ${pax_url}";
+				;;
+			pf)	ApplyPatch "${DISTDIR}/patch-${pf_ver/KMV/$KMV}.bz2" "pf-kernel patches - ${pf_url}";
+				;;
+			phc)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "Processor Hardware Control for the Linux Kernel - ${phc_url}";
 				;;
 			pld)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "PLD - ${pld_url}";
 				;;
@@ -311,6 +354,8 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 					fi
 				;;
 			rtai)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "RealTime Application Interface for Linux - ${rtai_url}";
+				;;
+			scst)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "Generic SCSI target (SCST) subsystem for Linux - ${scst_url}";
 				;;
 			suse)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "OpenSuSE - ${suse_url}";
 				;;
@@ -430,9 +475,17 @@ geek-sources_pkg_postinst() {
 					;;
 				imq)	einfo "Intermediate Queueing Device patches - ${imq_url}";
 					;;
+				lqx)	einfo "Liquorix patches - ${lqx_url}";
+					;;
 				mageia) einfo "Mandriva/Mageia - ${mageia_url}";
 					;;
 				pardus) einfo "Pardus - ${pardus_url}";
+					;;
+				pax) einfo "PAX patches - ${pax_url}";
+					;;
+				pf) einfo "pf-kernel patches - ${pf_url}";
+					;;
+				phc) einfo "Processor Hardware Control for the Linux Kernel - ${phc_url}";
 					;;
 				pld)	einfo "PLD - ${pld_url}";
 					;;
@@ -448,6 +501,8 @@ geek-sources_pkg_postinst() {
 				rt)	einfo "Ingo Molnar's realtime preempt patches - ${rt_url}";
 					;;
 				rtai)	einfo "RealTime Application Interface for Linux - ${rtai_url}";
+					;;
+				scst)	einfo "Generic SCSI target (SCST) subsystem for Linux - ${scst_url}";
 					;;
 				suse)	einfo "OpenSuSE - ${suse_url}";
 					;;
@@ -466,4 +521,3 @@ geek-sources_pkg_postinst() {
 		fi;
 	done;
 }
-

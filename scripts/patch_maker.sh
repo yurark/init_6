@@ -389,10 +389,8 @@ make_patch() {
 
 		# Integrate SPL
 		env EXTRA_ECONF='--prefix=/ --libdir=/lib64 --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux='"$PORTAGE_TMPDIR"'/portage/b --with-linux-obj='"$PORTAGE_TMPDIR"'/portage/b' ebuild "$PORTDIR"/sys-kernel/spl/spl-"$spl_version".ebuild clean configure
-#		cd "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"/work/spl-"${spl_version//_/-}"
-		cd "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"/work/spl-*
+		cd "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"/work/spl-spl-"$spl_version"
 		./copy-builtin "$PORTAGE_TMPDIR"/portage/b
-		rm -r "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"
 
 		ls -1 "$PORTDIR"/sys-fs/zfs-kmod | grep ebuild | sed 's/zfs-kmod-//g' | sed 's/.ebuild//g'
 
@@ -401,10 +399,12 @@ make_patch() {
 		echo "You entered: $zfs_version";
 
 		# Integrate ZFS
-		env EXTRA_ECONF='--prefix=/ --libdir=/lib64 --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux='"$PORTAGE_TMPDIR"'/portage/b --with-linux-obj='"$PORTAGE_TMPDIR"'/portage/b --with-spl='"$PORTAGE_TMPDIR"'/portage/b --with-spl-obj='"$PORTAGE_TMPDIR"'/portage/b' ebuild "$PORTDIR"/sys-fs/zfs-kmod/zfs-kmod-"$zfs_version".ebuild clean configure
-#		cd "$PORTAGE_TMPDIR"/portage/sys-fs/zfs-kmod-"$zfs_version"/work/zfs-"${zfs_version//_/-}"
-		cd "$PORTAGE_TMPDIR"/portage/sys-fs/zfs-kmod-"$zfs_version"/work/zfs-*
+		env EXTRA_ECONF='--prefix=/ --libdir=/lib64 --includedir=/usr/include --datarootdir=/usr/share --enable-linux-builtin=yes --with-linux='"$PORTAGE_TMPDIR"'/portage/b --with-linux-obj='"$PORTAGE_TMPDIR"'/portage/b --with-spl='"$PORTAGE_TMPDIR"'/portage/sys-kernel/spl-'"$spl_version"'/work/spl-spl-'"$spl_version"' --with-spl-obj='"$PORTAGE_TMPDIR"'/portage/sys-kernel/spl-'"$spl_version"'/work/spl-spl-'"$spl_version"'' ebuild "$PORTDIR"/sys-fs/zfs-kmod/zfs-kmod-"$zfs_version".ebuild clean configure
+
+		cd "$PORTAGE_TMPDIR"/portage/sys-fs/zfs-kmod-"$zfs_version"/work/zfs-zfs-"$zfs_version"
 		./copy-builtin "$PORTAGE_TMPDIR"/portage/b
+
+		rm -r "$PORTAGE_TMPDIR"/portage/sys-kernel/spl-"$spl_version"
 		rm -r "$PORTAGE_TMPDIR"/portage/sys-fs/zfs-kmod-"$zfs_version"
 
 		cd "$PORTAGE_TMPDIR"/portage/b
