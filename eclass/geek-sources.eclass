@@ -484,6 +484,9 @@ geek-sources_pkg_postinst() {
 				pax) einfo "PAX patches - ${pax_url}";
 					;;
 				pf) einfo "pf-kernel patches - ${pf_url}";
+					ewarn
+					ewarn "Linux kernel fork with new features, including the -ck patchset (BFS), BFQ, TuxOnIce and UKSM"
+					ewarn
 					;;
 				phc) einfo "Processor Hardware Control for the Linux Kernel - ${phc_url}";
 					;;
