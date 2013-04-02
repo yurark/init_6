@@ -214,15 +214,6 @@ for I in ${SUPPORTED_USES}; do
 	USEKnown "${I}"
 done
 
-# @FUNCTION: src_unpack
-# @USAGE:
-# @DESCRIPTION:
-geek-sources_src_unpack() {
-	use lqx && SKIP_UPDATE="1";
-	use pf && SKIP_UPDATE="1";
-	linux-geek_src_unpack
-}
-
 # @FUNCTION: in_iuse
 # @USAGE: <flag>
 # @DESCRIPTION:
@@ -250,6 +241,26 @@ use_if_iuse() {
 	in_iuse $1 || return 1
 	use $1
 }
+
+# @FUNCTION: src_unpack
+# @USAGE:
+# @DESCRIPTION:
+geek-sources_src_unpack() {
+
+	local SKIP_KERNEL_PATCH_UPDATE="lqx pf";
+	for Current_Patch in $SKIP_KERNEL_PATCH_UPDATE; do
+		if use_if_iuse "${Current_Patch}" ; then
+		case "${Current_Patch}" in
+			*) SKIP_UPDATE="1";
+				;;
+		esac
+		else continue
+		fi;
+	done;
+
+	linux-geek_src_unpack
+}
+
 
 # @FUNCTION: src_prepare
 # @USAGE:
