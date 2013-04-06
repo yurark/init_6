@@ -308,15 +308,17 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 			bld)	echo;
 				cd "${T}";
 				unpack "bld-${bld_ver/KMV/$KMV}.tar.bz2";
-				cp "${T}/bld-${bld_ver/KMV/$KMV}/BLD-${KMV}.patch" "${S}/BLD-${KMV}.patch";
+				cp "${T}/bld-${bld_ver/KMV/$KMV}/BLD-${bld_ver/KMV/$KMV}.patch" "${S}/BLD-${bld_ver/KMV/$KMV}.patch";
 				cd "${S}";
-				ApplyPatch "BLD-${KMV}.patch" "Alternate CPU load distribution technique for Linux kernel scheduler - ${bld_url}";
-				rm -f "BLD-${KMV}.patch";
+				ApplyPatch "BLD-${bld_ver/KMV/$KMV}.patch" "Alternate CPU load distribution technique for Linux kernel scheduler - ${bld_url}";
+				rm -f "BLD-${bld_ver/KMV/$KMV}.patch";
 				rm -r "${T}/bld-${bld_ver/KMV/$KMV}"; # Clean temp
 				;;
-			branding) ApplyPatch "${FILESDIR}/font-8x16-iso-latin-1-v2.patch" "font - CONFIG_FONT_ISO_LATIN_1_8x16 http://sudormrf.wordpress.com/2010/10/23/ka-ping-yee-iso-latin-1%c2%a0font-in-linux-kernel/";
-				ApplyPatch "${FILESDIR}/gentoo-larry-logo-v2.patch" "logo - CONFIG_LOGO_LARRY_CLUT224 https://github.com/init6/init_6/raw/master/sys-kernel/geek-sources/files/larry.png";
-				ApplyPatch "${FILESDIR}/linux-3.6.6-colored-printk.patch" "Colored printk"
+			branding) if [ -e "${FILESDIR}/${Current_Patch}/info" ] ; then
+					echo
+					cat "${FILESDIR}/${Current_Patch}/info";
+				fi
+				ApplyPatch "${FILESDIR}/${Current_Patch}/patch_list" "Branding";
 				;;
 			ck)	ApplyPatch "${DISTDIR}/patch-${ck_ver/KMV/$KMV}.lrz" "Con Kolivas high performance patchset - ${ck_url}";
 				if [ -d "${FILESDIR}/${PV}/${Current_Patch}" ] ; then
