@@ -272,14 +272,19 @@ geek-sources_src_prepare() {
 	local _PATCHDIR="/etc/portage/patches" # for user patch
 	local config_file="/etc/portage/kernel.conf"
 	local DEFAULT_GEEKSOURCES_PATCHING_ORDER="pax lqx pf phc scst vserver bfq ck genpatches grsecurity ice imq reiser4 rifs rt rtai xenomai bld uksm aufs mageia fedora suse debian pardus pld zfs branding fix zen upatch";
+	local xUserOrder=""
+	local xDefOder=""
 	if [ -e "${config_file}" ] ; then
 		source "${config_file}"
-		if [ "`echo ${GEEKSOURCES_PATCHING_ORDER} | tr " " "\n"|sort|tr "\n" " "`" == "`echo ${DEFAULT_GEEKSOURCES_PATCHING_ORDER} | tr " " "\n"|sort|tr "\n" " "`" ] ; then
+		xUserOrder="$(echo -n "$GEEKSOURCES_PATCHING_ORDER" | tr '\n' ' ' | tr -s ' ' | tr ' ' '\n' | sort | tr '\n' ' ' | sed -e 's,^\s*,,' -e 's,\s*$,,')"
+		xDefOrder="$(echo -n "$DEFAULT_GEEKSOURCES_PATCHING_ORDER" | tr '\n' ' ' | tr -s ' ' | tr ' ' '\n' | sort | tr '\n' ' ' | sed -e 's,^\s*,,' -e 's,\s*$,,')"
+
+		if [ "x${xUserOrder}" = "x${xDefOrder}" ] ; then
 			ewarn "Use GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\" from ${config_file}"
 		else
 			ewarn "Use GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\" from ${config_file}"
 			ewarn "Not all USE flag present in GEEKSOURCES_PATCHING_ORDER from ${config_file}"
-			difference=$(echo "${DEFAULT_GEEKSOURCES_PATCHING_ORDER} ${GEEKSOURCES_PATCHING_ORDER}" | awk '{for(i=1;i<=NF;i++){_a[$i]++}for(i in _a){if(_a[i]==1)print i}}' ORS=" ")
+			difference=$(echo "${xDefOrder} ${xUserOrder}" | awk '{for(i=1;i<=NF;i++){_a[$i]++}for(i in _a){if(_a[i]==1)print i}}' ORS=" ")
 			ewarn "The following flags are missing: ${difference}"
 			ewarn "Probably that's the plan. In that case, never mind."
 		fi
