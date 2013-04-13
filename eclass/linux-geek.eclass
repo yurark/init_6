@@ -210,7 +210,7 @@ Handler() {
 	;;
 	*)
 		local C=$(wc -l "$patch" | awk '{print $1}')
-		if [ "$C" -gt 9 ]; then # 9 lines
+		if [ "$C" -gt 8 ]; then # 8 lines
 			patch_command='patch -p1 --dry-run' # test argument to patch
 			if ExtractApply "$patch" &>/dev/null; then
 				# default argument to patch
