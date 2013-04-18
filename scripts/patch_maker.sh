@@ -270,10 +270,22 @@ make_patch() {
 	genpatches) cd "$CSD";
 		test -d "$CWD" >/dev/null 2>&1 || mkdir -p "$CWD";
 		cd "$CWD";
-		get_from_url "http://dev.gentoo.org/~mpagano/genpatches/trunk" "$KERN";
+#		get_from_url "http://dev.gentoo.org/~mpagano/genpatches/trunk" "$KERN";
 
-		ls -1 "$CWD" | grep "linux" | xargs -I{} rm -rf "{}";
-		ls -1 "$CWD" | grep ".patch" > "$CWD"/patch_list;
+		get_or_bump "$patch";
+
+		cp -r "$CSD" /tmp/genpatches$$;
+		cd /tmp/genpatches$$/"$KERN";
+
+		find -name .svn -type d -exec rm -rf {} \;
+		find -type d -empty -delete
+
+		ls -1 | grep "linux" | xargs -I{} rm -rf "{}";
+		ls -1 | grep ".patch" > "$CWD"/patch_list;
+
+		cp -r /tmp/genpatches$$/"$KERN"/* "$CWD"
+
+		rm -rf /tmp/genpatches$$
 
 		svn_info;
 	;;
