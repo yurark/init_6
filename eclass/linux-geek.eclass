@@ -303,7 +303,7 @@ esac
 # @DESCRIPTION:
 linux-geek_src_prepare() {
 
-	einfo
+	echo
 	einfo "Set extraversion in Makefile" # manually set extraversion
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile
 

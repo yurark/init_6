@@ -369,7 +369,9 @@ make_patch() {
 		git_info;
 		rm -rf /tmp/suse$$;
 	;;
-	zfs)	test -d "$CWD" >/dev/null 2>&1 || mkdir -p "$CWD";
+	zfs)	[ "${zfs_patch_type}" = "grsecurity" ] && CWD="$CWD/grsecurity";
+		[ "${zfs_patch_type}" = "vanilla" ] && CWD="$CWD/vanilla";
+		test -d "$CWD" >/dev/null 2>&1 || mkdir -p "$CWD";
 		if [ -e /etc/portage/make.conf ] ; then
 			if [ -z "${PORTDIR}" ] ; then
 				PORTDIR=$(source /etc/portage/make.conf 2>/dev/null ; echo ${PORTDIR})
@@ -379,9 +381,12 @@ make_patch() {
 			fi
 		fi
 
-		ebuild `grep ^storage /etc/layman/layman.cfg|sed "s/.*:.//"`/init6/sys-kernel/geek-sources/geek-sources-"$version".ebuild unpack;
+		[ "${zfs_patch_type}" = "grsecurity" ] && env USE="grsecurity -branding -fedora -genpatches -ice -mageia -reiser4 -suse -symlink -aufs -bfq -build -ck -debian -deblob -lqx -pax -pf -rt -uksm -zen -zfs" ebuild `grep ^storage /etc/layman/layman.cfg|sed "s/.*:.//"`/init6/sys-kernel/geek-sources/geek-sources-"$version".ebuild compile;
+		[ "${zfs_patch_type}" = "vanilla" ] && ebuild `grep ^storage /etc/layman/layman.cfg|sed "s/.*:.//"`/init6/sys-kernel/geek-sources/geek-sources-"$version".ebuild unpack;
 		mv "$PORTAGE_TMPDIR"/portage/sys-kernel/geek-sources-"$version"/work/linux-"$version"-geek "$PORTAGE_TMPDIR"/portage/a
 		rm -r "$PORTAGE_TMPDIR"/portage/sys-kernel
+		cd "$PORTAGE_TMPDIR"/portage/a
+		make mrproper
 		cd "$PORTAGE_TMPDIR"/portage
 		cp -r a b
 
@@ -423,7 +428,7 @@ make_patch() {
 		make mrproper
 
 		cd "$PORTAGE_TMPDIR"/portage
-		diff -urN a/ b/ > "$CWD"/zfs-builtin-"$version"-`date +"%Y%m%d"`.patch
+		diff -urN a/ b/ > "$CWD"/zfs-"$zfs_patch_type"-builtin-"$version"-`date +"%Y%m%d"`.patch
 
 		cd "$CWD";
 		ls -1 | grep ".patch" | xargs -I{} xz "{}" | xargs -I{} cp "{}" "$CWD";
@@ -438,6 +443,9 @@ make_patch() {
 		echo " zfs-builtin-$version-`date +"%Y%m%d"`.patch.xz based on:" >> "$CWD"/info
 		echo " sys-kernel/spl-`echo $spl_version`" >> "$CWD"/info
 		echo " sys-fs/zfs-kmod-`echo $zfs_version`" >> "$CWD"/info
+
+		cd "$PORTAGE_TMPDIR/portage"
+		rm -rf a b sys-fs sys-kernel;
 	;;
 	esac
 }
@@ -486,7 +494,17 @@ do
 		;;
 		8) patches="$patches suse"
 		;;
-		9) patches="$patches zfs"
+		9) cmd=(dialog --separate-output --checklist "Select zfs patch:" 22 76 16)
+		zfs_options=(0 "grsecurity" off
+			     1 "vanilla" off)
+		zfs_choices=$("${cmd[@]}" "${zfs_options[@]}" 2>&1 >/dev/tty)
+		clear
+		for zfs_choice in $zfs_choices ; do
+		case $zfs_choice in
+			0) zfs_patch_type="grsecurity"; make_patch "zfs" ;;
+			1) zfs_patch_type="vanilla"; make_patch "zfs" ;;
+		esac
+		done
 		;;
 		esac
 	done
