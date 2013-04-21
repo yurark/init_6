@@ -408,7 +408,7 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 					[ -e "${FILESDIR}/${PV}/${Current_Patch}/vanilla/info" ] && cat "${FILESDIR}/${PV}/${Current_Patch}/vanilla/info";
 					[ -e "${FILESDIR}/${PV}/${Current_Patch}/patch_list" ] && ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "zfs for vanilla - ${zfs_url}";
 				fi;
-				[ -e "${FILESDIR}/${PV}/${Current_Patch}/vanilla/patch_list" ] && ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/vanilla/patch_list" "zfs for vanilla - ${zfs_url}";
+				[ -e "${FILESDIR}/${PV}/${Current_Patch}/patch_list" ] && ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "zfs for vanilla - ${zfs_url}";
 				;;
 		esac
 	else continue

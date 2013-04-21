@@ -509,7 +509,9 @@ do
 		esac
 	done
 	;;
-	2) patches="aufs bfq debian fedora genpatches grsecurity ice mageia suse zfs"
+	2) patches="aufs bfq debian fedora genpatches grsecurity ice mageia suse"
+	zfs_patch_type="grsecurity"; make_patch "zfs"
+	zfs_patch_type="vanilla"; make_patch "zfs"
 	;;
 	esac
 done
