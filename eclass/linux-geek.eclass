@@ -313,7 +313,7 @@ linux-geek_src_prepare() {
 		ewarn "I will NOT overwrite that."
 		cp "/usr/src/linux-${KV_FULL}/.config" "${WORKDIR}/linux-${KV_FULL}/.config"
 	else
-		zcat /proc/config > .config || ewarn "Can't copy /proc/config"
+		zcat /proc/config.gz > .config || ewarn "Can't copy /proc/config.gz"
 	fi
 
 	einfo "Cleanup backups after patching"
