@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI="5"
-inherit base
+inherit base eutils
 
 DESCRIPTION="Provides a daemon for managing internet connections"
 HOMEPAGE="http://connman.net"
@@ -28,6 +28,21 @@ RDEPEND=">=dev-libs/glib-2.16
 DEPEND="${RDEPEND}
 	>=sys-kernel/linux-headers-2.6.39
 	doc? ( dev-util/gtk-doc )"
+
+src_prepare() {
+	epatch "${FILESDIR}/${PN}-do-not-cleanup-routes.patch"
+#	epatch "${FILESDIR}/${PN}-101-Add_description_of_AllowEthernetTethering.patch"
+	epatch "${FILESDIR}/${PN}-102-Add_support_for_AllowEthernetTethering_configuration_variable.patch"
+	epatch "${FILESDIR}/${PN}-103-Add_support_functions_needed_by_ethernet_tethering.patch"
+	epatch "${FILESDIR}/${PN}-104-Interface_was_added_to_technology_too_early.patch"
+	epatch "${FILESDIR}/${PN}-105-Add_tethering_support.patch"
+	epatch "${FILESDIR}/${PN}-106-Check_if_ethernet_tethering_is_allowed.patch"
+#	epatch "${FILESDIR}/${PN}-201-Add_description_of_StartTetheringAutomatically.patch"
+	epatch "${FILESDIR}/${PN}-202-Add_support_for_StartTetheringAutomatically_configuration_variable.patch"
+	epatch "${FILESDIR}/${PN}-203-Auto_start_tethering_if_enabled_and_configured.patch"
+	epatch "${FILESDIR}/${PN}-301-Return_proper_return_code_if_listener_table_is_missing.patch"
+	epatch "${FILESDIR}/${PN}-302-Use_fallback_nameservers_if_dnsproxy_is_not_in_use.patch"
+}
 
 src_configure() {
 	econf \
