@@ -71,7 +71,7 @@ KMV="${1}.${2}"
 
 # 0 for 3.4.0
 if [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
-	PV=$KMV # default PV=3.4.0 new PV=3.4
+	PV="${KMV}" # default PV=3.4.0 new PV=3.4
 	SKIP_UPDATE=1 # Skip update to latest upstream
 fi;
 
