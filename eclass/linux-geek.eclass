@@ -69,6 +69,12 @@ SUBLEVEL="${3}"
 # the kernel major version (e.g 3.4 for 3.4.2)
 KMV="${1}.${2}"
 
+# 0 for 3.4.0
+if [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
+	PV=$KMV # default PV=3.4.0 new PV=3.4
+	SKIP_UPDATE=1 # Skip update to latest upstream
+fi;
+
 # ebuild default values setup settings
 DEFEXTRAVERSION="-geek"
 EXTRAVERSION=${EXTRAVERSION:-$DEFEXTRAVERSION}
@@ -86,7 +92,7 @@ case "$PR" in
 		3)	extension="xz"
 			kurl="http://www.kernel.org/pub/linux/kernel/v${VERSION}.0"
 			kversion="${KMV}"
-			if [ "${SUBLEVEL}" != "0" ]; then
+			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
 				pversion="${PV}"
 				pname="patch-${pversion}.${extension}"
 				SRC_URI="${SRC_URI} ${kurl}/${pname}"
@@ -97,7 +103,7 @@ case "$PR" in
 	*)	extension="xz"
 		kurl="http://www.kernel.org/pub/linux/kernel/v${VERSION}.0/testing"
 		kversion="${VERSION}.$((${PATCHLEVEL} - 1))"
-		if [ "${SUBLEVEL}" != "0" ]; then
+		if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
 			pversion="${PVR//r/rc}"
 			pname="patch-${pversion}.${extension}"
 			SRC_URI="${SRC_URI} ${kurl}/${pname}"
@@ -281,12 +287,10 @@ case "$VERSION" in
 #		ApplyPatch "${DISTDIR}/${pname}" "Update to latest upstream ..."
 #	fi
 	;;
-	3) if  [ "${SUBLEVEL}" != "0" ]; then
-		if [[ ${SKIP_UPDATE} == "1" ]] ; then
+	3) if [ "${SKIP_UPDATE}" = "1" ] || [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
 			ewarn "Skipping update to latest upstream ..."
 		else
 			ApplyPatch "${DISTDIR}/${pname}" "Update to latest upstream ..."
-		fi
 	fi
 	;;
 esac

@@ -401,7 +401,7 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				;;
 			zen)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "zen-kernel - ${zen_url}";
 				;;
-			zfs)	if use grsecurity ; then
+			zfs)	if use_if_iuse "grsecurity" ; then
 					[ -e "${FILESDIR}/${PV}/${Current_Patch}/grsecurity/info" ] && echo; cat "${FILESDIR}/${PV}/${Current_Patch}/grsecurity/info";
 					[ -e "${FILESDIR}/${PV}/${Current_Patch}/grsecurity/patch_list" ] && ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/grsecurity/patch_list" "zfs for grsecurity - ${zfs_url}";
 				else
