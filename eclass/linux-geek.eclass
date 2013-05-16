@@ -34,6 +34,18 @@
 
 EXPORT_FUNCTIONS ApplyPatch src_unpack src_prepare src_compile src_install pkg_postinst
 
+case ${EAPI} in
+	0|1)
+		die "Unsupported EAPI=${EAPI} (too old) for linux-geek.eclass" ;;
+	2|3) ;;
+	4|5)
+		# S is no longer automatically assigned when it doesn't exist.
+		S="${WORKDIR}"
+		;;
+	*)
+		die "Unknown EAPI=${EAPI} for linux-geek.eclass"
+esac
+
 # No need to run scanelf/strip on kernel sources/headers (bug #134453).
 RESTRICT="mirror binchecks strip"
 
@@ -80,7 +92,9 @@ DEFEXTRAVERSION="-geek"
 EXTRAVERSION=${EXTRAVERSION:-$DEFEXTRAVERSION}
 KV_FULL="${PVR}${EXTRAVERSION}"
 S="${WORKDIR}"/linux-"${KV_FULL}"
-SLOT="${PVR}"
+
+SLOT="${PV:-${KMV}/-${VERSION}}"
+
 IUSE="symlink build"
 
 case "$PR" in
@@ -485,7 +499,9 @@ linux-geek_src_install() {
 				fi
 				ebegin " Editing kernel entry in GRUB"
 					if [[ -e "/etc/grub.d/10_linux" ]]; then
+#						mount /boot;
 						grub2-mkconfig -o /boot/grub2/grub.cfg;
+#						umount /boot;
 					elif [[ -e "/etc/boot.conf" ]]; then
 						boot-update;
 					fi;

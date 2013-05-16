@@ -19,33 +19,22 @@ In this overlay you will find:
 		aufs - AnotherUnionFS --> git://aufs.git.sourceforge.net/gitroot/aufs/aufs3-standalone.git
 		bfq - Budget Fair Queueing Budget I/O Scheduler --> http://algo.ing.unimo.it/people/paolo/disk_sched/sources.php
 		bld - Alternate CPU load distribution technique for Linux kernel scheduler --> http://code.google.com/p/bld
-		backports - Use backports patches.
 		branding - Enable Gentoo specific branding.
 		ck - Enable Con Kolivas' high performance patchset --> http://users.on.net/~ckolivas/kernel
 		debian - Use Debian kernel patches --> http://anonscm.debian.org/viewvc/kernel/dists/trunk/linux/debian/patches
 		deblob - Remove binary blobs from kernel sources to provide libre license compliance --> http://linux-libre.fsfla.org/pub/linux-libre
 		fedora - Use Fedora kernel patches --> git://pkgs.fedoraproject.org/kernel.git
-		genpatches - Use Gentoo kernel patches including Spock's fbsplash patch --> http://dev.gentoo.org/~mpagano/genpatches http://dev.gentoo.org/~spock/projects/fbcondecor
-		grsecurity - Use grsecurity patches --> git://git.overlays.gentoo.org/proj/hardened-patchset.git + http://dev.gentoo.org/~mpagano/genpatches/trunk/
+		gentoo - Use Gentoo kernel patches including Spock's fbsplash patch --> http://dev.gentoo.org/~mpagano/genpatches http://dev.gentoo.org/~spock/projects/fbcondecor
+		grsec - Use grsecurity patches --> git://git.overlays.gentoo.org/proj/hardened-patchset.git + http://dev.gentoo.org/~mpagano/genpatches/trunk/
 		ice - Use TuxOnIce patches --> git://github.com/NigelCunningham/tuxonice-kernel.git
-		imq - Use Intermediate Queueing Device patches --> http://www.linuximq.net
 		lqx - Use liquorix patches --> http://liquorix.net
 		mageia - Use Mandriva/Mageia patches --> svn://svn.mageia.org/svn/packages/cauldron/kernel
-		pardus - Use Pardus patches --> https://svn.pardus.org.tr/pardus/playground/kaan.aksit/2011/kernel/default
 		pax - Use PAX patches --> http://pax.grsecurity.net
 		pf - Use pf-kernel patches --> http://pf.natalenko.name
-		phc - Use Processor Hardware Control for the Linux Kernel patches --> http://www.linux-phc.org
-		pld - USE PLD-Linux patches --> git://github.com/pld-linux/kernel.git
 		reiser4 - Use Reiser4 FS patches --> http://sourceforge.net/projects/reiser4
-		rifs - Use Rotary Interactivity Favor Scheduler patches --> http://code.google.com/p/rifs-scheduler
 		rt - Use Ingo Molnar's realtime preempt patches --> http://www.kernel.org/pub/linux/kernel/projects/rt
-		rtai - Use RealTime Application Interface for Linux patches --> https://www.rtai.org
-		scst - Use Generic SCSI target (SCST) subsystem for Linux kernel patches --> http://scst.sourceforge.net
 		suse - Use OpenSuSE patches --> git://kernel.opensuse.org/kernel-source.git
 		uksm - Use Ultra Kernel Samepage Merging patches --> http://kerneldedup.org
-		vserver - VServer provides virtualization for GNU/Linux systems --> http://linux-vserver.org/Welcome_to_Linux-VServer.org
-		xenomai - Xenomai real-time framework for Linux - http://www.xenomai.org
-		zen - Use zen-kernel patches --> https://github.com/damentz/zen-kernel
 		zfs - The native Linux kernel port of the ZFS filesystem --> http://zfsonlinux.org
 	sys-kernel/rh-sources Full sources including the Red Hat Enterprise Linux sources patchset for the 2.6 kernel tree
 and many fixes and patches…
