@@ -364,7 +364,8 @@ make_patch() {
 
 		ls -1 | grep ".patch" | xargs -I{} cp "{}" "${CWD}"
 
-		cat kernel.spec | sed -n '/### BRANCH APPLY ###/ ,/# END OF PATCH APPLICATIONS/p' | sed 's/ApplyPatch //g' | sed 's/ApplyOptionalPatch //g' | sed 's/ pplyPatch //g' | sed -n '/%endif/ ,/%endif/!p' | sed -e '/^%/d' | sed 's/ -R//g' > "$CWD"/patch_list
+#		cat kernel.spec | sed -n '/### BRANCH APPLY ###/ ,/# END OF PATCH APPLICATIONS/p' | sed 's/ApplyPatch //g' | sed 's/ApplyOptionalPatch //g' | sed 's/ pplyPatch //g' | sed -n '/%endif/ ,/%endif/!p' | sed -e '/^%/d' | sed 's/ -R//g'
+		cat kernel.spec | sed -n '/### BRANCH APPLY ###/ ,/# END OF PATCH APPLICATIONS/p' | sed 's/ApplyPatch //g' | sed 's/ApplyOptionalPatch //g' | sed 's/ pplyPatch //g' | sed -n '/Drop some necessary files from the source dir into the buildroot/ ,/done/!p' | sed -e '/^%/d' | sed 's/ -R//g' > "$CWD"/patch_list
 
 		rm -rf "${CTD}"
 	;;
