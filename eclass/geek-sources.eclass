@@ -43,6 +43,8 @@ EXPORT_FUNCTIONS src_unpack src_prepare src_compile src_install pkg_postinst
 
 KNOWN_USES="aufs bfq bld branding build ck deblob fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zfs";
 
+SLOT="${PV:-${KMV}/-${VERSION}}"
+
 # @FUNCTION: geek-sources__init_variables
 # @INTERNAL
 # @DESCRIPTION:
@@ -122,13 +124,7 @@ USEKnown() {
 			grsec_def_src="git://git.overlays.gentoo.org/proj/hardened-patchset.git"
 			grsec_src=${user_grsec_src:-$grsec_def_src}
 			grsec_url="http://hardened.gentoo.org"
-
-			grsecp_ver=${user_grsecp_ver:-$KMV}
-			grsecp_def_src="http://grsecurity.net/test/grsecurity-${grsecp_ver}.patch"
-			grsecp_src=${user_grsecp_src:-$grsecp_def_src}
-			grsecp_url="http://grsecurity.net"
-
-			grsec_inf="GrSecurity patches - ${grsec_url} ${grsecp_url}"
+			grsec_inf="GrSecurity patches - ${grsec_url}"
 			HOMEPAGE="${HOMEPAGE} ${grsec_url}"
 			RDEPEND="${RDEPEND}
 				grsec?	( >=sys-apps/gradm-2.2.2 )"
@@ -353,6 +349,18 @@ make_patch() {
 
 		ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list;
 	;;
+	bld)	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}";
+		test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}";
+		cd "${CTD}";
+
+		cp "${DISTDIR}/bld-${bld_ver/KMV/$KMV}.tar.bz2" "bld-${bld_ver/KMV/$KMV}.tar.bz2"
+		tar -xjpf "bld-${bld_ver/KMV/$KMV}.tar.bz2";
+		cp "${CTD}/bld-${bld_ver/KMV/$KMV}/BLD-${bld_ver/KMV/$KMV}.patch" "${CWD}/BLD-${bld_ver/KMV/$KMV}.patch";
+
+		rm -rf "${CTD}";
+
+		ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list;
+	;;
 	fedora) cd "${CSD}";
 		test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}";
 		get_or_bump "${patch}" > /dev/null 2>&1;
@@ -364,8 +372,7 @@ make_patch() {
 
 		ls -1 | grep ".patch" | xargs -I{} cp "{}" "${CWD}"
 
-#		cat kernel.spec | sed -n '/### BRANCH APPLY ###/ ,/# END OF PATCH APPLICATIONS/p' | sed 's/ApplyPatch //g' | sed 's/ApplyOptionalPatch //g' | sed 's/ pplyPatch //g' | sed -n '/%endif/ ,/%endif/!p' | sed -e '/^%/d' | sed 's/ -R//g'
-		cat kernel.spec | sed -n '/### BRANCH APPLY ###/ ,/# END OF PATCH APPLICATIONS/p' | sed 's/ApplyPatch //g' | sed 's/ApplyOptionalPatch //g' | sed 's/ pplyPatch //g' | sed -n '/Drop some necessary files from the source dir into the buildroot/ ,/done/!p' | sed -e '/^%/d' | sed 's/ -R//g' > "$CWD"/patch_list
+		awk '/^Apply.*Patch.*\.patch/{print $2}' kernel.spec > "$CWD"/patch_list
 
 		rm -rf "${CTD}"
 	;;
@@ -388,18 +395,13 @@ make_patch() {
 
 		rm -rf "${CTD}"
 	;;
-	grsec) cd "${CSD}";
+	grsec)	cd "${CSD}";
 		test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}";
 		get_or_bump "${patch}" > /dev/null 2>&1;
 
 		cp -r "${CSD}" "${CTD}";
 
 		cd "${CTD}"/"${grsec_ver}";
-
-		ls -1 | grep "_linux-" | xargs rm
-		ls -1 | grep "4420_grsecurity-" | xargs rm
-
-		wget "${grsecp_src}" -O "4420_grsecurity-${grsecp_ver}.patch" > /dev/null 2>&1
 
 		ls -1 | xargs -I{} cp "{}" "${CWD}";
 
@@ -423,7 +425,7 @@ make_patch() {
 
 		find . -name "*.patch" | xargs -i cp "{}" "${CWD}";
 
-		cat patches/series | sed 's/3rd-/#3rd-/g' > "${CWD}"/patch_list;
+		awk '{gsub(/3rd/,"#3rd") ;print $0}' patches/series > "${CWD}"/patch_list
 
 		rm -rf "${CTD}"
 	;;
@@ -440,10 +442,10 @@ make_patch() {
 		[ -e "patches.kernel.org" ] && rm -rf patches.kernel.org > /dev/null 2>&1
 		[ -e "patches.rpmify" ] && rm -rf patches.rpmify > /dev/null 2>&1
 
-		cat series.conf | sed -n '/# Kernel patches configuration file/ ,/# own build environment./!p' | sed 's/+needs_update?/\#/g' | sed 's/+needs_update37/\#/g' | sed 's/+needs_updating-39/\#/g' | sed 's/+needs_update/\#/g' | sed 's/patches.kernel.org/\#patches.kernel.org/g' | sed 's/patches.rpmify/\#patches.rpmify/g' | sed 's/patches.xen/\#patches.xen/g' | sed 's/+trenn/\#/g' | sed 's/+hare/\#/g' | sed 's/+jeffm/\#/g' | sed 's/+jbeulich/\#/g' | sed 's/+update_xen/\#/g' | sed 's/+xen_needs_update/\#/g' | sed 's/[\t]//g' | sed 's/        //g' > patch_list
+		awk '!/(#|^$)/ && !/^(\+(needs|tren|hare|xen|jbeulich|jeffm))|patches\.(kernel|rpmify|xen).*/{gsub(/[ \t]/,"") ; print $1}' series.conf > patch_list
 
-#		cp -r patches.*/ "${CWD}";
-		cp -r * "${CWD}";
+		cp -r patches.*/ "${CWD}";
+		cp patch_list "${CWD}";
 
 		rm -rf "${CTD}";
 	;;
@@ -528,14 +530,9 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${bfq_inf}";
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}"
 				;;
-			bld)	echo;
-				cd "${T}";
-				unpack "bld-${bld_ver/KMV/$KMV}.tar.bz2";
-				cp "${T}/bld-${bld_ver/KMV/$KMV}/BLD-${bld_ver/KMV/$KMV}.patch" "${S}/BLD-${bld_ver/KMV/$KMV}.patch";
-				cd "${S}";
-				ApplyPatch "BLD-${bld_ver/KMV/$KMV}.patch" "${bld_inf}";
-				rm -f "BLD-${bld_ver/KMV/$KMV}.patch";
-				rm -r "${T}/bld-${bld_ver/KMV/$KMV}"; # Clean temp
+			bld)	make_patch "${Current_Patch}"
+				ApplyPatch "${T}/${Current_Patch}/patch_list" "${bfq_inf}";
+				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}"
 				;;
 			branding) if [ -e "${FILESDIR}/${Current_Patch}/info" ] ; then
 					echo
@@ -552,17 +549,17 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				# Comment out EXTRAVERSION added by CK patch:
 				sed -i -e 's/\(^EXTRAVERSION :=.*$\)/# \1/' "Makefile"
 				;;
-			fedora) make_patch "${Current_Patch}"
+			fedora)	make_patch "${Current_Patch}"
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${fedora_inf}";
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}"
 				;;
 			fix)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "Fixes for current kernel"
 				;;
-			gentoo) make_patch "${Current_Patch}"
+			gentoo)	make_patch "${Current_Patch}"
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${gentoo_inf}";
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}"
 				;;
-			grsec) make_patch "${Current_Patch}"
+			grsec)	make_patch "${Current_Patch}"
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${grsec_inf}";
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}"
 				;;
@@ -572,7 +569,7 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				;;
 			lqx)	ApplyPatch "${DISTDIR}/${lqx_ver/KMV/$KMV}.patch.gz" "${lqx_inf}";
 				;;
-			mageia) make_patch "${Current_Patch}"
+			mageia)	make_patch "${Current_Patch}"
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${mageia_inf}";
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}"
 				;;
@@ -590,7 +587,7 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				;;
 			uksm)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "${uksm_inf}";
 				;;
-			upatch) if [ -d "${_PATCHDIR}/${CATEGORY}/${PN}" ] ; then
+			upatch)	if [ -d "${_PATCHDIR}/${CATEGORY}/${PN}" ] ; then
 					if [ -e "${_PATCHDIR}/${CATEGORY}/${PN}/info" ] ; then
 						echo
 						cat "${_PATCHDIR}/${CATEGORY}/${PN}/info";
