@@ -34,16 +34,34 @@
 
 EXPORT_FUNCTIONS ApplyPatch src_unpack src_prepare src_compile src_install pkg_postinst
 
+# Color
+BR="\x1b[0;01m"
+#BLUEDARK="\x1b[34;0m"
+BLUE="\x1b[34;01m"
+#CYANDARK="\x1b[36;0m"
+CYAN="\x1b[36;01m"
+#GRAYDARK="\x1b[30;0m"
+#GRAY="\x1b[30;01m"
+#GREENDARK="\x1b[32;0m"
+#GREEN="\x1b[32;01m"
+#LIGHT="\x1b[37;01m"
+#MAGENTADARK="\x1b[35;0m"
+#MAGENTA="\x1b[35;01m"
+NORMAL="\x1b[0;0m"
+#REDDARK="\x1b[31;0m"
+RED="\x1b[31;01m"
+YELLOW="\x1b[33;01m"
+
 case ${EAPI} in
 	0|1)
-		die "Unsupported EAPI=${EAPI} (too old) for linux-geek.eclass" ;;
+		die "${BLUE}Unsupported${NORMAL} ${RED}EAPI=${EAPI}${NORMAL} ${BLUE}(too old) for linux-geek.eclass${NORMAL}" ;;
 	2|3) ;;
 	4|5)
 		# S is no longer automatically assigned when it doesn't exist.
 		S="${WORKDIR}"
 		;;
 	*)
-		die "Unknown EAPI=${EAPI} for linux-geek.eclass"
+		die "${BLUE}Unknown${NORMAL} ${RED}EAPI=${EAPI}${NORMAL} ${BLUE}for linux-geek.eclass${NORMAL}"
 esac
 
 # No need to run scanelf/strip on kernel sources/headers (bug #134453).
@@ -96,6 +114,7 @@ S="${WORKDIR}"/linux-"${KV_FULL}"
 SLOT="${PV:-${KMV}/-${VERSION}}"
 
 IUSE="symlink build"
+
 
 case "$PR" in
 	r0)	case "$VERSION" in
@@ -206,7 +225,7 @@ Handler() {
 	local patch=$1
 	shift
 	if [ ! -f "$patch" ]; then
-		ewarn "Patch $patch does not exist."
+		ewarn "${BLUE}Patch${NORMAL} ${RED}$patch${NORMAL} ${BLUE}does not exist.${NORMAL}"
 		#exit 1 # why exit ?
 	fi
 	# don't apply patch if it's empty
@@ -221,11 +240,11 @@ Handler() {
 				ExtractApply "$patch" &>/dev/null
 			else
 				patch_base_name=$(basename "$patch")
-				ewarn "Skipping patch --> $patch_base_name"
+				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
 			fi
 		else
 			patch_base_name=$(basename "$patch")
-			ewarn "Skipping empty patch --> $patch_base_name"
+			ewarn "${BLUE}Skipping empty patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
 		fi
 	;;
 	*)
@@ -239,11 +258,11 @@ Handler() {
 				ExtractApply "$patch" &>/dev/null
 			else
 				patch_base_name=$(basename "$patch")
-				ewarn "Skipping patch --> $patch_base_name"
+				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
 			fi
 		else
 			patch_base_name=$(basename "$patch")
-			ewarn "Skipping empty patch --> $patch_base_name"
+			ewarn "${BLUE}Skipping empty patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
 		fi
 	;;
 	esac
@@ -302,7 +321,7 @@ case "$VERSION" in
 #	fi
 	;;
 	3) if [ "${SKIP_UPDATE}" = "1" ] || [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
-			ewarn "Skipping update to latest upstream ..."
+			ewarn "${RED}Skipping update to latest upstream ...${NORMAL}"
 		else
 			ApplyPatch "${DISTDIR}/${pname}" "Update to latest upstream ..."
 	fi
@@ -310,9 +329,9 @@ case "$VERSION" in
 esac
 
 	if [[ $DEBLOB_AVAILABLE == 1 ]] && use deblob ; then
-		cp "${DISTDIR}/${DEBLOB_A}" "${T}" || die "cp ${DEBLOB_A} failed"
-		cp "${DISTDIR}/${DEBLOB_CHECK_A}" "${T}/deblob-check" || die "cp ${DEBLOB_CHECK_A} failed"
-		chmod +x "${T}/${DEBLOB_A}" "${T}/deblob-check" || die "chmod deblob scripts failed"
+		cp "${DISTDIR}/${DEBLOB_A}" "${T}" || die "${RED}cp ${DEBLOB_A} failed${NORMAL}"
+		cp "${DISTDIR}/${DEBLOB_CHECK_A}" "${T}/deblob-check" || die "${RED}cp ${DEBLOB_CHECK_A} failed${NORMAL}"
+		chmod +x "${T}/${DEBLOB_A}" "${T}/deblob-check" || die "${RED}chmod deblob scripts failed${NORMAL}"
 	fi
 }
 
@@ -327,11 +346,11 @@ linux-geek_src_prepare() {
 
 	einfo "Copy current config from /proc"
 	if [ -e "/usr/src/linux-${KV_FULL}/.config" ]; then
-		ewarn "Kernel config file already exist."
-		ewarn "I will NOT overwrite that."
+		ewarn "${RED}Kernel config file already exist.${NORMAL}"
+		ewarn "${RED}I will NOT overwrite that.${NORMAL}"
 		cp "/usr/src/linux-${KV_FULL}/.config" "${WORKDIR}/linux-${KV_FULL}/.config"
 	else
-		zcat /proc/config.gz > .config || ewarn "Can't copy /proc/config.gz"
+		zcat /proc/config.gz > .config || ewarn "${BLUE}Can"\'"t copy${NORMAL} ${RED}/proc/config.gz${NORMAL}"
 	fi
 
 	einfo "Cleanup backups after patching"
@@ -372,7 +391,7 @@ linux-geek_src_compile() {
 	if [[ $DEBLOB_AVAILABLE == 1 ]] && use deblob ; then
 		echo ">>> Running deblob script ..."
 		sh "${T}/${DEBLOB_A}" --force || \
-			die "Deblob script failed to run!!!"
+			die "${RED}Deblob script failed to run!!!${NORMAL}"
 	fi
 }
 
@@ -405,7 +424,7 @@ linux-geek_src_install() {
 		fi
 		dosym linux-${KV_FULL} \
 			"/usr/src/linux" ||
-			die "cannot install kernel symlink"
+			die "${RED}cannot install kernel symlink${NORMAL}"
 	fi
 
 	if use build ; then

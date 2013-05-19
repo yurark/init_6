@@ -45,7 +45,7 @@ KNOWN_USES="aufs bfq bld branding build ck deblob fedora gentoo grsec ice lqx ma
 
 SLOT="${PV:-${KMV}/-${VERSION}}"
 
-# @FUNCTION: geek-sources__init_variables
+# @FUNCTION: geek-sources_init_variables
 # @INTERNAL
 # @DESCRIPTION:
 # Internal function initializing all git variables.
@@ -67,31 +67,31 @@ geek-sources_init_variables() {
 # @DESCRIPTION:
 USEKnown() {
 	local USE=$1
-	[ "${USE}" == "" ] && die "Feature not defined!"
+	[ "${USE}" == "" ] && die "${RED}Feature not defined!${NORMAL}"
 
-	expr index "${SUPPORTED_USES}" "${USE}" >/dev/null || die "${USE} is not supported in current kernel"
-	expr index "${KNOWN_USES}" "${USE}" >/dev/null || die "${USE} is not known"
+	expr index "${SUPPORTED_USES}" "${USE}" >/dev/null || die "${RED}${USE}${NORMAL} ${BLUE}is not supported in current kernel${NORMAL}"
+	expr index "${KNOWN_USES}" "${USE}" >/dev/null || die "${RED}${USE}${NORMAL} ${BLUE}is not known${NORMAL}"
 	IUSE="${IUSE} ${USE}"
 	case ${USE} in
 		aufs)	aufs_ver=${user_aufs_ver:-$KMV}
 			aufs_def_src="git://git.code.sf.net/p/aufs/aufs3-standalone"
 			aufs_src=${user_aufs_src:-$aufs_def_src}
 			aufs_url="http://aufs.sourceforge.net"
-			aufs_inf="Another UnionFS - ${aufs_url}"
+			aufs_inf="${YELLOW}Another UnionFS - ${aufs_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${aufs_url}"
 			;;
 		bfq)	bfq_ver=${user_bfq_ver:-$KMV}
 			bfq_def_src="http://algo.ing.unimo.it/people/paolo/disk_sched/patches"
 			bfq_src=${user_bfq_src:-$bfq_def_src}
 			bfq_url="http://algo.ing.unimo.it/people/paolo/disk_sched/"
-			bfq_inf="Budget Fair Queueing Budget I/O Scheduler - ${bfq_url}"
+			bfq_inf="${YELLOW}Budget Fair Queueing Budget I/O Scheduler - ${bfq_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${bfq_url}"
 			;;
 		bld)	bld_ver=${user_bld_ver:-$KMV}
 			bld_def_src="http://bld.googlecode.com/files/bld-${bld_ver/KMV/$KMV}.tar.bz2"
 			bld_src=${user_bld_src:-$bld_def_src}
 			bld_url="http://code.google.com/p/bld"
-			bld_url="Alternate CPU load distribution technique for Linux kernel scheduler - ${bld_url}"
+			bld_url="${YELLOW}Alternate CPU load distribution technique for Linux kernel scheduler - ${bld_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${bld_url}"
 			SRC_URI="${SRC_URI}
 				bld?		( ${bld_src} )"
@@ -100,7 +100,7 @@ USEKnown() {
 			ck_def_src="http://ck.kolivas.org/patches/3.0/${KMV}/${ck_ver/KMV/$KMV}/patch-${ck_ver/KMV/$KMV}.lrz"
 			ck_src=${user_ck_src:-$ck_def_src}
 			ck_url="http://users.on.net/~ckolivas/kernel"
-			ck_inf="Con Kolivas high performance patchset - ${ck_url}"
+			ck_inf="${YELLOW}Con Kolivas high performance patchset - ${ck_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${ck_url}"
 			DEPEND="${DEPEND} >=app-arch/lrzip-0.614"
 			SRC_URI="${SRC_URI}
@@ -110,21 +110,21 @@ USEKnown() {
 			fedora_def_src="git://pkgs.fedoraproject.org/kernel.git"
 			fedora_src=${user_fedora_src:-$fedora_def_src}
 			fedora_url="http://fedoraproject.org"
-			fedora_inf="Fedora - ${fedora_url}"
+			fedora_inf="${YELLOW}Fedora - ${fedora_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${fedora_url}"
 			;;
 		gentoo)	gentoo_ver=${user_gentoo_ver:-$KMV}
 			gentoo_def_src="svn://anonsvn.gentoo.org/linux-patches/genpatches-2.6/trunk"
 			gentoo_src=${user_gentoo_src:-$gentoo_def_src}
 			gentoo_url="http://dev.gentoo.org/~mpagano/genpatches"
-			gentoo_inf="Gentoo patches - ${gentoo_url}"
+			gentoo_inf="${YELLOW}Gentoo patches - ${gentoo_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${gentoo_url}"
 			;;
 		grsec)	grsec_ver=${user_grsec_ver:-$KMV}
 			grsec_def_src="git://git.overlays.gentoo.org/proj/hardened-patchset.git"
 			grsec_src=${user_grsec_src:-$grsec_def_src}
 			grsec_url="http://hardened.gentoo.org"
-			grsec_inf="GrSecurity patches - ${grsec_url}"
+			grsec_inf="${YELLOW}GrSecurity patches - ${grsec_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${grsec_url}"
 			RDEPEND="${RDEPEND}
 				grsec?	( >=sys-apps/gradm-2.2.2 )"
@@ -133,7 +133,7 @@ USEKnown() {
 			ice_def_src="https://github.com/NigelCunningham/tuxonice-kernel/compare/vanilla-${ice_ver/KMV/$KMV}...tuxonice-${ice_ver/KMV/$KMV}.diff"
 			ice_src=${user_ice_src:-$ice_def_src}
 			ice_url="http://tuxonice.net"
-			ice_inf="TuxOnIce - ${ice_url}"
+			ice_inf="${YELLOW}TuxOnIce - ${ice_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${ice_url}"
 			RDEPEND="${RDEPEND}
 				ice?	( >=sys-apps/tuxonice-userui-1.0
@@ -143,7 +143,7 @@ USEKnown() {
 			lqx_def_src="http://liquorix.net/sources/${lqx_ver/KMV/$KMV}.patch.gz"
 			lqx_src=${user_lqx_src:-$lqx_def_src}
 			lqx_url="http://liquorix.net"
-			lqx_inf="Liquorix patches - ${lqx_url}"
+			lqx_inf="${YELLOW}Liquorix patches - ${lqx_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${lqx_url}"
 			SRC_URI="${SRC_URI}
 				lqx?			( ${lqx_src} )"
@@ -152,14 +152,14 @@ USEKnown() {
 			mageia_def_src="svn://svn.mageia.org/svn/packages/cauldron/kernel"
 			mageia_src=${user_mageia_src:-$mageia_def_src}
 			mageia_url="http://www.mageia.org"
-			mageia_inf="Mageia - ${mageia_url}"
+			mageia_inf="${YELLOW}Mageia - ${mageia_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${mageia_url}"
 			;;
 		pax)	pax_ver=${user_pax_ver:-$KMV}
 			pax_def_src="http://grsecurity.net/test/pax-linux-${pax_ver/KMV/$KMV}.patch"
 			pax_src=${user_pax_src:-$pax_def_src}
 			pax_url="http://pax.grsecurity.net"
-			pax_inf="PAX patches - ${pax_url}"
+			pax_inf="${YELLOW}PAX patches - ${pax_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${pax_url}"
 			SRC_URI="${SRC_URI}
 				pax?			( ${pax_src} )"
@@ -168,7 +168,7 @@ USEKnown() {
 			pf_def_src="http://pf.natalenko.name/sources/${KMV}/patch-${pf_ver/KMV/$KMV}.bz2"
 			pf_src=${user_pf_src:-$pf_def_src}
 			pf_url="http://pf.natalenko.name"
-			pf_inf="pf-kernel patches - ${pf_url}"
+			pf_inf="${YELLOW}pf-kernel patches - ${pf_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${pf_url}"
 			SRC_URI="${SRC_URI}
 				pf?			( ${pf_src} )"
@@ -177,7 +177,7 @@ USEKnown() {
 			reiser4_def_src="mirror://sourceforge/project/reiser4/reiser4-for-linux-3.x/reiser4-for-${reiser4_ver/PV/$PV}.patch.gz"
 			reiser4_src=${user_reiser4_src:-$reiser4_def_src}
 			reiser4_url="http://sourceforge.net/projects/reiser4"
-			reiser4_inf="ReiserFS v4 - ${reiser4_url}"
+			reiser4_inf="${YELLOW}ReiserFS v4 - ${reiser4_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${reiser4_url}"
 			SRC_URI="${SRC_URI}
 				reiser4?	( ${reiser4_src} )"
@@ -186,7 +186,7 @@ USEKnown() {
 			rt_def_src="http://www.kernel.org/pub/linux/kernel/projects/rt/${KMV}/patch-${rt_ver/KMV/$KMV}.patch.xz"
 			rt_src=${user_rt_src:-$rt_def_src}
 			rt_url="http://www.kernel.org/pub/linux/kernel/projects/rt"
-			rt_inf="Ingo Molnar's realtime preempt patches - ${rt_url}"
+			rt_inf="${YELLOW}Ingo Molnar"\'"s realtime preempt patches - ${rt_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${rt_url}"
 			SRC_URI="${SRC_URI}
 				rt?		( ${rt_src} )"
@@ -195,7 +195,7 @@ USEKnown() {
 			suse_def_src="git://kernel.opensuse.org/kernel-source.git"
 			suse_src=${user_suse_src:-$suse_def_src}
 			suse_url="http://www.opensuse.org"
-			suse_inf="OpenSuSE - ${suse_url}"
+			suse_inf="${YELLOW}OpenSuSE - ${suse_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${suse_url}"
 			;;
 		uksm)	uksm_ver=${user_uksm_ver:-$KMV}
@@ -203,7 +203,7 @@ USEKnown() {
 			uksm_def_src="http://kerneldedup.org/download/uksm/${uksm_ver}/${uksm_name}.patch"
 			uksm_src=${user_uksm_src:-$uksm_def_src}
 			uksm_url="http://kerneldedup.org"
-			uksm_inf="Ultra Kernel Samepage Merging - ${uksm_url}"
+			uksm_inf="${YELLOW}Ultra Kernel Samepage Merging - ${uksm_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${uksm_url}"
 			;;
 		zfs)	spl_ver=${user_spl_ver:-$KMV}
@@ -211,7 +211,7 @@ USEKnown() {
 			zfs_ver=${user_zfs_ver:-KMV}
 			zfs_src=${user_zfs_src:-zfs_def_src}
 			zfs_url="http://zfsonlinux.org"
-			zfs_inf="Native ZFS on Linux - ${zfs_url}"
+			zfs_inf="${YELLOW}Native ZFS on Linux - ${zfs_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${zfs_url}"
 			LICENSE="${LICENSE} GPL-3"
 			RDEPEND="${RDEPEND}
@@ -495,13 +495,13 @@ geek-sources_src_prepare() {
 		xDefOrder="$(echo -n "$DEFAULT_GEEKSOURCES_PATCHING_ORDER" | tr '\n' ' ' | tr -s ' ' | tr ' ' '\n' | sort | tr '\n' ' ' | sed -e 's,^\s*,,' -e 's,\s*$,,')"
 
 		if [ "x${xUserOrder}" = "x${xDefOrder}" ] ; then
-			ewarn "Use GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\" from ${config_file}"
+			ewarn "${BLUE}Use${NORMAL} ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL} ${BLUE}from${NORMAL} ${RED}${config_file}${NORMAL}"
 		else
-			ewarn "Use GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\" from ${config_file}"
-			ewarn "Not all USE flag present in GEEKSOURCES_PATCHING_ORDER from ${config_file}"
+			ewarn "${BLUE}Use${NORMAL} ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL} ${BLUE}from${NORMAL} ${RED}${config_file}${NORMAL}"
+			ewarn "${BLUE}Not all USE flag present in GEEKSOURCES_PATCHING_ORDER from${NORMAL} ${RED}${config_file}${NORMAL}"
 			difference=$(echo "${xDefOrder} ${xUserOrder}" | awk '{for(i=1;i<=NF;i++){_a[$i]++}for(i in _a){if(_a[i]==1)print i}}' ORS=" ")
-			ewarn "The following flags are missing: ${difference}"
-			ewarn "Probably that's the plan. In that case, never mind."
+			ewarn "${BLUE}The following flags are missing:${NORMAL} ${RED}${difference}${NORMAL}"
+			ewarn "${BLUE}Probably that"\'"s the plan. In that case, never mind.${NORMAL}"
 		fi
 	else
 		GEEKSOURCES_PATCHING_ORDER="${DEFAULT_GEEKSOURCES_PATCHING_ORDER}";
