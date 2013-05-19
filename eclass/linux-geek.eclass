@@ -546,14 +546,14 @@ linux-geek_src_install() {
 # @USAGE:
 # @DESCRIPTION:
 linux-geek_pkg_postinst() {
-	einfo " If you are upgrading from a previous kernel, you may be interested "
-	einfo " in the following document:"
-	einfo "   - General upgrade guide: http://www.gentoo.org/doc/en/kernel-upgrade.xml"
-	einfo " ${CATEGORY}/${PN} is UNSUPPORTED Gentoo Security."
-	einfo " This means that it is likely to be vulnerable to recent security issues."
-	einfo " For specific information on why this kernel is unsupported, please read:"
-	einfo " http://www.gentoo.org/proj/en/security/kernel.xml"
+	einfo " ${BLUE}If you are upgrading from a previous kernel, you may be interested${NORMAL}"
+	einfo " ${BLUE}in the following document:${NORMAL}"
+	einfo "   ${BLUE}- General upgrade guide:${NORMAL} ${RED}http://www.gentoo.org/doc/en/kernel-upgrade.xml${NORMAL}"
+	einfo " ${RED}${CATEGORY}/${PN}${NORMAL} ${BLUE}is UNSUPPORTED Gentoo Security.${NORMAL}"
+	einfo " ${BLUE}This means that it is likely to be vulnerable to recent security issues.${NORMAL}"
+	einfo " ${BLUE}For specific information on why this kernel is unsupported, please read:${NORMAL}"
+	einfo " ${RED}http://www.gentoo.org/proj/en/security/kernel.xml${NORMAL}"
 	einfo
-	einfo " Now is the time to configure and build the kernel."
+	einfo " ${BLUE}Now is the time to configure and build the kernel.${NORMAL}"
 	einfo
 }

@@ -505,13 +505,13 @@ geek-sources_src_prepare() {
 		fi
 	else
 		GEEKSOURCES_PATCHING_ORDER="${DEFAULT_GEEKSOURCES_PATCHING_ORDER}";
-		ewarn "The order of patching is defined in file ${config_file} with the variable GEEKSOURCES_PATCHING_ORDER is its default value:
-GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"
-You are free to choose any order of patching.
-For example, if you like the alphabetical order of patching you must set the variable:
-echo 'GEEKSOURCES_PATCHING_ORDER=\"aufs bfq bld branding build ck deblob fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zfs\"' > ${config_file}
-Otherwise i will use the default value of GEEKSOURCES_PATCHING_ORDER!
-And may the Force be with you…"
+		ewarn "${BLUE}The order of patching is defined in file${NORMAL} ${RED}${config_file}${NORMAL} ${BLUE}with the variable GEEKSOURCES_PATCHING_ORDER is its default value:${NORMAL}
+${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL}
+${BLUE}You are free to choose any order of patching.${NORMAL}
+${BLUE}For example, if you like the alphabetical order of patching you must set the variable:${NORMAL}
+${RED}echo 'GEEKSOURCES_PATCHING_ORDER=\"`echo ${GEEKSOURCES_PATCHING_ORDER} | sed "s/ /\n/g" | sort | sed ':a;N;$!ba;s/\n/ /g'`\"' > ${config_file}${NORMAL}
+${BLUE}Otherwise i will use the default value of GEEKSOURCES_PATCHING_ORDER!${NORMAL}
+${BLUE}And may the Force be with you…${NORMAL}"
 	fi
 
 for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
@@ -642,56 +642,56 @@ geek-sources_src_install() {
 geek-sources_pkg_postinst() {
 	linux-geek_pkg_postinst
 	einfo
-	einfo "Wiki: https://github.com/init6/init_6/wiki/geek-sources"
+	einfo "${BLUE}Wiki:${NORMAL} ${RED}https://github.com/init6/init_6/wiki/geek-sources${NORMAL}"
 	einfo
-	einfo "For more info on this patchset, and how to report problems, see:"
+	einfo "${BLUE}For more info on this patchset, and how to report problems, see:${NORMAL}"
 	for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 		if use_if_iuse "${Current_Patch}" || [[ "${Current_Patch}" == "fix" ]] || [[ "${Current_Patch}" == "upatch" ]] ; then
 			case "${Current_Patch}" in
 				aufs)	if ! has_version sys-fs/aufs-util; then
 						ewarn
-						ewarn "In order to use aufs FS you need to install sys-fs/aufs-util"
+						ewarn "${BLUE}In order to use aufs FS you need to install${NORMAL} ${RED}sys-fs/aufs-util${NORMAL}"
 						ewarn
 					fi
 					;;
 				grsec) local GRADM_COMPAT="sys-apps/gradm-2.9.1"
 					ewarn
-					ewarn "Hardened Gentoo provides three different predefined grsecurity level:"
-					ewarn "[server], [workstation], and [virtualization].  Those who intend to"
-					ewarn "use one of these predefined grsecurity levels should read the help"
-					ewarn "associated with the level.  Because some options require >=gcc-4.5,"
-					ewarn "users with more, than one version of gcc installed should use gcc-config"
-					ewarn "to select a compatible version."
+					ewarn "${BLUE}Hardened Gentoo provides three different predefined grsecurity level:${NORMAL}"
+					ewarn "${BLUE}[server], [workstation], and [virtualization].  Those who intend to${NORMAL}"
+					ewarn "${BLUE}use one of these predefined grsecurity levels should read the help${NORMAL}"
+					ewarn "${BLUE}associated with the level.  Because some options require >=gcc-4.5,${NORMAL}"
+					ewarn "${BLUE}users with more, than one version of gcc installed should use gcc-config${NORMAL}"
+					ewarn "${BLUE}to select a compatible version.${NORMAL}"
 					ewarn
-					ewarn "Users of grsecurity's RBAC system must ensure they are using"
-					ewarn "${GRADM_COMPAT}, which is compatible with ${PF}."
-					ewarn "It is strongly recommended that the following command is issued"
-					ewarn "prior to booting a ${PF} kernel for the first time:"
+					ewarn "${BLUE}Users of grsecurity's RBAC system must ensure they are using${NORMAL}"
+					ewarn "${RED}${GRADM_COMPAT}${NORMAL}${BLUE}, which is compatible with${NORMAL} ${RED}${PF}${NORMAL}${BLUE}.${NORMAL}"
+					ewarn "${BLUE}It is strongly recommended that the following command is issued${NORMAL}"
+					ewarn "${BLUE}prior to booting a${NORMAL} ${RED}${PF}${NORMAL} ${BLUE}kernel for the first time:${NORMAL}"
 					ewarn
-					ewarn "emerge -na =${GRADM_COMPAT}*"
+					ewarn "${RED}emerge -na =${GRADM_COMPAT}*${NORMAL}"
 					ewarn
 					ewarn
 					;;
 				ice)	ewarn
-					ewarn "${P} has the following optional runtime dependencies:"
-					ewarn "  sys-apps/tuxonice-userui"
-					ewarn "    provides minimal userspace progress information related to"
-					ewarn "    suspending and resuming process"
-					ewarn "  sys-power/hibernate-script or sys-power/pm-utils"
-					ewarn "    runtime utilites for hibernating and suspending your computer"
+					ewarn "${RED}${P}${NORMAL} ${BLUE}has the following optional runtime dependencies:${NORMAL}"
+					ewarn "  ${RED}sys-apps/tuxonice-userui${NORMAL}"
+					ewarn "    ${BLUE}provides minimal userspace progress information related to${NORMAL}"
+					ewarn "    ${BLUE}suspending and resuming process${NORMAL}"
+					ewarn "  ${RED}sys-power/hibernate-script${NORMAL} ${BLUE}or${NORMAL} ${RED}sys-power/pm-utils${NORMAL}"
+					ewarn "    ${BLUE}runtime utilites for hibernating and suspending your computer${NORMAL}"
 					ewarn
-					ewarn "If there are issues with this kernel, please direct any"
-					ewarn "queries to the tuxonice-users mailing list:"
-					ewarn "http://lists.tuxonice.net/mailman/listinfo/tuxonice-users/"
+					ewarn "${BLUE}If there are issues with this kernel, please direct any${NORMAL}"
+					ewarn "${BLUE}queries to the tuxonice-users mailing list:${NORMAL}"
+					ewarn "${RED}http://lists.tuxonice.net/mailman/listinfo/tuxonice-users/${NORMAL}"
 					ewarn
 					;;
 				pf)	ewarn
-					ewarn "Linux kernel fork with new features, including the -ck patchset (BFS), BFQ, TuxOnIce and UKSM"
+					ewarn "${BLUE}Linux kernel fork with new features, including the -ck patchset (BFS), BFQ, TuxOnIce and UKSM${NORMAL}"
 					ewarn
 					;;
 				reiser4) if ! has_version sys-fs/reiser4progs; then
 						ewarn
-						ewarn "In order to use Reiser4 FS you need to install sys-fs/reiser4progs"
+						ewarn "${BLUE}In order to use Reiser4 FS you need to install${NORMAL} ${RED}sys-fs/reiser4progs${NORMAL}"
 						ewarn
 					fi
 					;;
