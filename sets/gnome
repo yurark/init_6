@@ -56,11 +56,11 @@ gnome-extra/gnome-screensaver
 gnome-extra/gnome-system-monitor
 gnome-extra/gnome-tweak-tool
 gnome-extra/gnome-user-docs
-gnome-extra/gnome-utils
+#gnome-extra/gnome-utils
 gnome-extra/gtkhtml
 gnome-extra/gucharmap
-gnome-extra/nautilus-tracker-tags
-gnome-extra/nm-applet
+#gnome-extra/nautilus-tracker-tags
+#gnome-extra/nm-applet
 gnome-extra/sushi
 gnome-extra/yelp
 gnome-extra/yelp-xsl
@@ -71,7 +71,7 @@ media-libs/clutter
 media-libs/cogl
 media-libs/gexiv2
 media-libs/libchamplain
-media-libs/libgnome-media-profiles
+#media-libs/libgnome-media-profiles
 media-libs/libraw
 media-sound/sound-juicer
 media-video/cheese
@@ -86,10 +86,10 @@ net-libs/libsoup-gnome
 net-libs/libsoup
 net-libs/telepathy-glib
 net-libs/webkit-gtk
-net-misc/networkmanager
+#net-misc/networkmanager
 net-misc/vinagre
 net-misc/vino
-net-print/cups-pk-helper
+#net-print/cups-pk-helper
 net-wireless/gnome-bluetooth
 sys-apps/accountsservice
 www-client/epiphany
