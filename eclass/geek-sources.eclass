@@ -26,8 +26,13 @@
 #
 
 #
+#  ChangeLog:
+#
 #  May 02, 2011 Add sys-kernel/fc-sources-2.6.38.4
-#  February 05, 2012 sys-kernel/fc-sources -> sys-kernel/geek-sources
+#  Feb 05, 2012 Renaming sys-kernel/fc-sources -> sys-kernel/geek-sources
+#  Jun 21, 2012 sys-kernel/geek-sources-3.4.{1,2,3} use eclass/kernel-geek.eclass
+#  Jan 09, 2013 Split eclass/kernel-geek.eclass to: eclass/geek-sources.eclass + eclass/linux-geek.eclass
+#  May 16, 2013 The release of "big update" with sys-kernel/geek-sources-3.9.2
 #
 
 # Logical part
@@ -449,6 +454,11 @@ make_patch() {
 
 		rm -rf "${CTD}";
 	;;
+	uksm)	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}";
+		wget "${uksm_src}" -O "${CWD}/${uksm_name}.patch" > /dev/null 2>&1;
+		cd "${CWD}";
+		ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list;
+	;;
 	esac
 
 	cd "${S}"
@@ -553,7 +563,7 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${fedora_inf}";
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}"
 				;;
-			fix)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "Fixes for current kernel"
+			fix)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "${YELLOW}Fixes for current kernel${NORMAL}"
 				;;
 			gentoo)	make_patch "${Current_Patch}"
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${gentoo_inf}";
@@ -585,7 +595,9 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${suse_inf}";
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}"
 				;;
-			uksm)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "${uksm_inf}";
+			uksm)	make_patch "${Current_Patch}"
+				ApplyPatch "${T}/${Current_Patch}/patch_list" "${uksm_inf}";
+				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}"
 				;;
 			upatch)	if [ -d "${_PATCHDIR}/${CATEGORY}/${PN}" ] ; then
 					if [ -e "${_PATCHDIR}/${CATEGORY}/${PN}/info" ] ; then
@@ -593,12 +605,12 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 						cat "${_PATCHDIR}/${CATEGORY}/${PN}/info";
 					fi
 					if [ -e "${_PATCHDIR}/${CATEGORY}/${PN}/patch_list" ] ; then
-						ApplyPatch "${_PATCHDIR}/${CATEGORY}/${PN}/patch_list" "Applying user patches"
+						ApplyPatch "${_PATCHDIR}/${CATEGORY}/${PN}/patch_list" "${YELLOW}Applying user patches${NORMAL}"
 					else
-						ewarn "File ${_PATCHDIR}/${CATEGORY}/${PN}/patch_list not found!"
-						ewarn "Try to apply the patches if they are there…"
+						ewarn "${BLUE}File${NORMAL} ${RED}${_PATCHDIR}/${CATEGORY}/${PN}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
+						ewarn "${BLUE}Try to apply the patches if they are there…${NORMAL}"
 						for i in `ls ${_PATCHDIR}/${CATEGORY}/${PN}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
-							ApplyPatch "${i}" "Applying user patches"
+							ApplyPatch "${i}" "${YELLOW}Applying user patches${NORMAL}"
 						done
 					fi
 				fi
