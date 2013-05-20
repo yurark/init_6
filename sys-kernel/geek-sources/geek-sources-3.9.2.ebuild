@@ -20,7 +20,7 @@ user_pf_ver="${PV}-pf"
 user_pax_ver="${PV}-test5"
 #user_suse_ver="stable"
 user_uksm_ver="0.1.2.2"
-user_uksm_name="uksm-${uksm_ver}-for-v${KMV}.ge.1"
+user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}.ge.1"
 
 SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice mageia pf pax suse symlink uksm"
 
