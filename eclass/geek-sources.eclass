@@ -25,16 +25,6 @@
 #  Wiki: https://github.com/init6/init_6/wiki/geek-sources.eclass
 #
 
-#
-#  ChangeLog:
-#
-#  May 02, 2011 Add sys-kernel/fc-sources-2.6.38.4
-#  Feb 05, 2012 Renaming sys-kernel/fc-sources -> sys-kernel/geek-sources
-#  Jun 21, 2012 sys-kernel/geek-sources-3.4.{1,2,3} use eclass/kernel-geek.eclass
-#  Jan 09, 2013 Split eclass/kernel-geek.eclass to: eclass/geek-sources.eclass + eclass/linux-geek.eclass
-#  May 16, 2013 The release of "big update" with sys-kernel/geek-sources-3.9.2
-#
-
 # Logical part
 # Purpose: Installing geek-sources
 # Uses: linux-geek.eclass
