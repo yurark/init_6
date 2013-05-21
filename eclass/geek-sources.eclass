@@ -25,16 +25,6 @@
 #  Wiki: https://github.com/init6/init_6/wiki/geek-sources.eclass
 #
 
-#
-#  ChangeLog:
-#
-#  May 02, 2011 Add sys-kernel/fc-sources-2.6.38.4
-#  Feb 05, 2012 Renaming sys-kernel/fc-sources -> sys-kernel/geek-sources
-#  Jun 21, 2012 sys-kernel/geek-sources-3.4.{1,2,3} use eclass/kernel-geek.eclass
-#  Jan 09, 2013 Split eclass/kernel-geek.eclass to: eclass/geek-sources.eclass + eclass/linux-geek.eclass
-#  May 16, 2013 The release of "big update" with sys-kernel/geek-sources-3.9.2
-#
-
 # Logical part
 # Purpose: Installing geek-sources
 # Uses: linux-geek.eclass
@@ -60,6 +50,11 @@ geek-sources_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${GEEK_STORE_DIR:="${PORTAGE_ACTUAL_DISTDIR-${DISTDIR}}/geek"}
+
+	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx pf"}
+	: ${patch_user_dir="/etc/portage/patches"}
+	: ${cfg_file="/etc/portage/kernel.conf"}
+	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER="pax lqx pf bfq ck gentoo grsec ice reiser4 rt bld uksm aufs mageia fedora suse zfs branding fix upatch"}
 
 	# Disable the sandbox for this dir
 	addwrite "${GEEK_STORE_DIR}"
@@ -448,9 +443,11 @@ make_patch() {
 		[ -e "patches.rpmify" ] && rm -rf patches.rpmify > /dev/null 2>&1
 
 		awk '!/(#|^$)/ && !/^(\+(needs|tren|hare|xen|jbeulich|jeffm))|patches\.(kernel|rpmify|xen).*/{gsub(/[ \t]/,"") ; print $1}' series.conf > patch_list
+		grep patches.xen series.conf > spatch_list
 
 		cp -r patches.*/ "${CWD}";
 		cp patch_list "${CWD}";
+		cp spatch_list "${CWD}";
 
 		rm -rf "${CTD}";
 	;;
@@ -468,58 +465,47 @@ make_patch() {
 # @USAGE:
 # @DESCRIPTION:
 geek-sources_src_unpack() {
-
 	geek-sources_init_variables
 
-	local SKIP_KERNEL_PATCH_UPDATE="lqx pf";
 	for Current_Patch in $SKIP_KERNEL_PATCH_UPDATE; do
 		if use_if_iuse "${Current_Patch}" ; then
 		case "${Current_Patch}" in
-			*) SKIP_UPDATE="1";
-				;;
+			*) SKIP_UPDATE="1" ;;
 		esac
 		else continue
 		fi;
 	done;
 
 	linux-geek_src_unpack
-
 }
-
 
 # @FUNCTION: src_prepare
 # @USAGE:
 # @DESCRIPTION:
-geek-sources_src_prepare() {
-
-### BRANCH APPLY ###
-
-	local _PATCHDIR="/etc/portage/patches" # for user patch
-	local config_file="/etc/portage/kernel.conf"
-	local DEFAULT_GEEKSOURCES_PATCHING_ORDER="pax lqx pf bfq ck gentoo grsec ice reiser4 rt bld uksm aufs mageia fedora suse zfs branding fix upatch";
+geek-sources_src_prepare() { ### BRANCH APPLY ###
 	local xUserOrder=""
 	local xDefOder=""
-	if [ -e "${config_file}" ] ; then
-		source "${config_file}"
+	if [ -e "${cfg_file}" ] ; then
+		source "${cfg_file}"
 		xUserOrder="$(echo -n "$GEEKSOURCES_PATCHING_ORDER" | tr '\n' ' ' | tr -s ' ' | tr ' ' '\n' | sort | tr '\n' ' ' | sed -e 's,^\s*,,' -e 's,\s*$,,')"
 		xDefOrder="$(echo -n "$DEFAULT_GEEKSOURCES_PATCHING_ORDER" | tr '\n' ' ' | tr -s ' ' | tr ' ' '\n' | sort | tr '\n' ' ' | sed -e 's,^\s*,,' -e 's,\s*$,,')"
 
 		if [ "x${xUserOrder}" = "x${xDefOrder}" ] ; then
-			ewarn "${BLUE}Use${NORMAL} ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL} ${BLUE}from${NORMAL} ${RED}${config_file}${NORMAL}"
+			ewarn "${BLUE}Use${NORMAL} ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL} ${BLUE}from${NORMAL} ${RED}${cfg_file}${NORMAL}"
 		else
-			ewarn "${BLUE}Use${NORMAL} ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL} ${BLUE}from${NORMAL} ${RED}${config_file}${NORMAL}"
-			ewarn "${BLUE}Not all USE flag present in GEEKSOURCES_PATCHING_ORDER from${NORMAL} ${RED}${config_file}${NORMAL}"
+			ewarn "${BLUE}Use${NORMAL} ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL} ${BLUE}from${NORMAL} ${RED}${cfg_file}${NORMAL}"
+			ewarn "${BLUE}Not all USE flag present in GEEKSOURCES_PATCHING_ORDER from${NORMAL} ${RED}${cfg_file}${NORMAL}"
 			difference=$(echo "${xDefOrder} ${xUserOrder}" | awk '{for(i=1;i<=NF;i++){_a[$i]++}for(i in _a){if(_a[i]==1)print i}}' ORS=" ")
 			ewarn "${BLUE}The following flags are missing:${NORMAL} ${RED}${difference}${NORMAL}"
 			ewarn "${BLUE}Probably that"\'"s the plan. In that case, never mind.${NORMAL}"
 		fi
 	else
 		GEEKSOURCES_PATCHING_ORDER="${DEFAULT_GEEKSOURCES_PATCHING_ORDER}";
-		ewarn "${BLUE}The order of patching is defined in file${NORMAL} ${RED}${config_file}${NORMAL} ${BLUE}with the variable GEEKSOURCES_PATCHING_ORDER is its default value:${NORMAL}
+		ewarn "${BLUE}The order of patching is defined in file${NORMAL} ${RED}${cfg_file}${NORMAL} ${BLUE}with the variable GEEKSOURCES_PATCHING_ORDER is its default value:${NORMAL}
 ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL}
 ${BLUE}You are free to choose any order of patching.${NORMAL}
 ${BLUE}For example, if you like the alphabetical order of patching you must set the variable:${NORMAL}
-${RED}echo 'GEEKSOURCES_PATCHING_ORDER=\"`echo ${GEEKSOURCES_PATCHING_ORDER} | sed "s/ /\n/g" | sort | sed ':a;N;$!ba;s/\n/ /g'`\"' > ${config_file}${NORMAL}
+${RED}echo 'GEEKSOURCES_PATCHING_ORDER=\"`echo ${GEEKSOURCES_PATCHING_ORDER} | sed "s/ /\n/g" | sort | sed ':a;N;$!ba;s/\n/ /g'`\"' > ${cfg_file}${NORMAL}
 ${BLUE}Otherwise i will use the default value of GEEKSOURCES_PATCHING_ORDER!${NORMAL}
 ${BLUE}And may the Force be with you…${NORMAL}"
 	fi
@@ -593,24 +579,25 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				;;
 			suse)	make_patch "${Current_Patch}"
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${suse_inf}";
+				SmartApplyPatch "${T}/${Current_Patch}/spatch_list" "${YELLOW}OpenSuSE xen - ${suse_url}${NORMAL}";
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}"
 				;;
 			uksm)	make_patch "${Current_Patch}"
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${uksm_inf}";
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}"
 				;;
-			upatch)	if [ -d "${_PATCHDIR}/${CATEGORY}/${PN}" ] ; then
-					if [ -e "${_PATCHDIR}/${CATEGORY}/${PN}/info" ] ; then
+			upatch)	if [ -d "${patch_user_dir}/${CATEGORY}/${PN}" ] ; then
+					if [ -e "${patch_user_dir}/${CATEGORY}/${PN}/info" ] ; then
 						echo
-						cat "${_PATCHDIR}/${CATEGORY}/${PN}/info";
+						cat "${patch_user_dir}/${CATEGORY}/${PN}/info";
 					fi
-					if [ -e "${_PATCHDIR}/${CATEGORY}/${PN}/patch_list" ] ; then
-						ApplyPatch "${_PATCHDIR}/${CATEGORY}/${PN}/patch_list" "${YELLOW}Applying user patches${NORMAL}"
+					if [ -e "${patch_user_dir}/${CATEGORY}/${PN}/patch_list" ] ; then
+						ApplyPatch "${patch_user_dir}/${CATEGORY}/${PN}/patch_list" "${YELLOW}Applying user patches from${NORMAL} ${RED}${patch_user_dir}/${CATEGORY}/${PN}${NORMAL}"
 					else
-						ewarn "${BLUE}File${NORMAL} ${RED}${_PATCHDIR}/${CATEGORY}/${PN}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
+						ewarn "${BLUE}File${NORMAL} ${RED}${patch_user_dir}/${CATEGORY}/${PN}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
 						ewarn "${BLUE}Try to apply the patches if they are there…${NORMAL}"
-						for i in `ls ${_PATCHDIR}/${CATEGORY}/${PN}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
-							ApplyPatch "${i}" "${YELLOW}Applying user patches${NORMAL}"
+						for i in `ls ${patch_user_dir}/${CATEGORY}/${PN}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
+							ApplyPatch "${i}" "${YELLOW}Applying user patches from${NORMAL} ${RED}${patch_user_dir}/${CATEGORY}/${PN}${NORMAL}"
 						done
 					fi
 				fi
@@ -628,11 +615,8 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 	else continue
 	fi;
 done;
-
-### END OF PATCH APPLICATIONS ###
-
 	linux-geek_src_prepare
-}
+} ### END OF PATCH APPLICATIONS ###
 
 # @FUNCTION: src_compile
 # @USAGE:
