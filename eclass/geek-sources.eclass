@@ -443,9 +443,11 @@ make_patch() {
 		[ -e "patches.rpmify" ] && rm -rf patches.rpmify > /dev/null 2>&1
 
 		awk '!/(#|^$)/ && !/^(\+(needs|tren|hare|xen|jbeulich|jeffm))|patches\.(kernel|rpmify|xen).*/{gsub(/[ \t]/,"") ; print $1}' series.conf > patch_list
+		grep patches.xen series.conf > spatch_list
 
 		cp -r patches.*/ "${CWD}";
 		cp patch_list "${CWD}";
+		cp spatch_list "${CWD}";
 
 		rm -rf "${CTD}";
 	;;
@@ -577,6 +579,7 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				;;
 			suse)	make_patch "${Current_Patch}"
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${suse_inf}";
+				SmartApplyPatch "${T}/${Current_Patch}/spatch_list" "${YELLOW}OpenSuSE xen - ${suse_url}${NORMAL}";
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}"
 				;;
 			uksm)	make_patch "${Current_Patch}"

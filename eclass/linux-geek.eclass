@@ -302,7 +302,7 @@ linux-geek_ApplyPatch() {
 
 # @FUNCTION: SmartApplyPatch
 # @USAGE:
-# SmartApplyPatch "${FILESDIR}/${PVR}/patch_list" "Patch set description";
+# SmartApplyPatch "${FILESDIR}/${PVR}/spatch_list" "Patch set description";
 # @DESCRIPTION:
 # Main function
 linux-geek_SmartApplyPatch() {
@@ -314,7 +314,7 @@ linux-geek_SmartApplyPatch() {
 	patch_base_name=$(basename "${patch}")
 	patch_dir_name=$(dirname "${patch}")
 	case ${patch_base_name} in
-	patch_list) # list of patches
+	spatch_list) # list of patches
 		for var in $(grep -v '^#' "${patch}"); do
 			ebegin "Applying $var"
 				Handler "${patch_dir_name}/${var}" || no_luck="1"
