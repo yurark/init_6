@@ -207,9 +207,11 @@ USEKnown() {
 			HOMEPAGE="${HOMEPAGE} ${uksm_url}"
 			;;
 		zfs)	spl_ver=${user_spl_ver:-$KMV}
-			spl_src=${user_spl_src:-spl_def_src}
-			zfs_ver=${user_zfs_ver:-KMV}
-			zfs_src=${user_zfs_src:-zfs_def_src}
+			spl_def_src="git://github.com/zfsonlinux/spl.git"
+			spl_src=${user_spl_src:-$spl_def_src}
+			zfs_ver=${user_zfs_ver:-$KMV}
+			zfs_def_src="git://github.com/zfsonlinux/zfs.git"
+			zfs_src=${user_zfs_src:-$zfs_def_src}
 			zfs_url="http://zfsonlinux.org"
 			zfs_inf="${YELLOW}Native ZFS on Linux - ${zfs_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${zfs_url}"
@@ -288,12 +290,14 @@ get_or_bump() {
 		fi
 	else
 		case "${patch}" in
-		aufs) git clone "${aufs_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}"; git_get_all_branches ;;
-		fedora) git clone "${fedora_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}"; git_get_all_branches ;;
-		gentoo) svn co "${gentoo_src}" "${CSD}" > /dev/null 2>&1;;
-		grsec) git clone "${grsec_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}"; git_get_all_branches ;;
-		mageia) svn co "${mageia_src}" "${CSD}" > /dev/null 2>&1;;
-		suse) git clone "${suse_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}"; git_get_all_branches ;;
+		aufs)	git clone "${aufs_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}"; git_get_all_branches ;;
+		fedora)	git clone "${fedora_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}"; git_get_all_branches ;;
+		gentoo)	svn co "${gentoo_src}" "${CSD}" > /dev/null 2>&1;;
+		grsec)	git clone "${grsec_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}"; git_get_all_branches ;;
+		mageia)	svn co "${mageia_src}" "${CSD}" > /dev/null 2>&1;;
+		suse)	git clone "${suse_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}"; git_get_all_branches ;;
+		zfs)	git clone "${spl_src}" "${CSD}/spl" > /dev/null 2>&1; cd "${CSD}/spl"; git_get_all_branches ;
+			git clone "${zfs_src}" "${CSD}/zfs" > /dev/null 2>&1; cd "${CSD}/zfs"; git_get_all_branches ;;
 		esac
 	fi
 }
@@ -456,6 +460,60 @@ make_patch() {
 		cd "${CWD}";
 		ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list;
 	;;
+	zfs)	einfo "Prepare kernel sources"
+		cd "${S}"
+		export PORTAGE_ARCH="${ARCH}"
+		case ${ARCH} in
+			x86) export ARCH="i386";;
+			amd64) export ARCH="x86_64";;
+			*) export ARCH="${ARCH}";;
+		esac
+		zcat /proc/config.gz > .config > /dev/null 2>&1 && yes "" | make oldconfig > /dev/null 2>&1 && make prepare > /dev/null 2>&1 && make scripts > /dev/null 2>&1;
+
+		test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}";
+		get_or_bump "${patch}" > /dev/null 2>&1;
+		cp -r "${CSD}" "${CTD}";
+		rm -rf "${CTD}"/{spl,zfs}/.git
+
+		addwrite /usr/src
+		unlink /usr/src/linux
+		ln -s "${S}" /usr/src/linux
+
+		einfo "Integrate SPL"
+		cd "${CTD}/spl";
+		[ -e autogen.sh ] && ./autogen.sh > /dev/null 2>&1;
+		./configure \
+			--prefix=/ \
+			--libdir=/lib64 \
+			--includedir=/usr/include \
+			--datarootdir=/usr/share \
+			--enable-linux-builtin=yes \
+			--with-linux=${S} \
+			--with-linux-obj=${S} > /dev/null 2>&1;
+		./copy-builtin ${S} > /dev/null 2>&1;
+
+		einfo "Integrate ZFS"
+		cd "${CTD}/zfs";
+		[ -e autogen.sh ] && ./autogen.sh > /dev/null 2>&1;
+		./configure \
+			--prefix=/ \
+			--libdir=/lib64 \
+			--includedir=/usr/include \
+			--datarootdir=/usr/share \
+			--enable-linux-builtin=yes \
+			--with-linux=${S} \
+			--with-linux-obj=${S} \
+			--with-spl="${CTD}/spl" \
+			--with-spl-obj="${CTD}/spl" > /dev/null 2>&1;
+		./copy-builtin ${S} > /dev/null 2>&1;
+
+		cd "${S}"
+		make mrproper > /dev/null 2>&1;
+
+		unlink /usr/src/linux
+
+		mv "${CTD}" "${S}/patches/${patch}"
+	;;
 	esac
 
 	cd "${S}"
@@ -602,14 +660,10 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 					fi
 				fi
 				;;
-			zfs)	if use_if_iuse "grsec" ; then
-					[ -e "${FILESDIR}/${PV}/${Current_Patch}/grsec/info" ] && echo; cat "${FILESDIR}/${PV}/${Current_Patch}/grsec/info";
-					[ -e "${FILESDIR}/${PV}/${Current_Patch}/grsec/patch_list" ] && ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/grsec/patch_list" "${zfs_inf}";
-				else
-					[ -e "${FILESDIR}/${PV}/${Current_Patch}/vanilla/info" ] && cat "${FILESDIR}/${PV}/${Current_Patch}/vanilla/info";
-					[ -e "${FILESDIR}/${PV}/${Current_Patch}/vanilla/patch_list" ] && ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/vanilla/patch_list" "${zfs_inf}";
-				fi;
-				[ -e "${FILESDIR}/${PV}/${Current_Patch}/patch_list" ] && ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "${zfs_inf}";
+			zfs)	echo
+				ebegin "${zfs_inf}"
+					make_patch "${Current_Patch}"
+				eend
 				;;
 		esac
 	else continue
