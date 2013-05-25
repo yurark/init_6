@@ -425,7 +425,7 @@ make_patch() {
 		get_or_bump "${patch}" > /dev/null 2>&1;
 
 		cp -r "${CSD}" "${CTD}";
-		cd "${CTD}"/releases/"${mageia_ver}"/PATCHES;
+		cd "${CTD}"/"${mageia_ver}"/PATCHES;
 
 		find . -name "*.patch" | xargs -i cp "{}" "${CWD}";
 
