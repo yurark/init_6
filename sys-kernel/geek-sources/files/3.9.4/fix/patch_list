@@ -25,3 +25,4 @@ linux-700-jmicron_1_0_8_5.patch
 linux-900-hide_tsc_error.patch
 linux-950-saa716x_PCIe_interface_chipset.patch
 linux-995-CX24120-13Z_frontend.patch
+linux-996-macmini2012-ethernet.patch
