@@ -66,6 +66,8 @@ geek-sources_init_variables() {
 # @USAGE:
 # @DESCRIPTION:
 USEKnown() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	local USE=$1
 	[ "${USE}" == "" ] && die "${RED}Feature not defined!${NORMAL}"
 
@@ -235,6 +237,7 @@ done
 # Note that this function should not be used in the global scope.
 in_iuse() {
 	debug-print-function ${FUNCNAME} "${@}"
+
 	[[ ${#} -eq 1 ]] || die "Invalid args to ${FUNCNAME}()"
 
 	local flag=${1}
@@ -250,6 +253,8 @@ in_iuse() {
 #
 # Note that this function should not be used in the global scope.
 use_if_iuse() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	in_iuse $1 || return 1
 	use $1
 }
@@ -258,6 +263,8 @@ use_if_iuse() {
 # @USAGE:
 # @DESCRIPTION:
 get_from_url() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	local url="$1"
 	local release="$2"
 	shift
@@ -269,6 +276,8 @@ get_from_url() {
 # @USAGE:
 # @DESCRIPTION:
 git_get_all_branches(){
+	debug-print-function ${FUNCNAME} "$@"
+
 	for branch in `git branch -a | grep remotes | grep -v HEAD | grep -v master`; do
 		git branch --track ${branch##*/} ${branch} > /dev/null 2>&1
 	done
@@ -278,6 +287,8 @@ git_get_all_branches(){
 # @USAGE:
 # @DESCRIPTION:
 get_or_bump() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	local patch=$1
 	local CSD="${GEEK_STORE_DIR}/${patch}";
 	shift
@@ -306,6 +317,8 @@ get_or_bump() {
 # @USAGE:
 # @DESCRIPTION:
 make_patch() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	local patch="$1"
 	local CSD="${GEEK_STORE_DIR}/${patch}";
 	local CWD="${T}/${patch}";
@@ -523,6 +536,8 @@ make_patch() {
 # @USAGE:
 # @DESCRIPTION:
 geek-sources_src_unpack() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	geek-sources_init_variables
 
 	for Current_Patch in $SKIP_KERNEL_PATCH_UPDATE; do
@@ -541,6 +556,8 @@ geek-sources_src_unpack() {
 # @USAGE:
 # @DESCRIPTION:
 geek-sources_src_prepare() { ### BRANCH APPLY ###
+	debug-print-function ${FUNCNAME} "$@"
+
 	local xUserOrder=""
 	local xDefOder=""
 	if [ -e "${cfg_file}" ] ; then
@@ -676,6 +693,8 @@ done;
 # @USAGE:
 # @DESCRIPTION:
 geek-sources_src_compile() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	linux-geek_src_compile
 }
 
@@ -683,6 +702,8 @@ geek-sources_src_compile() {
 # @USAGE:
 # @DESCRIPTION:
 geek-sources_src_install() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	linux-geek_src_install
 }
 
@@ -690,6 +711,8 @@ geek-sources_src_install() {
 # @USAGE:
 # @DESCRIPTION:
 geek-sources_pkg_postinst() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	linux-geek_pkg_postinst
 	einfo
 	einfo "${BLUE}Wiki:${NORMAL} ${RED}https://github.com/init6/init_6/wiki/geek-sources${NORMAL}"

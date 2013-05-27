@@ -16,13 +16,14 @@ user_ck_ver="${KMV}-ck1"
 user_grsec_ver="${PV}"
 #user_ice_ver="$KMV"
 user_mageia_ver="current"
+user_pax_ver="3.9.3-test7"
 user_pf_ver="3.9.3-pf"
-user_pax_ver="3.9.2-test6"
+user_reiser4_ver="3.9.2"
 #user_suse_ver="stable"
 user_uksm_ver="0.1.2.2"
 user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}.ge.1"
 
-SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice mageia pf pax suse symlink uksm zfs"
+SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice mageia pax pf reiser4 suse symlink uksm zfs"
 
 inherit geek-sources
 

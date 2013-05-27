@@ -18,14 +18,14 @@ user_grsec_ver="${PV}"
 user_lqx_ver="3.2.28-1"
 user_lqx_src="http://liquorix.net/sources/legacy/${user_lqx_ver}.patch.gz"
 user_mageia_ver="releases/3.2.9/2.mga2"
-user_pf_ver="3.2.7-pf"
 user_pax_ver="3.2.45-test106"
+user_pf_ver="3.2.7-pf"
 #user_suse_ver="stable"
 user_rt_ver="3.2.45-rt66"
 user_uksm_ver="0.1.2.2"
 user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}.ge.40"
 
-SUPPORTED_USES="aufs bfq -build ck gentoo grsec ice lqx mageia pf pax rt symlink uksm"
+SUPPORTED_USES="aufs bfq -build ck gentoo grsec ice lqx mageia pax pf rt symlink uksm"
 
 inherit geek-sources
 
