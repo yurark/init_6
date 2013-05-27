@@ -11,7 +11,7 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 user_bfq_ver="3.2.0-v6r1"
 #user_bld_ver="${KMV}-rc4"
 user_ck_ver="${KMV}-ck1"
-#user_fedora_ver="f19"
+user_fedora_ver="8959a0e95fa1ab409603d38059342e7a99668418" # 3.2
 #user_gentoo_ver="$KMV"
 user_grsec_ver="${PV}"
 #user_ice_ver="$KMV"
@@ -20,12 +20,12 @@ user_lqx_src="http://liquorix.net/sources/legacy/${user_lqx_ver}.patch.gz"
 user_mageia_ver="releases/3.2.9/2.mga2"
 user_pax_ver="3.2.45-test106"
 user_pf_ver="3.2.7-pf"
-#user_suse_ver="stable"
+user_suse_ver="2206a5c5b9aa64bd9a741830257f184818a0f6ee" # rpm-3.2.0-2
 user_rt_ver="3.2.45-rt66"
 user_uksm_ver="0.1.2.2"
 user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}.ge.40"
 
-SUPPORTED_USES="aufs bfq -build ck gentoo grsec ice lqx mageia pax pf rt symlink uksm"
+SUPPORTED_USES="aufs bfq -build ck fedora gentoo grsec ice lqx mageia pax pf rt suse symlink uksm"
 
 inherit geek-sources
 
