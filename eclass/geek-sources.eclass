@@ -283,6 +283,22 @@ git_get_all_branches(){
 	done
 }
 
+# @FUNCTION: git_checkout
+# @USAGE:
+# @DESCRIPTION:
+git_checkout(){
+	debug-print-function ${FUNCNAME} "$@"
+
+	local branch_name=${1:-master}
+
+	pushd "${EGIT_SOURCEDIR}" > /dev/null
+
+	debug-print "${FUNCNAME}: git checkout ${branch_name}"
+	git checkout ${branch_name}
+
+	popd > /dev/null
+}
+
 # @FUNCTION: get_or_bump
 # @USAGE:
 # @DESCRIPTION:
@@ -335,7 +351,7 @@ make_patch() {
 		dir=( "Documentation" "fs" "include" )
 		local dest="${CWD}"/aufs3-${aufs_ver}-`date +"%Y%m%d"`.patch;
 
-		git checkout origin/aufs"${aufs_ver}" > /dev/null 2>&1; git pull > /dev/null 2>&1;
+		git_checkout "origin/aufs${aufs_ver}" > /dev/null 2>&1; git pull > /dev/null 2>&1;
 
 		mkdir ../a ../b
 		cp -r {Documentation,fs,include} ../b
@@ -385,7 +401,7 @@ make_patch() {
 		cp -r "${CSD}" "${CTD}";
 		cd "${CTD}";
 
-		git checkout "${fedora_ver}" > /dev/null 2>&1; git pull > /dev/null 2>&1;
+		git_checkout "${fedora_ver}" > /dev/null 2>&1; git pull > /dev/null 2>&1;
 
 		ls -1 | grep ".patch" | xargs -I{} cp "{}" "${CWD}"
 
@@ -454,7 +470,7 @@ make_patch() {
 
 		cd "${CTD}";
 
-		git checkout "${suse_ver}" > /dev/null 2>&1; git pull > /dev/null 2>&1;
+		git_checkout "${suse_ver}" > /dev/null 2>&1; git pull > /dev/null 2>&1;
 
 		[ -e "patches.kernel.org" ] && rm -rf patches.kernel.org > /dev/null 2>&1
 		[ -e "patches.rpmify" ] && rm -rf patches.rpmify > /dev/null 2>&1
