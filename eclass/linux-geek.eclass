@@ -204,6 +204,8 @@ fi
 # @USAGE: ExtractApply "<patch>"
 # @DESCRIPTION: Extract patch from *.gz, *.bz, *.bz2, *.lrz, *.xz, *.zip, *.Z
 ExtractApply() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	local patch=$1
 	shift
 	case "$patch" in
@@ -227,6 +229,8 @@ ExtractApply() {
 # Test run patch with 'patch -p1 --dry-run'
 # All tests completed successfully? run ExtractApply
 Handler() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	local patch=$1
 	local patch_base_name=$(basename "$patch")
 	shift
@@ -273,6 +277,8 @@ Handler() {
 # @DESCRIPTION:
 # Main function
 linux-geek_ApplyPatch() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	local patch=$1
 	local msg=$2
 	shift
@@ -306,6 +312,8 @@ linux-geek_ApplyPatch() {
 # @DESCRIPTION:
 # Main function
 linux-geek_SmartApplyPatch() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	local patch=$1
 	local msg=$2
 	shift
@@ -339,6 +347,8 @@ linux-geek_SmartApplyPatch() {
 # @USAGE:
 # @DESCRIPTION:
 linux-geek_src_unpack() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	linux-geek_init_variables
 
 	if [ "${A}" != "" ]; then
@@ -374,6 +384,8 @@ linux-geek_src_unpack() {
 # @USAGE:
 # @DESCRIPTION:
 linux-geek_src_prepare() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	echo
 	ebegin "Set extraversion in Makefile" # manually set extraversion
 		sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile
@@ -433,6 +445,8 @@ linux-geek_src_prepare() {
 # @USAGE:
 # @DESCRIPTION:
 linux-geek_src_compile() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	if [[ $DEBLOB_AVAILABLE == 1 ]] && use deblob ; then
 		echo ">>> Running deblob script ..."
 		sh "${T}/${DEBLOB_A}" --force || \
@@ -444,6 +458,8 @@ linux-geek_src_compile() {
 # @USAGE:
 # @DESCRIPTION:
 linux-geek_src_install() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	# Disable the sandbox for this dir
 	addwrite "/boot"
 
@@ -585,6 +601,8 @@ linux-geek_src_install() {
 # @USAGE:
 # @DESCRIPTION:
 linux-geek_pkg_postinst() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	einfo " ${BLUE}If you are upgrading from a previous kernel, you may be interested${NORMAL}"
 	einfo " ${BLUE}in the following document:${NORMAL}"
 	einfo "   ${BLUE}- General upgrade guide:${NORMAL} ${RED}http://www.gentoo.org/doc/en/kernel-upgrade.xml${NORMAL}"
