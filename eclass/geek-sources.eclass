@@ -504,8 +504,8 @@ make_patch() {
 		cp -r "${CSD}" "${CTD}";
 		rm -rf "${CTD}"/{spl,zfs}/.git
 
-		addwrite /usr/src
-		unlink /usr/src/linux
+		addwrite "/usr/src/linux"
+		unlink "/usr/src/linux"
 		ln -s "${S}" /usr/src/linux
 
 		einfo "Integrate SPL"
@@ -539,7 +539,8 @@ make_patch() {
 		cd "${S}"
 		make mrproper > /dev/null 2>&1;
 
-		unlink /usr/src/linux
+		addwrite "/usr/src/linux"
+		unlink "/usr/src/linux"
 
 		mv "${CTD}" "${S}/patches/${patch}"
 	;;

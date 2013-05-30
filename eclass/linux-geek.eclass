@@ -480,6 +480,7 @@ linux-geek_src_install() {
 
 	if use symlink ; then
 		if [ -h "/usr/src/linux" ]; then
+			addwrite "/usr/src/linux"
 			unlink "/usr/src/linux"
 		elif [ -d "/usr/src/linux" ]; then
 			mv "/usr/src/linux" "/usr/src/linux-old"
