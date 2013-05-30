@@ -497,7 +497,7 @@ make_patch() {
 			amd64) export ARCH="x86_64";;
 			*) export ARCH="${ARCH}";;
 		esac
-		zcat /proc/config.gz > .config > /dev/null 2>&1 && yes "" | make oldconfig > /dev/null 2>&1 && make prepare > /dev/null 2>&1 && make scripts > /dev/null 2>&1;
+		`zcat /proc/config.gz > .config && yes "" | make oldconfig && make prepare && make scripts` > /dev/null 2>&1;
 
 		test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}";
 		get_or_bump "${patch}" > /dev/null 2>&1;
