@@ -504,8 +504,8 @@ make_patch() {
 		cp -r "${CSD}" "${CTD}";
 		rm -rf "${CTD}"/{spl,zfs}/.git
 
-		addwrite /usr/src
-		unlink /usr/src/linux
+		addwrite "/usr/src/linux"
+		unlink "/usr/src/linux"
 		ln -s "${S}" /usr/src/linux
 
 		einfo "Integrate SPL"
@@ -539,7 +539,8 @@ make_patch() {
 		cd "${S}"
 		make mrproper > /dev/null 2>&1;
 
-		unlink /usr/src/linux
+		addwrite "/usr/src/linux"
+		unlink "/usr/src/linux"
 
 		mv "${CTD}" "${S}/patches/${patch}"
 	;;
@@ -550,7 +551,7 @@ make_patch() {
 
 # @FUNCTION: src_unpack
 # @USAGE:
-# @DESCRIPTION:
+# @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-sources_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
 
@@ -559,7 +560,7 @@ geek-sources_src_unpack() {
 	for Current_Patch in $SKIP_KERNEL_PATCH_UPDATE; do
 		if use_if_iuse "${Current_Patch}" ; then
 		case "${Current_Patch}" in
-			*) SKIP_UPDATE="1" ;;
+			*) SKIP_UPDATE="1"; SKIP_SQUEUE="1" ;;
 		esac
 		else continue
 		fi;
@@ -570,7 +571,7 @@ geek-sources_src_unpack() {
 
 # @FUNCTION: src_prepare
 # @USAGE:
-# @DESCRIPTION:
+# @DESCRIPTION: Prepare source packages and do any necessary patching or fixes.
 geek-sources_src_prepare() { ### BRANCH APPLY ###
 	debug-print-function ${FUNCNAME} "$@"
 
@@ -707,7 +708,7 @@ done;
 
 # @FUNCTION: src_compile
 # @USAGE:
-# @DESCRIPTION:
+# @DESCRIPTION: Configure and build the package.
 geek-sources_src_compile() {
 	debug-print-function ${FUNCNAME} "$@"
 
@@ -716,7 +717,7 @@ geek-sources_src_compile() {
 
 # @FUNCTION: src_install
 # @USAGE:
-# @DESCRIPTION:
+# @DESCRIPTION: Install a package to ${D}
 geek-sources_src_install() {
 	debug-print-function ${FUNCNAME} "$@"
 
@@ -725,7 +726,7 @@ geek-sources_src_install() {
 
 # @FUNCTION: pkg_postinst
 # @USAGE:
-# @DESCRIPTION:
+# @DESCRIPTION: Called after image is installed to ${ROOT}
 geek-sources_pkg_postinst() {
 	debug-print-function ${FUNCNAME} "$@"
 
