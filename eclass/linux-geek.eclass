@@ -32,7 +32,7 @@
 # Bugs to sudormrfhalt@gmail.com
 #
 
-EXPORT_FUNCTIONS ApplyPatch SmartApplyPatch src_unpack src_prepare src_compile src_install pkg_postinst
+EXPORT_FUNCTIONS ApplyPatch SmartApplyPatch src_unpack get_config src_prepare src_compile src_install pkg_postinst
 
 # Color
 BR="\x1b[0;01m"
@@ -123,6 +123,8 @@ linux-geek_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${patch_cmd:="patch -p1 -s"}
+
+	: ${GEEK_STORE_DIR:="${PORTAGE_ACTUAL_DISTDIR-${DISTDIR}}/geek"}
 }
 
 case "$PR" in
@@ -343,9 +345,36 @@ linux-geek_SmartApplyPatch() {
 	esac
 }
 
-# @FUNCTION: src_unpack
+# @FUNCTION: gen_squeue
 # @USAGE:
 # @DESCRIPTION:
+linux-geek_gen_squeue() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	local CSD="${GEEK_STORE_DIR}/squeue";
+	local CWD="${S}/patches/squeue";
+
+	if [ -d ${CSD} ] ; then
+		cd ${CSD}
+		git pull > /dev/null 2>&1;
+		cd "${S}"
+	else
+		git clone "git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git" ${CSD} > /dev/null 2>&1;
+	fi
+
+	test -d "${S}/patches" >/dev/null 2>&1 || mkdir -p "${S}/patches";
+
+	if [ -d ${CSD}/queue-${KMV} ] ; then
+		cp -r "${CSD}/queue-${KMV}" "${CWD}"
+		mv "${CWD}/series" "${CWD}/patch_list"
+	else
+		ewarn "There is no stable-queue patch-set this time"
+	fi
+}
+
+# @FUNCTION: src_unpack
+# @USAGE:
+# @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 linux-geek_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
 
@@ -362,13 +391,13 @@ linux-geek_src_unpack() {
 	case "$VERSION" in
 		2) continue
 	#	if  [ "${SUBLEVEL}" != "0" ]; then
-	#		ApplyPatch "${DISTDIR}/${pname}" "Update to latest upstream ..."
+	#		ApplyPatch "${DISTDIR}/${pname}" "${YELLOW}Update to latest upstream ...${NORMAL}"
 	#	fi
 		;;
 		3) if [ "${SKIP_UPDATE}" = "1" ] || [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
 				ewarn "${RED}Skipping update to latest upstream ...${NORMAL}"
 			else
-				ApplyPatch "${DISTDIR}/${pname}" "Update to latest upstream ..."
+				ApplyPatch "${DISTDIR}/${pname}" "${YELLOW}Update to latest upstream ...${NORMAL}"
 		fi
 		;;
 	esac
@@ -380,16 +409,11 @@ linux-geek_src_unpack() {
 	fi
 }
 
-# @FUNCTION: src_prepare
+# @FUNCTION: get_config
 # @USAGE:
 # @DESCRIPTION:
-linux-geek_src_prepare() {
+linux-geek_get_config() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	echo
-	ebegin "Set extraversion in Makefile" # manually set extraversion
-		sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile
-	eend
 
 	ebegin "Searching for best availiable kernel config"
 		if [ -e "/proc/config.gz" ]; then test -d .config >/dev/null 2>&1 || zcat /proc/config.gz > .config;
@@ -406,6 +430,27 @@ linux-geek_src_prepare() {
 			einfo " ${BLUE}No suitable custom config found, defaulting to defconfig${NORMAL}"
 		fi
 	eend $?
+}
+
+# @FUNCTION: src_prepare
+# @USAGE:
+# @DESCRIPTION: Prepare source packages and do any necessary patching or fixes.
+linux-geek_src_prepare() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	if [ "${SKIP_SQUEUE}" = "1" ] ; then
+			ewarn "${RED}Skipping update to latest stable queue ...${NORMAL}"
+		else
+			linux-geek_gen_squeue
+			ApplyPatch "${S}/patches/squeue/patch_list" "${YELLOW}Update to latest stable queue ...${NORMAL}"
+	fi
+
+	echo
+	ebegin "Set extraversion in Makefile" # manually set extraversion
+		sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile
+	eend
+
+	linux-geek_get_config
 
 	ebegin "Cleanup backups after patching"
 		find '(' -name '*~' -o -name '*.orig' -o -name '.*.orig' -o -name '.gitignore'  -o -name '.*.old' ')' -print0 | xargs -0 -r -l512 rm -f
@@ -443,7 +488,7 @@ linux-geek_src_prepare() {
 
 # @FUNCTION: src_compile
 # @USAGE:
-# @DESCRIPTION:
+# @DESCRIPTION: Configure and build the package.
 linux-geek_src_compile() {
 	debug-print-function ${FUNCNAME} "$@"
 
@@ -456,7 +501,7 @@ linux-geek_src_compile() {
 
 # @FUNCTION: src_install
 # @USAGE:
-# @DESCRIPTION:
+# @DESCRIPTION: Install a package to ${D}
 linux-geek_src_install() {
 	debug-print-function ${FUNCNAME} "$@"
 
@@ -520,27 +565,9 @@ linux-geek_src_install() {
 						mount /boot
 					eend $?
 				fi
-				ebegin " No kernel config found, searching for best availiable config"
-				if [ -e "/proc/config.gz" ]; then test -d .config >/dev/null 2>&1 || zcat /proc/config.gz > .config;
-					true | make oldconfig 2>/dev/null \
-					einfo " ${BLUE}Foung config from running kernel, updating to match target kernel${NORMAL}"
-				elif [ -e "/boot/config-${FULLVER}" ]; then test -d .config >/dev/null 2>&1 || cat "/boot/config-${FULLVER}" > .config
-					true | make oldconfig 2>/dev/null \
-					einfo " ${BLUE}Found${NORMAL} ${RED}/boot/config-${FULLVER}${NORMAL}"
-				elif [ -e "/etc/portage/savedconfig/${CATEGORY}/${PN}/config" ]; then test -d .config >/dev/null 2>&1 || cat /etc/portage/savedconfig/${CATEGORY}/${PN}/config > .config
-					true | make oldconfig 2>/dev/null \
-					einfo " ${BLUE}Found${NORMAL} ${RED}/etc/portage/savedconfig/${CATEGORY}/${PN}/config${NORMAL}"
-				elif [ -e "/usr/src/linux/.config" ]; then test -d .config >/dev/null 2>&1 || cat /usr/src/linux/.config > .config
-					true | make oldconfig 2>/dev/null \
-					einfo " ${BLUE}Found${NORMAL} ${RED}/usr/src/linux/.config${NORMAL}"
-				elif [ -e "/usr/src/linux-${KV_FULL}/.config" ]; then test -d .config >/dev/null 2>&1 || cat /usr/src/linux-${KV_FULL}/.config > .config
-					true | make oldconfig 2>/dev/null \
-					einfo " ${BLUE}Found${NORMAL} ${RED}/usr/src/linux-${KV_FULL}/.config${NORMAL}"
-				else test -d .config >/dev/null 2>&1 || cp arch/${ARCH}/defconfig .config \
-					true | make oldconfig 2>/dev/null \
-					einfo " ${BLUE}No suitable custom config found, defaulting to defconfig${NORMAL}"
-				fi
-				eend $
+
+				linux-geek_get_config
+
 			fi
 
 			if [[ ${ISNEWER} != "" ]]; then
@@ -600,7 +627,7 @@ linux-geek_src_install() {
 
 # @FUNCTION: pkg_postinst
 # @USAGE:
-# @DESCRIPTION:
+# @DESCRIPTION: Called after image is installed to ${ROOT}
 linux-geek_pkg_postinst() {
 	debug-print-function ${FUNCNAME} "$@"
 
