@@ -52,9 +52,9 @@ geek-sources_init_variables() {
 	: ${GEEK_STORE_DIR:="${PORTAGE_ACTUAL_DISTDIR-${DISTDIR}}/geek"}
 
 	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx pf"}
-	: ${patch_user_dir="/etc/portage/patches"}
-	: ${cfg_file="/etc/portage/kernel.conf"}
-	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER="pax lqx pf bfq ck gentoo grsec ice reiser4 rt bld uksm aufs mageia fedora suse zfs branding fix upatch"}
+	: ${patch_user_dir:="/etc/portage/patches"}
+	: ${cfg_file:="/etc/portage/kernel.conf"}
+	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="pax lqx pf bfq ck gentoo grsec ice reiser4 rt bld uksm aufs mageia fedora suse zfs branding fix upatch"}
 
 	# Disable the sandbox for this dir
 	addwrite "${GEEK_STORE_DIR}"
