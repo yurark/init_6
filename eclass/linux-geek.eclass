@@ -122,9 +122,11 @@ IUSE="symlink build"
 linux-geek_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${patch_cmd:="patch -p1 -s"}
-
+	: ${patch_cmd:="patch -p1"}
 	: ${GEEK_STORE_DIR:="${PORTAGE_ACTUAL_DISTDIR-${DISTDIR}}/geek"}
+	: ${cfg_file:="/etc/portage/kernel.conf"}
+	local crap_patch_cfg=$(source $cfg_file 2>/dev/null ; echo ${crap_patch})
+	: ${crap_patch:=${crap_patch_cfg:-ignore}} # crap_patch=ignore/will_not_pass
 }
 
 case "$PR" in
@@ -221,6 +223,32 @@ ExtractApply() {
 	esac
 }
 
+# iternal function
+#
+# @FUNCTION: find_crap
+# @USAGE:
+# @DESCRIPTION: Find *.orig or *.rej files
+find_crap() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	if [ $(find "${S}" \( -name \*.orig -o -name \*.rej \) | wc -c) -eq 0 ] ; then
+		return 1
+	else
+		return 0
+	fi;
+}
+
+# iternal function
+#
+# @FUNCTION: rm_crap
+# @USAGE:
+# @DESCRIPTION: Remove *.orig or *.rej files
+rm_crap() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	find "${S}" \( -name \*~ -o -name \.gitignore -o -name \*.orig -o -name \.*.orig -o -name \*.rej -o -name \*.old -o -name \.*.old \) -delete
+}
+
 # internal function
 #
 # @FUNCTION: Handler
@@ -244,7 +272,7 @@ Handler() {
 		if [ -s "$patch" ]; then # !=0
 			patch_cmd="patch -p1 --dry-run" # test argument to patch
 			if ExtractApply "$patch" &>/dev/null; then
-				patch_cmd="patch -p1 -s"
+				patch_cmd="patch -p1"
 				ExtractApply "$patch" &>/dev/null
 			else
 				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
@@ -259,7 +287,7 @@ Handler() {
 		if [ "$C" -gt 8 ]; then # 8 lines
 			patch_cmd="patch -p1 --dry-run" # test argument to patch
 			if ExtractApply "$patch" &>/dev/null; then
-				patch_cmd="patch -p1 -s"
+				patch_cmd="patch -p1"
 				ExtractApply "$patch" &>/dev/null
 			else
 				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
@@ -268,6 +296,16 @@ Handler() {
 		else
 			ewarn "${BLUE}Skipping empty patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
 		fi
+	;;
+	esac
+
+	case "$crap_patch" in
+	will_not_pass) find_crap &&
+		ebegin "${BLUE}Reversing crap patch <--${NORMAL} ${RED}$patch_base_name${NORMAL}"
+			patch_cmd="patch -p1 -R"; # reverse argument to patch
+			ExtractApply "$patch" &>/dev/null;
+			rm_crap;
+		eend
 	;;
 	esac
 }
@@ -380,6 +418,8 @@ linux-geek_src_unpack() {
 
 	linux-geek_init_variables
 
+	einfo "${BLUE}Crap patch -->${NORMAL} ${RED}$crap_patch${NORMAL}"
+
 	if [ "${A}" != "" ]; then
 		ebegin "Extract the sources"
 			tar xvJf "${DISTDIR}/${kname}" &>/dev/null
@@ -397,7 +437,10 @@ linux-geek_src_unpack() {
 		3) if [ "${SKIP_UPDATE}" = "1" ] || [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
 				ewarn "${RED}Skipping update to latest upstream ...${NORMAL}"
 			else
+				local old_crap_patch="${crap_patch}"
+				crap_patch="ignore"
 				ApplyPatch "${DISTDIR}/${pname}" "${YELLOW}Update to latest upstream ...${NORMAL}"
+				crap_patch="${old_crap_patch}"
 		fi
 		;;
 	esac
@@ -453,7 +496,7 @@ linux-geek_src_prepare() {
 	linux-geek_get_config
 
 	ebegin "Cleanup backups after patching"
-		find '(' -name '*~' -o -name '*.orig' -o -name '.*.orig' -o -name '.gitignore'  -o -name '.*.old' ')' -print0 | xargs -0 -r -l512 rm -f
+		rm_crap
 	eend
 
 	ebegin "Remove unneeded architectures"
