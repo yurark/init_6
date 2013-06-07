@@ -127,6 +127,7 @@ linux-geek_init_variables() {
 	: ${cfg_file:="/etc/portage/kernel.conf"}
 	local crap_patch_cfg=$(source $cfg_file 2>/dev/null ; echo ${crap_patch})
 	: ${crap_patch:=${crap_patch_cfg:-ignore}} # crap_patch=ignore/will_not_pass
+	: ${crap:="0"}
 }
 
 case "$PR" in
@@ -232,9 +233,9 @@ find_crap() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	if [ $(find "${S}" \( -name \*.orig -o -name \*.rej \) | wc -c) -eq 0 ] ; then
-		return 1
+		crap="0"
 	else
-		return 0
+		crap="1"
 	fi;
 }
 
@@ -300,12 +301,15 @@ Handler() {
 	esac
 
 	case "$crap_patch" in
-	will_not_pass) find_crap &&
+	will_not_pass) find_crap;
+	if [[ "${crap}" == 1 ]] ; then
 		ebegin "${BLUE}Reversing crap patch <--${NORMAL} ${RED}$patch_base_name${NORMAL}"
 			patch_cmd="patch -p1 -R"; # reverse argument to patch
 			ExtractApply "$patch" &>/dev/null;
 			rm_crap;
 		eend
+	fi;
+
 	;;
 	esac
 }
@@ -437,10 +441,7 @@ linux-geek_src_unpack() {
 		3) if [ "${SKIP_UPDATE}" = "1" ] || [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
 				ewarn "${RED}Skipping update to latest upstream ...${NORMAL}"
 			else
-				local old_crap_patch="${crap_patch}"
-				crap_patch="ignore"
 				ApplyPatch "${DISTDIR}/${pname}" "${YELLOW}Update to latest upstream ...${NORMAL}"
-				crap_patch="${old_crap_patch}"
 		fi
 		;;
 	esac
