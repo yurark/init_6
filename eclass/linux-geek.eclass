@@ -122,12 +122,16 @@ IUSE="symlink build"
 linux-geek_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${patch_cmd:="patch -p1"}
 	: ${GEEK_STORE_DIR:="${PORTAGE_ACTUAL_DISTDIR-${DISTDIR}}/geek"}
 	: ${cfg_file:="/etc/portage/kernel.conf"}
 	local crap_patch_cfg=$(source $cfg_file 2>/dev/null ; echo ${crap_patch})
 	: ${crap_patch:=${crap_patch_cfg:-ignore}} # crap_patch=ignore/will_not_pass
 	: ${crap:="0"}
+
+	case "$crap_patch" in
+	ignore) : ${patch_cmd:="patch -p1 -g1 --no-backup-if-mismatch"} ;;
+	will_not_pass) : ${patch_cmd:="patch -p1 -g1"} ;;
+	esac
 }
 
 case "$PR" in
@@ -271,9 +275,15 @@ Handler() {
 	case "$patch" in
 	*.gz|*.bz|*.bz2|*.lrz|*.xz|*.zip|*.Z)
 		if [ -s "$patch" ]; then # !=0
-			patch_cmd="patch -p1 --dry-run" # test argument to patch
+			case "$crap_patch" in # test argument to patch
+			ignore) patch_cmd="patch -p1 -g1 --dry-run --no-backup-if-mismatch" ;;
+			will_not_pass) patch_cmd="patch -p1 -g1 --dry-run" ;;
+			esac
 			if ExtractApply "$patch" &>/dev/null; then
-				patch_cmd="patch -p1"
+				case "$crap_patch" in
+				ignore) patch_cmd="patch -p1 -g1 --no-backup-if-mismatch" ;;
+				will_not_pass) patch_cmd="patch -p1 -g1" ;;
+				esac
 				ExtractApply "$patch" &>/dev/null
 			else
 				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
@@ -286,9 +296,15 @@ Handler() {
 	*)
 		local C=$(wc -l "$patch" | awk '{print $1}')
 		if [ "$C" -gt 8 ]; then # 8 lines
-			patch_cmd="patch -p1 --dry-run" # test argument to patch
+			case "$crap_patch" in # test argument to patch
+			ignore) patch_cmd="patch -p1 -g1 --dry-run --no-backup-if-mismatch" ;;
+			will_not_pass) patch_cmd="patch -p1 -g1 --dry-run" ;;
+			esac
 			if ExtractApply "$patch" &>/dev/null; then
-				patch_cmd="patch -p1"
+				case "$crap_patch" in
+				ignore) patch_cmd="patch -p1 -g1 --no-backup-if-mismatch" ;;
+				will_not_pass) patch_cmd="patch -p1 -g1" ;;
+				esac
 				ExtractApply "$patch" &>/dev/null
 			else
 				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
@@ -304,7 +320,7 @@ Handler() {
 	will_not_pass) find_crap;
 	if [[ "${crap}" == 1 ]] ; then
 		ebegin "${BLUE}Reversing crap patch <--${NORMAL} ${RED}$patch_base_name${NORMAL}"
-			patch_cmd="patch -p1 -R"; # reverse argument to patch
+			patch_cmd="patch -p1 -g1 -R"; # reverse argument to patch
 			ExtractApply "$patch" &>/dev/null;
 			rm_crap;
 		eend
@@ -377,7 +393,7 @@ linux-geek_SmartApplyPatch() {
 			local vars=($(grep -v '^#' ${patch}));
 			for var in $(seq $((${#vars[@]} - 1)) -1 0); do
 				ebegin "${BLUE}Reversing patch <--${NORMAL} ${RED}${vars[$var]}${NORMAL}"
-					patch_cmd="patch -p1 -R" # reverse argument to patch
+					patch_cmd="patch -p1 -g1 -R" # reverse argument to patch
 					ExtractApply "${patch_dir_name}/${vars[$var]}" &>/dev/null
 				eend $?
 			done
