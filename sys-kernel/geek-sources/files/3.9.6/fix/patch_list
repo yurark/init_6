@@ -1,5 +1,5 @@
 change-default-console-loglevel.patch
-kernel-39-gcc48-1.patch.gz
+kernel-39-gcc48-2.patch.gz
 
 linux-003-no_dev_console.patch
 linux-004_lower_undefined_mode_timeout.patch
@@ -24,6 +24,7 @@ linux-221-ngene-octopus.patch
 linux-222-stb0899_signal_quality.patch
 linux-223-Fix-video-artifacts-with-tt-3600-s2-usb.patch
 linux-700-jmicron_1_0_8_5.patch
+linux-701-fix-r8169.patch
 linux-900-hide_tsc_error.patch
 linux-950-saa716x_PCIe_interface_chipset.patch
 linux-995-CX24120-13Z_frontend.patch
