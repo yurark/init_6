@@ -5,4 +5,4 @@
 =sys-kernel/vanilla-sources-9999
 
 # Kernel mainline 2013-06-09
-=sys-kernel/geek-sources-3.10-r5
+=sys-kernel/geek-sources-3.10-r6
