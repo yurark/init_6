@@ -91,7 +91,7 @@ USEKnown() {
 			bld_def_src="http://bld.googlecode.com/files/bld-${bld_ver/KMV/$KMV}.tar.bz2"
 			bld_src=${user_bld_src:-$bld_def_src}
 			bld_url="http://code.google.com/p/bld"
-			bld_url="${YELLOW}Alternate CPU load distribution technique for Linux kernel scheduler - ${bld_url}${NORMAL}"
+			bld_inf="${YELLOW}Alternate CPU load distribution technique for Linux kernel scheduler - ${bld_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${bld_url}"
 			SRC_URI="${SRC_URI}
 				bld?		( ${bld_src} )"

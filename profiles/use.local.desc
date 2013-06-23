@@ -1,3 +1,12 @@
+# Copyright 1999-2013 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+# This file contains descriptions of local USE flags, and the ebuilds which
+# contain them.
+
+# Keep it sorted.
+
 sys-kernel/geek-sources:aufs - AnotherUnionFS
 sys-kernel/geek-sources:bfq - Budget Fair Queueing Budget I/O Scheduler
 sys-kernel/geek-sources:bld - Alternate CPU load distribution technique for Linux kernel scheduler
