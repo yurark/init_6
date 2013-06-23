@@ -38,8 +38,6 @@ EXPORT_FUNCTIONS src_unpack src_prepare src_compile src_install pkg_postinst
 
 KNOWN_USES="aufs bfq bld branding build ck deblob fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zfs";
 
-SLOT="${PV:-${KMV}/-${VERSION}}"
-
 # @FUNCTION: geek-sources_init_variables
 # @INTERNAL
 # @DESCRIPTION:
@@ -139,7 +137,7 @@ USEKnown() {
 			HOMEPAGE="${HOMEPAGE} ${ice_url}"
 			RDEPEND="${RDEPEND}
 				ice?	( >=sys-apps/tuxonice-userui-1.0
-						( || ( >=sys-power/hibernate-script-2.0 sys-power/pm-utils ) ) )"
+						|| ( >=sys-power/hibernate-script-2.0 sys-power/pm-utils ) )"
 			;;
 		lqx)	lqx_ver=${user_lqx_ver:-$KMV}
 			lqx_def_src="http://liquorix.net/sources/${lqx_ver/KMV/$KMV}.patch.gz"
@@ -185,7 +183,7 @@ USEKnown() {
 				reiser4?	( ${reiser4_src} )"
 			;;
 		rt)	rt_ver=${user_rt_ver:-$KMV}
-			rt_def_src="http://www.kernel.org/pub/linux/kernel/projects/rt/${KMV}/patch-${rt_ver/KMV/$KMV}.patch.xz"
+			rt_def_src="mirror://kernel/linux/kernel/projects/rt/${KMV}/patch-${rt_ver/KMV/$KMV}.patch.xz"
 			rt_src=${user_rt_src:-$rt_def_src}
 			rt_url="http://www.kernel.org/pub/linux/kernel/projects/rt"
 			rt_inf="${YELLOW}Ingo Molnar"\'"s realtime preempt patches - ${rt_url}${NORMAL}"
@@ -218,8 +216,8 @@ USEKnown() {
 			zfs_inf="${YELLOW}Native ZFS on Linux - ${zfs_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${zfs_url}"
 			LICENSE="${LICENSE} GPL-3"
-			RDEPEND="${RDEPEND}
-				zfs?	( sys-fs/zfs[kernel-builtin] )"
+			PDEPEND="${PDEPEND}
+				zfs?	( sys-fs/zfs[kernel-builtin(+)?] )"
 			;;
 	esac
 }
