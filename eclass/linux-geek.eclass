@@ -103,7 +103,7 @@ KMV="${1}.${2}"
 if [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
 	PV="${KMV}" # default PV=3.4.0 new PV=3.4
 	SKIP_UPDATE=1 # Skip update to latest upstream
-fi;
+fi
 
 # ebuild default values setup settings
 DEFEXTRAVERSION="-geek"
@@ -240,7 +240,7 @@ find_crap() {
 		crap="0"
 	else
 		crap="1"
-	fi;
+	fi
 }
 
 # iternal function
@@ -317,14 +317,14 @@ Handler() {
 	esac
 
 	case "$crap_patch" in
-	will_not_pass) find_crap;
+	will_not_pass) find_crap
 	if [[ "${crap}" == 1 ]] ; then
 		ebegin "${BLUE}Reversing crap patch <--${NORMAL} ${RED}$patch_base_name${NORMAL}"
 			patch_cmd="patch -p1 -g1 -R"; # reverse argument to patch
-			ExtractApply "$patch" &>/dev/null;
-			rm_crap;
+			ExtractApply "$patch" &>/dev/null
+			rm_crap
 		eend
-	fi;
+	fi
 
 	;;
 	esac
@@ -332,8 +332,8 @@ Handler() {
 
 # @FUNCTION: ApplyPatch
 # @USAGE:
-# ApplyPatch "${FILESDIR}/${PVR}/patch_list" "Patch set description";
-# ApplyPatch "${FILESDIR}/<patch>" "Patch description";
+# ApplyPatch "${FILESDIR}/${PVR}/patch_list" "Patch set description"
+# ApplyPatch "${FILESDIR}/<patch>" "Patch description"
 # @DESCRIPTION:
 # Main function
 linux-geek_ApplyPatch() {
@@ -354,13 +354,13 @@ linux-geek_ApplyPatch() {
 			# skip comments
 			[[ $line =~ ^\ {0,}# ]] && continue
 			ebegin "Applying $line"
-				Handler "$patch_dir_name/$line";
+				Handler "$patch_dir_name/$line"
 			eend $?
 		done < "$patch"
 	;;
 	*) # else is patch
 		ebegin "Applying $patch_base_name"
-			Handler "$patch";
+			Handler "$patch"
 		eend $?
 	;;
 	esac
@@ -368,7 +368,7 @@ linux-geek_ApplyPatch() {
 
 # @FUNCTION: SmartApplyPatch
 # @USAGE:
-# SmartApplyPatch "${FILESDIR}/${PVR}/spatch_list" "Patch set description";
+# SmartApplyPatch "${FILESDIR}/${PVR}/spatch_list" "Patch set description"
 # @DESCRIPTION:
 # Main function
 linux-geek_SmartApplyPatch() {
@@ -390,14 +390,14 @@ linux-geek_SmartApplyPatch() {
 			eend
 		done
 		if [ "${no_luck}" = "1" ]; then
-			local vars=($(grep -v '^#' ${patch}));
+			local vars=($(grep -v '^#' ${patch}))
 			for var in $(seq $((${#vars[@]} - 1)) -1 0); do
 				ebegin "${BLUE}Reversing patch <--${NORMAL} ${RED}${vars[$var]}${NORMAL}"
 					patch_cmd="patch -p1 -g1 -R" # reverse argument to patch
 					ExtractApply "${patch_dir_name}/${vars[$var]}" &>/dev/null
 				eend $?
 			done
-		fi;
+		fi
 	;;
 	*) continue ;;
 	esac
@@ -409,22 +409,22 @@ linux-geek_SmartApplyPatch() {
 linux-geek_gen_squeue() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	local CSD="${GEEK_STORE_DIR}/squeue";
-	local CWD="${S}/patches/squeue";
+	local CSD="${GEEK_STORE_DIR}/squeue"
+	local CWD="${S}/patches/squeue"
 
 	if [ -d ${CSD} ] ; then
-		cd ${CSD}
-		git pull > /dev/null 2>&1;
-		cd "${S}"
+		cd ${CSD} || die "${RED}cd ${CSD} failed${NORMAL}"
+		git pull > /dev/null 2>&1
+		cd "${S}" || die "${RED}cd ${S} failed${NORMAL}"
 	else
-		git clone "git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git" ${CSD} > /dev/null 2>&1;
+		git clone "git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git" ${CSD} > /dev/null 2>&1
 	fi
 
-	test -d "${S}/patches" >/dev/null 2>&1 || mkdir -p "${S}/patches";
+	test -d "${S}/patches" >/dev/null 2>&1 || mkdir -p "${S}/patches"
 
 	if [ -d ${CSD}/queue-${KMV} ] ; then
-		cp -r "${CSD}/queue-${KMV}" "${CWD}"
-		mv "${CWD}/series" "${CWD}/patch_list"
+		cp -r "${CSD}/queue-${KMV}" "${CWD}" || die "${RED}cp -r ${CSD}/queue-${KMV} ${CWD} failed${NORMAL}"
+		mv "${CWD}/series" "${CWD}/patch_list" || die "${RED}mv ${CWD}/series ${CWD}/patch_list failed${NORMAL}"
 	else
 		ewarn "There is no stable-queue patch-set this time"
 	fi
@@ -444,10 +444,10 @@ linux-geek_src_unpack() {
 		ebegin "Extract the sources"
 			tar xvJf "${DISTDIR}/${kname}" &>/dev/null
 		eend $?
-		cd "${WORKDIR}"
-		mv "linux-${kversion}" "${S}"
+		cd "${WORKDIR}" || die "${RED}cd ${WORKDIR} failed${NORMAL}"
+		mv "linux-${kversion}" "${S}" || die "${RED}mv linux-${kversion} ${S} failed${NORMAL}"
 	fi
-	cd "${S}"
+	cd "${S}" || die "${RED}cd ${S} failed${NORMAL}"
 	case "$VERSION" in
 		2) continue
 	#	if  [ "${SUBLEVEL}" != "0" ]; then
@@ -476,7 +476,7 @@ linux-geek_get_config() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ebegin "Searching for best availiable kernel config"
-		if [ -e "/proc/config.gz" ]; then test -d .config >/dev/null 2>&1 || zcat /proc/config.gz > .config;
+		if [ -e "/proc/config.gz" ]; then test -d .config >/dev/null 2>&1 || zcat /proc/config.gz > .config
 			einfo " ${BLUE}Foung config from running kernel, updating to match target kernel${NORMAL}"
 		elif [ -e "/boot/config-${FULLVER}" ]; then test -d .config >/dev/null 2>&1 || cat "/boot/config-${FULLVER}" > .config
 			einfo " ${BLUE}Found${NORMAL} ${RED}/boot/config-${FULLVER}${NORMAL}"
@@ -530,7 +530,7 @@ linux-geek_src_prepare() {
 		chmod +x "${WORKDIR}"/linux-"${KV_FULL}"/usr/gen_init_cpio "${WORKDIR}"/linux-"${KV_FULL}"/scripts/gen_initramfs_list.sh > /dev/null 2>&1
 	eend
 
-	cd "${WORKDIR}"/linux-"${KV_FULL}"
+	cd "${WORKDIR}"/linux-"${KV_FULL}" || die "${RED}cd ${WORKDIR}/linux-${KV_FULL} failed${NORMAL}"
 	local GENTOOARCH="${ARCH}"
 	unset ARCH
 	ebegin "Running ${RED}make oldconfig${NORMAL}"
@@ -577,18 +577,18 @@ linux-geek_src_install() {
 		rm -f "${version_h}"
 	fi
 
-	cd "${S}"
+	cd "${S}" || die "${RED}cd ${S} failed${NORMAL}"
 	dodir /usr/src
 	echo ">>> Copying sources ..."
 
-	mv ${WORKDIR}/linux* "${D}"/usr/src;
+	mv ${WORKDIR}/linux* "${D}"/usr/src || die "${RED}mv ${WORKDIR}/linux* ${D}/usr/src failed${NORMAL}"
 
 	if use symlink ; then
 		if [ -h "/usr/src/linux" ]; then
 			addwrite "/usr/src/linux"
-			unlink "/usr/src/linux"
+			unlink "/usr/src/linux" || die "${RED}unlink /usr/src/linux failed${NORMAL}"
 		elif [ -d "/usr/src/linux" ]; then
-			mv "/usr/src/linux" "/usr/src/linux-old"
+			mv "/usr/src/linux" "/usr/src/linux-old" || die "${RED}mv /usr/src/linux /usr/src/linux-old failed${NORMAL}"
 		fi
 		dosym linux-${KV_FULL} \
 			"/usr/src/linux" ||
@@ -663,10 +663,10 @@ linux-geek_src_install() {
 				fi
 				ebegin " Editing kernel entry in GRUB"
 					if [[ -e "/etc/grub.d/10_linux" ]]; then
-						grub2-mkconfig -o /boot/grub2/grub.cfg;
+						grub2-mkconfig -o /boot/grub2/grub.cfg
 					elif [[ -e "/etc/boot.conf" ]]; then
-						boot-update;
-					fi;
+						boot-update
+					fi
 				eend $?
 			eend $?
 
