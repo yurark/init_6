@@ -110,7 +110,7 @@ DEFEXTRAVERSION="-geek"
 EXTRAVERSION=${EXTRAVERSION:-$DEFEXTRAVERSION}
 KV_FULL="${PVR}${EXTRAVERSION}"
 S="${WORKDIR}"/linux-"${KV_FULL}"
-SLOT="${PV:-${KMV}/-${VERSION}}"
+SLOT=${SLOT:-${KMV}}
 IUSE="symlink build"
 
 # @FUNCTION: linux-geek_init_variables
@@ -137,11 +137,11 @@ linux-geek_init_variables() {
 case "$PR" in
 	r0)	case "$VERSION" in
 		2)	extension="bz2"
-			kurl="http://www.kernel.org/pub/linux/kernel/v${KMV}"
+			kurl="mirror://kernel/linux/kernel/v${KMV}"
 			kversion="${PV}"
 		;;
 		3)	extension="xz"
-			kurl="http://www.kernel.org/pub/linux/kernel/v${VERSION}.0"
+			kurl="mirror://kernel/linux/kernel/v${VERSION}.0"
 			kversion="${KMV}"
 			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
 				pversion="${PV}"
@@ -152,7 +152,7 @@ case "$PR" in
 		esac
 	;;
 	*)	extension="xz"
-		kurl="http://www.kernel.org/pub/linux/kernel/v${VERSION}.0/testing"
+		kurl="mirror://kernel/linux/kernel/v${VERSION}.0/testing"
 		kversion="${VERSION}.$((${PATCHLEVEL} - 1))"
 		if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
 			pversion="${PVR//r/rc}"
