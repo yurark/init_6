@@ -1,0 +1,9 @@
+amd64           init6/default/linux/amd64			stable
+amd64           init6/default/linux/amd64/bleeding_edge		dev
+amd64           init6/hardened/linux/amd64			stable
+amd64           init6/hardened/linux/amd64/bleeding_edge	dev
+
+x86             init6/default/linux/x86				stable
+x86             init6/default/linux/x86/bleeding_edge		dev
+x86             init6/hardened/linux/x86			stable
+x86             init6/hardened/linux/x86/bleeding_edge		dev
