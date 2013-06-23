@@ -29,4 +29,7 @@
     <flag name='uksm'>Use Ultra Kernel Samepage Merging patches.</flag>
     <flag name='zfs'>The native Linux kernel port of the ZFS filesystem.</flag>
   </use>
+  <upstream>
+    <remote-id type="cpe">cpe:/o:linux:linux_kernel</remote-id>
+  </upstream>
 </pkgmetadata>
