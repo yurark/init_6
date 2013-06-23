@@ -217,7 +217,7 @@ USEKnown() {
 			HOMEPAGE="${HOMEPAGE} ${zfs_url}"
 			LICENSE="${LICENSE} GPL-3"
 			PDEPEND="${PDEPEND}
-				zfs?	( sys-fs/zfs[kernel-builtin(+)?] )"
+				zfs?	( sys-fs/zfs[kernel-builtin(+)] )"
 			;;
 	esac
 }
