@@ -315,14 +315,14 @@ get_or_bump() {
 		fi
 	else
 		case "${patch}" in
-		aufs)	git clone "${aufs_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches ;;
-		fedora)	git clone "${fedora_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches ;;
+		aufs)	git clone "${aufs_src}" "${CSD}" > /dev/null 2>&1 cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}" git_get_all_branches ;;
+		fedora)	git clone "${fedora_src}" "${CSD}" > /dev/null 2>&1 cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}" git_get_all_branches ;;
 		gentoo)	svn co "${gentoo_src}" "${CSD}" > /dev/null 2>&1;;
-		grsec)	git clone "${grsec_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches ;;
+		grsec)	git clone "${grsec_src}" "${CSD}" > /dev/null 2>&1 cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}" git_get_all_branches ;;
 		mageia)	svn co "${mageia_src}" "${CSD}" > /dev/null 2>&1;;
-		suse)	git clone "${suse_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches ;;
-		zfs)	git clone "${spl_src}" "${CSD}/spl" > /dev/null 2>&1; cd "${CSD}/spl" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches ;
-			git clone "${zfs_src}" "${CSD}/zfs" > /dev/null 2>&1; cd "${CSD}/zfs" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches ;;
+		suse)	git clone "${suse_src}" "${CSD}" > /dev/null 2>&1 cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}" git_get_all_branches ;;
+		zfs)	git clone "${spl_src}" "${CSD}/spl" > /dev/null 2>&1 cd "${CSD}/spl" || die "${RED}cd ${CSD} failed${NORMAL}" git_get_all_branches
+			git clone "${zfs_src}" "${CSD}/zfs" > /dev/null 2>&1 cd "${CSD}/zfs" || die "${RED}cd ${CSD} failed${NORMAL}" git_get_all_branches ;;
 		esac
 	fi
 }
@@ -349,7 +349,7 @@ make_patch() {
 		dir=( "Documentation" "fs" "include" )
 		local dest="${CWD}"/aufs3-${aufs_ver}-`date +"%Y%m%d"`.patch
 
-		git_checkout "origin/aufs${aufs_ver}" > /dev/null 2>&1; git pull > /dev/null 2>&1
+		git_checkout "origin/aufs${aufs_ver}" > /dev/null 2>&1 git pull > /dev/null 2>&1
 
 		mkdir ../a ../b || die "${RED}mkdir ../a ../b failed${NORMAL}"
 		cp -r {Documentation,fs,include} ../b || die "${RED}cp -r {Documentation,fs,include} ../b failed${NORMAL}"
@@ -399,7 +399,7 @@ make_patch() {
 		cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
 		cd "${CTD}" || die "${RED}cd ${CTD} failed${NORMAL}"
 
-		git_checkout "${fedora_ver}" > /dev/null 2>&1; git pull > /dev/null 2>&1
+		git_checkout "${fedora_ver}" > /dev/null 2>&1 git pull > /dev/null 2>&1
 
 		ls -1 | grep ".patch" | xargs -I{} cp "{}" "${CWD}"
 
@@ -468,7 +468,7 @@ make_patch() {
 
 		cd "${CTD}" || die "${RED}cd ${CTD} failed${NORMAL}"
 
-		git_checkout "${suse_ver}" > /dev/null 2>&1; git pull > /dev/null 2>&1
+		git_checkout "${suse_ver}" > /dev/null 2>&1 git pull > /dev/null 2>&1
 
 		[ -e "patches.kernel.org" ] && rm -rf patches.kernel.org > /dev/null 2>&1
 		[ -e "patches.rpmify" ] && rm -rf patches.rpmify > /dev/null 2>&1
@@ -556,9 +556,9 @@ geek-sources_src_unpack() {
 	geek-sources_init_variables
 
 	for Current_Patch in $SKIP_KERNEL_PATCH_UPDATE; do
-		if use_if_iuse "${Current_Patch}" ; then
+		if use_if_iuse "${Current_Patch}"; then
 		case "${Current_Patch}" in
-			*) SKIP_UPDATE="1"; SKIP_SQUEUE="1" ;;
+			*) SKIP_UPDATE="1" SKIP_SQUEUE="1" ;;
 		esac
 		else continue
 		fi
@@ -575,12 +575,12 @@ geek-sources_src_prepare() { ### BRANCH APPLY ###
 
 	local xUserOrder=""
 	local xDefOder=""
-	if [ -e "${cfg_file}" ] ; then
+	if [ -e "${cfg_file}" ]; then
 		source "${cfg_file}"
 		xUserOrder="$(echo -n "$GEEKSOURCES_PATCHING_ORDER" | tr '\n' ' ' | tr -s ' ' | tr ' ' '\n' | sort | tr '\n' ' ' | sed -e 's,^\s*,,' -e 's,\s*$,,')"
 		xDefOrder="$(echo -n "$DEFAULT_GEEKSOURCES_PATCHING_ORDER" | tr '\n' ' ' | tr -s ' ' | tr ' ' '\n' | sort | tr '\n' ' ' | sed -e 's,^\s*,,' -e 's,\s*$,,')"
 
-		if [ "x${xUserOrder}" = "x${xDefOrder}" ] ; then
+		if [ "x${xUserOrder}" = "x${xDefOrder}" ]; then
 			ewarn "${BLUE}Use${NORMAL} ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL} ${BLUE}from${NORMAL} ${RED}${cfg_file}${NORMAL}"
 		else
 			ewarn "${BLUE}Use${NORMAL} ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL} ${BLUE}from${NORMAL} ${RED}${cfg_file}${NORMAL}"
@@ -601,8 +601,8 @@ ${BLUE}And may the Force be with you…${NORMAL}"
 	fi
 
 for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
-	if use_if_iuse "${Current_Patch}" || [[ "${Current_Patch}" == "fix" ]] || [[ "${Current_Patch}" == "upatch" ]] ; then
-		if [ -e "${FILESDIR}/${PV}/${Current_Patch}/info" ] ; then
+	if use_if_iuse "${Current_Patch}" || [[ "${Current_Patch}" == "fix" ]] || [[ "${Current_Patch}" == "upatch" ]]; then
+		if [ -e "${FILESDIR}/${PV}/${Current_Patch}/info" ]; then
 			echo
 			cat "${FILESDIR}/${PV}/${Current_Patch}/info"
 		fi
@@ -620,15 +620,15 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${bfq_inf}"
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}" || die "${RED}mv ${T}/${Current_Patch} ${S}/patches/${Current_Patch} failed${NORMAL}"
 				;;
-			branding) if [ -e "${FILESDIR}/${Current_Patch}/info" ] ; then
+			branding) if [ -e "${FILESDIR}/${Current_Patch}/info" ]; then
 					echo
 					cat "${FILESDIR}/${Current_Patch}/info"
 				fi
 				ApplyPatch "${FILESDIR}/${Current_Patch}/patch_list" "Branding"
 				;;
 			ck)	ApplyPatch "${DISTDIR}/patch-${ck_ver/KMV/$KMV}.lrz" "${ck_inf}"
-				if [ -d "${FILESDIR}/${PV}/${Current_Patch}" ] ; then
-					if [ -e "${FILESDIR}/${PV}/${Current_Patch}/patch_list" ] ; then
+				if [ -d "${FILESDIR}/${PV}/${Current_Patch}" ]; then
+					if [ -e "${FILESDIR}/${PV}/${Current_Patch}/patch_list" ]; then
 						ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "CK Fix"
 					fi
 				fi
@@ -676,12 +676,12 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${uksm_inf}"
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}" || die "${RED}mv ${T}/${Current_Patch} ${S}/patches/${Current_Patch} failed${NORMAL}"
 				;;
-			upatch)	if [ -d "${patch_user_dir}/${CATEGORY}/${PN}" ] ; then
-					if [ -e "${patch_user_dir}/${CATEGORY}/${PN}/info" ] ; then
+			upatch)	if [ -d "${patch_user_dir}/${CATEGORY}/${PN}" ]; then
+					if [ -e "${patch_user_dir}/${CATEGORY}/${PN}/info" ]; then
 						echo
 						cat "${patch_user_dir}/${CATEGORY}/${PN}/info"
 					fi
-					if [ -e "${patch_user_dir}/${CATEGORY}/${PN}/patch_list" ] ; then
+					if [ -e "${patch_user_dir}/${CATEGORY}/${PN}/patch_list" ]; then
 						ApplyPatch "${patch_user_dir}/${CATEGORY}/${PN}/patch_list" "${YELLOW}Applying user patches from${NORMAL} ${RED}${patch_user_dir}/${CATEGORY}/${PN}${NORMAL}"
 					else
 						ewarn "${BLUE}File${NORMAL} ${RED}${patch_user_dir}/${CATEGORY}/${PN}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
@@ -734,7 +734,7 @@ geek-sources_pkg_postinst() {
 	einfo
 	einfo "${BLUE}For more info on this patchset, and how to report problems, see:${NORMAL}"
 	for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
-		if use_if_iuse "${Current_Patch}" || [[ "${Current_Patch}" == "fix" ]] || [[ "${Current_Patch}" == "upatch" ]] ; then
+		if use_if_iuse "${Current_Patch}" || [[ "${Current_Patch}" == "fix" ]] || [[ "${Current_Patch}" == "upatch" ]]; then
 			case "${Current_Patch}" in
 				aufs)	if ! has_version sys-fs/aufs-util; then
 						ewarn
