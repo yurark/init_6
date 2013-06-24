@@ -103,7 +103,7 @@ KMV="${1}.${2}"
 if [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
 	PV="${KMV}" # default PV=3.4.0 new PV=3.4
 	SKIP_UPDATE=1 # Skip update to latest upstream
-fi;
+fi
 
 # ebuild default values setup settings
 DEFEXTRAVERSION="-geek"
@@ -124,7 +124,7 @@ linux-geek_init_variables() {
 
 	: ${GEEK_STORE_DIR:="${PORTAGE_ACTUAL_DISTDIR-${DISTDIR}}/geek"}
 	: ${cfg_file:="/etc/portage/kernel.conf"}
-	local crap_patch_cfg=$(source $cfg_file 2>/dev/null ; echo ${crap_patch})
+	local crap_patch_cfg=$(source $cfg_file 2>/dev/null echo ${crap_patch})
 	: ${crap_patch:=${crap_patch_cfg:-ignore}} # crap_patch=ignore/will_not_pass
 	: ${crap:="0"}
 
@@ -166,8 +166,8 @@ kname="linux-${kversion}.tar.${extension}"
 SRC_URI="${SRC_URI} ${kurl}/${kname}"
 
 # Bug #266157, deblob for libre support
-if [[ -z ${PREDEBLOBBED} ]] ; then
-	if [[ ${DEBLOB_AVAILABLE} == "1" ]] ; then
+if [[ -z ${PREDEBLOBBED} ]]; then
+	if [[ ${DEBLOB_AVAILABLE} == "1" ]]; then
 		IUSE="${IUSE} deblob"
 		# Reflect that kernels contain firmware blobs unless otherwise
 		# stripped
@@ -187,7 +187,7 @@ if [[ -z ${PREDEBLOBBED} ]] ; then
 		DEBLOB_CHECK_A="deblob-check-${DEBLOB_PV}"
 		DEBLOB_HOMEPAGE="http://www.fsfla.org/svnwiki/selibre/linux-libre/"
 		DEBLOB_URI_PATH="download/releases/LATEST-${DEBLOB_PV}.N"
-		if ! has "${EAPI:-0}" 0 1 ; then
+		if ! has "${EAPI:-0}" 0 1; then
 			DEBLOB_CHECK_URI="${DEBLOB_HOMEPAGE}/${DEBLOB_URI_PATH}/deblob-check -> ${DEBLOB_CHECK_A}"
 		else
 			DEBLOB_CHECK_URI="mirror://gentoo/${DEBLOB_CHECK_A}"
@@ -236,11 +236,11 @@ ExtractApply() {
 find_crap() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	if [ $(find "${S}" \( -name \*.orig -o -name \*.rej \) | wc -c) -eq 0 ] ; then
+	if [ $(find "${S}" \( -name \*.orig -o -name \*.rej \) | wc -c) -eq 0 ]; then
 		crap="0"
 	else
 		crap="1"
-	fi;
+	fi
 }
 
 # iternal function
@@ -317,14 +317,14 @@ Handler() {
 	esac
 
 	case "$crap_patch" in
-	will_not_pass) find_crap;
-	if [[ "${crap}" == 1 ]] ; then
+	will_not_pass) find_crap
+	if [[ "${crap}" == 1 ]]; then
 		ebegin "${BLUE}Reversing crap patch <--${NORMAL} ${RED}$patch_base_name${NORMAL}"
 			patch_cmd="patch -p1 -g1 -R"; # reverse argument to patch
-			ExtractApply "$patch" &>/dev/null;
-			rm_crap;
+			ExtractApply "$patch" &>/dev/null
+			rm_crap
 		eend
-	fi;
+	fi
 
 	;;
 	esac
@@ -332,8 +332,8 @@ Handler() {
 
 # @FUNCTION: ApplyPatch
 # @USAGE:
-# ApplyPatch "${FILESDIR}/${PVR}/patch_list" "Patch set description";
-# ApplyPatch "${FILESDIR}/<patch>" "Patch description";
+# ApplyPatch "${FILESDIR}/${PVR}/patch_list" "Patch set description"
+# ApplyPatch "${FILESDIR}/<patch>" "Patch description"
 # @DESCRIPTION:
 # Main function
 linux-geek_ApplyPatch() {
@@ -348,19 +348,19 @@ linux-geek_ApplyPatch() {
 	patch_dir_name=$(dirname "$patch")
 	case $patch_base_name in
 	patch_list) # list of patches
-		while read -r line ; do
+		while read -r line; do
 			# skip empty lines
 			[[ -z "$line" ]] && continue
 			# skip comments
 			[[ $line =~ ^\ {0,}# ]] && continue
 			ebegin "Applying $line"
-				Handler "$patch_dir_name/$line";
+				Handler "$patch_dir_name/$line"
 			eend $?
 		done < "$patch"
 	;;
 	*) # else is patch
 		ebegin "Applying $patch_base_name"
-			Handler "$patch";
+			Handler "$patch"
 		eend $?
 	;;
 	esac
@@ -368,7 +368,7 @@ linux-geek_ApplyPatch() {
 
 # @FUNCTION: SmartApplyPatch
 # @USAGE:
-# SmartApplyPatch "${FILESDIR}/${PVR}/spatch_list" "Patch set description";
+# SmartApplyPatch "${FILESDIR}/${PVR}/spatch_list" "Patch set description"
 # @DESCRIPTION:
 # Main function
 linux-geek_SmartApplyPatch() {
@@ -390,14 +390,14 @@ linux-geek_SmartApplyPatch() {
 			eend
 		done
 		if [ "${no_luck}" = "1" ]; then
-			local vars=($(grep -v '^#' ${patch}));
+			local vars=($(grep -v '^#' ${patch}))
 			for var in $(seq $((${#vars[@]} - 1)) -1 0); do
 				ebegin "${BLUE}Reversing patch <--${NORMAL} ${RED}${vars[$var]}${NORMAL}"
 					patch_cmd="patch -p1 -g1 -R" # reverse argument to patch
 					ExtractApply "${patch_dir_name}/${vars[$var]}" &>/dev/null
 				eend $?
 			done
-		fi;
+		fi
 	;;
 	*) continue ;;
 	esac
@@ -409,22 +409,22 @@ linux-geek_SmartApplyPatch() {
 linux-geek_gen_squeue() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	local CSD="${GEEK_STORE_DIR}/squeue";
-	local CWD="${S}/patches/squeue";
+	local CSD="${GEEK_STORE_DIR}/squeue"
+	local CWD="${S}/patches/squeue"
 
-	if [ -d ${CSD} ] ; then
-		cd ${CSD}
-		git pull > /dev/null 2>&1;
-		cd "${S}"
+	if [ -d ${CSD} ]; then
+		cd ${CSD} || die "${RED}cd ${CSD} failed${NORMAL}"
+		git pull > /dev/null 2>&1
+		cd "${S}" || die "${RED}cd ${S} failed${NORMAL}"
 	else
-		git clone "git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git" ${CSD} > /dev/null 2>&1;
+		git clone "git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git" ${CSD} > /dev/null 2>&1
 	fi
 
-	test -d "${S}/patches" >/dev/null 2>&1 || mkdir -p "${S}/patches";
+	test -d "${S}/patches" >/dev/null 2>&1 || mkdir -p "${S}/patches"
 
-	if [ -d ${CSD}/queue-${KMV} ] ; then
-		cp -r "${CSD}/queue-${KMV}" "${CWD}"
-		mv "${CWD}/series" "${CWD}/patch_list"
+	if [ -d ${CSD}/queue-${KMV} ]; then
+		cp -r "${CSD}/queue-${KMV}" "${CWD}" || die "${RED}cp -r ${CSD}/queue-${KMV} ${CWD} failed${NORMAL}"
+		mv "${CWD}/series" "${CWD}/patch_list" || die "${RED}mv ${CWD}/series ${CWD}/patch_list failed${NORMAL}"
 	else
 		ewarn "There is no stable-queue patch-set this time"
 	fi
@@ -444,10 +444,10 @@ linux-geek_src_unpack() {
 		ebegin "Extract the sources"
 			tar xvJf "${DISTDIR}/${kname}" &>/dev/null
 		eend $?
-		cd "${WORKDIR}"
-		mv "linux-${kversion}" "${S}"
+		cd "${WORKDIR}" || die "${RED}cd ${WORKDIR} failed${NORMAL}"
+		mv "linux-${kversion}" "${S}" || die "${RED}mv linux-${kversion} ${S} failed${NORMAL}"
 	fi
-	cd "${S}"
+	cd "${S}" || die "${RED}cd ${S} failed${NORMAL}"
 	case "$VERSION" in
 		2) continue
 	#	if  [ "${SUBLEVEL}" != "0" ]; then
@@ -462,7 +462,7 @@ linux-geek_src_unpack() {
 		;;
 	esac
 
-	if [[ $DEBLOB_AVAILABLE == 1 ]] && use deblob ; then
+	if [[ $DEBLOB_AVAILABLE == 1 ]] && use deblob; then
 		cp "${DISTDIR}/${DEBLOB_A}" "${T}" || die "${RED}cp ${DEBLOB_A} failed${NORMAL}"
 		cp "${DISTDIR}/${DEBLOB_CHECK_A}" "${T}/deblob-check" || die "${RED}cp ${DEBLOB_CHECK_A} failed${NORMAL}"
 		chmod +x "${T}/${DEBLOB_A}" "${T}/deblob-check" || die "${RED}chmod deblob scripts failed${NORMAL}"
@@ -476,7 +476,7 @@ linux-geek_get_config() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ebegin "Searching for best availiable kernel config"
-		if [ -e "/proc/config.gz" ]; then test -d .config >/dev/null 2>&1 || zcat /proc/config.gz > .config;
+		if [ -e "/proc/config.gz" ]; then test -d .config >/dev/null 2>&1 || zcat /proc/config.gz > .config
 			einfo " ${BLUE}Foung config from running kernel, updating to match target kernel${NORMAL}"
 		elif [ -e "/boot/config-${FULLVER}" ]; then test -d .config >/dev/null 2>&1 || cat "/boot/config-${FULLVER}" > .config
 			einfo " ${BLUE}Found${NORMAL} ${RED}/boot/config-${FULLVER}${NORMAL}"
@@ -498,7 +498,7 @@ linux-geek_get_config() {
 linux-geek_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	if [ "${SKIP_SQUEUE}" = "1" ] ; then
+	if [ "${SKIP_SQUEUE}" = "1" ]; then
 			ewarn "${RED}Skipping update to latest stable queue ...${NORMAL}"
 		else
 			linux-geek_gen_squeue
@@ -530,7 +530,7 @@ linux-geek_src_prepare() {
 		chmod +x "${WORKDIR}"/linux-"${KV_FULL}"/usr/gen_init_cpio "${WORKDIR}"/linux-"${KV_FULL}"/scripts/gen_initramfs_list.sh > /dev/null 2>&1
 	eend
 
-	cd "${WORKDIR}"/linux-"${KV_FULL}"
+	cd "${WORKDIR}"/linux-"${KV_FULL}" || die "${RED}cd ${WORKDIR}/linux-${KV_FULL} failed${NORMAL}"
 	local GENTOOARCH="${ARCH}"
 	unset ARCH
 	ebegin "Running ${RED}make oldconfig${NORMAL}"
@@ -552,7 +552,7 @@ linux-geek_src_prepare() {
 linux-geek_src_compile() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	if [[ $DEBLOB_AVAILABLE == 1 ]] && use deblob ; then
+	if [[ $DEBLOB_AVAILABLE == 1 ]] && use deblob; then
 		echo ">>> Running deblob script ..."
 		sh "${T}/${DEBLOB_A}" --force || \
 			die "${RED}Deblob script failed to run!!!${NORMAL}"
@@ -577,25 +577,25 @@ linux-geek_src_install() {
 		rm -f "${version_h}"
 	fi
 
-	cd "${S}"
+	cd "${S}" || die "${RED}cd ${S} failed${NORMAL}"
 	dodir /usr/src
 	echo ">>> Copying sources ..."
 
-	mv ${WORKDIR}/linux* "${D}"/usr/src;
+	mv ${WORKDIR}/linux* "${D}"/usr/src || die "${RED}mv ${WORKDIR}/linux* ${D}/usr/src failed${NORMAL}"
 
-	if use symlink ; then
+	if use symlink; then
 		if [ -h "/usr/src/linux" ]; then
 			addwrite "/usr/src/linux"
-			unlink "/usr/src/linux"
+			unlink "/usr/src/linux" || die "${RED}unlink /usr/src/linux failed${NORMAL}"
 		elif [ -d "/usr/src/linux" ]; then
-			mv "/usr/src/linux" "/usr/src/linux-old"
+			mv "/usr/src/linux" "/usr/src/linux-old" || die "${RED}mv /usr/src/linux /usr/src/linux-old failed${NORMAL}"
 		fi
 		dosym linux-${KV_FULL} \
 			"/usr/src/linux" ||
 			die "${RED}cannot install kernel symlink${NORMAL}"
 	fi
 
-	if use build ; then
+	if use build; then
 		# Find out some info..
 		eval $(head -n 4 Makefile | sed -e 's/ //g')
 		local ARCH=$(uname -m | sed -e s/i.86/i386/g)
@@ -663,10 +663,10 @@ linux-geek_src_install() {
 				fi
 				ebegin " Editing kernel entry in GRUB"
 					if [[ -e "/etc/grub.d/10_linux" ]]; then
-						grub2-mkconfig -o /boot/grub2/grub.cfg;
+						grub2-mkconfig -o /boot/grub2/grub.cfg
 					elif [[ -e "/etc/boot.conf" ]]; then
-						boot-update;
-					fi;
+						boot-update
+					fi
 				eend $?
 			eend $?
 

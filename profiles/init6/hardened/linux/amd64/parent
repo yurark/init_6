@@ -1,0 +1,4 @@
+gentoo:hardened/linux/amd64
+init6:init6/arch/amd64
+init6:init6/base
+../base

@@ -1,13 +1,9 @@
 app-emulation
 app-misc
-app-text
-dev-lang
-games-fps
+dev-python
 media-fonts
 media-video
 net-irc
-net-libs
-profiles
+net-misc
 sys-kernel
 virtual
-x11-drivers
