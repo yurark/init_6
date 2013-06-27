@@ -530,7 +530,7 @@ linux-geek_src_prepare() {
 				rm -rf "${WORKDIR}"/linux-"${KV_FULL}"/arch/{avr32,blackfin,c6x,cris,frv,h8300,hexagon,m32r,m68k,m68knommu,microblaze,mn10300,openrisc,score,tile,unicore32,um,v850,xtensa}
 			fi
 		eend ;;
-	no)	einfo "${RED}Skipping remove unneeded architectures ...${NORMAL}" ;;
+	no)	einfo "Skipping remove unneeded architectures ..." ;;
 	esac
 
 	ebegin "Compile ${RED}gen_init_cpio${NORMAL}"
