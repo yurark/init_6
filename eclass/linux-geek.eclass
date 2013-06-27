@@ -125,6 +125,8 @@ linux-geek_init_variables() {
 	: ${GEEK_STORE_DIR:="${PORTAGE_ACTUAL_DISTDIR-${DISTDIR}}/geek"}
 	: ${cfg_file:="/etc/portage/kernel.conf"}
 	local crap_patch_cfg=$(source $cfg_file 2>/dev/null echo ${crap_patch})
+	local rm_unneeded_arch_cfg=$(source $cfg_file 2>/dev/null echo ${rm_unneeded_arch})
+
 	: ${crap_patch:=${crap_patch_cfg:-ignore}} # crap_patch=ignore/will_not_pass
 	: ${crap:="0"}
 
@@ -132,6 +134,8 @@ linux-geek_init_variables() {
 	ignore) : ${patch_cmd:="patch -p1 -g1 --no-backup-if-mismatch"} ;;
 	will_not_pass) : ${patch_cmd:="patch -p1 -g1"} ;;
 	esac
+
+	: ${rm_unneeded_arch:=${rm_unneeded_arch_cfg:-no}} # rm_unneeded-arch=yes/no
 }
 
 case "$PR" in
@@ -439,6 +443,7 @@ linux-geek_src_unpack() {
 	linux-geek_init_variables
 
 	einfo "${BLUE}Crap patch -->${NORMAL} ${RED}$crap_patch${NORMAL}"
+	einfo "${BLUE}Remove unneeded architectures -->${NORMAL} ${RED}$rm_unneeded_arch${NORMAL}"
 
 	if [ "${A}" != "" ]; then
 		ebegin "Extract the sources"
@@ -516,14 +521,17 @@ linux-geek_src_prepare() {
 		rm_crap
 	eend
 
-	ebegin "Remove unneeded architectures"
-		if use x86 || use amd64; then
-			rm -rf "${WORKDIR}"/linux-"${KV_FULL}"/arch/{alpha,arc,arm,arm26,arm64,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,metag,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,xtensa}
-			sed -i 's/include/#include/g' "${WORKDIR}"/linux-"${KV_FULL}"/fs/hostfs/Makefile
-		else
-			rm -rf "${WORKDIR}"/linux-"${KV_FULL}"/arch/{avr32,blackfin,c6x,cris,frv,h8300,hexagon,m32r,m68k,m68knommu,microblaze,mn10300,openrisc,score,tile,unicore32,um,v850,xtensa}
-		fi
-	eend
+	case "$rm_unneeded_arch" in
+	yes)	ebegin "Remove unneeded architectures"
+			if use x86 || use amd64; then
+				rm -rf "${WORKDIR}"/linux-"${KV_FULL}"/arch/{alpha,arc,arm,arm26,arm64,avr32,blackfin,c6x,cris,frv,h8300,hexagon,ia64,m32r,m68k,m68knommu,metag,mips,microblaze,mn10300,openrisc,parisc,powerpc,ppc,s390,score,sh,sh64,sparc,sparc64,tile,unicore32,um,v850,xtensa}
+				sed -i 's/include/#include/g' "${WORKDIR}"/linux-"${KV_FULL}"/fs/hostfs/Makefile
+			else
+				rm -rf "${WORKDIR}"/linux-"${KV_FULL}"/arch/{avr32,blackfin,c6x,cris,frv,h8300,hexagon,m32r,m68k,m68knommu,microblaze,mn10300,openrisc,score,tile,unicore32,um,v850,xtensa}
+			fi
+		eend ;;
+	no)	einfo "${RED}Skipping remove unneeded architectures ...${NORMAL}" ;;
+	esac
 
 	ebegin "Compile ${RED}gen_init_cpio${NORMAL}"
 		make -C "${WORKDIR}"/linux-"${KV_FULL}"/usr/ gen_init_cpio > /dev/null 2>&1

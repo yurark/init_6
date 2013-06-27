@@ -18,10 +18,10 @@ user_grsec_ver="${PV}"
 user_lqx_ver="3.2.28-1"
 user_lqx_src="http://liquorix.net/sources/legacy/${user_lqx_ver}.patch.gz"
 user_mageia_ver="releases/3.2.9/2.mga2"
-user_pax_ver="3.2.47-test107"
+user_pax_ver="3.2.47-test109"
 user_pf_ver="3.2.7-pf"
 user_suse_ver="2206a5c5b9aa64bd9a741830257f184818a0f6ee" # rpm-3.2.0-2
-user_rt_ver="3.2.45-rt66"
+user_rt_ver="3.2.46-rt67"
 user_uksm_ver="0.1.2.2"
 user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}.ge.40"
 

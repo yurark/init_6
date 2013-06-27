@@ -21,7 +21,7 @@ user_mageia_ver="releases/3.4.6/1.mga3"
 user_pax_ver="3.4.8-test32"
 user_pf_ver="3.4.6-pf"
 user_suse_ver="259fc874ec90b84ca02ad1c1ae186989c83bb2fa" # rpm-3.4.11-2.16
-user_rt_ver="3.4.45-rt60"
+user_rt_ver="3.4.47-rt62"
 user_uksm_ver="0.1.2.2"
 user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}.ge.36"
 
