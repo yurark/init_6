@@ -2,10 +2,6 @@ change-default-console-loglevel.patch
 kernel-39-gcc48-2.patch.gz
 
 linux-003-no_dev_console.patch
-linux-004_lower_undefined_mode_timeout.patch
-linux-006_enable_utf8.patch
-linux-007_die_floppy_die.patch
-linux-009_disable_i8042_check_on_apple_mac.patch
 linux-010-perf_crosscompiling.patch
 linux-052-XBOX_remote_support.patch
 linux-053-spinelplus-remote-0.2.patch
@@ -24,7 +20,6 @@ linux-221-ngene-octopus.patch
 linux-222-stb0899_signal_quality.patch
 linux-223-Fix-video-artifacts-with-tt-3600-s2-usb.patch
 linux-700-jmicron_1_0_8_5.patch
-linux-701-fix-r8169.patch
 linux-900-hide_tsc_error.patch
 linux-950-saa716x_PCIe_interface_chipset.patch
 linux-995-CX24120-13Z_frontend.patch
