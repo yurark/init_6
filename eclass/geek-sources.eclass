@@ -356,8 +356,8 @@ make_patch() {
 		rm ../b/include/uapi/linux/Kbuild || die "${RED}rm ../b/include/uapi/linux/Kbuild failed${NORMAL}"
 		cd .. || die "${RED}cd .. failed${NORMAL}"
 
-		for i in "${dir[@]}"
-			do diff -U 3 -dHrN -- a/ b/"${i}"/ >> "${dest}" || die "${RED}diff -U 3 -dHrN -- a/ b/${i}/ >> ${dest} failed${NORMAL}"
+		for i in "${dir[@]}"; do
+			diff -U 3 -dHrN -- a/ b/"${i}"/ >> "${dest}"
 			sed -i "s:a/:a/"${i}"/:" "${dest}"
 			sed -i "s:b:b:" "${dest}"
 		done
