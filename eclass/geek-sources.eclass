@@ -315,14 +315,14 @@ get_or_bump() {
 		fi
 	else
 		case "${patch}" in
-		aufs)	git clone "${aufs_src}" "${CSD}" > /dev/null 2>&1 cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}" git_get_all_branches ;;
-		fedora)	git clone "${fedora_src}" "${CSD}" > /dev/null 2>&1 cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}" git_get_all_branches ;;
+		aufs)	git clone "${aufs_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches ;;
+		fedora)	git clone "${fedora_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches ;;
 		gentoo)	svn co "${gentoo_src}" "${CSD}" > /dev/null 2>&1;;
-		grsec)	git clone "${grsec_src}" "${CSD}" > /dev/null 2>&1 cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}" git_get_all_branches ;;
+		grsec)	git clone "${grsec_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches ;;
 		mageia)	svn co "${mageia_src}" "${CSD}" > /dev/null 2>&1;;
-		suse)	git clone "${suse_src}" "${CSD}" > /dev/null 2>&1 cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}" git_get_all_branches ;;
-		zfs)	git clone "${spl_src}" "${CSD}/spl" > /dev/null 2>&1 cd "${CSD}/spl" || die "${RED}cd ${CSD} failed${NORMAL}" git_get_all_branches
-			git clone "${zfs_src}" "${CSD}/zfs" > /dev/null 2>&1 cd "${CSD}/zfs" || die "${RED}cd ${CSD} failed${NORMAL}" git_get_all_branches ;;
+		suse)	git clone "${suse_src}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches ;;
+		zfs)	git clone "${spl_src}" "${CSD}/spl" > /dev/null 2>&1; cd "${CSD}/spl" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches
+			git clone "${zfs_src}" "${CSD}/zfs" > /dev/null 2>&1; cd "${CSD}/zfs" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches ;;
 		esac
 	fi
 }
@@ -341,7 +341,7 @@ make_patch() {
 	addwrite "${CTD}"
 	shift
 	case "${patch}" in
-	aufs)	cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
+	aufs)	cd "${CSD}" >/dev/null 2>&1
 		test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
 		get_or_bump "${patch}" > /dev/null 2>&1
 		cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
@@ -392,7 +392,7 @@ make_patch() {
 
 		ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list
 	;;
-	fedora) cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
+	fedora) cd "${CSD}" >/dev/null 2>&1
 		test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
 		get_or_bump "${patch}" > /dev/null 2>&1
 
@@ -407,7 +407,7 @@ make_patch() {
 
 		rm -rf "${CTD}" || die "${RED}rm -rf ${CTD} failed${NORMAL}"
 	;;
-	gentoo) cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
+	gentoo) cd "${CSD}" >/dev/null 2>&1
 		test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
 		cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
 
@@ -426,9 +426,9 @@ make_patch() {
 
 		rm -rf "${CTD}" || die "${RED}rm -rf ${CTD} failed${NORMAL}"
 	;;
-	grsec)	cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
+	grsec)	cd "${CSD}" >/dev/null 2>&1
 		test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
-		get_or_bump "${patch}" > /dev/null 2>&1
+		get_or_bump "${patch}" #> /dev/null 2>&1
 
 		cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
 
@@ -447,7 +447,7 @@ make_patch() {
 		ls -1 | grep ".patch" | xargs -I{} xz "{}" | xargs -I{} cp "{}" "${CWD}"
 		ls -1 "${CWD}" | grep ".patch.xz" > "${CWD}"/patch_list
 	;;
-	mageia) cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
+	mageia) cd "${CSD}" >/dev/null 2>&1
 		test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
 		get_or_bump "${patch}" > /dev/null 2>&1
 
@@ -460,7 +460,7 @@ make_patch() {
 
 		rm -rf "${CTD}" || die "${RED}rm -rf ${CTD} failed${NORMAL}"
 	;;
-	suse)	cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
+	suse)	cd "${CSD}" >/dev/null 2>&1
 		test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
 		get_or_bump "${patch}" > /dev/null 2>&1
 
