@@ -386,7 +386,7 @@ make_patch() {
 
 		cp "${DISTDIR}/bld-${bld_ver/KMV/$KMV}.tar.bz2" "bld-${bld_ver/KMV/$KMV}.tar.bz2" || die "${RED}cp ${DISTDIR}/bld-${bld_ver/KMV/$KMV}.tar.bz2 bld-${bld_ver/KMV/$KMV}.tar.bz2 failed${NORMAL}"
 		tar -xjpf "bld-${bld_ver/KMV/$KMV}.tar.bz2" || die "${RED}tar -xjpf bld-${bld_ver/KMV/$KMV}.tar.bz2 failed${NORMAL}"
-		cp "${CTD}/bld-${bld_ver/KMV/$KMV}/BLD-${bld_ver/KMV/$KMV}.patch" "${CWD}/BLD-${bld_ver/KMV/$KMV}.patch" || die "${RED}cp ${CTD}/bld-${bld_ver/KMV/$KMV}/BLD-${bld_ver/KMV/$KMV}.patch ${CWD}/BLD-${bld_ver/KMV/$KMV}.patch failed${NORMAL}"
+		find "${CTD}/bld-${bld_ver/KMV/$KMV}/" -name "*-${bld_ver/KMV/$KMV}.patch" -exec cp {} "${CWD}" \;
 
 		rm -rf "${CTD}" || die "${RED}rm -rf ${CTD} failed${NORMAL}"
 
@@ -428,7 +428,7 @@ make_patch() {
 	;;
 	grsec)	cd "${CSD}" >/dev/null 2>&1
 		test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
-		get_or_bump "${patch}" #> /dev/null 2>&1
+		get_or_bump "${patch}" > /dev/null 2>&1
 
 		cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
 
