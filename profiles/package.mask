@@ -5,4 +5,4 @@
 =sys-kernel/vanilla-sources-9999
 
 # Kernel mainline stable 2013-06-30 for now not all patchset available
-=sys-kernel/geek-sources-3.10-r7
+=sys-kernel/geek-sources-3.10
