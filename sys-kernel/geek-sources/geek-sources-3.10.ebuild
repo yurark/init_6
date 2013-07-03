@@ -8,7 +8,7 @@ DEBLOB_AVAILABLE="0"
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 
 user_aufs_ver="3.x-rcN"
-user_bfq_ver="3.9.0-v6r2"
+user_bfq_ver="3.10.0-v6r2"
 #user_bld_ver="${KMV}-rc5"
 #user_ck_ver="3.9-ck1"
 #user_ck_src="http://ck.kolivas.org/patches/3.0/3.9/${user_ck_ver}/patch-${user_ck_ver}.lrz"
