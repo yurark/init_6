@@ -1,12 +1,14 @@
-diff -Naur linux-3.9.5/drivers/media/usb/dvb-usb-v2/rtl28xxu.c linux-3.9.5.patch/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
---- linux-3.9.5/drivers/media/usb/dvb-usb-v2/rtl28xxu.c	2013-06-07 21:54:00.000000000 +0200
-+++ linux-3.9.5.patch/drivers/media/usb/dvb-usb-v2/rtl28xxu.c	2013-06-13 14:48:38.110705193 +0200
-@@ -1372,6 +1372,8 @@
- 		&rtl2832u_props, "Digivox Micro Hd", NULL) },
- 	{ DVB_USB_DEVICE(USB_VID_COMPRO, 0x0620,
+diff --git a/drivers/media/usb/dvb-usb-v2/rtl28xxu.c b/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
+index 2cc8ec7..985fa11 100644
+--- a/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
++++ b/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
+@@ -1408,6 +1408,9 @@ static const struct usb_device_id rtl28xxu_id_table[] = {
  		&rtl2832u_props, "Compro VideoMate U620F", NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_KWORLD_2, 0xd394,
+ 		&rtl2832u_props, "MaxMedia HU394-T", NULL) },
 +	{ DVB_USB_DEVICE(USB_VID_GTEK, 0xa803,
 +		&rtl2832u_props, "Realtek RTL2832U reference design", NULL) },
++
  	{ }
  };
  MODULE_DEVICE_TABLE(usb, rtl28xxu_id_table);

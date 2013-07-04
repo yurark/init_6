@@ -21,13 +21,13 @@ linux-060-add_AUGUST_DVB-T205.patch
 linux-203-stb0899_enable_low_symbol_rate.patch
 linux-210-dvbsky.patch
 linux-212-mantis_stb0899_faster_lock.patch
-linux-213-cinergy_s2_usb_r2.patch
 linux-221-ngene-octopus.patch
 linux-222-stb0899_signal_quality.patch
 linux-223-Fix-video-artifacts-with-tt-3600-s2-usb.patch
 linux-700-jmicron_1_0_8_5.patch
 linux-900-hide_tsc_error.patch
 linux-950-saa716x_PCIe_interface_chipset.patch
+linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
 linux-995-CX24120-13Z_frontend.patch
 linux-996-macmini2012-ethernet.patch
 linux-997-disable-rc6-on-sandybridge-gt1.patch
