@@ -619,9 +619,13 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${bfq_inf}"
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}" || die "${RED}mv ${T}/${Current_Patch} ${S}/patches/${Current_Patch} failed${NORMAL}"
 				;;
-			bld)	make_patch "${Current_Patch}"
-				ApplyPatch "${T}/${Current_Patch}/patch_list" "${bfq_inf}"
-				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}" || die "${RED}mv ${T}/${Current_Patch} ${S}/patches/${Current_Patch} failed${NORMAL}"
+			bld)	if [ "${VERSION}" = "3" -a "${PATCHLEVEL}" = "10" ]; then
+					ApplyPatch "${DISTDIR}/BLD-${bld_ver/KMV/$KMV}.patch" "${bld_inf}"
+				else
+					make_patch "${Current_Patch}"
+					ApplyPatch "${T}/${Current_Patch}/patch_list" "${bld_inf}"
+					mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}" || die "${RED}mv ${T}/${Current_Patch} ${S}/patches/${Current_Patch} failed${NORMAL}"
+				fi
 				;;
 			branding) if [ -e "${FILESDIR}/${Current_Patch}/info" ]; then
 					echo
