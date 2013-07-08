@@ -48,14 +48,16 @@ geek-sources_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${GEEK_STORE_DIR:="${PORTAGE_ACTUAL_DISTDIR-${DISTDIR}}/geek"}
+	# Disable the sandbox for this dir
+	addwrite "${GEEK_STORE_DIR}"
 
 	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx pf"}
 	: ${patch_user_dir:="/etc/portage/patches"}
 	: ${cfg_file:="/etc/portage/kernel.conf"}
 	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="pax lqx pf bfq ck gentoo grsec ice reiser4 rt bld uksm aufs mageia fedora suse zfs branding fix upatch"}
 
-	# Disable the sandbox for this dir
-	addwrite "${GEEK_STORE_DIR}"
+	local disable_fixes_cfg=$(source $cfg_file 2>/dev/null; echo ${disable_fixes})
+	: ${disable_fixes:=${disable_fixes_cfg:-no}} # disable_fixes=yes/no
 }
 
 # internal function
@@ -558,12 +560,13 @@ geek-sources_src_unpack() {
 	for Current_Patch in $SKIP_KERNEL_PATCH_UPDATE; do
 		if use_if_iuse "${Current_Patch}"; then
 		case "${Current_Patch}" in
-			*) SKIP_UPDATE="1" SKIP_SQUEUE="1" ;;
+			*) SKIP_UPDATE="1" skip_squeue="yes" ;;
 		esac
 		else continue
 		fi
 	done
 
+	einfo "${BLUE}Disable fixes -->${NORMAL} ${RED}$disable_fixes${NORMAL}"
 	linux-geek_src_unpack
 }
 
@@ -616,9 +619,13 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${bfq_inf}"
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}" || die "${RED}mv ${T}/${Current_Patch} ${S}/patches/${Current_Patch} failed${NORMAL}"
 				;;
-			bld)	make_patch "${Current_Patch}"
-				ApplyPatch "${T}/${Current_Patch}/patch_list" "${bfq_inf}"
-				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}" || die "${RED}mv ${T}/${Current_Patch} ${S}/patches/${Current_Patch} failed${NORMAL}"
+			bld)	if [ "${VERSION}" = "3" -a "${PATCHLEVEL}" = "10" ]; then
+					ApplyPatch "${DISTDIR}/BLD-${bld_ver/KMV/$KMV}.patch" "${bld_inf}"
+				else
+					make_patch "${Current_Patch}"
+					ApplyPatch "${T}/${Current_Patch}/patch_list" "${bld_inf}"
+					mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}" || die "${RED}mv ${T}/${Current_Patch} ${S}/patches/${Current_Patch} failed${NORMAL}"
+				fi
 				;;
 			branding) if [ -e "${FILESDIR}/${Current_Patch}/info" ]; then
 					echo
@@ -639,7 +646,7 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${fedora_inf}"
 				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}" || die "${RED}mv ${T}/${Current_Patch} ${S}/patches/${Current_Patch} failed${NORMAL}"
 				;;
-			fix)	ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "${YELLOW}Fixes for current kernel${NORMAL}"
+			fix)	[ "${disable_fixes}" = "no" ] && ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "${YELLOW}Fixes for current kernel${NORMAL}"
 				;;
 			gentoo)	make_patch "${Current_Patch}"
 				ApplyPatch "${T}/${Current_Patch}/patch_list" "${gentoo_inf}"

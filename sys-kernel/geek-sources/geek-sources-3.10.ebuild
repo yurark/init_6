@@ -3,13 +3,14 @@
 # $Header: $
 
 EAPI="5"
-DEBLOB_AVAILABLE="0"
+DEBLOB_AVAILABLE="1"
 
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 
 user_aufs_ver="3.x-rcN"
 user_bfq_ver="3.10.0-v6r2"
-#user_bld_ver="${KMV}-rc5"
+user_bld_ver="3.10.0"
+user_bld_src="http://bld.googlecode.com/files/BLD-${user_bld_ver}.patch"
 #user_ck_ver="3.9-ck1"
 #user_ck_src="http://ck.kolivas.org/patches/3.0/3.9/${user_ck_ver}/patch-${user_ck_ver}.lrz"
 user_fedora_ver="master"
@@ -27,7 +28,7 @@ user_suse_ver="master"
 #user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}.ge.1"
 
 #SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 suse symlink uksm zfs"
-SUPPORTED_USES="aufs bfq branding -build fedora gentoo ice mageia pf suse symlink zfs"
+SUPPORTED_USES="aufs bfq bld branding -build fedora gentoo ice mageia pf suse symlink zfs"
 
 inherit geek-sources
 
