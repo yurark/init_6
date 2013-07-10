@@ -25,11 +25,11 @@ user_pax_ver="3.10-test1"
 user_pf_ver="3.10.0-pf"
 #user_reiser4_ver="3.9.2"
 user_suse_ver="master"
-#user_uksm_ver="0.1.2.2"
-#user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}.ge.1"
+user_uksm_ver="0.1.2.2"
+user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}"
 
 #SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 suse symlink uksm zfs"
-SUPPORTED_USES="aufs bfq bld branding -build fedora gentoo grsec ice mageia pax pf suse symlink zfs"
+SUPPORTED_USES="aufs bfq bld branding -build fedora gentoo grsec ice mageia pax pf suse symlink uksm zfs"
 
 inherit geek-sources
 
