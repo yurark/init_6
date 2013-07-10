@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit eutils flag-o-matic
 
@@ -46,6 +46,10 @@ src_prepare() {
 
 	# bug #473244
 	epatch "${FILESDIR}/${P}-segfault-unowned-temp-dir.patch"
+	# bug #403863
+	epatch "${FILESDIR}/${P}-race_cond_create_tmp_dir.patch"
+	# bug #461284
+	epatch "${FILESDIR}/${P}-wrong_char_in_menu_file.patch"
 }
 
 S=${WORKDIR}/${MY_P}
