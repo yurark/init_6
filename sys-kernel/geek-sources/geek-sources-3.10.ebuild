@@ -8,7 +8,7 @@ DEBLOB_AVAILABLE="1"
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 
 #user_aufs_ver="3.x-rcN"
-user_aufs_ver="aufs3.10"
+user_aufs_ver="3.10"
 user_bfq_ver="3.10.0-v6r2"
 user_bld_ver="3.10.0"
 user_bld_src="http://bld.googlecode.com/files/BLD-${user_bld_ver}.patch"
