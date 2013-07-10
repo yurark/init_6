@@ -21,7 +21,7 @@ user_fedora_ver="master"
 #user_lqx_ver="3.9.8-1"
 #user_lqx_src="http://liquorix.net/sources/${user_lqx_ver}.patch.gz"
 user_mageia_ver="releases/3.9.8/1.mga4"
-#user_pax_ver="3.9.7-test12"
+user_pax_ver="3.10-test1"
 user_pf_ver="3.10.0-pf"
 #user_reiser4_ver="3.9.2"
 user_suse_ver="master"
@@ -29,7 +29,7 @@ user_suse_ver="master"
 #user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}.ge.1"
 
 #SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 suse symlink uksm zfs"
-SUPPORTED_USES="aufs bfq bld branding -build fedora gentoo ice mageia pf suse symlink zfs"
+SUPPORTED_USES="aufs bfq bld branding -build fedora gentoo grsec ice mageia pax pf suse symlink zfs"
 
 inherit geek-sources
 
