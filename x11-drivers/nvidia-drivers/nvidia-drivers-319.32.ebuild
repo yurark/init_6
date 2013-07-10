@@ -160,8 +160,8 @@ src_prepare() {
 		ewarn "Using PAX patches is not supported. You will be asked to"
 		ewarn "use a standard kernel should you have issues. Should you"
 		ewarn "need support with these patches, contact the PaX team."
-		epatch "${FILESDIR}"/nvidia-drivers-pax-const.patch
-		epatch "${FILESDIR}"/nvidia-drivers-pax-usercopy.patch
+#		epatch "${FILESDIR}"/nvidia-drivers-pax-const.patch
+#		epatch "${FILESDIR}"/nvidia-drivers-pax-usercopy.patch
 	fi
 
 	if kernel_is ge 3 10 0; then
