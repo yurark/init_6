@@ -7,8 +7,8 @@ inherit eutils linux-info linux-mod unpacker
 
 DESCRIPTION="Broadcom's IEEE 802.11a/b/g/n hybrid Linux device driver."
 HOMEPAGE="https://launchpad.net/ubuntu/+source/bcmwl http://www.broadcom.com/support/802.11/linux_sta.php"
-BASE_URI="https://launchpad.net/~albertomilone/+archive/broadcom/+files"
-BASE_NAME="bcmwl-kernel-source_${PV}%2Bbdcom-0ubuntu1%7Eppa1_"
+BASE_URI="https://launchpad.net/ubuntu/+archive/primary/+files"
+BASE_NAME="bcmwl-kernel-source_${PV}%2Bbdcom-0ubuntu3_"
 SRC_URI="amd64? ( ${BASE_URI}/${BASE_NAME}amd64.deb )
 		x86? ( ${BASE_URI}/${BASE_NAME}i386.deb )"
 
@@ -71,11 +71,7 @@ src_prepare() {
 #	Filter the outdated patches here
 	EPATCH_FORCE="yes" EPATCH_EXCLUDE="0002* 0004* 0005*" EPATCH_SOURCE="${S}/patches" EPATCH_SUFFIX=patch epatch
 #	Makefile.patch: keep `emake install` working
-#	linux-3.9.0.patch: add support for kernel 3.9.0
-#	linux-3.10.0.patch: add support for kernel 3.10.0
-	epatch "${FILESDIR}/${P}-makefile.patch" \
-		"${FILESDIR}/${P}-linux-3.9.0.patch" \
-		"${FILESDIR}/${P}-linux-3.10.0.patch"
+	epatch "${FILESDIR}/${P}-makefile.patch"
 
 	mv "${S}/lib/wlc_hybrid.o_shipped_"* "${S}/lib/wlc_hybrid.o_shipped" \
 		|| die "Where is the blob?"
