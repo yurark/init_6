@@ -1,5 +1,5 @@
 change-default-console-loglevel.patch
-kernel-39-gcc48-2.patch.gz
+kernel-310-gcc48-1.patch.gz
 
 linux-003-no_dev_console.patch
 linux-004_lower_undefined_mode_timeout.patch

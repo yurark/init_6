@@ -432,7 +432,10 @@ linux-geek_gen_squeue() {
 
 	test -d "${S}/patches" >/dev/null 2>&1 || mkdir -p "${S}/patches"
 
-	if [ -d ${CSD}/releases/${PV} ]; then
+	if [ -d ${CSD}/queue-${KMV} ] ; then
+		cp -r "${CSD}/queue-${KMV}" "${CWD}" || die "${RED}cp -r ${CSD}/queue-${KMV} ${CWD} failed${NORMAL}"
+		mv "${CWD}/series" "${CWD}/patch_list" || die "${RED}mv ${CWD}/series ${CWD}/patch_list failed${NORMAL}"
+	elif [ -d ${CSD}/releases/${PV} ]; then
 		cp -r "${CSD}/releases/${PV}" "${CWD}" || die "${RED}cp -r ${CSD}/releases/${PV} ${CWD} failed${NORMAL}"
 		mv "${CWD}/series" "${CWD}/patch_list" || die "${RED}mv ${CWD}/series ${CWD}/patch_list failed${NORMAL}"
 	else
