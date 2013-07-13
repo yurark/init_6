@@ -42,14 +42,9 @@ DEPEND="${RDEPEND}
 [[ -n ${LIVE_EBUILD} ]] && DEPEND="${DEPEND} dev-vcs/cvs" # needed only for SCM source tree (autopoint uses cvs)
 
 src_prepare() {
-	[[ -n ${LIVE_EBUILD} ]] && ./autogen.sh
+	epatch "${FILESDIR}/${PN}-4.8.9-unknown-opts.patch"
 
-	# bug #473244
-	epatch "${FILESDIR}/${P}-segfault-unowned-temp-dir.patch"
-	# bug #403863
-	epatch "${FILESDIR}/${P}-race_cond_create_tmp_dir.patch"
-	# bug #461284
-	epatch "${FILESDIR}/${P}-wrong_char_in_menu_file.patch"
+	[[ -n ${LIVE_EBUILD} ]] && ./autogen.sh
 }
 
 S=${WORKDIR}/${MY_P}
@@ -75,7 +70,7 @@ src_configure() {
 		$(use_enable spell aspell) \
 		$(use_with gpm gpm-mouse) \
 		--with-screen=${myscreen} \
-		$(use_with edit) \
+		$(use_with edit internal-edit) \
 		$(use_enable mclib) \
 		$(use_enable test tests) \
 		--with-homedir=${homedir}
