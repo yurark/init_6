@@ -388,7 +388,7 @@ make_patch() {
 
 		cp "${DISTDIR}/bld-${bld_ver/KMV/$KMV}.tar.bz2" "bld-${bld_ver/KMV/$KMV}.tar.bz2" || die "${RED}cp ${DISTDIR}/bld-${bld_ver/KMV/$KMV}.tar.bz2 bld-${bld_ver/KMV/$KMV}.tar.bz2 failed${NORMAL}"
 		tar -xjpf "bld-${bld_ver/KMV/$KMV}.tar.bz2" || die "${RED}tar -xjpf bld-${bld_ver/KMV/$KMV}.tar.bz2 failed${NORMAL}"
-		find "${CTD}/bld-${bld_ver/KMV/$KMV}/" -name "*-${bld_ver/KMV/$KMV}.patch" -exec cp {} "${CWD}" \;
+		find "${CTD}/bld-${bld_ver/KMV/$KMV}/" -name "*-${bld_ver/KMV/$KMV}.patch" -exec cp {} "${CWD}" \ > /dev/null 2>&1;
 
 		rm -rf "${CTD}" || die "${RED}rm -rf ${CTD} failed${NORMAL}"
 
@@ -418,7 +418,7 @@ make_patch() {
 		cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
 		cd "${CTD}"/${KMV} || die "${RED}cd ${CTD}/${KMV} failed${NORMAL}"
 
-		find -name .svn -type d -exec rm -rf {} \
+		find -name .svn -type d -exec rm -rf {} \ > /dev/null 2>&1
 		find -type d -empty -delete
 
 		ls -1 | grep "linux" | xargs -I{} rm -rf "{}"
