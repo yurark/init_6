@@ -100,9 +100,11 @@ SUBLEVEL="${3}"
 KMV="${1}.${2}"
 
 # 0 for 3.4.0
-if [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
+if [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ] ; then
 	PV="${KMV}" # default PV=3.4.0 new PV=3.4
-	SKIP_UPDATE=1 # Skip update to latest upstream
+	if [[ "${PR}" == "r0" ]] ; then
+		SKIP_UPDATE=1 # Skip update to latest upstream
+	fi
 fi
 
 # ebuild default values setup settings
@@ -469,7 +471,8 @@ linux-geek_src_unpack() {
 	#		ApplyPatch "${DISTDIR}/${pname}" "${YELLOW}Update to latest upstream ...${NORMAL}"
 	#	fi
 		;;
-		3) if [ "${SKIP_UPDATE}" = "1" ] || [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
+#		3) if [ "${SKIP_UPDATE}" = "1" ] || [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
+		3) if [ "${SKIP_UPDATE}" = "1" ] ; then
 				ewarn "${RED}Skipping update to latest upstream ...${NORMAL}"
 			else
 				ApplyPatch "${DISTDIR}/${pname}" "${YELLOW}Update to latest upstream ...${NORMAL}"
