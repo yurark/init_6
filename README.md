@@ -49,6 +49,7 @@ In this overlay you will find
      * **rt** - [Use Ingo Molnar's realtime preempt patches](http://www.kernel.org/pub/linux/kernel/projects/rt)
      * **suse** - [Use OpenSuSE patches](http://kernel.opensuse.org/cgit/kernel-source)
      * **uksm** - [Use Ultra Kernel Samepage Merging patches](http://kerneldedup.org)
+     * **zen** - [Use ZEN kernel patches](https://github.com/damentz/zen-kernel)
      * **zfs** - [The native Linux kernel port of the ZFS filesystem](http://zfsonlinux.org)
  * [sys-kernel/rh-sources](https://github.com/init6/init_6/tree/master/sys-kernel/rh-sources) Full sources including the Red Hat Enterprise Linux sources patchset for the 2.6 kernel tree
 and many fixes and patches…
