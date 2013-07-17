@@ -36,7 +36,7 @@ inherit linux-geek
 
 EXPORT_FUNCTIONS src_unpack src_prepare src_compile src_install pkg_postinst
 
-KNOWN_USES="aufs bfq bld branding build ck deblob fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zfs"
+KNOWN_USES="aufs bfq bld branding build ck deblob fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zen zfs"
 
 # @FUNCTION: geek-sources_init_variables
 # @INTERNAL
@@ -51,10 +51,10 @@ geek-sources_init_variables() {
 	# Disable the sandbox for this dir
 	addwrite "${GEEK_STORE_DIR}"
 
-	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx pf"}
+	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx pf zen"}
 	: ${patch_user_dir:="/etc/portage/patches"}
 	: ${cfg_file:="/etc/portage/kernel.conf"}
-	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="pax lqx pf bfq ck gentoo grsec ice reiser4 rt bld uksm aufs mageia fedora suse zfs branding fix upatch"}
+	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="pax lqx pf zen bfq ck gentoo grsec ice reiser4 rt bld uksm aufs mageia fedora suse zfs branding fix upatch"}
 
 	local disable_fixes_cfg=$(source $cfg_file 2>/dev/null; echo ${disable_fixes})
 	: ${disable_fixes:=${disable_fixes_cfg:-no}} # disable_fixes=yes/no
@@ -207,6 +207,13 @@ USEKnown() {
 			uksm_url="http://kerneldedup.org"
 			uksm_inf="${YELLOW}Ultra Kernel Samepage Merging - ${uksm_url}${NORMAL}"
 			HOMEPAGE="${HOMEPAGE} ${uksm_url}"
+			;;
+		zen)	zen_ver=${user_zen_ver:-$KMV}
+			zen_def_src="https://github.com/damentz/zen-kernel/compare/torvalds:v${zen_ver/KMV/$KMV}...${zen_ver/KMV/$KMV}/master.diff"
+			zen_src=${user_zen_src:-$zen_def_src}
+			zen_url="https://github.com/damentz/zen-kernel"
+			zen_inf="${YELLOW}The Zen Kernel - ${zen_url}${NORMAL}"
+			HOMEPAGE="${HOMEPAGE} ${zen_url}"
 			;;
 		zfs)	spl_ver=${user_spl_ver:-$KMV}
 			spl_def_src="git://github.com/zfsonlinux/spl.git"
@@ -489,6 +496,13 @@ make_patch() {
 		cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
 		ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list
 	;;
+	zen)	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
+		dest="${CWD}"/zen-kernel-"${PV}"-`date +"%Y%m%d"`.patch
+		wget "${zen_src}" -O "${dest}" > /dev/null 2>&1
+		cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
+		ls -1 | grep ".patch" | xargs -I{} xz "{}" | xargs -I{} cp "{}" "${CWD}"
+		ls -1 "${CWD}" | grep ".patch.xz" > "${CWD}"/patch_list
+	;;
 	zfs)	einfo "Prepare kernel sources"
 		cd "${S}" || die "${RED}cd ${S} failed${NORMAL}"
 		export PORTAGE_ARCH="${ARCH}"
@@ -698,6 +712,10 @@ for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 						done
 					fi
 				fi
+				;;
+			zen)	make_patch "${Current_Patch}"
+				ApplyPatch "${T}/${Current_Patch}/patch_list" "${zen_inf}"
+				mv "${T}/${Current_Patch}" "${S}/patches/${Current_Patch}" || die "${RED}mv ${T}/${Current_Patch} ${S}/patches/${Current_Patch} failed${NORMAL}"
 				;;
 			zfs)	echo
 				ebegin "${zfs_inf}"

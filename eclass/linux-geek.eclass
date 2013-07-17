@@ -471,7 +471,6 @@ linux-geek_src_unpack() {
 	#		ApplyPatch "${DISTDIR}/${pname}" "${YELLOW}Update to latest upstream ...${NORMAL}"
 	#	fi
 		;;
-#		3) if [ "${SKIP_UPDATE}" = "1" ] || [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ]; then
 		3) if [ "${SKIP_UPDATE}" = "1" ] ; then
 				ewarn "${RED}Skipping update to latest upstream ...${NORMAL}"
 			else
