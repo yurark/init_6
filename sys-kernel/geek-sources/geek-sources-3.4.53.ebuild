@@ -24,8 +24,9 @@ user_suse_ver="259fc874ec90b84ca02ad1c1ae186989c83bb2fa" # rpm-3.4.11-2.16
 user_rt_ver="3.4.47-rt62"
 user_uksm_ver="0.1.2.2"
 user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}.ge.36"
+user_zen_ver="3.4"
 
-SUPPORTED_USES="aufs bfq bld -build ck fedora gentoo ice lqx mageia pax pf rt suse symlink uksm"
+SUPPORTED_USES="aufs bfq bld -build ck fedora gentoo ice lqx mageia pax pf rt suse symlink uksm zen"
 
 inherit geek-sources
 

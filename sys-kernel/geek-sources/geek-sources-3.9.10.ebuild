@@ -24,8 +24,9 @@ user_reiser4_ver="3.9.2"
 #user_suse_ver="stable"
 user_uksm_ver="0.1.2.2"
 user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}.ge.1"
+user_zen_ver="3.9"
 
-SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 suse symlink uksm zfs"
+SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 
