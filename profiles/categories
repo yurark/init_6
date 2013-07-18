@@ -1,9 +1,13 @@
 app-emulation
 app-misc
+dev-libs
 dev-python
+dev-vcs
 media-fonts
 media-video
 net-irc
 net-misc
+net-wireless
 sys-kernel
 virtual
+x11-drivers
