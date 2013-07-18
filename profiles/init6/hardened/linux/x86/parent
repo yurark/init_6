@@ -1,5 +1,5 @@
 gentoo:hardened/linux/x86
 gentoo:targets/desktop
 init6:init6/arch/x86
-../base
 init6:init6/base
+../base
