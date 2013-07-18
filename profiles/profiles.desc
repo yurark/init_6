@@ -7,3 +7,10 @@ x86             init6/default/linux/x86				stable
 x86             init6/default/linux/x86/bleeding_edge		dev
 x86             init6/hardened/linux/x86			stable
 x86             init6/hardened/linux/x86/bleeding_edge		dev
+
+arm             init6/default/linux/arm				stable
+arm             init6/default/linux/arm/bleeding_edge		dev
+arm             init6/hardened/linux/arm			stable
+arm             init6/hardened/linux/arm/bleeding_edge		dev
+#arm             init6/hardened/linux/uclibc/arm			dev
+#arm             init6/hardened/linux/uclibc/arm/bleeding_edge	dev
