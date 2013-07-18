@@ -1,5 +1,4 @@
 gentoo:hardened/linux/amd64
-gentoo:targets/desktop
 init6:init6/arch/amd64
-../base
 init6:init6/base
+../base
