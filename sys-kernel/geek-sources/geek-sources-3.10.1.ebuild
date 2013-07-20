@@ -23,15 +23,14 @@ user_lqx_src="http://liquorix.net/sources/${user_lqx_ver}.patch.gz"
 user_mageia_ver="releases/3.10.1/1.mga4"
 user_pax_ver="3.10.1-test2"
 user_pf_ver="3.10.1-pf"
-#user_reiser4_ver="3.9.2"
+user_reiser4_ver="3.10"
 user_suse_ver="master"
 #user_suse_ver="stable"
 user_uksm_ver="0.1.2.2"
 user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}"
 user_zen_ver="3.10"
 
-#SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 suse symlink uksm zfs"
-SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice lqx mageia pax pf suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 
