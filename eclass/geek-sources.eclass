@@ -519,8 +519,8 @@ make_patch() {
 		rm -rf "${CTD}"/{spl,zfs}/.git || die "${RED}rm -rf ${CTD}/{spl,zfs}/.git failed${NORMAL}"
 
 		addwrite "/usr/src/linux"
-		unlink "/usr/src/linux" || die "${RED}unlink /usr/src/linux failed${NORMAL}"
-		ln -s "${S}" /usr/src/linux || die "${RED}ln -s ${S} /usr/src/linux failed${NORMAL}"
+		unlink "/usr/src/linux" #|| die "${RED}unlink /usr/src/linux failed${NORMAL}"
+		ln -s "${S}" /usr/src/linux #|| die "${RED}ln -s ${S} /usr/src/linux failed${NORMAL}"
 
 		einfo "Integrate SPL"
 		cd "${CTD}/spl" || die "${RED}cd ${CTD}/spl failed${NORMAL}"
@@ -554,7 +554,7 @@ make_patch() {
 		make mrproper > /dev/null 2>&1
 
 		addwrite "/usr/src/linux"
-		unlink "/usr/src/linux" || die "${RED}unlink /usr/src/linux failed${NORMAL}"
+		unlink "/usr/src/linux" #|| die "${RED}unlink /usr/src/linux failed${NORMAL}"
 
 		mv "${CTD}" "${S}/patches/${patch}" || die "${RED}mv ${CTD} ${S}/patches/${patch} failed${NORMAL}"
 	;;
