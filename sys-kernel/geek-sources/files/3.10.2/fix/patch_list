@@ -32,3 +32,4 @@ linux-995-CX24120-13Z_frontend.patch
 linux-996-macmini2012-ethernet.patch
 linux-997-disable-rc6-on-sandybridge-gt1.patch
 linux-999.01-Support-for-cheap-Ralink-3070-WiFi-plug.patch
+linux-999.02-drm-i915-correctly-restore-fences-with-objects-attached.patch
