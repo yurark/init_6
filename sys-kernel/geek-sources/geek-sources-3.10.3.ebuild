@@ -31,7 +31,7 @@ user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}"
 user_zen_ver="3.10"
 
 #SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 suse symlink uksm zen zfs"
-SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice mageia pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq branding -build ck fedora gentoo grsec ice mageia pax pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 
