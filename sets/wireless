@@ -1,0 +1,4 @@
+net-wireless/broadcom-sta
+#sys-firmware/b43-firmware
+#net-wireless/b43-fwcutter
+net-wireless/wireless-tools

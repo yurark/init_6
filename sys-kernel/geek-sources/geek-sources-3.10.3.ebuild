@@ -16,7 +16,7 @@ user_ck_ver="3.10-ck1"
 user_ck_src="http://ck.kolivas.org/patches/3.0/${KMV}/${user_ck_ver}/patch-${user_ck_ver}.lrz"
 user_fedora_ver="master"
 #user_gentoo_ver="$KMV"
-user_grsec_ver="3.10.2"
+user_grsec_ver="3.10.3"
 #user_ice_ver="$KMV"
 #user_lqx_ver="3.9.11-1"
 #user_lqx_src="http://liquorix.net/sources/${user_lqx_ver}.patch.gz"
@@ -31,7 +31,7 @@ user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}"
 user_zen_ver="3.10"
 
 #SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 suse symlink uksm zen zfs"
-SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice mageia pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq branding -build ck fedora gentoo grsec ice mageia pax pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 
