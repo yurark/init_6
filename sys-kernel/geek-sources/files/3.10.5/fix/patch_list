@@ -35,4 +35,3 @@ linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
 linux-995-CX24120-13Z_frontend.patch
 linux-997-disable-rc6-on-sandybridge-gt1.patch
 linux-998.01-cpufreq-revert-9d3ce4af3be0235d4cf41ea9fd774205a32e58a2.patch
-linux-999.02-drm-i915-correctly-restore-fences-with-objects-attached.patch
