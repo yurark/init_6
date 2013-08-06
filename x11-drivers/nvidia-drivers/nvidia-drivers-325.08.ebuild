@@ -151,17 +151,6 @@ src_prepare() {
 		if kernel_is lt 2 6 9 ; then
 			eerror "You must build this against 2.6.9 or higher kernels."
 		fi
-
-		# If greater than 2.6.5 use M= instead of SUBDIR=
-#		convert_to_m "${NV_SRC}"/Makefile.kbuild
-	fi
-
-	if use pax_kernel; then
-		ewarn "Using PAX patches is not supported. You will be asked to"
-		ewarn "use a standard kernel should you have issues. Should you"
-		ewarn "need support with these patches, contact the PaX team."
-#		epatch "${FILESDIR}"/nvidia-drivers-pax-const.patch
-#		epatch "${FILESDIR}"/nvidia-drivers-pax-usercopy.patch
 	fi
 
 	if kernel_is ge 3 10 0; then
