@@ -151,13 +151,6 @@ src_prepare() {
 		if kernel_is lt 2 6 9 ; then
 			eerror "You must build this against 2.6.9 or higher kernels."
 		fi
-
-		# If greater than 2.6.5 use M= instead of SUBDIR=
-		convert_to_m "${NV_SRC}"/Makefile.kbuild
-	fi
-
-	if kernel_is ge 3 10 0; then
-		epatch "${FILESDIR}/${P}-3.10.patch"
 	fi
 
 	# Allow user patches so they can support RC kernels and whatever else
