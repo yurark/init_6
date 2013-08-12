@@ -80,11 +80,10 @@ geek-ice_src_unpack() {
 
 	local CSD="${GEEK_STORE_DIR}/ice"
 	local CWD="${T}/ice"
-	local CTD="${T}/ice"$$
 	shift
 	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
 	dest="${CWD}"/tuxonice-kernel-"${PV}"-`date +"%Y%m%d"`.patch
-	wget "${ice_src}" -O "${dest}" > /dev/null 2>&1
+	wget "${ICE_SRC}" -O "${dest}" > /dev/null 2>&1
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
 	ls -1 | grep ".patch" | xargs -I{} xz "{}" | xargs -I{} cp "{}" "${CWD}"
 	ls -1 "${CWD}" | grep ".patch.xz" > "${CWD}"/patch_list

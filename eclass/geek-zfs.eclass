@@ -29,7 +29,7 @@
 
 inherit geek-patch geek-utils
 
-EXPORT_FUNCTIONS src_prepare pkg_postinst
+EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 
 # @FUNCTION: init_variables
 # @INTERNAL
@@ -64,7 +64,7 @@ geek-zfs_init_variables() {
 
 	: ${ZFS_URL:=${ZFS_URL:-"http://zfsonlinux.org"}}
 
-	: ${ZFS_INF:=${ZFS_INF:-"${YELLOW}Native ZFS on Linux - ${ZFS_URL}${NORMAL}"}}
+	: ${ZFS_INF:=${ZFS_INF:-"${YELLOW}Integrate Native ZFS on Linux - ${ZFS_URL}${NORMAL}"}}
 
 	: ${HOMEPAGE:="${HOMEPAGE} ${ZFS_URL}"}
 
@@ -74,10 +74,10 @@ geek-zfs_init_variables() {
 		zfs?	( sys-fs/zfs[kernel-builtin(+)] )"}
 }
 
-# @FUNCTION: src_prepare
+# @FUNCTION: src_unpack
 # @USAGE:
-# @DESCRIPTION: Prepare source packages and do any necessary patching or fixes.
-geek-zfs_src_prepare() {
+# @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
+geek-zfs_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	geek-zfs_init_variables
@@ -97,8 +97,18 @@ geek-zfs_src_prepare() {
 
 	cp -r "${CSD}" "${CWD}" || die "${RED}cp -r ${CSD} ${CWD} failed${NORMAL}"
 	rm -rf "${CWD}"/.git || die "${RED}rm -rf ${CWD}/.git failed${NORMAL}"
+}
 
-	einfo "Integrate ZFS"
+# @FUNCTION: src_prepare
+# @USAGE:
+# @DESCRIPTION: Prepare source packages and do any necessary patching or fixes.
+geek-zfs_src_prepare() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	local CWD="${T}/zfs"
+	shift
+
+	einfo "${ZFS_INF}"
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
 	[ -e autogen.sh ] && ./autogen.sh > /dev/null 2>&1
 	./configure \
@@ -115,6 +125,8 @@ geek-zfs_src_prepare() {
 
 	cd "${S}" || die "${RED}cd ${S} failed${NORMAL}"
 	make mrproper > /dev/null 2>&1
+
+	rm -rf "${T}/{spl,zfs}" || die "${RED}rm -rf ${T}/{spl,zfs} failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst
