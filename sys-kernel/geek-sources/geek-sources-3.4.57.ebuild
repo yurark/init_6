@@ -7,24 +7,24 @@ DEBLOB_AVAILABLE="1"
 
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 
-#user_aufs_ver="$KMV"
-user_bfq_ver="3.4.0-v6r1"
-user_bld_ver="${KMV}-rc4"
-user_ck_ver="${KMV}-ck3"
-user_fedora_ver="d0633aed96aaed8d8996ecec7213ad2bf1a819df" # Linux v3.4-10115-g829f51d
-#user_gentoo_ver="$KMV"
-#user_grsec_ver="${PV}"
-#user_ice_ver="$KMV"
-user_lqx_ver="3.4.35-1"
-user_lqx_src="http://liquorix.net/sources/${user_lqx_ver}.patch.gz"
-user_mageia_ver="releases/3.4.6/1.mga3"
-user_pax_ver="3.4.8-test32"
-user_pf_ver="3.4.6-pf"
-user_suse_ver="259fc874ec90b84ca02ad1c1ae186989c83bb2fa" # rpm-3.4.11-2.16
-user_rt_ver="3.4.47-rt62"
-user_uksm_ver="0.1.2.2"
-user_uksm_name="uksm-${user_uksm_ver}-for-v${KMV}.ge.36"
-user_zen_ver="3.4"
+#AUFS_VER="$KMV"
+BFQ_VER="3.4.0-v6r1"
+BLD_VER="${KMV}-rc4"
+CK_VER="${KMV}-ck3"
+FEDORA_VER="d0633aed96aaed8d8996ecec7213ad2bf1a819df" # Linux v3.4-10115-g829f51d
+#GENTOO_VER="$KMV"
+#GRSEC_VER="${PV}"
+#ICE_VER="$KMV"
+LQX_VER="3.4.35-1"
+LQX_SRC="http://liquorix.net/sources/${LQX_VER}.patch.gz"
+MAGEIA_VER="releases/3.4.6/1.mga3"
+PAX_VER="3.4.8-test32"
+#PF_VER="3.4.6-pf"
+SUSE_VER="259fc874ec90b84ca02ad1c1ae186989c83bb2fa" # rpm-3.4.11-2.16
+RT_VER="3.4.47-rt62"
+UKSM_VER="0.1.2.2"
+UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.36"
+ZEN_VER="3.4"
 
 SUPPORTED_USES="aufs bfq bld -build ck fedora gentoo ice lqx mageia pax pf rt suse symlink uksm zen"
 
