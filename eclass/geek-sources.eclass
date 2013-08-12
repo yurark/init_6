@@ -155,6 +155,7 @@ geek-sources_src_unpack() {
 				suse	)	geek-suse_src_unpack ;;
 				uksm	)	geek-uksm_src_unpack ;;
 				zen	)	geek-zen_src_unpack ;;
+				zfs	)	geek-spl_src_unpack; geek-zfs_src_unpack ;;
 			esac
 		else continue
 		fi

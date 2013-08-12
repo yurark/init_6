@@ -82,6 +82,7 @@ geek-spl_src_unpack() {
 	local CSD="${GEEK_STORE_DIR}/spl"
 	local CWD="${T}/spl"
 	shift
+
 	einfo "Prepare kernel sources"
 	cd "${S}" || die "${RED}cd ${S} failed${NORMAL}"
 	export PORTAGE_ARCH="${ARCH}"
