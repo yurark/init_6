@@ -82,6 +82,19 @@ pkg_pretend() {
 		die "Unexpected \${DEFAULT_ABI} = ${DEFAULT_ABI}"
 	fi
 
+	if use kernel_linux && kernel_is ge 3 11 ; then
+		ewarn "Gentoo supports kernels which are supported by NVIDIA"
+		ewarn "which are limited to the following kernels:"
+		ewarn "<sys-kernel/gentoo-sources-3.11"
+		ewarn "<sys-kernel/vanilla-sources-3.11"
+		ewarn ""
+		ewarn "You are free to utilize epatch_user to provide whatever"
+		ewarn "support you feel is appropriate, but will not receive"
+		ewarn "support as a result of those changes."
+		ewarn ""
+		ewarn "Do not file a bug report about this."
+	fi
+
 	# Since Nvidia ships 3 different series of drivers, we need to give the user
 	# some kind of guidance as to what version they should install. This tries
 	# to point the user in the right direction but can't be perfect. check
@@ -151,6 +164,16 @@ src_prepare() {
 		if kernel_is lt 2 6 9 ; then
 			eerror "You must build this against 2.6.9 or higher kernels."
 		fi
+
+		# If greater than 2.6.5 use M= instead of SUBDIR=
+#		convert_to_m "${NV_SRC}"/Makefile.kbuild
+	fi
+
+	if use pax_kernel; then
+		ewarn "Using PAX patches is not supported. You will be asked to"
+		ewarn "use a standard kernel should you have issues. Should you"
+		ewarn "need support with these patches, contact the PaX team."
+		epatch "${FILESDIR}"/${PN}-pax-usercopy.patch
 	fi
 
 	# Allow user patches so they can support RC kernels and whatever else
@@ -412,7 +435,7 @@ pkg_postinst() {
 	elog "To use the NVIDIA CUDA/OpenCL, run \"eselect opencl set nvidia\""
 	elog
 	elog "NVIDIA has requested that any bug reports submitted have the"
-	elog "output of /opt/bin/nvidia-bug-report.sh included."
+	elog "output of nvidia-bug-report.sh included."
 	elog
 	if ! use X; then
 		elog "You have elected to not install the X.org driver. Along with"
