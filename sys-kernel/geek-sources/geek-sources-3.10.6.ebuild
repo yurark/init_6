@@ -10,8 +10,8 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 #AUFS_VER="3.x-rcN"
 AUFS_VER="3.10"
 BFQ_VER="3.10.0-v6r2"
-BLD_VER="3.10.0"
-BLD_SRC="https://bld.googlecode.com/files/bld-${BLD_VER}.patch"
+#BLD_VER="3.10.0"
+#BLD_SRC="https://bld.googlecode.com/files/bld-${BLD_VER}.patch"
 CK_VER="3.10-ck1"
 CK_SRC="http://ck.kolivas.org/patches/3.0/${KMV}/${CK_VER}/patch-${CK_VER}.lrz"
 FEDORA_VER="f19"
@@ -30,7 +30,8 @@ UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}"
 ZEN_VER="3.10"
 
-SUPPORTED_USES="aufs bfq bld brand -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zen zfs"
+#SUPPORTED_USES="aufs bfq bld brand -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq brand -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zen zfs"
 
 inherit geek-sources
 
