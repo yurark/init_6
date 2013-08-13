@@ -20,7 +20,7 @@ FEDORA_VER="master"
 #ICE_VER="$KMV"
 #LQX_VER="3.9.8-1"
 #LQX_SRC="http://liquorix.net/sources/${LQX_VER}.patch.gz"
-MAGEIA_VER="releases/3.10.5/3.mga4"
+MAGEIA_VER="releases/3.10.6/1.mga4"
 #PAX_VER="3.10.1-test2"
 #PF_VER="3.10.0-pf"
 #REISER4_VER="3.9.2"
@@ -30,8 +30,8 @@ SUSE_VER="master"
 #UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}"
 #ZEN_VER="3.10"
 
-#SUPPORTED_USES="aufs bfq bld branding -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 suse symlink uksm zen zfs"
-SUPPORTED_USES="aufs bfq branding -build fedora gentoo ice mageia suse symlink zfs"
+#SUPPORTED_USES="aufs bfq bld brand -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq brand -build fedora gentoo ice mageia suse symlink zfs"
 
 inherit geek-sources
 
