@@ -35,6 +35,7 @@ SUPPORTED_USES="aufs bfq brand -build fedora gentoo ice mageia suse symlink zfs"
 
 inherit geek-sources
 
+HOMEPAGE="https://github.com/init6/init_6/wiki/${PN}"
 KEYWORDS="~amd64 ~x86"
 
 DESCRIPTION="Full sources for the Linux kernel including: fedora, grsecurity, mageia and other patches"

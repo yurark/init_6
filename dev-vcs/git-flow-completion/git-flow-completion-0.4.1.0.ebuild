@@ -7,6 +7,7 @@ EAPI="3"
 DESCRIPTION="git flow completion for bash and zsh"
 GITHUB_USER="bobthecow"
 GITHUB_TAG="${PV}"
+HOMEPAGE="https://github.com/${GITHUB_USER}/${PN}"
 SRC_URI="https://github.com/${GITHUB_USER}/${PN}/tarball/${GITHUB_TAG} -> ${P}.tar.gz"
 SRC_HASH="b399150"
 
