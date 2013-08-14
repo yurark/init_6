@@ -26,15 +26,13 @@ In this overlay you will find
 -----------------------------
  * [app-emulation/wine](https://github.com/init6/init_6/tree/master/app-emulation/wine) with desktop and icon files and with with [with Maarten Lankhorst's multimedia patches, including PulseAudio support](http://repo.or.cz/w/wine/multimedia.git)
  * [app-misc/mc](https://github.com/init6/init_6/tree/master/app-misc/mc) with desktop and icon files
- * [media-video/mplayer](https://github.com/init6/init_6/tree/master/media-video/mplayer) with desktop and icon files
- * [media-video/mplayer2](https://github.com/init6/init_6/tree/master/media-video/mplayer2) with desktop and icon files
  * [net-irc/irssi](https://github.com/init6/init_6/tree/master/net-irc/irssi) with desktop and icon files
  * [sys-kernel/vanilla-sources](https://github.com/init6/init_6/blob/master/sys-kernel/vanilla-sources/vanilla-sources-9999.ebuild) live 9999 git ebuild
  * [sys-kernel/geek-sources](https://github.com/init6/init_6/tree/master/sys-kernel/geek-sources) [Full geek`s kernel linux sources including](https://github.com/init6/init_6/wiki/geek-sources):
      * **aufs** - [AnotherUnionFS](http://aufs.sourceforge.net)
      * **bfq** - [Budget Fair Queueing Budget I/O Scheduler](http://algo.ing.unimo.it/people/paolo/disk_sched/sources.php)
      * **bld** - [Alternate CPU load distribution technique for Linux kernel scheduler](http://code.google.com/p/bld)
-     * **branding** - Enable Gentoo specific branding.
+     * **brand** - Enable Gentoo specific branding.
      * **ck** - [Enable Con Kolivas' high performance patchset](http://users.on.net/~ckolivas/kernel)
      * **deblob** - [Remove binary blobs from kernel sources to provide libre license compliance](http://linux-libre.fsfla.org/pub/linux-libre)
      * **fedora** - [Use Fedora kernel patches](http://pkgs.fedoraproject.org/cgit/kernel.git)

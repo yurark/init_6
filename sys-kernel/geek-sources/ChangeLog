@@ -3,6 +3,19 @@
 # $Header: $
 
 
+*geek-sources-3.10.6 (12 Aug 2013)
+
+  12 Aug 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
+  +geek-sources-3.10.6.ebuild
+  -linux-geek.eclass
+  +geek-aufs.eclass +geek-bfq.eclass +geek-bld.eclass +geek-brand.eclass +geek-build.eclass
+  +geek-ck.eclass +geek-deblob.eclass +geek-fedora.eclass +geek-fix.eclass +geek-gentoo.eclass
+  +geek-grsec.eclass +geek-ice.eclass +geek-linux.eclass +geek-lqx.eclass +geek-mageia.eclass
+  +geek-patch.eclass +geek-pax.eclass +geek-pf.eclass +geek-reiser4.eclass +geek-rt.eclass
+  +geek-spl.eclass +geek-squeue.eclass +geek-suse.eclass +geek-uksm.eclass +geek-upatch.eclass
+  +geek-utils.eclass +geek-zen.eclass +geek-zfs.eclass
+  Rename USE flags: branding --> brand.
+
 *geek-sources-3.9.2 (16 May 2013)
 
   16 May 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
