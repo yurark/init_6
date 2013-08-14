@@ -80,17 +80,22 @@ geek-bld_src_unpack() {
 	local CWD="${T}/bld"
 	local CTD="${T}/bld"$$
 	shift
-	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
-	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"
-	cd "${CTD}" || die "${RED}cd ${CTD} failed${NORMAL}"
 
-	cp "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/bld-${BLD_VER}.tar.bz2" "bld-${BLD_VER}.tar.bz2" || die "${RED}cp ${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/bld-${BLD_VER}.tar.bz2 bld-${BLD_VER}.tar.bz2 failed${NORMAL}"
-	tar -xjpf "bld-${BLD_VER}.tar.bz2" || die "${RED}tar -xjpf bld-${BLD_VER}.tar.bz2 failed${NORMAL}"
-	find "${CTD}/bld-${BLD_VER}/" -name "*-${BLD_VER}.patch" -exec cp {} "${CWD}" \ > /dev/null 2>&1;
+	if [ "${VERSION}" = "3" -a "${PATCHLEVEL}" = "10" ]; then
+		einfo "Do nothing"
+	else
+		test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
+		test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"
+		cd "${CTD}" || die "${RED}cd ${CTD} failed${NORMAL}"
 
-	rm -rf "${CTD}" || die "${RED}rm -rf ${CTD} failed${NORMAL}"
+		cp "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/bld-${BLD_VER}.tar.bz2" "bld-${BLD_VER}.tar.bz2" || die "${RED}cp ${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/bld-${BLD_VER}.tar.bz2 bld-${BLD_VER}.tar.bz2 failed${NORMAL}"
+		tar -xjpf "bld-${BLD_VER}.tar.bz2" || die "${RED}tar -xjpf bld-${BLD_VER}.tar.bz2 failed${NORMAL}"
+		find "${CTD}/bld-${BLD_VER}/" -name "*-${BLD_VER}.patch" -exec cp {} "${CWD}" \ > /dev/null 2>&1;
 
-	ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list
+		rm -rf "${CTD}" || die "${RED}rm -rf ${CTD} failed${NORMAL}"
+
+		ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list
+	fi
 }
 
 # @FUNCTION: src_prepare
@@ -100,7 +105,7 @@ geek-bld_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	if [ "${VERSION}" = "3" -a "${PATCHLEVEL}" = "10" ]; then
-		ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/BLD-${BLD_VER}.patch" "${BLD_INF}"
+		ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/bld-${BLD_VER}.patch" "${BLD_INF}"
 	else
 		ApplyPatch "${T}/bld/patch_list" "${BLD_INF}"
 		mv "${T}/bld" "${S}/patches/bld" || die "${RED}mv ${T}/bld ${S}/patches/bld failed${NORMAL}"
