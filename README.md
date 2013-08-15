@@ -62,8 +62,8 @@ Release security & signing
 
 All release media will have its Manifest file signed by one of the keys listed on this page.
 
-| Key ID        | Key Type                | Key Fingerprint                                   | Key Description                                   | Created    | Expires    | Revoked    | Notes      |
-| ------------- |:-----------------------:| -------------------------------------------------:| -------------------------------------------------:| ----------:| ----------:| ----------:| ----------:|
-| B9489F0C      |  2048-bit DSA / ElGamal | E10F 898F F87E 82A6 928E EC6E 4DFA 96F5 B948 9F0C | Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com> | 2013-08-13 | 2014-02-09 |            |            |
+| Key ID | Key Type | Key Fingerprint | Key Description | Created | Expires | Revoked | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| B9489F0C | 2048-bit DSA/ElGamal | E10F 898F F87E 82A6 928E EC6E 4DFA 96F5 B948 9F0C | Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com> | 2013-08-13 | 2014-02-09 | | |
 
 You will find more in the [GnuPG Gentoo User Guide](http://www.gentoo.org/doc/en/gnupg-user.xml)
