@@ -218,6 +218,21 @@ geek-linux_src_install() {
 		geek-build_src_compile
 	fi
 
+	local version_h_name="usr/src/linux-${KV_FULL}/include/linux"
+	local version_h="${ROOT}${version_h_name}"
+
+	if [ -f "${version_h}" ]; then
+		einfo "Discarding previously installed version.h to avoid collisions"
+		addwrite "/${version_h_name}"
+		rm -f "${version_h}"
+	fi
+
+	cd "${S}" || die "${RED}cd ${S} failed${NORMAL}"
+	dodir /usr/src
+	echo ">>> Copying sources ..."
+
+	mv ${WORKDIR}/linux* "${D}"/usr/src || die "${RED}mv ${WORKDIR}/linux* ${D}/usr/src failed${NORMAL}"
+
 	if use symlink; then
 		if [ -h "/usr/src/linux" ]; then
 			addwrite "/usr/src/linux"
