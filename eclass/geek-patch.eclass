@@ -50,7 +50,7 @@ DEPEND="${DEPEND}
 geek-patch_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${patch_cmd:=${patch_cmd:-"patch -p1 -g1 --dry-run --no-backup-if-mismatch"}}
+	: ${patch_cmd:=${patch_cmd:-"patch -p1 -g1 --no-backup-if-mismatch"}}
 
 	: ${cfg_file:="/etc/portage/kernel.conf"}
 
@@ -68,6 +68,7 @@ ExtractApply() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	local patch=$1
+	debug-print "$FUNCNAME: patch=$patch"
 	shift
 	case "$patch" in
 	*.gz)       gunzip -dc    < "$patch" | $patch_cmd ${1+"$@"} ;; # app-arch/gzip
@@ -78,6 +79,7 @@ ExtractApply() {
 	*.Z)        uncompress -c < "$patch" | $patch_cmd ${1+"$@"} ;; # app-arch/gzip
 	*) $patch_cmd ${1+"$@"} < "$patch" ;;
 	esac
+	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
 }
 
 # internal function
@@ -103,7 +105,8 @@ Handler() {
 		if [ -s "$patch" ]; then # !=0
 			patch_cmd="$patch_cmd --dry-run"
 			if ExtractApply "$patch" &>/dev/null; then
-				geek-patch_init_variables
+				#geek-patch_init_variables
+				patch_cmd="patch -p1 -g1 --no-backup-if-mismatch"
 				ExtractApply "$patch" &>/dev/null
 			else
 				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
@@ -118,7 +121,8 @@ Handler() {
 		if [ "$C" -gt 8 ]; then # 8 lines
 			patch_cmd="$patch_cmd --dry-run"
 			if ExtractApply "$patch" &>/dev/null; then
-				geek-patch_init_variables
+				#geek-patch_init_variables
+				patch_cmd="patch -p1 -g1 --no-backup-if-mismatch"
 				ExtractApply "$patch" &>/dev/null
 			else
 				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
