@@ -116,8 +116,6 @@ ${RED}echo 'GEEKSOURCES_PATCHING_ORDER=\"`echo ${GEEKSOURCES_PATCHING_ORDER} | s
 ${BLUE}Otherwise i will use the default value of GEEKSOURCES_PATCHING_ORDER!${NORMAL}
 ${BLUE}And may the Force be with you…${NORMAL}"
 	fi
-
-	SKIP_UPDATE="0"
 }
 
 # @FUNCTION: src_unpack
@@ -131,7 +129,7 @@ geek-sources_src_unpack() {
 	for Current_Patch in $SKIP_KERNEL_PATCH_UPDATE; do
 		if use_if_iuse "${Current_Patch}"; then
 		case "${Current_Patch}" in
-			*) SKIP_UPDATE="1"; skip_squeue="yes" ;;
+			*) SKIP_UPDATE="1" skip_squeue="yes" ;;
 		esac
 		else continue
 		fi
