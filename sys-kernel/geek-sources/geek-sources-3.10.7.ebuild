@@ -30,8 +30,7 @@ UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}"
 ZEN_VER="3.10"
 
-#SUPPORTED_USES="aufs bfq bld brand -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zen zfs"
-SUPPORTED_USES="aufs bfq bld brand -build ck fedora gentoo ice lqx mageia pax pf reiser4 rt suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build ck fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zen zfs"
 
 inherit geek-sources
 
