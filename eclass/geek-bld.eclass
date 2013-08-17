@@ -57,7 +57,7 @@ geek-bld_init_variables() {
 
 	: ${BLD_VER:=${BLD_VER:-$KMV}}
 
-	: ${BLD_SRC:=${BLD_SRC:-"https://bld.googlecode.com/files/bld-${BLD_VER}.patch"}}
+	: ${BLD_SRC:=${BLD_SRC:-"http://bld.googlecode.com/files/bld-${BLD_VER}.patch"}}
 
 	: ${BLD_URL:=${BLD_URL:-"http://code.google.com/p/bld"}}
 
@@ -78,7 +78,6 @@ geek-bld_src_unpack() {
 	geek-bld_init_variables
 
 	local CWD="${T}/bld"
-	local CTD="${T}/bld"$$
 	shift
 	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
 	dest="${CWD}"/bld-"${PV}"-`date +"%Y%m%d"`.patch
