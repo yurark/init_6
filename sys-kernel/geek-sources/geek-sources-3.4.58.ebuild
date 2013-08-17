@@ -9,7 +9,7 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 
 #AUFS_VER="$KMV"
 BFQ_VER="3.4.0-v6r1"
-BLD_VER="${KMV}-rc4"
+#BLD_VER="${KMV}-rc4"
 CK_VER="${KMV}-ck3"
 FEDORA_VER="d0633aed96aaed8d8996ecec7213ad2bf1a819df" # Linux v3.4-10115-g829f51d
 #GENTOO_VER="$KMV"
@@ -26,7 +26,7 @@ UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.36"
 ZEN_VER="3.4"
 
-SUPPORTED_USES="aufs bfq bld -build ck fedora gentoo ice lqx mageia pax pf rt suse symlink uksm zen"
+SUPPORTED_USES="aufs bfq -build ck fedora gentoo ice lqx mageia pax pf rt suse symlink uksm zen"
 
 inherit geek-sources
 
