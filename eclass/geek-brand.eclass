@@ -57,7 +57,7 @@ geek-brand_src_prepare() {
 
 	geek-brand_init_variables
 
-	ApplyPatch "${FILESDIR}/brand/patch_list" "${BRAND_INF}"
+	ApplyPatch "${FILESDIR}/${PV}/brand/patch_list" "${BRAND_INF}"
 }
 
 # @FUNCTION: pkg_postinst

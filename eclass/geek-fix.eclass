@@ -71,6 +71,6 @@ geek-fix_src_prepare() {
 	geek-fix_init_variables
 
 	if [ "${disable_fixes}" = "no" ]; then
-		ApplyPatch "${FILESDIR}/${PV}/${Current_Patch}/patch_list" "${YELLOW}Fixes for current kernel${NORMAL}"
+		ApplyPatch "${FILESDIR}/${PV}/fix/patch_list" "${YELLOW}Fixes for current kernel${NORMAL}"
 	fi
 }

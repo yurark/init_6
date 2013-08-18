@@ -83,6 +83,7 @@ geek-spl_src_unpack() {
 	local CWD="${T}/spl"
 	shift
 
+	echo
 	einfo "Prepare kernel sources"
 	cd "${S}" || die "${RED}cd ${S} failed${NORMAL}"
 	export PORTAGE_ARCH="${ARCH}"
