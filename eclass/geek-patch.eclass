@@ -103,10 +103,15 @@ Handler() {
 	case "$patch" in
 	*.gz|*.bz|*.bz2|*.lrz|*.xz|*.zip|*.Z)
 		if [ -s "$patch" ]; then # !=0
-			patch_cmd="$patch_cmd --dry-run"
+			case "$crap_patch" in # test argument to patch
+			ignore) patch_cmd="patch -p1 -g1 --dry-run --no-backup-if-mismatch" ;;
+			will_not_pass) patch_cmd="patch -p1 -g1 --dry-run" ;;
+			esac
 			if ExtractApply "$patch" &>/dev/null; then
-				#geek-patch_init_variables
-				patch_cmd="patch -p1 -g1 --no-backup-if-mismatch"
+				case "$crap_patch" in
+				ignore) patch_cmd="patch -p1 -g1 --no-backup-if-mismatch" ;;
+				will_not_pass) patch_cmd="patch -p1 -g1" ;;
+				esac
 				ExtractApply "$patch" &>/dev/null
 			else
 				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
@@ -119,10 +124,15 @@ Handler() {
 	*)
 		local C=$(wc -l "$patch" | awk '{print $1}')
 		if [ "$C" -gt 8 ]; then # 8 lines
-			patch_cmd="$patch_cmd --dry-run"
+			case "$crap_patch" in # test argument to patch
+			ignore) patch_cmd="patch -p1 -g1 --dry-run --no-backup-if-mismatch" ;;
+			will_not_pass) patch_cmd="patch -p1 -g1 --dry-run" ;;
+			esac
 			if ExtractApply "$patch" &>/dev/null; then
-				#geek-patch_init_variables
-				patch_cmd="patch -p1 -g1 --no-backup-if-mismatch"
+				case "$crap_patch" in
+				ignore) patch_cmd="patch -p1 -g1 --no-backup-if-mismatch" ;;
+				will_not_pass) patch_cmd="patch -p1 -g1" ;;
+				esac
 				ExtractApply "$patch" &>/dev/null
 			else
 				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
