@@ -89,25 +89,17 @@ geek-aufs_src_unpack() {
 
 	if [ -d "${CSD}" ]; then
 		cd "${CSD}"
-# || die "${RED}cd ${CSD} failed${NORMAL}"
 		if [ -e ".git" ]; then # git
 			git fetch --all && git pull --all
 		fi
 	else
 		git clone "${AUFS_SRC}" "${CSD}"
-# > /dev/null 2>&1;
-
 		cd "${CSD}"
-# || die "${RED}cd ${CSD} failed${NORMAL}";
-
 		git_get_all_branches
 	fi
 
 	cp -r "${CSD}" "${CTD}"
-# || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
-
 	cd "${CTD}"
-# || die "${RED}cd ${CTD} failed${NORMAL}"
 
 	dir=( "Documentation" "fs" "include" )
 	local dest="${CWD}"/aufs3-${AUFS_VER}-`date +"%Y%m%d"`.patch
