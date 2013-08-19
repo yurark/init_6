@@ -64,6 +64,9 @@ geek-zen_init_variables() {
 	: ${ZEN_INF:=${ZEN_INF:-"${YELLOW}The Zen Kernel - ${ZEN_URL}${NORMAL}"}}
 
 	: ${HOMEPAGE:="${HOMEPAGE} ${ZEN_URL}"}
+
+#	: ${SRC_URI:="${SRC_URI}
+#		zen?	( ${ZEN_SRC} )"}
 }
 
 # @FUNCTION: src_unpack
