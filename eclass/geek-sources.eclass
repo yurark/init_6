@@ -29,7 +29,7 @@
 
 inherit geek-linux geek-utils geek-fix geek-upatch geek-squeue
 
-KNOWN_USES="aufs bfq bld brand build ck deblob fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zen zfs"
+KNOWN_USES="aufs bfq bld brand build cjktty ck deblob fedora gentoo grsec ice lqx mageia optimization pax pf reiser4 rt suse symlink uksm zen zfs"
 
 # internal function
 #
@@ -58,6 +58,7 @@ for use_flag in ${IUSE}; do
 		bld	)	inherit geek-bld ;;
 		brand	)	inherit geek-brand ;;
 		build	)	inherit geek-build ;;
+		cjktty	)	inherit geek-cjktty ;;
 		ck	)	inherit geek-ck ;;
 		deblob	)	inherit geek-deblob ;;
 		fedora	)	inherit geek-fedora ;;
@@ -66,6 +67,7 @@ for use_flag in ${IUSE}; do
 		ice	)	inherit geek-ice ;;
 		lqx	)	inherit geek-lqx ;;
 		mageia	)	inherit geek-mageia ;;
+		optimization	)	inherit geek-optimization ;;
 		pax	)	inherit geek-pax ;;
 		pf	)	inherit geek-pf ;;
 		reiser4	)	inherit geek-reiser4 ;;
@@ -88,7 +90,7 @@ geek-sources_init_variables() {
 
 	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx pf zen"}
 	: ${cfg_file:="/etc/portage/kernel.conf"}
-	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="pax lqx pf zen bfq ck gentoo grsec ice reiser4 rt bld uksm aufs mageia fedora suse zfs brand fix upatch squeue"}
+	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq ck cjktty gentoo grsec ice reiser4 rt bld uksm aufs mageia fedora suse brand fix upatch squeue"}
 	
 	local xUserOrder=""
 	local xDefOder=""
@@ -145,11 +147,13 @@ geek-sources_src_unpack() {
 				aufs	)	geek-aufs_src_unpack ;;
 				bfq	)	geek-bfq_src_unpack ;;
 				bld	)	geek-bld_src_unpack ;;
+				cjktty	)	geek-cjktty_src_unpack ;;
 				fedora	)	geek-fedora_src_unpack ;;
 				gentoo	)	geek-gentoo_src_unpack ;;
 				grsec	)	geek-grsec_src_unpack ;;
 				ice	)	geek-ice_src_unpack ;;
 				mageia	)	geek-mageia_src_unpack ;;
+				optimization	)	geek-optimization_src_unpack ;;
 				pf	)	geek-pf_src_unpack ;;
 				squeue	)	geek-squeue_src_unpack ;;
 				suse	)	geek-suse_src_unpack ;;
@@ -176,6 +180,7 @@ geek-sources_src_prepare() {
 				bfq	)	geek-bfq_src_prepare ;;
 				bld	)	geek-bld_src_prepare ;;
 				brand	)	geek-brand_src_prepare ;;
+				cjktty	)	geek-cjktty_src_prepare ;;
 				ck	)	geek-ck_src_prepare ;;
 				fedora	)	geek-fedora_src_prepare ;;
 				fix	)	geek-fix_src_prepare ;;
@@ -184,6 +189,7 @@ geek-sources_src_prepare() {
 				ice	)	geek-ice_src_prepare ;;
 				lqx	)	geek-lqx_src_prepare ;;
 				mageia	)	geek-mageia_src_prepare ;;
+				optimization	)	geek-optimization_src_prepare ;;
 				pax	)	geek-pax_src_prepare ;;
 				pf	)	geek-pf_src_prepare ;;
 				reiser4	)	geek-reiser4_src_prepare ;;

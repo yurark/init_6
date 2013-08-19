@@ -12,6 +12,7 @@
     <flag name='bld'>Alternate CPU load distribution technique for Linux kernel scheduler.</flag>
     <flag name='brand'>Enable Gentoo specific branding.</flag>
     <flag name='build'>Build kernel.</flag>
+    <flag name='cjktty'>CJK support for tty framebuffer vt.</flag>
     <flag name='ck'>Enable Con Kolivas' high performance patchset.</flag>
     <flag name='deblob'>Remove binary blobs from kernel sources to provide libre license compliance.</flag>
     <flag name='fedora'>Use Fedora kernel patches.</flag>
@@ -20,6 +21,7 @@
     <flag name='ice'>Use TuxOnIce patches.</flag>
     <flag name='lqx'>Use liquorix patches.</flag>
     <flag name='mageia'>Use Mandriva/Mageia patches.</flag>
+    <flag name='optimization'>Kernel patch enables gcc optimizations for additional CPUs.</flag>
     <flag name='pax'>Use PAX patches.</flag>
     <flag name='pf'>Use pf-kernel patches.</flag>
     <flag name='reiser4'>Use Reiser4 FS patches.</flag>
