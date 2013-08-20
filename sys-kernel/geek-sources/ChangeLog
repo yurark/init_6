@@ -3,6 +3,12 @@
 # $Header: $
 
 
+*geek-sources-3.10.7 (19 Aug 2013)
+
+  19 Aug 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
+  +geek-sources-3.10.7.ebuild
+  +geek-cjktty.eclass +geek-optimization.eclass
+
 *geek-sources-3.10.6 (12 Aug 2013)
 
   12 Aug 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
