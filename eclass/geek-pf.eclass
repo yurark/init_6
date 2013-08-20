@@ -66,8 +66,8 @@ geek-pf_init_variables() {
 
 	: ${HOMEPAGE:="${HOMEPAGE} ${PF_URL}"}
 
-	: ${SRC_URI:="${SRC_URI}
-		pf?( ${PF_SRC} )"}
+#	: ${SRC_URI:="${SRC_URI}
+#		pf?( ${PF_SRC} )"}
 }
 
 # @FUNCTION: src_unpack

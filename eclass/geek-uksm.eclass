@@ -66,6 +66,9 @@ geek-uksm_init_variables() {
 	: ${UKSM_INF:=${UKSM_INF:-"${YELLOW}Ultra Kernel Samepage Merging - ${UKSM_URL}${NORMAL}"}}
 
 	: ${HOMEPAGE:="${HOMEPAGE} ${UKSM_URL}"}
+
+	: ${SRC_URI:="${SRC_URI}
+		uksm?	( ${UKSM_SRC} )"}
 }
 
 # @FUNCTION: src_unpack

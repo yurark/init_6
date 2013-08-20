@@ -33,6 +33,7 @@ In this overlay you will find
      * **bfq** - [Budget Fair Queueing Budget I/O Scheduler](http://algo.ing.unimo.it/people/paolo/disk_sched/sources.php)
      * **bld** - [Alternate CPU load distribution technique for Linux kernel scheduler](http://code.google.com/p/bld)
      * **brand** - Enable Gentoo specific branding.
+     * **cjktty** - [CJK support for tty framebuffer vt](https://github.com/Gentoo-zh/linux-cjktty)
      * **ck** - [Enable Con Kolivas' high performance patchset](http://users.on.net/~ckolivas/kernel)
      * **deblob** - [Remove binary blobs from kernel sources to provide libre license compliance](http://linux-libre.fsfla.org/pub/linux-libre)
      * **fedora** - [Use Fedora kernel patches](http://pkgs.fedoraproject.org/cgit/kernel.git)
@@ -41,6 +42,7 @@ In this overlay you will find
      * **ice** - [Use TuxOnIce patches](https://github.com/NigelCunningham/tuxonice-kernel)
      * **lqx** - [Use liquorix patches](http://liquorix.net)
      * **mageia** - [Use Mandriva/Mageia patches](http://svnweb.mageia.org/packages/cauldron/kernel)
+     * **optimization** - [Kernel patch enables gcc optimizations for additional CPUs](https://github.com/graysky2/kernel_gcc_patch)
      * **pax** - [Use PAX patches](http://pax.grsecurity.net)
      * **pf** - [Use pf-kernel patches](http://pf.natalenko.name)
      * **reiser4** - [Use Reiser4 FS patches](http://sourceforge.net/projects/reiser4)
