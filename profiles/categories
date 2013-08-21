@@ -11,6 +11,7 @@ net-irc
 net-wireless
 sys-apps
 sys-devel
+sys-firmware
 sys-kernel
 sys-libs
 virtual
