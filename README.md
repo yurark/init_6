@@ -29,7 +29,7 @@ In this overlay you will find
  * [net-irc/irssi](https://github.com/init6/init_6/tree/master/net-irc/irssi) with desktop and icon files
  * [sys-kernel/vanilla-sources](https://github.com/init6/init_6/blob/master/sys-kernel/vanilla-sources/vanilla-sources-9999.ebuild) live 9999 git ebuild
  * [sys-kernel/geek-sources](https://github.com/init6/init_6/tree/master/sys-kernel/geek-sources) [Full geek`s kernel linux sources including](https://github.com/init6/init_6/wiki/geek-sources):
-     * **aufs** - [AnotherUnionFS](http://aufs.sourceforge.net)
+     * **aufs** - [Another Union FS](http://aufs.sourceforge.net)
      * **bfq** - [Budget Fair Queueing Budget I/O Scheduler](http://algo.ing.unimo.it/people/paolo/disk_sched/sources.php)
      * **bld** - [Alternate CPU load distribution technique for Linux kernel scheduler](http://code.google.com/p/bld)
      * **brand** - Enable Gentoo specific branding.
@@ -38,7 +38,7 @@ In this overlay you will find
      * **deblob** - [Remove binary blobs from kernel sources to provide libre license compliance](http://linux-libre.fsfla.org/pub/linux-libre)
      * **fedora** - [Use Fedora kernel patches](http://pkgs.fedoraproject.org/cgit/kernel.git)
      * **gentoo** - [Use Gentoo kernel patches](http://dev.gentoo.org/~mpagano/genpatches)
-     * **grsec** - [Use grsecurity patches](http://git.overlays.gentoo.org/gitweb/?p=proj/hardened-patchset.git;a=summary)
+     * **grsec** - [Use hardened-patchset](http://git.overlays.gentoo.org/gitweb/?p=proj/hardened-patchset.git;a=summary) which includes a [grsecurity patches](http://grsecurity.net)
      * **ice** - [Use TuxOnIce patches](https://github.com/NigelCunningham/tuxonice-kernel)
      * **lqx** - [Use liquorix patches](http://liquorix.net)
      * **mageia** - [Use Mandriva/Mageia patches](http://svnweb.mageia.org/packages/cauldron/kernel)
