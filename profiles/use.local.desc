@@ -16,9 +16,9 @@ sys-kernel/geek-sources:ck - Enable Con Kolivas' high performance patchset
 sys-kernel/geek-sources:deblob - Remove binary blobs from kernel sources to provide libre license compliance
 sys-kernel/geek-sources:fedora - Use Fedora kernel patches
 sys-kernel/geek-sources:gentoo - Use Gentoo kernel patches
-sys-kernel/geek-sources:grsec - Use grsecurity patches
+sys-kernel/geek-sources:grsec - Use hardened-patchset which includes a grsecurity patches
 sys-kernel/geek-sources:ice - Use TuxOnIce patches
-sys-kernel/geek-sources:lqx - Use liquorix patches
+sys-kernel/geek-sources:lqx - Use Liquorix patches
 sys-kernel/geek-sources:mageia - Use Mandriva/Mageia patches
 sys-kernel/geek-sources:optimization - Kernel patch enables gcc optimizations for additional CPUs
 sys-kernel/geek-sources:pax - Use PAX patches
