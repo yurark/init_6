@@ -62,23 +62,23 @@ geek-optimization_init_variables() {
 	: ${OPTIMIZATION_URL:=${OPTIMIZATION_URL:-"https://github.com/graysky2/kernel_gcc_patch"}}
 
 	: ${OPTIMIZATION_INF:=${OPTIMIZATION_INF:-"${YELLOW}Kernel patch enables gcc optimizations for additional CPUs - ${OPTIMIZATION_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${OPTIMIZATION_URL}"}
-
-	: ${DEPEND:="${DEPEND}
-		optimization?	( >=sys-devel/gcc-4.8 )"}
-
-	: ${SRC_URI:="${SRC_URI}
-		optimization?	( ${OPTIMIZATION_SRC} )"}
 }
+
+geek-optimization_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${OPTIMIZATION_URL}"
+
+DEPEND="${DEPEND}
+	optimization?	( >=sys-devel/gcc-4.8 )"
+
+SRC_URI="${SRC_URI}
+	optimization?	( ${OPTIMIZATION_SRC} )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-optimization_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-optimization_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/optimization"
 	local CWD="${T}/optimization"

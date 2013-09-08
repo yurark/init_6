@@ -117,17 +117,17 @@ geek-linux_init_variables() {
 
 	local rm_unneeded_arch_cfg=$(source $cfg_file 2>/dev/null; echo ${rm_unneeded_arch})
 	: ${rm_unneeded_arch:=${rm_unneeded_arch_cfg:-no}} # rm_unneeded-arch=yes/no
-	einfo "${BLUE}Remove unneeded architectures -->${NORMAL} ${RED}$rm_unneeded_arch${NORMAL}"
 }
 
+geek-linux_init_variables
+
+# einfo "${BLUE}Remove unneeded architectures -->${NORMAL} ${RED}$rm_unneeded_arch${NORMAL}"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-linux_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-linux_init_variables
 
 	if [ "${A}" != "" ]; then
 		ebegin "Extract the sources"

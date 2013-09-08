@@ -65,21 +65,22 @@ geek-aufs_init_variables() {
 	: ${AUFS_URL:=${AUFS_URL:-"http://aufs.sourceforge.net"}}
 
 	: ${AUFS_INF:="${YELLOW}Another UnionFS - ${AUFS_URL}${NORMAL}"}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${AUFS_URL}"}
-
-	: ${DEPEND:="${DEPEND}
-		sys-fs/aufs-util
-		sys-fs/squashfs-tools"}
 }
+
+geek-aufs_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${AUFS_URL}"
+
+DEPEND="${DEPEND}
+	aufs?	( dev-vcs/git
+		sys-fs/aufs-util
+		sys-fs/squashfs-tools )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-aufs_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-aufs_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/aufs"
 	local CWD="${T}/aufs"

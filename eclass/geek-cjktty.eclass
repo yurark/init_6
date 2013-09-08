@@ -62,20 +62,20 @@ geek-cjktty_init_variables() {
 	: ${CJKTTY_URL:=${CJKTTY_URL:-"https://github.com/Gentoo-zh/linux-cjktty"}} # http://sourceforge.net/projects/cjktty
 
 	: ${CJKTTY_INF:=${CJKTTY_INF:-"${YELLOW}CJK support for tty framebuffer vt - ${CJKTTY_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${CJKTTY_URL}"}
-
-#	: ${SRC_URI:="${SRC_URI}
-#		cjktty?	( ${CJKTTY_SRC} )"}
 }
+
+geek-cjktty_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${CJKTTY_URL}"
+
+#SRC_URI="${SRC_URI}
+#	cjktty?	( ${CJKTTY_SRC} )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-cjktty_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-cjktty_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/cjktty"
 	local CWD="${T}/cjktty"

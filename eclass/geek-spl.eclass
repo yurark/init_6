@@ -65,19 +65,22 @@ geek-spl_init_variables() {
 	: ${SPL_URL=${SPL_URL:-"http://zfsonlinux.org"}}
 
 	: ${SPL_INF:=${SPL_INF:-"${YELLOW}Integrate Solaris Porting Layer - ${SPL_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${SPL_URL}"}
-
-	: ${LICENSE:="${LICENSE} GPL-3"}
 }
+
+geek-spl_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${SPL_URL}"
+
+LICENSE="${LICENSE} GPL-3"
+
+DEPEND="${DEPEND}
+	zfs?	( dev-vcs/git )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-spl_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-spl_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/spl"
 	local CWD="${T}/spl"

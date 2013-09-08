@@ -64,20 +64,20 @@ geek-uksm_init_variables() {
 	: ${UKSM_URL:=${UKSM_URL:-"http://kerneldedup.org"}}
 
 	: ${UKSM_INF:=${UKSM_INF:-"${YELLOW}Ultra Kernel Samepage Merging - ${UKSM_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${UKSM_URL}"}
-
-	: ${SRC_URI:="${SRC_URI}
-		uksm?	( ${UKSM_SRC} )"}
 }
+
+geek-uksm_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${UKSM_URL}"
+
+SRC_URI="${SRC_URI}
+	uksm?	( ${UKSM_SRC} )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-uksm_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-uksm_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/uksm"
 	local CWD="${T}/uksm"

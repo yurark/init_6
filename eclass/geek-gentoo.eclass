@@ -66,17 +66,20 @@ geek-gentoo_init_variables() {
 	: ${GENTOO_URL:=${GENTOO_URL:-"http://dev.gentoo.org/~mpagano/genpatches"}}
 
 	: ${GENTOO_INF:=${GENTOO_INF:-"${YELLOW}Gentoo patches - ${GENTOO_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${GENTOO_URL}"}
 }
+
+geek-gentoo_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${GENTOO_URL}"
+
+DEPEND="${DEPEND}
+	gentoo?	( dev-vcs/subversion )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-gentoo_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-gentoo_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/gentoo"
 	local CWD="${T}/gentoo"

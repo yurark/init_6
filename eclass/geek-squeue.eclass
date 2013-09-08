@@ -66,22 +66,26 @@ geek-squeue_init_variables() {
 
 	: ${SQUEUE_INF:=${SQUEUE_INF:-"${YELLOW}Stable-queue patch-set - ${SQUEUE_URL}${NORMAL}"}}
 
-	: ${HOMEPAGE:="${HOMEPAGE} ${SQUEUE_URL}"}
-
 	: ${cfg_file:="/etc/portage/kernel.conf"}
 
 	local skip_squeue_cfg=$(source $cfg_file 2>/dev/null; echo ${skip_squeue})
 	: ${skip_squeue:=${skip_squeue_cfg:-no}} # skip_squeue=yes/no
-	einfo "${BLUE}Skip stable-queue -->${NORMAL} ${RED}$skip_squeue${NORMAL}"
 }
+
+geek-squeue_init_variables
+
+# einfo "${BLUE}Skip stable-queue -->${NORMAL} ${RED}$skip_squeue${NORMAL}"
+
+HOMEPAGE="${HOMEPAGE} ${SQUEUE_URL}"
+
+DEPEND="${DEPEND}
+	dev-vcs/git"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-squeue_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-squeue_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/squeue"
 	local CWD="${T}/squeue"

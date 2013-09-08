@@ -62,17 +62,17 @@ geek-bfq_init_variables() {
 	: ${BFQ_URL:=${BFQ_URL:-"http://algo.ing.unimo.it/people/paolo/disk_sched/"}}
 
 	: ${BFQ_INF:=${BFQ_INF:-"${YELLOW}Budget Fair Queueing Budget I/O Scheduler - ${BFQ_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${BFQ_URL}"}
 }
+
+geek-bfq_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${BFQ_URL}"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-bfq_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-bfq_init_variables
 
 	local CWD="${T}/bfq"
 	shift

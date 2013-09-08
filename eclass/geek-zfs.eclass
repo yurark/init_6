@@ -65,22 +65,23 @@ geek-zfs_init_variables() {
 	: ${ZFS_URL:=${ZFS_URL:-"http://zfsonlinux.org"}}
 
 	: ${ZFS_INF:=${ZFS_INF:-"${YELLOW}Integrate Native ZFS on Linux - ${ZFS_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${ZFS_URL}"}
-
-	: ${LICENSE:="${LICENSE} GPL-3"}
-
-	: ${DEPEND:="${DEPEND}
-		zfs?	( sys-fs/zfs[kernel-builtin(+)] )"}
 }
+
+geek-zfs_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${ZFS_URL}"
+
+LICENSE="${LICENSE} GPL-3"
+
+DEPEND="${DEPEND}
+	zfs?	( dev-vcs/git
+		sys-fs/zfs[kernel-builtin(+)] )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-zfs_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-zfs_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/zfs"
 	local CWD="${T}/zfs"

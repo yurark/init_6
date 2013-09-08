@@ -35,11 +35,11 @@ EXPORT_FUNCTIONS ApplyPatch SmartApplyPatch
 # *.Z        -> uncompress -c -> app-arch/gzip
 
 DEPEND="${DEPEND}
-		app-arch/bzip2
-		app-arch/gzip
-		app-arch/lrzip
-		app-arch/unzip
-		app-arch/xz-utils"
+	app-arch/bzip2
+	app-arch/gzip
+	app-arch/lrzip
+	app-arch/unzip
+	app-arch/xz-utils"
 
 # @FUNCTION: init_variables
 # @INTERNAL
@@ -56,8 +56,11 @@ geek-patch_init_variables() {
 
 	local crap_patch_cfg=$(source $cfg_file 2>/dev/null; echo ${crap_patch})
 	: ${crap_patch:=${crap_patch_cfg:-ignore}} # crap_patch=ignore/will_not_pass
-#	einfo "${BLUE}Crap patch -->${NORMAL} ${RED}$crap_patch${NORMAL}"
 }
+
+geek-patch_init_variables
+
+# einfo "${BLUE}Crap patch -->${NORMAL} ${RED}$crap_patch${NORMAL}"
 
 # iternal function
 #
@@ -166,8 +169,6 @@ Handler() {
 # Main function
 geek-patch_ApplyPatch() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-patch_init_variables
 
 	local patch=$1
 	debug-print "$FUNCNAME: patch=$patch"

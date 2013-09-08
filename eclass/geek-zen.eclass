@@ -62,20 +62,20 @@ geek-zen_init_variables() {
 	: ${ZEN_URL:=${ZEN_URL:-"https://github.com/damentz/zen-kernel"}}
 
 	: ${ZEN_INF:=${ZEN_INF:-"${YELLOW}The Zen Kernel - ${ZEN_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${ZEN_URL}"}
-
-#	: ${SRC_URI:="${SRC_URI}
-#		zen?	( ${ZEN_SRC} )"}
 }
+
+geek-zen_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${ZEN_URL}"
+
+#SRC_URI="${SRC_URI}
+#	zen?	( ${ZEN_SRC} )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-zen_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-zen_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/zen"
 	local CWD="${T}/zen"
