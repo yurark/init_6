@@ -63,20 +63,20 @@ geek-pf_init_variables() {
 	: ${PF_URL:=${PF_URL:-"http://pf.natalenko.name"}}
 
 	: ${PF_INF:=${PF_INF:-"${YELLOW}pf-kernel patches - ${PF_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${PF_URL}"}
-
-#	: ${SRC_URI:="${SRC_URI}
-#		pf?( ${PF_SRC} )"}
 }
+
+geek-pf_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${PF_URL}"
+
+#SRC_URI="${SRC_URI}
+#	pf?( ${PF_SRC} )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-pf_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-pf_init_variables
 
 	local CWD="${T}/pf"
 	local CTD="${T}/pf"$$

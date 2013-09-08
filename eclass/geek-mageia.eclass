@@ -65,17 +65,20 @@ geek-mageia_init_variables() {
 	: ${MAGEIA_URL:=${MAGEIA_URL:-"http://www.mageia.org"}}
 
 	: ${MAGEIA_INF:=${MAGEIA_INF:-"${YELLOW}Mageia - ${MAGEIA_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${MAGEIA_URL}"}
 }
+
+geek-mageia_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${MAGEIA_URL}"
+
+DEPEND="${DEPEND}
+	mageia?	( dev-vcs/subversion )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-mageia_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-mageia_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/mageia"
 	local CWD="${T}/mageia"

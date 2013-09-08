@@ -126,6 +126,11 @@ ${BLUE}And may the Force be with you…${NORMAL}"
 geek-sources_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
 
+	einfo "${BLUE}Crap patch -->${NORMAL} ${RED}$crap_patch${NORMAL}"
+	einfo "${BLUE}Disable fixes -->${NORMAL} ${RED}$disable_fixes${NORMAL}"
+	einfo "${BLUE}Remove unneeded architectures -->${NORMAL} ${RED}$rm_unneeded_arch${NORMAL}"
+	einfo "${BLUE}Skip stable-queue -->${NORMAL} ${RED}$skip_squeue${NORMAL}"
+
 	geek-sources_init_variables
 
 	for Current_Patch in $SKIP_KERNEL_PATCH_UPDATE; do
