@@ -63,8 +63,6 @@ geek-fix_init_variables() {
 
 geek-fix_init_variables
 
-# einfo "${BLUE}Disable fixes -->${NORMAL} ${RED}$disable_fixes${NORMAL}"
-
 # @FUNCTION: src_prepare
 # @USAGE:
 # @DESCRIPTION: Prepare source packages and do any necessary patching or fixes.

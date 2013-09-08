@@ -121,8 +121,6 @@ geek-linux_init_variables() {
 
 geek-linux_init_variables
 
-# einfo "${BLUE}Remove unneeded architectures -->${NORMAL} ${RED}$rm_unneeded_arch${NORMAL}"
-
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.

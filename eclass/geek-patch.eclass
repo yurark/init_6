@@ -60,8 +60,6 @@ geek-patch_init_variables() {
 
 geek-patch_init_variables
 
-# einfo "${BLUE}Crap patch -->${NORMAL} ${RED}$crap_patch${NORMAL}"
-
 # iternal function
 #
 # @FUNCTION: ExtractApply
