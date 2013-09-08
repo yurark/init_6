@@ -65,20 +65,21 @@ geek-grsec_init_variables() {
 	: ${GRSEC_URL:=${GRSEC_URL:-"http://hardened.gentoo.org"}}
 
 	: ${GRSEC_INF:=${GRSEC_INF:-"${YELLOW}GrSecurity patches - ${GRSEC_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${GRSEC_URL}"}
-
-	: ${DEPEND:="${DEPEND}
-		grsec?	( >=sys-apps/gradm-2.2.2 )"}
 }
 
+geek-grsec_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${GRSEC_URL}"
+
+DEPEND="${DEPEND}
+	grsec?	( dev-vcs/git
+		>=sys-apps/gradm-2.2.2 )"
+	
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-grsec_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-grsec_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/grsec"
 	local CWD="${T}/grsec"

@@ -66,17 +66,20 @@ geek-fedora_init_variables() {
 	: ${FEDORA_URL:=${FEDORA_URL:-"http://fedoraproject.org"}}
 
 	: ${FEDORA_INF:=${FEDORA_INF:-"${YELLOW}Fedora - ${FEDORA_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${FEDORA_URL}"}
 }
+
+geek-fedora_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${FEDORA_URL}"
+
+DEPEND="${DEPEND}
+	fedora?	( dev-vcs/git )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-fedora_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-fedora_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/fedora"
 	local CWD="${T}/fedora"

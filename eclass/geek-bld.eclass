@@ -62,20 +62,20 @@ geek-bld_init_variables() {
 	: ${BLD_URL:=${BLD_URL:-"http://code.google.com/p/bld"}}
 
 	: ${BLD_INF:=${BLD_INF:-"${YELLOW}Alternate CPU load distribution technique for Linux kernel scheduler - ${BLD_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${BLD_URL}"}
-
-	: ${SRC_URI:="${SRC_URI}
-		bld?( ${BLD_SRC} )"}
 }
+
+geek-bld_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${BLD_URL}"
+
+SRC_URI="${SRC_URI}
+	bld?	( ${BLD_SRC} )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-bld_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-bld_init_variables
 
 	local CWD="${T}/bld"
 	shift

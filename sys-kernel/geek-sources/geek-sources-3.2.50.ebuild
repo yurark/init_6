@@ -18,10 +18,10 @@ GRSEC_VER="${PV}"
 LQX_VER="3.2.28-1"
 LQX_SRC="http://liquorix.net/sources/legacy/${LQX_VER}.patch.gz"
 MAGEIA_VER="releases/3.2.9/2.mga2"
-PAX_VER="3.2.50-test114"
+PAX_VER="3.2.50-test119"
 #PF_VER="3.2.7-pf"
 SUSE_VER="2206a5c5b9aa64bd9a741830257f184818a0f6ee" # rpm-3.2.0-2
-RT_VER="3.2.46-rt67"
+RT_VER="3.2.50-rt70"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.40"
 

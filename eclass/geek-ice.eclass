@@ -62,24 +62,25 @@ geek-ice_init_variables() {
 	: ${ICE_URL:=${ICE_URL:-"http://tuxonice.net"}}
 
 	: ${ICE_INF:=${ICE_INF:-"${YELLOW}TuxOnIce - ${ICE_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${ICE_URL}"}
-
-	: ${DEPEND:="${DEPEND}
-		ice?	( >=sys-apps/tuxonice-userui-1.0
-	|| ( >=sys-power/hibernate-script-2.0 sys-power/pm-utils ) )"}
-
-#	: ${SRC_URI:="${SRC_URI}
-#		ice?	( ${ICE_SRC} )"}
 }
+
+geek-ice_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${ICE_URL}"
+
+DEPEND="${DEPEND}
+	ice?	( dev-vcs/git
+		>=sys-apps/tuxonice-userui-1.0
+		|| ( >=sys-power/hibernate-script-2.0 sys-power/pm-utils ) )"
+
+#SRC_URI="${SRC_URI}
+#	ice?	( ${ICE_SRC} )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-ice_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-ice_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/ice"
 	local CWD="${T}/ice"

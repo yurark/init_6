@@ -65,17 +65,20 @@ geek-suse_init_variables() {
 	: ${SUSE_URL:=${SUSE_URL:-"http://www.opensuse.org"}}
 
 	: ${SUSE_INF:=${SUSE_INF:-"${YELLOW}OpenSuSE - ${SUSE_URL}${NORMAL}"}}
-
-	: ${HOMEPAGE:="${HOMEPAGE} ${SUSE_URL}"}
 }
+
+geek-suse_init_variables
+
+HOMEPAGE="${HOMEPAGE} ${SUSE_URL}"
+
+DEPEND="${DEPEND}
+	suse?	( dev-vcs/git )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
 geek-suse_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	geek-suse_init_variables
 
 	local CSD="${GEEK_STORE_DIR}/suse"
 	local CWD="${T}/suse"
