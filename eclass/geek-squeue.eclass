@@ -74,8 +74,6 @@ geek-squeue_init_variables() {
 
 geek-squeue_init_variables
 
-# einfo "${BLUE}Skip stable-queue -->${NORMAL} ${RED}$skip_squeue${NORMAL}"
-
 HOMEPAGE="${HOMEPAGE} ${SQUEUE_URL}"
 
 DEPEND="${DEPEND}
