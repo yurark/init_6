@@ -68,8 +68,8 @@ geek-optimization_init_variables
 
 HOMEPAGE="${HOMEPAGE} ${OPTIMIZATION_URL}"
 
-DEPEND="${DEPEND}
-	optimization?	( >=sys-devel/gcc-4.8 )"
+#DEPEND="${DEPEND}
+#	optimization?	( >=sys-devel/gcc-4.8 )"
 
 SRC_URI="${SRC_URI}
 	optimization?	( ${OPTIMIZATION_SRC} )"
