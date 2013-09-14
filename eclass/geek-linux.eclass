@@ -69,7 +69,7 @@ YELLOW="\x1b[33;01m"
 
 # 0 for 3.4.0
 if [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ] ; then
-	: ${PV:="${KMV}"} # default PV=3.4.0 new PV=3.4
+	PV="${KMV}" # default PV=3.4.0 new PV=3.4
 	if [[ "${PR}" == "r0" ]] ; then
 		SKIP_UPDATE=1 # Skip update to latest upstream
 	fi
