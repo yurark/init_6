@@ -3,6 +3,11 @@
 # $Header: $
 
 
+*geek-sources-3.11.1 (15 Sep 2013)
+
+  15 Sep 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
+  Bump sys-kernel/geek-sources-{3.2.50,3.4.61,3.10.11,3.11} -> sys-kernel/geek-sources-{3.2.51,3.4.62,3.10.12,3.11.1}
+
 *geek-sources-3.10.7 (19 Aug 2013)
 
   19 Aug 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
