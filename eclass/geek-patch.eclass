@@ -41,6 +41,7 @@ DEPEND="${DEPEND}
 	app-arch/unzip
 	app-arch/xz-utils"
 
+
 # @FUNCTION: init_variables
 # @INTERNAL
 # @DESCRIPTION:
@@ -62,6 +63,38 @@ geek-patch_init_variables
 
 # iternal function
 #
+# @FUNCTION: get_patch_cmd
+# @USAGE: get_patch_cmd
+# @DESCRIPTION: Get argument to patch
+get_patch_cmd () {
+	debug-print-function ${FUNCNAME} "$@"
+	debug-print "$FUNCNAME: crap_patch=$crap_patch"
+	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
+
+	case "$crap_patch" in
+	ignore) patch_cmd="patch -p1 -g1 --no-backup-if-mismatch" ;;
+	will_not_pass) patch_cmd="patch -p1 -g1" ;;
+	esac
+}
+
+# iternal function
+#
+# @FUNCTION: get_test_patch_cmd
+# @USAGE: get_test_patch_cmd
+# @DESCRIPTION: Get test argument to patch
+get_test_patch_cmd () {
+	debug-print-function ${FUNCNAME} "$@"
+	debug-print "$FUNCNAME: crap_patch=$crap_patch"
+	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
+
+	case "$crap_patch" in # test argument to patch
+	ignore) patch_cmd="patch -p1 -g1 --dry-run --no-backup-if-mismatch" ;;
+	will_not_pass) patch_cmd="patch -p1 -g1 --dry-run" ;;
+	esac
+}
+
+# iternal function
+#
 # @FUNCTION: ExtractApply
 # @USAGE: ExtractApply "<patch>"
 # @DESCRIPTION: Extract patch from *.gz, *.bz, *.bz2, *.lrz, *.xz, *.zip, *.Z
@@ -70,6 +103,8 @@ ExtractApply() {
 
 	local patch=$1
 	debug-print "$FUNCNAME: patch=$patch"
+	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
+
 	shift
 	case "$patch" in
 	*.gz)       gunzip -dc    < "$patch" | $patch_cmd ${1+"$@"} ;; # app-arch/gzip
@@ -80,7 +115,6 @@ ExtractApply() {
 	*.Z)        uncompress -c < "$patch" | $patch_cmd ${1+"$@"} ;; # app-arch/gzip
 	*) $patch_cmd ${1+"$@"} < "$patch" ;;
 	esac
-	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
 }
 
 # internal function
@@ -104,15 +138,9 @@ Handler() {
 	case "$patch" in
 	*.gz|*.bz|*.bz2|*.lrz|*.xz|*.zip|*.Z)
 		if [ -s "$patch" ]; then # !=0
-			case "$crap_patch" in # test argument to patch
-			ignore) patch_cmd="patch -p1 -g1 --dry-run --no-backup-if-mismatch" ;;
-			will_not_pass) patch_cmd="patch -p1 -g1 --dry-run" ;;
-			esac
+			get_test_patch_cmd
 			if ExtractApply "$patch" &>/dev/null; then
-				case "$crap_patch" in
-				ignore) patch_cmd="patch -p1 -g1 --no-backup-if-mismatch" ;;
-				will_not_pass) patch_cmd="patch -p1 -g1" ;;
-				esac
+				get_patch_cmd
 				ExtractApply "$patch" &>/dev/null
 			else
 				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
@@ -125,15 +153,9 @@ Handler() {
 	*)
 		local C=$(wc -l "$patch" | awk '{print $1}')
 		if [ "$C" -gt 8 ]; then # 8 lines
-			case "$crap_patch" in # test argument to patch
-			ignore) patch_cmd="patch -p1 -g1 --dry-run --no-backup-if-mismatch" ;;
-			will_not_pass) patch_cmd="patch -p1 -g1 --dry-run" ;;
-			esac
+			get_test_patch_cmd
 			if ExtractApply "$patch" &>/dev/null; then
-				case "$crap_patch" in
-				ignore) patch_cmd="patch -p1 -g1 --no-backup-if-mismatch" ;;
-				will_not_pass) patch_cmd="patch -p1 -g1" ;;
-				esac
+				get_patch_cmd
 				ExtractApply "$patch" &>/dev/null
 			else
 				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
@@ -157,6 +179,8 @@ Handler() {
 
 	;;
 	esac
+
+	get_patch_cmd
 }
 
 # @FUNCTION: ApplyPatch
@@ -181,10 +205,8 @@ geek-patch_ApplyPatch() {
 	case $patch_base_name in
 	patch_list) # list of patches
 		while read -r line; do
-			# skip empty lines
-			[[ -z "$line" ]] && continue
-			# skip comments
-			[[ $line =~ ^\ {0,}# ]] && continue
+			[[ -z "$line" ]] && continue # skip empty lines
+			[[ $line =~ ^\ {0,}# ]] && continue # skip comments
 			ebegin "Applying $line"
 				Handler "$patch_dir_name/$line"
 			eend $?

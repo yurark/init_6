@@ -100,6 +100,7 @@ geek-grsec_src_unpack() {
 
 	cd "${CTD}"/"${GRSEC_VER}" || die "${RED}cd ${CTD}/${GRSEC_VER} failed${NORMAL}"
 
+	ls -1 | grep "linux" | xargs -I{} rm -rf "{}"
 	ls -1 | xargs -I{} cp "{}" "${CWD}"
 
 	rm -rf "${CTD}" || die "${RED}rm -rf ${CTD} failed${NORMAL}"
