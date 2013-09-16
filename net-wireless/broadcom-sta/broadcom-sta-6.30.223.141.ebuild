@@ -59,8 +59,10 @@ src_prepare() {
 #	Makefile.patch: keep `emake install` working
 #	linux-3.9.0.patch: add support for kernel 3.9.0
 #	linux-3.10.0.patch: add support for kernel 3.10, bug #477372
-	epatch "${FILESDIR}/${P}-makefile.patch" \
-		"${FILESDIR}/${P}-linux-3.10.0.patch"
+	epatch "${FILESDIR}/${P}-license.patch"
+	epatch "${FILESDIR}/${P}-makefile.patch"
+#	epatch "${FILESDIR}/${P}-linux-3.10.0.patch"
+	epatch "${FILESDIR}/${P}-linux-recent.patch"
 
 	epatch_user
 }
