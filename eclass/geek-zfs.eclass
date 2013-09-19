@@ -58,7 +58,7 @@ geek-zfs_init_variables() {
 	: ${GEEK_STORE_DIR:=${GEEK_STORE_DIR:-"${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/geek"}}
 	addwrite "${GEEK_STORE_DIR}" # Disable the sandbox for this dir
 
-	: ${ZFS_VER:=${ZFS_VER:-$KMV}}
+	: ${ZFS_VER:=${ZFS_VER:-master}}
 
 	: ${ZFS_SRC:=${ZFS_SRC:-"git://github.com/zfsonlinux/zfs.git"}}
 
@@ -97,6 +97,10 @@ geek-zfs_src_unpack() {
 	fi
 
 	cp -r "${CSD}" "${CWD}" || die "${RED}cp -r ${CSD} ${CWD} failed${NORMAL}"
+	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
+
+	git_checkout "${ZFS_VER}" > /dev/null 2>&1 git pull > /dev/null 2>&1
+
 	rm -rf "${CWD}"/.git || die "${RED}rm -rf ${CWD}/.git failed${NORMAL}"
 }
 

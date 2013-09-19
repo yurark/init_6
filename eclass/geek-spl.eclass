@@ -58,7 +58,7 @@ geek-spl_init_variables() {
 	: ${GEEK_STORE_DIR:=${GEEK_STORE_DIR:-"${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/geek"}}
 	addwrite "${GEEK_STORE_DIR}" # Disable the sandbox for this dir
 
-	: ${SPL_VER:=${SPL_VER:-$KMV}}
+	: ${SPL_VER:=${SPL_VER:-master}}
 
 	: ${SPL_SRC:=${SPL_SRC:-"git://github.com/zfsonlinux/spl.git"}}
 
@@ -107,6 +107,10 @@ geek-spl_src_unpack() {
 	fi
 
 	cp -r "${CSD}" "${CWD}" || die "${RED}cp -r ${CSD} ${CWD} failed${NORMAL}"
+	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
+
+	git_checkout "${SPL_VER}" > /dev/null 2>&1 git pull > /dev/null 2>&1
+
 	rm -rf "${CWD}"/.git || die "${RED}rm -rf ${CWD}/.git failed${NORMAL}"
 }
 
