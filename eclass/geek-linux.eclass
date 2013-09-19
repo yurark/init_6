@@ -79,6 +79,15 @@ fi
 EXTRAVERSION=${EXTRAVERSION:-"-geek"}
 KV_FULL="${PVR}${EXTRAVERSION}"
 S="${WORKDIR}"/linux-"${KV_FULL}"
+
+DEPEND="!build? ( sys-apps/sed
+		  >=sys-devel/binutils-2.11.90.0.31 )"
+RDEPEND="!build? ( >=sys-libs/ncurses-5.2
+		   sys-devel/make 
+		   dev-lang/perl
+		   sys-devel/bc )"
+PDEPEND="!build? ( virtual/dev-manager )"
+
 SLOT=${SLOT:-${KMV}}
 IUSE="${IUSE} symlink"
 
