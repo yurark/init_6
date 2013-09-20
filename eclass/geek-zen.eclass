@@ -81,7 +81,7 @@ geek-zen_src_unpack() {
 	local CWD="${T}/zen"
 	local CTD="${T}/zen"$$
 	shift
-	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
+	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
 	dest="${CWD}"/zen-kernel-"${PV}"-`date +"%Y%m%d"`.patch
 	wget "${ZEN_SRC}" -O "${dest}" > /dev/null 2>&1
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"

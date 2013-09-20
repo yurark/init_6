@@ -86,8 +86,7 @@ geek-aufs_src_unpack() {
 	local CWD="${T}/aufs"
 	local CTD="${T}/aufs"$$
 	shift
-	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
-
+	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
 	if [ -d "${CSD}" ]; then
 		cd "${CSD}"
 		if [ -e ".git" ]; then # git

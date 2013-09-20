@@ -80,7 +80,7 @@ geek-cjktty_src_unpack() {
 	local CSD="${GEEK_STORE_DIR}/cjktty"
 	local CWD="${T}/cjktty"
 	shift
-	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
+	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
 	dest="${CWD}"/cjktty-"${PV}"-`date +"%Y%m%d"`.patch
 	wget "${CJKTTY_SRC}" -O "${dest}" > /dev/null 2>&1
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
