@@ -83,7 +83,7 @@ geek-uksm_src_unpack() {
 	local CWD="${T}/uksm"
 	local CTD="${T}/uksm"$$
 	shift
-	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
+	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
 	wget "${UKSM_SRC}" -O "${CWD}/${UKSM_NAME}.patch" > /dev/null 2>&1
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
 	ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list	

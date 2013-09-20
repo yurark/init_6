@@ -81,7 +81,7 @@ geek-pf_src_unpack() {
 	local CWD="${T}/pf"
 	local CTD="${T}/pf"$$
 	shift
-	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
+	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
 	dest="${CWD}"/pf-kernel-"${PV}"-`date +"%Y%m%d"`.patch
 	wget "${PF_SRC}" -O "${dest}" > /dev/null 2>&1
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"

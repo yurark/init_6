@@ -85,7 +85,7 @@ geek-suse_src_unpack() {
 	local CTD="${T}/suse"$$
 	shift
 	cd "${CSD}" >/dev/null 2>&1
-	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
+	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
 	if [ -d ${CSD} ]; then
 	cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
 		if [ -e ".git" ]; then # git
