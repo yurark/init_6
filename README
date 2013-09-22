@@ -1,0 +1,44 @@
+INIT6(8)                                                             INIT6(8)
+
+
+
+NAME
+       init6 - overlay for Gentoo Linux used by Andrey Ovcharov.
+
+DESCRIPTION
+       This overlay is used for personal hacking of Gentoo Linux: addition of
+       unofficial/unsupported ebuilds, masking/unmasking according to personal
+       preferences and so on.
+       At this unofficial place, i publish some ebuilds that may (or may not)
+       be interesting to other Gentoo users.
+
+INSTALLATION
+       Installation is rather simple: all you have to do is to register new
+       overlay in your system. Additonally, you may want to use init6 profile:
+       eselect profile list | grep init6
+
+   Installation via layman
+       You will need app-portage/layman installed:
+       emerge -avq app-portage/layman
+
+       init6 is in the official overlays list - so just run
+       layman -a init6
+
+       Don't forget to add 'source /var/lib/layman/make.conf' to the
+       /etc/portage/make.conf
+
+   Manual installation
+       Go to wherever you want to place overlays:
+       mkdir -p /var/lib/my_overlays
+       cd /var/lib/my_overlays
+
+       Clone git repository.
+       git clone https://github.com/init6/init_6.git
+
+       Register overlay in PORTDIR_OVERLAY in the /etc/make.conf.
+       PORTDIR_OVERLAY="$PORTDIR_OVERLAY /var/lib/my_overlays/init6"
+
+
+
+
+                                                                     INIT6(8)
