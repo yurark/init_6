@@ -7,21 +7,27 @@ if [ -e /etc/portage/make.conf ] ; then
 fi
 
 cd ..
-for file in $(find `pwd` -iname  \*.ebuild); do
-	echo "${file}";
+
+echo "Prepare ebuild\`s and ChangeLog"
+for file in $(find `pwd` \( -name "*.ebuild" -o -name "ChangeLog" \)); do
+#	echo "${file}";
 	cp "${file}" "${file}~";
 	echo "`cat ${PORTDIR}/header.txt`" > "${file}";
 	echo "" >> "${file}";
 	echo "`sed '1,4d' "${file}~"`" >> "${file}";
 	rm -rf "${file}~";
-	ebuild "${file}" digest;
 done;
 
-for file in $(find `pwd` -iname  ChangeLog); do
-	echo "${file}";
-	cp "${file}" "${file}~";
-	echo "`cat ${PORTDIR}/header.txt`" > "${file}";
-	echo "" >> "${file}";
-	echo "`sed '1,4d' "${file}~"`" >> "${file}";
-	rm -rf "${file}~";
+echo "Delete all current Manifest"
+find `pwd` -name Manifest -type f -exec rm {} \;
+
+echo "Make all digest"
+find `pwd` -name \*.ebuild -type f -exec ebuild {} digest > /dev/null 2>&1 \;
+
+echo "Sign all Manifest"
+printf "Enter the passphrase for gpg key:\n"
+read "PASSPHRASE"
+for file in $(find `pwd` -iname Manifest); do
+	gpg --yes --batch --passphrase="${PASSPHRASE}" --clearsign "${file}";
+	mv "${file}".asc "${file}"
 done;
