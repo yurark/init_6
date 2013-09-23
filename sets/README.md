@@ -9,10 +9,11 @@ Dynamic sets:
 			into @init6-broken (see below). Still
 			broken ebuild might be fetched as
 			dependencies. Use it, if you want to install
-			and try all known packages of enlightenment.
+			and try all known packages from overlay.
 
 Static sets:
-____________
+-------------
+
 	Meta sets:
 	----------
 

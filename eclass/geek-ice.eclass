@@ -85,7 +85,7 @@ geek-ice_src_unpack() {
 	local CSD="${GEEK_STORE_DIR}/ice"
 	local CWD="${T}/ice"
 	shift
-	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
+	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
 	dest="${CWD}"/tuxonice-kernel-"${PV}"-`date +"%Y%m%d"`.patch
 	wget "${ICE_SRC}" -O "${dest}" > /dev/null 2>&1
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"

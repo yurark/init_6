@@ -96,7 +96,7 @@ geek-squeue_src_unpack() {
 		git clone ${SQUEUE_SRC} ${CSD} > /dev/null 2>&1
 	fi
 
-#	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
+	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
 
 	if [ -d ${CSD}/queue-${SQUEUE_VER} ] ; then
 		cp -r "${CSD}/queue-${SQUEUE_VER}" "${CWD}" #|| die "${RED}cp -r ${CSD}/queue-${SQUEUE_VER} ${CWD} failed${NORMAL}"

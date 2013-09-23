@@ -76,8 +76,7 @@ geek-bfq_src_unpack() {
 
 	local CWD="${T}/bfq"
 	shift
-	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
-	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
+	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
 
 	get_from_url "${BFQ_SRC}" "${BFQ_VER}" > /dev/null 2>&1
 
