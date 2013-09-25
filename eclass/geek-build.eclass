@@ -95,10 +95,10 @@ geek-build_src_compile() {
 			if [[ ${ISNEWER} != "" ]]; then
 				ebegin " No kernel version found"
 					if [[ -e /usr/src/linux/.version ]]; then
-						einfo "  Foung kernel version /usr/src/linux/.version"
+						einfo "  Found kernel version /usr/src/linux/.version"
 							cat /usr/src/linux/.version > .version
 					elif [[ -e /usr/src/linux-${KV_FULL}/.version ]]; then
-						einfo "  Foung kernel version /usr/src/linux-${KV_FULL}/.version"
+						einfo "  Found kernel version /usr/src/linux-${KV_FULL}/.version"
 							cat /usr/src/linux-${KV_FULL}/.version > .version
 					fi
 				eend $
