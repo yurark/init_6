@@ -18,7 +18,9 @@ Static sets:
 	----------
 
 	@core		= Only stage3 core stuff
+	@e17		= enlightenment 17 stuff
 	@gnome		= Gnome set
+	@kernel		= Only kernel. Read [Depclean Tricks sets.conf](http://www.gentoo-pr.org/node/18)
 	@portage	= Portage stuff set
 	@toolchain	= Only toolchain
 	@wireless	= wireless stuff set
