@@ -144,7 +144,9 @@ src_prepare() {
 	# Linux 3.11 support
 	epatch "${FILESDIR}"/${PN}-linux-3.11.patch
 	# Linux 3.12 support
-	epatch "${FILESDIR}"/${PN}-linux-3.12.patch
+	if use kernel_linux && kernel_is ge 3 12 ; then
+		epatch "${FILESDIR}"/${PN}-linux-3.12.patch
+	fi
 
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
