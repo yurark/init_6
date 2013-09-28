@@ -61,8 +61,9 @@ src_prepare() {
 #	linux-3.10.0.patch: add support for kernel 3.10, bug #477372
 	epatch "${FILESDIR}/${P}-license.patch"
 	epatch "${FILESDIR}/${P}-makefile.patch"
-#	epatch "${FILESDIR}/${P}-linux-3.10.0.patch"
 	epatch "${FILESDIR}/${P}-linux-recent.patch"
+	epatch "${FILESDIR}/${P}-eth-to-wlan.patch"
+	epatch "${FILESDIR}/${P}-gcc.patch"
 
 	epatch_user
 }
