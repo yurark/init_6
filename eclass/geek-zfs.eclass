@@ -75,7 +75,7 @@ LICENSE="${LICENSE} GPL-3"
 
 DEPEND="${DEPEND}
 	zfs?	( dev-vcs/git
-		sys-fs/zfs[kernel-builtin(+)] )"
+		=sys-fs/zfs-9999[kernel-builtin(+)] )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
