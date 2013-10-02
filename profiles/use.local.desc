@@ -10,10 +10,12 @@
 sys-kernel/geek-sources:aufs - AnotherUnionFS
 sys-kernel/geek-sources:bfq - Budget Fair Queueing Budget I/O Scheduler
 sys-kernel/geek-sources:bld - Alternate CPU load distribution technique for Linux kernel scheduler
-sys-kernel/geek-sources:branding - Enable Gentoo specific branding.
+sys-kernel/geek-sources:brand - Enable Gentoo specific branding
+sys-kernel/geek-sources:build - Build kernel
 sys-kernel/geek-sources:cjktty - CJK support for tty framebuffer vt
 sys-kernel/geek-sources:ck - Enable Con Kolivas' high performance patchset
 sys-kernel/geek-sources:deblob - Remove binary blobs from kernel sources to provide libre license compliance
+sys-kernel/geek-sources:exfat - Samsung’s exFAT fs Linux driver
 sys-kernel/geek-sources:fedora - Use Fedora kernel patches
 sys-kernel/geek-sources:gentoo - Use Gentoo kernel patches
 sys-kernel/geek-sources:grsec - Use hardened-patchset which includes a grsecurity patches
@@ -26,6 +28,7 @@ sys-kernel/geek-sources:pf - Use pf-kernel patches
 sys-kernel/geek-sources:reiser4 - Use Reiser4 FS patches
 sys-kernel/geek-sources:rt - Use Ingo Molnar's realtime preempt patches
 sys-kernel/geek-sources:suse - Use OpenSuSE patches
+sys-kernel/geek-sources:symlink - Force kernel ebuilds to automatically update the /usr/src/linux symlink
 sys-kernel/geek-sources:uksm - Use Ultra Kernel Samepage Merging patches
 sys-kernel/geek-sources:zen - Use zen-kernel patches
 sys-kernel/geek-sources:zfs - The native Linux kernel port of the ZFS filesystem

@@ -1,4 +1,4 @@
-# Copyright 2004-2010 Gentoo Foundation.
+# Copyright 2004-2013 Gentoo Foundation.
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -16,12 +16,13 @@ FCFLAGS="${FCFLAGS} -frecord-gcc-switches"
 
 FEATURES="${FEATURES} usersandbox protect-owned userpriv userfetch fixlafiles news parallel-fetch sfperms unmerge-orphans unknown-features-warn usersync multilib-strict preserve-libs"
 
-#add --getbinpkg=y and PORTAGE_BINHOST when we have binhost offered
-#prepping for major use of binpkgs, we need to "fix" a few of gentoo's flaws:
+#for major use of binpkgs, we need to "fix" a few of gentoo's flaws:
 #a package built against kernel A will attempt to be used even when remerging on kernel B (often to hilarious consequences)
 #so we will define a long list of such packages and exclude them from being built and used (catch it on both ends to avoid issues)
-#DOES NOT WORK #PENTOO_BINPKG_RESTRICTED="sys-kernel/compat-drivers sys-kernel/ax88179_178a x11-drivers/ati-drivers x11-drivers/nvidia-drivers sys-fs/zfs-kmod sys-kernel/spl sys-power/bbswitch app-emulation/virtualbox-modules app-emulation/vmware-modules app-emulation/open-vm-tools-kmod"
-EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --ask-enter-invalid --keep-going=y --binpkg-respect-use=y --tree --verbose --with-bdeps=y"
+GENTOO_BINPKG_RESTRICTED="sys-kernel/compat-drivers sys-kernel/ax88179_178a x11-drivers/ati-drivers x11-drivers/nvidia-drivers sys-fs/zfs-kmod sys-kernel/spl sys-power/bbswitch \
+			app-emulation/virtualbox-modules app-emulation/vmware-modules app-emulation/open-vm-tools-kmod"
+EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --ask-enter-invalid --keep-going=y --binpkg-respect-use=y --tree --verbose --with-bdeps=y --autounmask=n"
+EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --buildpkg-exclude \"${GENTOO_BINPKG_RESTRICTED}\" --usepkg-exclude \"${GENTOO_BINPKG_RESTRICTED}\""
 
 XFCE_PLUGINS="${XFCE_PLUGINS} brightness menu logout trash"
 
@@ -30,20 +31,23 @@ INPUT_DEVICES="evdev"
 # Log eqawarn messages
 PORTAGE_ELOG_CLASSES="${PORTAGE_ELOG_CLASSES} qa"
 
-RUBY_TARGETS="ruby18 ruby19"
-
 PORTAGE_NICENESS="9"
 
-#VIDEO_CARDS="virtualbox nvidia fglrx nouveau fbdev glint intel mach64 mga nv radeon radeonhd savage sis tdfx trident vesa vga via vmware voodoo apm ark chips cirrus cyrix epson i128 i740 imstt nsc rendition s3 s3virge siliconmotion"
+VIDEO_CARDS="virtualbox nvidia fglrx nouveau fbdev glint intel mach64 mga nv radeon radeonhd savage sis tdfx trident vesa vga via vmware voodoo apm ark chips cirrus cyrix epson i128 i740 imstt nsc rendition s3 s3virge siliconmotion"
 
-#USE="${USE} X adns caps curl directfb fbcon gps jack lm_sensors lua lzma oss perl pulseaudio python ruby samba sqlite subversion xattr xinerama"
+RUBY_TARGETS="ruby19"
 
-#PORTAGE_BZIP2_COMMAND="lbzip2"
+USE="${USE} X adns caps curl directfb fbcon gps jack lm_sensors lua lzma oss perl pulseaudio python ruby samba sqlite subversion xattr xinerama -ruby_targets_ruby18"
+
+PORTAGE_BZIP2_COMMAND="lbzip2"
 
 QEMU_SOFTMMU_TARGETS="arm i386 x86_64"
 QEMU_USER_TARGETS="arm i386 x86_64"
 
 GRUB_PLATFORMS="coreboot efi-32 efi-64 emu multiboot pc qemu"
 
-# Env vars to expand into USE vars.  
+# Env vars to expand into USE vars.
 USE_EXPAND="${USE_EXPAND} COMPAT_DRIVERS_WIFI COMPAT_DRIVERS_ETHERNET COMPAT_DRIVERS_VARIOUS"
+
+#mgorny suggested this speeds up sync, in my testing it makes a rather large difference
+PORTAGE_RSYNC_EXTRA_OPTS="--omit-dir-times"

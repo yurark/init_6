@@ -2,7 +2,6 @@ app-admin
 app-emulation
 app-misc
 app-portage
-dev-db
 dev-libs
 dev-vcs
 media-fonts
