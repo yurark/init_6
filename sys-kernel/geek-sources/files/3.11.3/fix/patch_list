@@ -30,7 +30,9 @@ linux-900-hide_tsc_error.patch
 linux-950-saa716x_PCIe_interface_chipset.patch
 linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
 linux-990.11-ALSA-AMD-HD-Audio.patch
-linux-990.11-DRM-revert-e6e7920.patch
+linux-990.12-RADEON-upstream-fix-01.patch
+linux-990.12-RADEON-upstream-fix-02.patch
+linux-990.12-RADEON-upstream-fix-03.patch
 linux-991.01-ptrace_fix.patch
 linux-995-CX24120-13Z_frontend.patch
 linux-998.01-cpufreq-revert-9d3ce4af3be0235d4cf41ea9fd774205a32e58a2.patch
