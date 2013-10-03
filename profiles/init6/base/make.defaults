@@ -5,49 +5,65 @@
 # Adding -Wl,--hash-style=gnu to default LDFLAGS for linux/amd64 dev profile
 # This will help developers track packages, that don't respect LDFLAGS, down
 # more effectively
-LDFLAGS="${LDFLAGS} -Wl,--hash-style=gnu"
+LDFLAGS="${LDFLAGS} -Wl,--warn-once -Wl,--hash-style=gnu"
 
 #Adding -frecord-gcc-switches to help track down packages which don't respect *FLAGS
 #should probably leave a note in /etc/portage/make.conf about keeping this when override
-CFLAGS="${CFLAGS} -frecord-gcc-switches"
-CXXFLAGS="${CXXFLAGS} -frecord-gcc-switches"
-FFLAGS="${FFLAGS} -frecord-gcc-switches"
-FCFLAGS="${FCFLAGS} -frecord-gcc-switches"
+GRAPHITE="-falign-functions=4 -fforce-addr -floop-block -floop-interchange -floop-strip-mine -fno-ident -fomit-frame-pointer -ftracer -ftree-loop-distribution -fweb"
+CFLAGS="${CFLAGS} -frecord-gcc-switches -ftree-vectorize -mfpmath=sse,387 -mssse3 -mstackrealign -mtune=generic -pipe ${GRAPHITE}"
+CXXFLAGS="${CXXFLAGS} ${CFLAGS}"
+CPPFLAGS="${CPPFLAGS} ${CFLAGS}"
 
-FEATURES="${FEATURES} usersandbox protect-owned userpriv userfetch fixlafiles news parallel-fetch sfperms unmerge-orphans unknown-features-warn usersync multilib-strict preserve-libs"
+FEATURES="${FEATURES} buildpkg clean-logs fixlafiles multilib-strict news parallel-fetch preserve-libs protect-owned sfperms unknown-features-warn unmerge-orphans userfetch userpriv usersandbox usersync"
 
 #for major use of binpkgs, we need to "fix" a few of gentoo's flaws:
 #a package built against kernel A will attempt to be used even when remerging on kernel B (often to hilarious consequences)
 #so we will define a long list of such packages and exclude them from being built and used (catch it on both ends to avoid issues)
-GENTOO_BINPKG_RESTRICTED="sys-kernel/compat-drivers sys-kernel/ax88179_178a x11-drivers/ati-drivers x11-drivers/nvidia-drivers sys-fs/zfs-kmod sys-kernel/spl sys-power/bbswitch \
-			app-emulation/virtualbox-modules app-emulation/vmware-modules app-emulation/open-vm-tools-kmod"
-EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --ask-enter-invalid --keep-going=y --binpkg-respect-use=y --tree --verbose --with-bdeps=y --autounmask=n"
-EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --buildpkg-exclude \"${GENTOO_BINPKG_RESTRICTED}\" --usepkg-exclude \"${GENTOO_BINPKG_RESTRICTED}\""
+#GENTOO_BINPKG_RESTRICTED="sys-kernel/compat-drivers sys-kernel/ax88179_178a x11-drivers/ati-drivers x11-drivers/nvidia-drivers sys-fs/zfs-kmod sys-kernel/spl sys-power/bbswitch \
+#			app-emulation/virtualbox-modules app-emulation/vmware-modules app-emulation/open-vm-tools-kmod"
+EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --ask-enter-invalid --keep-going=y --binpkg-respect-use=y --tree --verbose --with-bdeps=y --autounmask=n --quiet-build=n"
+#EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --buildpkg-exclude \"${GENTOO_BINPKG_RESTRICTED}\" --usepkg-exclude \"${GENTOO_BINPKG_RESTRICTED}\""
 
-XFCE_PLUGINS="${XFCE_PLUGINS} brightness menu logout trash"
+# Default:		"rsync://rsync.gentoo.org/gentoo-portage"
+# North America:	"rsync://rsync.namerica.gentoo.org/gentoo-portage"
+# South America:	"rsync://rsync.samerica.gentoo.org/gentoo-portage"
+# Europe:		"rsync://rsync.europe.gentoo.org/gentoo-portage"
+# Asia:			"rsync://rsync.asia.gentoo.org/gentoo-portage"
+# Australia:		"rsync://rsync.au.gentoo.org/gentoo-portage"
+SYNC="rsync://rsync.gentoo.org/gentoo-portage"
 
-INPUT_DEVICES="evdev"
+INPUT_DEVICES="keyboard mouse synaptics evdev v4l"
+
+PORTAGE_ECLASS_WARNING_ENABLE="0"
+PORTAGE_ELOG_CLASSES="log warn error info"
+PORTAGE_ELOG_SYSTEM="echo:log,warn"
+PORT_LOGDIR="/var/log/portage"
 
 # Log eqawarn messages
 PORTAGE_ELOG_CLASSES="${PORTAGE_ELOG_CLASSES} qa"
 
-PORTAGE_NICENESS="9"
+PORTAGE_NICENESS="19"
 
-VIDEO_CARDS="virtualbox nvidia fglrx nouveau fbdev glint intel mach64 mga nv radeon radeonhd savage sis tdfx trident vesa vga via vmware voodoo apm ark chips cirrus cyrix epson i128 i740 imstt nsc rendition s3 s3virge siliconmotion"
+VIDEO_CARDS="fbdev nouveau v4l"
 
-RUBY_TARGETS="ruby19"
+# Some more forced targets
+# ruby
+RUBY_TARGETS="ruby20"
+# python
+USE_PYTHON="3.3"
+PYTHON_TARGETS="python3_3"
+# php
+PHP_TARGETS="php5-3"
 
-#USE="${USE} X adns caps fbcon lm_sensors lua lzma oss perl pulseaudio python ruby samba sqlite subversion xattr xinerama -ruby_targets_ruby18"
+USE="${USE} truetype X new-login xorg xscreensaver xv xcomposite xinerama opengl egl gles1 gles2 xvmc jpeg gif tiff png apng svg pdf djvu dvi jbig jpeg2k exif alsa mad vidix asf dvd mp4 aac x264 xvid nsplugin mp3 gstreamer cdda vpx a52 dv ffmpeg pulseaudio dts theora ogg vorbis wavpack flac lame mpeg v4l ipv6 lzma lzo symlink sqlite spell xml extras device-mapper acpi sse3 ssse3 branding xattr g3dvl X509 fam dbus threads systemd policykit gnutls dri -samba -java -perl -python -kerberos -ldap -avahi -zeroconf -gnome-keyring -consolekit -zeitgeist -nautilus -cups -orc -openrc -webkit -mms gtk gtk3 cairo gnome colord libnotify startup-notification connman libkms introspection qt3support qt4 semantic-desktop icu networkmanager bluetooth"
 
 PORTAGE_BZIP2_COMMAND="lbzip2"
 
 QEMU_SOFTMMU_TARGETS="arm i386 x86_64"
 QEMU_USER_TARGETS="arm i386 x86_64"
 
-GRUB_PLATFORMS="coreboot efi-32 efi-64 emu multiboot pc qemu"
-
-# Env vars to expand into USE vars.
-USE_EXPAND="${USE_EXPAND} COMPAT_DRIVERS_WIFI COMPAT_DRIVERS_ETHERNET COMPAT_DRIVERS_VARIOUS"
+# Standard PC (BIOS)
+GRUB_PLATFORMS="${GRUB_PLATFORMS} pc"
 
 #mgorny suggested this speeds up sync, in my testing it makes a rather large difference
 PORTAGE_RSYNC_EXTRA_OPTS="--omit-dir-times"

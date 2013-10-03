@@ -1,0 +1,4 @@
+net-libs/farsight2 python
+net-libs/libgadu -ssl
+net-libs/libproxy python
+net-libs/webkit-gtk doc coverage webgl jit

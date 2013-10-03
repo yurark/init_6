@@ -1,0 +1,3 @@
+app-emulation/libvirt qemu
+app-emulation/qemu sdl spice
+app-emulation/virtualbox-bin additions -chm vboxwebsrv

@@ -1,0 +1,5 @@
+media-gfx/eog python
+media-gfx/gimp -doc -gnome
+media-gfx/inkscape -spell -gnome
+media-gfx/fontforge pango python
+media-gfx/exiv2 xmp

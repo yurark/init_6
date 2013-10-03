@@ -1,0 +1,3 @@
+net-misc/connman bluetooth
+net-misc/modemmanager -qmi
+net-misc/networkmanager bluetooth connection-sharing modemmanager -nss

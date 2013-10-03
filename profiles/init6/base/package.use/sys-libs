@@ -1,0 +1,4 @@
+sys-libs/e2fsprogs-libs static-libs
+sys-libs/libcap-ng python
+sys-libs/libselinux static-libs
+sys-libs/zlib minizip

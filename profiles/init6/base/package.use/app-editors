@@ -1,0 +1,4 @@
+app-editors/gedit-plugins charmap terminal python
+app-editors/gedit python
+app-editors/gvim -gnome
+app-editors/scite lua
