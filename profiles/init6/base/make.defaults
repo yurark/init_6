@@ -37,7 +37,7 @@ VIDEO_CARDS="virtualbox nvidia fglrx nouveau fbdev glint intel mach64 mga nv rad
 
 RUBY_TARGETS="ruby19"
 
-USE="${USE} X adns caps curl directfb fbcon gps jack lm_sensors lua lzma oss perl pulseaudio python ruby samba sqlite subversion xattr xinerama -ruby_targets_ruby18"
+#USE="${USE} X adns caps fbcon lm_sensors lua lzma oss perl pulseaudio python ruby samba sqlite subversion xattr xinerama -ruby_targets_ruby18"
 
 PORTAGE_BZIP2_COMMAND="lbzip2"
 
