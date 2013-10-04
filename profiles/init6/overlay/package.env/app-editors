@@ -1,1 +1,3 @@
-../../base/package.env/app-editors
+app-editors/gedit-plugins python_all
+app-editors/gedit python_all
+app-editors/gvim python_all

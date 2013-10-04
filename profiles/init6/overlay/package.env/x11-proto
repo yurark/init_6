@@ -1,1 +1,1 @@
-../../base/package.env/x11-proto
+x11-proto/xcb-proto python_all

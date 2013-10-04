@@ -1,1 +1,3 @@
-../../base/env/debug
+CFLAGS="${CFLAGS} -ggdb -pipe"
+CXXFLAGS="${CXXFLAGS} -ggdb -pipe"
+FEATURES="splitdebug nostrip"

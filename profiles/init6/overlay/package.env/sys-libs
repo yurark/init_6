@@ -1,1 +1,1 @@
-../../base/package.env/sys-libs
+sys-libs/zlib nopie

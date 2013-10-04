@@ -1,1 +1,4 @@
-../../base/package.env/gnome-base
+gnome-base/gconf python_all
+gnome-base/gnome-applets python_all
+gnome-base/gnome-menus python_all
+gnome-base/gnome-shell python_all

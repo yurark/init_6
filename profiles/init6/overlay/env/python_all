@@ -1,1 +1,2 @@
-../../base/env/python_all
+PYTHON_TARGETS="python2_7 python3_3"
+USE_PYTHON="2.7 3.3"

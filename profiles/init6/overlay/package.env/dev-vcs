@@ -1,1 +1,3 @@
-../../base/package.env/dev-vcs
+dev-vcs/git-cola python_all
+dev-vcs/git python_all
+dev-vcs/subversion python_all

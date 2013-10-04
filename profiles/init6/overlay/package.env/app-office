@@ -1,1 +1,2 @@
-../../base/package.env/app-office
+app-office/gnumeric python_all
+app-office/libreoffice no-lto no-tmpfs python_all

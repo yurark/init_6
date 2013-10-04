@@ -1,1 +1,3 @@
-../../base/package.env/virtual
+virtual/pyparsing python_all
+virtual/python-argparse python_all
+virtual/python-imaging python_all

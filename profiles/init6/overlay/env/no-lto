@@ -1,1 +1,4 @@
-../../base/env/no-lto
+CFLAGS="${CFLAGS} -fno-lto"
+CXXFLAGS="${CXXFLAGS} -fno-lto"
+LDFLAGS="${LDFLAGS} -fno-lto"
+

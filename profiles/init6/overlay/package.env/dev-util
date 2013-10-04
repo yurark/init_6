@@ -1,1 +1,5 @@
-../../base/package.env/dev-util
+dev-util/gdbus-codegen python_all
+dev-util/gtk-builder-convert python_all
+dev-util/gtk-doc python_all
+dev-util/meld python_all
+dev-util/scons python_all

@@ -1,1 +1,3 @@
-../../base/package.env/net-libs
+net-libs/gtk-vnc python_all
+net-libs/libproxy python_all
+net-libs/telepathy-glib python_all

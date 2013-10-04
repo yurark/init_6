@@ -1,1 +1,4 @@
-../../base/package.env/gnome-extra
+gnome-extra/cinnamon python_all
+gnome-extra/gnome-games python_all
+gnome-extra/gnome-tweak-tool python_all
+gnome-extra/zeitgeist python_all

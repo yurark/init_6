@@ -1,1 +1,2 @@
-../../base/package.env/app-text
+app-text/asciidoc python_all
+app-text/gnome-doc-utils python_all

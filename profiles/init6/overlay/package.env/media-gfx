@@ -1,1 +1,6 @@
-../../base/package.env/media-gfx
+media-gfx/eog-plugins python_all
+media-gfx/freecad python_all
+media-gfx/graphviz python_all
+media-gfx/inkscape python_all
+media-gfx/uniconvertor python_all
+media-libs/sk1libs python_all

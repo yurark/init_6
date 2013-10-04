@@ -1,1 +1,4 @@
-../../base/package.env/kde-base
+kde-base/kate python_all
+kde-base/kig python_all
+kde-base/plasma-workspace python_all
+kde-base/superkaramba python_all

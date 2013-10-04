@@ -1,1 +1,3 @@
-/var/gentoo/layman/init6/profiles/init6/base/env/clang
+# Environment override named clang
+CC=clang
+CXX=clang++
