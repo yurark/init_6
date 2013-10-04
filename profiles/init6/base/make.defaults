@@ -10,7 +10,7 @@ LDFLAGS="${LDFLAGS} -Wl,--warn-once -Wl,--hash-style=gnu"
 #Adding -frecord-gcc-switches to help track down packages which don't respect *FLAGS
 #should probably leave a note in /etc/portage/make.conf about keeping this when override
 GRAPHITE="-falign-functions=4 -fforce-addr -floop-block -floop-interchange -floop-strip-mine -fno-ident -fomit-frame-pointer -ftracer -ftree-loop-distribution -fweb"
-CFLAGS="${CFLAGS} -frecord-gcc-switches -ftree-vectorize -mfpmath=sse,387 -mssse3 -mstackrealign -mtune=generic -pipe ${GRAPHITE}"
+CFLAGS="${CFLAGS} -frecord-gcc-switches -ftree-vectorize -mstackrealign -pipe ${GRAPHITE}"
 CXXFLAGS="${CXXFLAGS} ${CFLAGS}"
 CPPFLAGS="${CPPFLAGS} ${CFLAGS}"
 
