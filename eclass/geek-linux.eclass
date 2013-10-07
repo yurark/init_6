@@ -238,7 +238,9 @@ geek-linux_src_install() {
 	dodir /usr/src
 	echo ">>> Copying sources ..."
 
-	mv ${WORKDIR}/linux* "${D}"/usr/src || die "${RED}mv ${WORKDIR}/linux* ${D}/usr/src failed${NORMAL}"
+#	mv ${WORKDIR}/linux* "${D}"/usr/src || die "${RED}mv ${WORKDIR}/linux* ${D}/usr/src failed${NORMAL}"
+#	rsync -avhW --no-compress --progress ${WORKDIR}/linux*/ "${D}"/usr/src || die "${RED}rsync -avhW --no-compress --progress ${WORKDIR}/linux*/ ${D}/usr/src failed${NORMAL}"
+	test -d "${D}/usr/src/linux-${KV_FULL}" >/dev/null 2>&1 || mkdir -p "${D}/usr/src/linux-${KV_FULL}"; (cd ${WORKDIR}/linux*; tar cf - .) | (cd "${D}/usr/src/linux-${KV_FULL}"; tar xpf -)
 
 	if use symlink; then
 		if [ -h "/usr/src/linux" ]; then

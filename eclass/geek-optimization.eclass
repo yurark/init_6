@@ -99,6 +99,7 @@ geek-optimization_src_prepare() {
 
 	ApplyPatch "${T}/optimization/patch_list" "${OPTIMIZATION_INF}"
 	mv "${T}/optimization" "${S}/patches/optimization" || die "${RED}mv ${T}/optimization ${S}/patches/optimization failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/optimization/" "${S}/patches/optimization" || die "${RED}rsync -avhW --no-compress --progress ${T}/optimization/ ${S}/patches/optimization failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

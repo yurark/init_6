@@ -100,9 +100,11 @@ geek-squeue_src_unpack() {
 
 	if [ -d ${CSD}/queue-${SQUEUE_VER} ] ; then
 		cp -r "${CSD}/queue-${SQUEUE_VER}" "${CWD}" #|| die "${RED}cp -r ${CSD}/queue-${SQUEUE_VER} ${CWD} failed${NORMAL}"
+#		rsync -avhW --no-compress --progress "${CSD}/queue-${SQUEUE_VER}/" "${CWD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/queue-${SQUEUE_VER}/ ${CWD} failed${NORMAL}"
 		mv "${CWD}/series" "${CWD}/patch_list" #|| die "${RED}mv ${CWD}/series ${CWD}/patch_list failed${NORMAL}"
 	elif [ -d ${CSD}/releases/${PV} ]; then
 		cp -r "${CSD}/releases/${PV}" "${CWD}" #|| die "${RED}cp -r ${CSD}/releases/${PV} ${CWD} failed${NORMAL}"
+#		rsync -avhW --no-compress --progress "${CSD}/releases/${PV}/" "${CWD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/releases/${PV}/ ${CWD} failed${NORMAL}"
 		mv "${CWD}/series" "${CWD}/patch_list" #|| die "${RED}mv ${CWD}/series ${CWD}/patch_list failed${NORMAL}"
 	else
 		ewarn "There is no stable-queue patch-set this time"
@@ -120,6 +122,7 @@ geek-squeue_src_prepare() {
 		else
 			ApplyPatch "${T}/squeue/patch_list" "${SQUEUE_INF}"
 			mv "${T}/squeue" "${S}/patches/squeue" || die "${RED}mv ${T}/squeue ${S}/patches/squeue failed${NORMAL}"
+#			rsync -avhW --no-compress --progress "${T}/squeue/" "${S}/patches/squeue" || die "${RED}rsync -avhW --no-compress --progress ${T}/squeue/ ${S}/patches/squeue failed${NORMAL}"
 	fi
 }
 

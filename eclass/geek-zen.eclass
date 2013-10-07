@@ -97,6 +97,7 @@ geek-zen_src_prepare() {
 
 	ApplyPatch "${T}/zen/patch_list" "${ZEN_INF}"
 	mv "${T}/zen" "${S}/patches/zen" || die "${RED}mv ${T}/zen ${S}/patches/zen failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/zen/" "${S}/patches/zen" || die "${RED}rsync -avhW --no-compress --progress ${T}/zen/ ${S}/patches/zen failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

@@ -97,6 +97,7 @@ geek-exfat_src_prepare() {
 
 	ApplyPatch "${T}/exfat/patch_list" "${EXFAT_INF}"
 	mv "${T}/exfat" "${S}/patches/exfat" || die "${RED}mv ${T}/exfat ${S}/patches/exfat failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/exfat/" "${S}/patches/exfat" || die "${RED}rsync -avhW --no-compress --progress ${T}/exfat/ ${S}/patches/exfat failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst
