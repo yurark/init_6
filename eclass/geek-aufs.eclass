@@ -98,7 +98,9 @@ geek-aufs_src_unpack() {
 		git_get_all_branches
 	fi
 
-	cp -r "${CSD}" "${CTD}"
+#	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${CSD}/" "${CTD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/ ${CTD} failed${NORMAL}"
+	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"; (cd "${CSD}"; tar cf - .) | (cd "${CTD}"; tar xpf -)
 	cd "${CTD}"
 
 	dir=( "Documentation" "fs" "include" )
@@ -141,6 +143,7 @@ geek-aufs_src_prepare() {
 
 	ApplyPatch "${T}/aufs/patch_list" "${AUFS_INF}"
 	mv "${T}/aufs" "${S}/patches/aufs" || die "${RED}mv ${T}/aufs ${S}/patches/aufs failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/aufs/" "${S}/patches/aufs" || die "${RED}rsync -avhW --no-compress --progress ${T}/aufs/ ${S}/patches/aufs failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

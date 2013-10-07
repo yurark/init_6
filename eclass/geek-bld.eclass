@@ -95,6 +95,7 @@ geek-bld_src_prepare() {
 
 	ApplyPatch "${T}/bld/patch_list" "${BLD_INF}"
 	mv "${T}/bld" "${S}/patches/bld" || die "${RED}mv ${T}/bld ${S}/patches/bld failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/bld/" "${S}/patches/bld" || die "${RED}rsync -avhW --no-compress --progress ${T}/bld/ ${S}/patches/bld failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

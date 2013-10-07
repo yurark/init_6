@@ -95,7 +95,9 @@ geek-suse_src_unpack() {
 		git clone "${SUSE_SRC}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches
 	fi
 
-	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
+#	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${CSD}/" "${CTD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/ ${CTD} failed${NORMAL}"
+	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"; (cd "${CSD}"; tar cf - .) | (cd "${CTD}"; tar xpf -)
 
 	cd "${CTD}" || die "${RED}cd ${CTD} failed${NORMAL}"
 
@@ -123,6 +125,7 @@ geek-suse_src_prepare() {
 	ApplyPatch "${T}/suse/patch_list" "${SUSE_INF}"
 	SmartApplyPatch "${T}/suse/spatch_list" "${YELLOW}OpenSuSE xen - ${SUSE_URL}${NORMAL}"
 	mv "${T}/suse" "${S}/patches/suse" || die "${RED}mv ${T}/suse ${S}/patches/suse failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/suse/" "${S}/patches/suse" || die "${RED}rsync -avhW --no-compress --progress ${T}/suse/ ${S}/patches/suse failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

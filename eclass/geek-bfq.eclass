@@ -91,6 +91,7 @@ geek-bfq_src_prepare() {
 
 	ApplyPatch "${T}/bfq/patch_list" "${BFQ_INF}"
 	mv "${T}/bfq" "${S}/patches/bfq" || die "${RED}mv ${T}/bfq ${S}/patches/bfq failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/bfq/" "${S}/patches/bfq" || die "${RED}rsync -avhW --no-compress --progress ${T}/bfq/ ${S}/patches/bfq failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

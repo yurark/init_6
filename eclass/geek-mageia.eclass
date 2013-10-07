@@ -94,7 +94,9 @@ geek-mageia_src_unpack() {
 		svn co "${MAGEIA_SRC}" "${CSD}" > /dev/null 2>&1
 	fi
 
-	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
+#	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${CSD}/" "${CTD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/ ${CTD} failed${NORMAL}"
+	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"; (cd "${CSD}"; tar cf - .) | (cd "${CTD}"; tar xpf -)
 	cd "${CTD}"/"${MAGEIA_VER}"/PATCHES || die "${RED}cd ${CTD}/${MAGEIA_VER}/PATCHES failed${NORMAL}"
 
 	find . -name "*.patch" | xargs -i cp "{}" "${CWD}"
@@ -112,6 +114,7 @@ geek-mageia_src_prepare() {
 
 	ApplyPatch "${T}/mageia/patch_list" "${MAGEIA_INF}"
 	mv "${T}/mageia" "${S}/patches/mageia" || die "${RED}mv ${T}/mageia ${S}/patches/mageia failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/mageia/" "${S}/patches/mageia" || die "${RED}rsync -avhW --no-compress --progress ${T}/mageia/ ${S}/patches/mageia failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

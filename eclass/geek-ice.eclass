@@ -101,6 +101,7 @@ geek-ice_src_prepare() {
 
 	ApplyPatch "${T}/ice/patch_list" "${ICE_INF}"
 	mv "${T}/ice" "${S}/patches/ice" || die "${RED}mv ${T}/ice ${S}/patches/ice failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/ice/" "${S}/patches/ice" || die "${RED}rsync -avhW --no-compress --progress ${T}/ice/ ${S}/patches/ice failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

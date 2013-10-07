@@ -95,7 +95,9 @@ geek-gentoo_src_unpack() {
 		svn co "${GENTOO_SRC}" "${CSD}" > /dev/null 2>&1
 	fi
 
-	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
+#	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${CSD}/" "${CTD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/ ${CTD} failed${NORMAL}"
+	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"; (cd "${CSD}"; tar cf - .) | (cd "${CTD}"; tar xpf -)
 	cd "${CTD}"/${KMV} || die "${RED}cd ${CTD}/${KMV} failed${NORMAL}"
 
 	find -name .svn -type d -exec rm -rf {} \ > /dev/null 2>&1
@@ -104,7 +106,9 @@ geek-gentoo_src_unpack() {
 	ls -1 | grep "linux" | xargs -I{} rm -rf "{}"
 	ls -1 | grep ".patch" > "$CWD"/patch_list
 
-	cp -r "${CTD}"/${KMV}/* "${CWD}" || die "${RED}cp -r ${CTD}/${KMV}/* ${CWD} failed${NORMAL}"
+#	cp -r "${CTD}"/${KMV}/* "${CWD}" || die "${RED}cp -r ${CTD}/${KMV}/* ${CWD} failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${CTD}"/${KMV}/ "${CWD}" || die "${RED}rsync -avhW --no-compress --progress ${CTD}/${KMV}/ ${CWD} failed${NORMAL}"
+	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"; (cd "${CTD}"/${KMV}; tar cf - .) | (cd "${CWD}"; tar xpf -)
 
 	rm -rf "${CTD}" || die "${RED}rm -rf ${CTD} failed${NORMAL}"
 }
@@ -117,6 +121,7 @@ geek-gentoo_src_prepare() {
 
 	ApplyPatch "${T}/gentoo/patch_list" "${GENTOO_INF}"
 	mv "${T}/gentoo" "${S}/patches/gentoo" || die "${RED}mv ${T}/gentoo ${S}/patches/gentoo failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/gentoo/" "${S}/patches/gentoo" || die "${RED}rsync -avhW --no-compress --progress ${T}/gentoo/ ${S}/patches/gentoo failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

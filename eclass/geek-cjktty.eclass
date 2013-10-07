@@ -96,6 +96,7 @@ geek-cjktty_src_prepare() {
 
 	ApplyPatch "${T}/cjktty/patch_list" "${CJKTTY_INF}"
 	mv "${T}/cjktty" "${S}/patches/cjktty" || die "${RED}mv ${T}/cjktty ${S}/patches/cjktty failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/cjktty/" "${S}/patches/cjktty" || die "${RED}rsync -avhW --no-compress --progress ${T}/cjktty/ ${S}/patches/cjktty failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

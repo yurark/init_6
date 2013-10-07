@@ -1,3 +1,4 @@
+sys-apps/busybox static
 sys-apps/groff -X
 sys-apps/hwdata-gentoo binary-drivers
 sys-apps/kmod tools

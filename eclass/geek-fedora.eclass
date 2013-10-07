@@ -95,7 +95,9 @@ geek-fedora_src_unpack() {
 		git clone "${FEDORA_SRC}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches
 	fi
 
-	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
+#	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${CSD}/" "${CTD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/ ${CTD} failed${NORMAL}"
+	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"; (cd "${CSD}"; tar cf - .) | (cd "${CTD}"; tar xpf -)
 	cd "${CTD}" || die "${RED}cd ${CTD} failed${NORMAL}"
 
 	git_checkout "${FEDORA_VER}" > /dev/null 2>&1 git pull > /dev/null 2>&1
@@ -115,6 +117,7 @@ geek-fedora_src_prepare() {
 
 	ApplyPatch "${T}/fedora/patch_list" "${FEDORA_INF}"
 	mv "${T}/fedora" "${S}/patches/fedora" || die "${RED}mv ${T}/fedora ${S}/patches/fedora failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/fedora/" "${S}/patches/fedora" || die "${RED}rsync -avhW --no-compress --progress ${T}/fedora/ ${S}/patches/fedora failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst
