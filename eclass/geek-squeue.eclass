@@ -62,7 +62,7 @@ geek-squeue_init_variables() {
 
 	: ${SQUEUE_SRC:=${SQUEUE_SRC:-"git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git"}}
 
-	: ${SQUEUE_URL:=${SQUEUE_URL:-"http://git.kernel.org/scm/linux/kernel/git/stable/stable-queue.git"}}
+	: ${SQUEUE_URL:=${SQUEUE_URL:-"http://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git"}}
 
 	: ${SQUEUE_INF:=${SQUEUE_INF:-"${YELLOW}Stable-queue patch-set - ${SQUEUE_URL}${NORMAL}"}}
 

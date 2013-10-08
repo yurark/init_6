@@ -82,6 +82,7 @@ DEPEND="${DEPEND}
 geek-spl_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
 
+	local CTD="${T}/spl"
 	local CSD="${GEEK_STORE_DIR}/spl"
 	local CWD="${T}/spl"
 	shift

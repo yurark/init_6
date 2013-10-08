@@ -83,6 +83,7 @@ DEPEND="${DEPEND}
 geek-zfs_src_unpack() {
 	debug-print-function ${FUNCNAME} "$@"
 
+	local CTD="${T}/zfs"
 	local CSD="${GEEK_STORE_DIR}/zfs"
 	local CWD="${T}/zfs"
 	shift
