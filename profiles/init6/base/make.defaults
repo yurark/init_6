@@ -57,7 +57,7 @@ PHP_TARGETS="php5-3"
 
 USE="${USE} -avahi -consolekit -cups -gnome-keyring -java -kerberos -ldap -mms -nautilus -openrc -orc -perl -python -samba -webkit -zeitgeist -zeroconf X X509 a52 aac acpi alsa apng asf bluetooth branding cairo cdda colord connman dbus device-mapper djvu dri dts dv dvd dvi egl exif extras fam ffmpeg flac g3dvl gif gles1 gles2 gnome gnutls gstreamer gtk gtk3 icu introspection ipv6 jbig jpeg jpeg2k lame libkms libnotify lzma lzo mad mp3 mp4 mpeg networkmanager new-login nsplugin ogg opengl pdf png policykit pulseaudio qt3support qt4 semantic-desktop spell sqlite sse3 ssse3 startup-notification svg symlink systemd theora threads tiff truetype v4l vidix vorbis vpx wavpack x264 xattr xcomposite xinerama xml xorg xscreensaver xv xvid xvmc"
 
-PORTAGE_BZIP2_COMMAND="lbzip2"
+#PORTAGE_BZIP2_COMMAND="lbzip2"
 
 QEMU_SOFTMMU_TARGETS="arm i386 x86_64"
 QEMU_USER_TARGETS="arm i386 x86_64"
