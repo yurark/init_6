@@ -99,15 +99,16 @@ geek-squeue_src_unpack() {
 #	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
 
 	if [ -d ${CSD}/queue-${SQUEUE_VER} ] ; then
-		cp -r "${CSD}/queue-${SQUEUE_VER}" "${CWD}" #|| die "${RED}cp -r ${CSD}/queue-${SQUEUE_VER} ${CWD} failed${NORMAL}"
+		cp -r "${CSD}/queue-${SQUEUE_VER}" "${CWD}" > /dev/null 2>&1; #|| die "${RED}cp -r ${CSD}/queue-${SQUEUE_VER} ${CWD} failed${NORMAL}"
 #		rsync -avhW --no-compress --progress "${CSD}/queue-${SQUEUE_VER}/" "${CWD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/queue-${SQUEUE_VER}/ ${CWD} failed${NORMAL}"
-		mv "${CWD}/series" "${CWD}/patch_list" #|| die "${RED}mv ${CWD}/series ${CWD}/patch_list failed${NORMAL}"
+		mv "${CWD}/series" "${CWD}/patch_list" > /dev/null 2>&1; #|| die "${RED}mv ${CWD}/series ${CWD}/patch_list failed${NORMAL}"
 	elif [ -d ${CSD}/releases/${PV} ]; then
-		cp -r "${CSD}/releases/${PV}" "${CWD}" #|| die "${RED}cp -r ${CSD}/releases/${PV} ${CWD} failed${NORMAL}"
+		cp -r "${CSD}/releases/${PV}" "${CWD}" > /dev/null 2>&1; #|| die "${RED}cp -r ${CSD}/releases/${PV} ${CWD} failed${NORMAL}"
 #		rsync -avhW --no-compress --progress "${CSD}/releases/${PV}/" "${CWD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/releases/${PV}/ ${CWD} failed${NORMAL}"
-		mv "${CWD}/series" "${CWD}/patch_list" #|| die "${RED}mv ${CWD}/series ${CWD}/patch_list failed${NORMAL}"
+		mv "${CWD}/series" "${CWD}/patch_list" > /dev/null 2>&1 || ewarn "There is no stable-queue patch-set this time"; skip_squeue="yes"; #die "${RED}mv ${CWD}/series ${CWD}/patch_list failed${NORMAL}"
 	else
 		ewarn "There is no stable-queue patch-set this time"
+		skip_squeue="yes";
 	fi
 }
 
@@ -121,7 +122,7 @@ geek-squeue_src_prepare() {
 			ewarn "${RED}Skipping update to latest stable queue ...${NORMAL}"
 		else
 			ApplyPatch "${T}/squeue/patch_list" "${SQUEUE_INF}"
-			mv "${T}/squeue" "${S}/patches/squeue" || die "${RED}mv ${T}/squeue ${S}/patches/squeue failed${NORMAL}"
+			mv "${T}/squeue" "${S}/patches/squeue" > /dev/null 2>&1; #|| die "${RED}mv ${T}/squeue ${S}/patches/squeue failed${NORMAL}"
 #			rsync -avhW --no-compress --progress "${T}/squeue/" "${S}/patches/squeue" || die "${RED}rsync -avhW --no-compress --progress ${T}/squeue/ ${S}/patches/squeue failed${NORMAL}"
 	fi
 }
