@@ -96,8 +96,8 @@ geek-zen_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/zen/patch_list" "${ZEN_INF}"
-	mv "${T}/zen" "${S}/patches/zen" || die "${RED}mv ${T}/zen ${S}/patches/zen failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/zen/" "${S}/patches/zen" || die "${RED}rsync -avhW --no-compress --progress ${T}/zen/ ${S}/patches/zen failed${NORMAL}"
+	mv "${T}/zen" "${WORKDIR}/linux-${KV_FULL}-patches/zen" || die "${RED}mv ${T}/zen ${WORKDIR}/linux-${KV_FULL}-patches/zen failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/zen/" "${WORKDIR}/linux-${KV_FULL}-patches/zen" || die "${RED}rsync -avhW --no-compress --progress ${T}/zen/ ${WORKDIR}/linux-${KV_FULL}-patches/zen failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

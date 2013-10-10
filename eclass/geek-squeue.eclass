@@ -121,8 +121,8 @@ geek-squeue_src_prepare() {
 			ewarn "${RED}Skipping update to latest stable queue ...${NORMAL}"
 		else
 			ApplyPatch "${T}/squeue/patch_list" "${SQUEUE_INF}"
-			mv "${T}/squeue" "${S}/patches/squeue" || die "${RED}mv ${T}/squeue ${S}/patches/squeue failed${NORMAL}"
-#			rsync -avhW --no-compress --progress "${T}/squeue/" "${S}/patches/squeue" || die "${RED}rsync -avhW --no-compress --progress ${T}/squeue/ ${S}/patches/squeue failed${NORMAL}"
+			mv "${T}/squeue" "${WORKDIR}/linux-${KV_FULL}-patches/squeue" || die "${RED}mv ${T}/squeue ${WORKDIR}/linux-${KV_FULL}-patches/squeue failed${NORMAL}"
+#			rsync -avhW --no-compress --progress "${T}/squeue/" "${WORKDIR}/linux-${KV_FULL}-patches/squeue" || die "${RED}rsync -avhW --no-compress --progress ${T}/squeue/ ${WORKDIR}/linux-${KV_FULL}-patches/squeue failed${NORMAL}"
 	fi
 }
 
