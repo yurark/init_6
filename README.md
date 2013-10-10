@@ -56,6 +56,7 @@ In this overlay you will find
      * **pf** - [Use pf-kernel patches](http://pf.natalenko.name)
      * **reiser4** - [Use Reiser4 FS patches](http://sourceforge.net/projects/reiser4)
      * **rifs** - [RIFS A interactivity favor scheduler](https://code.google.com/p/rifs-scheduler)
+     * **rsbac** - [RSBAC (Rule Set Based Access Control) patches](http://www.rsbac.org)
      * **rt** - [Use Ingo Molnar's realtime preempt patches](http://www.kernel.org/pub/linux/kernel/projects/rt)
      * **suse** - [Use OpenSuSE patches](http://kernel.opensuse.org/cgit/kernel-source)
      * **uksm** - [Use Ultra Kernel Samepage Merging patches](http://kerneldedup.org)
