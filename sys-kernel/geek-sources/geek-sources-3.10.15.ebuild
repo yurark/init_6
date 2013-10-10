@@ -26,12 +26,14 @@ PAX_VER="3.10.11-test26"
 #PF_VER="3.10.1-pf"
 REISER4_VER="3.10"
 RT_VER="3.10.10-rt7"
+RSBAC_VER="1.4.7"
+RSBAC_NAME="patch-linux-3.10.7-rsbac-${RSBAC_VER}.diff.xz"
 SUSE_VER="stable"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}"
 ZEN_VER="3.10"
 
-SUPPORTED_USES="aufs bfq bld brand -build cjktty ck fedora gentoo grsec ice lqx mageia optimization pax pf reiser4 rt suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build cjktty ck fedora gentoo grsec ice lqx mageia optimization pax pf reiser4 rsbac rt suse symlink uksm zen zfs"
 
 inherit geek-sources
 

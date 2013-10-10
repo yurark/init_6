@@ -20,12 +20,14 @@ LQX_SRC="http://liquorix.net/sources/legacy/${LQX_VER}.patch.gz"
 MAGEIA_VER="releases/3.2.9/2.mga2"
 PAX_VER="3.2.50-test119"
 #PF_VER="3.2.7-pf"
-SUSE_VER="2206a5c5b9aa64bd9a741830257f184818a0f6ee" # rpm-3.2.0-2
+RSBAC_VER="1.4.7"
+RSBAC_NAME="patch-linux-3.2.50-rsbac-${RSBAC_VER}.diff.xz"
 RT_VER="3.2.50-rt70"
+SUSE_VER="2206a5c5b9aa64bd9a741830257f184818a0f6ee" # rpm-3.2.0-2
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.40"
 
-SUPPORTED_USES="aufs bfq -build ck fedora gentoo grsec ice lqx mageia pax pf rt suse symlink uksm"
+SUPPORTED_USES="aufs bfq -build ck fedora gentoo grsec ice lqx mageia pax pf rsbac rt suse symlink uksm"
 
 inherit geek-sources
 
