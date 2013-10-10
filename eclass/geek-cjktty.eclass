@@ -95,8 +95,8 @@ geek-cjktty_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/cjktty/patch_list" "${CJKTTY_INF}"
-	mv "${T}/cjktty" "${S}/patches/cjktty" || die "${RED}mv ${T}/cjktty ${S}/patches/cjktty failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/cjktty/" "${S}/patches/cjktty" || die "${RED}rsync -avhW --no-compress --progress ${T}/cjktty/ ${S}/patches/cjktty failed${NORMAL}"
+	mv "${T}/cjktty" "${WORKDIR}/linux-${KV_FULL}-patches/cjktty" || die "${RED}mv ${T}/cjktty ${WORKDIR}/linux-${KV_FULL}-patches/cjktty failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/cjktty/" "${WORKDIR}/linux-${KV_FULL}-patches/cjktty" || die "${RED}rsync -avhW --no-compress --progress ${T}/cjktty/ ${WORKDIR}/linux-${KV_FULL}-patches/cjktty failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

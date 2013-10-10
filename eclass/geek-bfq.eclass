@@ -90,8 +90,8 @@ geek-bfq_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/bfq/patch_list" "${BFQ_INF}"
-	mv "${T}/bfq" "${S}/patches/bfq" || die "${RED}mv ${T}/bfq ${S}/patches/bfq failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/bfq/" "${S}/patches/bfq" || die "${RED}rsync -avhW --no-compress --progress ${T}/bfq/ ${S}/patches/bfq failed${NORMAL}"
+	mv "${T}/bfq" "${WORKDIR}/linux-${KV_FULL}-patches/bfq" || die "${RED}mv ${T}/bfq ${WORKDIR}/linux-${KV_FULL}-patches/bfq failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/bfq/" "${WORKDIR}/linux-${KV_FULL}-patches/bfq" || die "${RED}rsync -avhW --no-compress --progress ${T}/bfq/ ${WORKDIR}/linux-${KV_FULL}-patches/bfq failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

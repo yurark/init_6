@@ -116,8 +116,8 @@ geek-grsec_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/grsec/patch_list" "${GRSEC_INF}"
-	mv "${T}/grsec" "${S}/patches/grsec" || die "${RED}mv ${T}/grsec ${S}/patches/grsec failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/grsec/" "${S}/patches/grsec" || die "${RED}rsync -avhW --no-compress --progress ${T}/grsec/ ${S}/patches/grsec failed${NORMAL}"
+	mv "${T}/grsec" "${WORKDIR}/linux-${KV_FULL}-patches/grsec" || die "${RED}mv ${T}/grsec ${WORKDIR}/linux-${KV_FULL}-patches/grsec failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/grsec/" "${WORKDIR}/linux-${KV_FULL}-patches/grsec" || die "${RED}rsync -avhW --no-compress --progress ${T}/grsec/ ${WORKDIR}/linux-${KV_FULL}-patches/grsec failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

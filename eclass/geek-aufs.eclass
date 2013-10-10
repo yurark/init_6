@@ -142,8 +142,8 @@ geek-aufs_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/aufs/patch_list" "${AUFS_INF}"
-	mv "${T}/aufs" "${S}/patches/aufs" || die "${RED}mv ${T}/aufs ${S}/patches/aufs failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/aufs/" "${S}/patches/aufs" || die "${RED}rsync -avhW --no-compress --progress ${T}/aufs/ ${S}/patches/aufs failed${NORMAL}"
+	mv "${T}/aufs" "${WORKDIR}/linux-${KV_FULL}-patches/aufs" || die "${RED}mv ${T}/aufs ${WORKDIR}/linux-${KV_FULL}-patches/aufs failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/aufs/" "${WORKDIR}/linux-${KV_FULL}-patches/aufs" || die "${RED}rsync -avhW --no-compress --progress ${T}/aufs/ ${WORKDIR}/linux-${KV_FULL}-patches/aufs failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

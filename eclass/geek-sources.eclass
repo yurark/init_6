@@ -146,7 +146,7 @@ geek-sources_src_unpack() {
 
 	geek-linux_src_unpack
 
-	test -d "${S}/patches" >/dev/null 2>&1 || mkdir -p "${S}/patches"
+	test -d "${WORKDIR}/linux-${KV_FULL}-patches" >/dev/null 2>&1 || mkdir -p "${WORKDIR}/linux-${KV_FULL}-patches"
 	for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 		if use_if_iuse "${Current_Patch}" || [ "${Current_Patch}" = "fix" ] || [ "${Current_Patch}" = "upatch" ] || [ "${Current_Patch}" = "squeue" ]; then
 			einfo "Unpack - ${Current_Patch}"

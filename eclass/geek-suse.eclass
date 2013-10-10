@@ -124,8 +124,8 @@ geek-suse_src_prepare() {
 
 	ApplyPatch "${T}/suse/patch_list" "${SUSE_INF}"
 	SmartApplyPatch "${T}/suse/spatch_list" "${YELLOW}OpenSuSE xen - ${SUSE_URL}${NORMAL}"
-	mv "${T}/suse" "${S}/patches/suse" || die "${RED}mv ${T}/suse ${S}/patches/suse failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/suse/" "${S}/patches/suse" || die "${RED}rsync -avhW --no-compress --progress ${T}/suse/ ${S}/patches/suse failed${NORMAL}"
+	mv "${T}/suse" "${WORKDIR}/linux-${KV_FULL}-patches/suse" || die "${RED}mv ${T}/suse ${WORKDIR}/linux-${KV_FULL}-patches/suse failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/suse/" "${WORKDIR}/linux-${KV_FULL}-patches/suse" || die "${RED}rsync -avhW --no-compress --progress ${T}/suse/ ${WORKDIR}/linux-${KV_FULL}-patches/suse failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

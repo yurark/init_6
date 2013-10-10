@@ -94,8 +94,8 @@ geek-rifs_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/rifs/patch_list" "${RIFS_INF}"
-	mv "${T}/rifs" "${S}/patches/rifs" || die "${RED}mv ${T}/rifs ${S}/patches/rifs failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/rifs/" "${S}/patches/rifs" || die "${RED}rsync -avhW --no-compress --progress ${T}/rifs/ ${S}/patches/rifs failed${NORMAL}"
+	mv "${T}/rifs" "${WORKDIR}/linux-${KV_FULL}-patches/rifs" || die "${RED}mv ${T}/rifs ${WORKDIR}/linux-${KV_FULL}-patches/rifs failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/rifs/" "${WORKDIR}/linux-${KV_FULL}-patches/rifs" || die "${RED}rsync -avhW --no-compress --progress ${T}/rifs/ ${WORKDIR}/linux-${KV_FULL}-patches/rifs failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

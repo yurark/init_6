@@ -116,8 +116,8 @@ geek-fedora_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/fedora/patch_list" "${FEDORA_INF}"
-	mv "${T}/fedora" "${S}/patches/fedora" || die "${RED}mv ${T}/fedora ${S}/patches/fedora failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/fedora/" "${S}/patches/fedora" || die "${RED}rsync -avhW --no-compress --progress ${T}/fedora/ ${S}/patches/fedora failed${NORMAL}"
+	mv "${T}/fedora" "${WORKDIR}/linux-${KV_FULL}-patches/fedora" || die "${RED}mv ${T}/fedora ${WORKDIR}/linux-${KV_FULL}-patches/fedora failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/fedora/" "${WORKDIR}/linux-${KV_FULL}-patches/fedora" || die "${RED}rsync -avhW --no-compress --progress ${T}/fedora/ ${WORKDIR}/linux-${KV_FULL}-patches/fedora failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

@@ -120,8 +120,8 @@ geek-gentoo_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/gentoo/patch_list" "${GENTOO_INF}"
-	mv "${T}/gentoo" "${S}/patches/gentoo" || die "${RED}mv ${T}/gentoo ${S}/patches/gentoo failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/gentoo/" "${S}/patches/gentoo" || die "${RED}rsync -avhW --no-compress --progress ${T}/gentoo/ ${S}/patches/gentoo failed${NORMAL}"
+	mv "${T}/gentoo" "${WORKDIR}/linux-${KV_FULL}-patches/gentoo" || die "${RED}mv ${T}/gentoo ${WORKDIR}/linux-${KV_FULL}-patches/gentoo failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/gentoo/" "${WORKDIR}/linux-${KV_FULL}-patches/gentoo" || die "${RED}rsync -avhW --no-compress --progress ${T}/gentoo/ ${WORKDIR}/linux-${KV_FULL}-patches/gentoo failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst
