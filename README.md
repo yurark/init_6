@@ -59,6 +59,7 @@ In this overlay you will find
      * **rsbac** - [RSBAC (Rule Set Based Access Control) patches](http://www.rsbac.org)
      * **rt** - [Use Ingo Molnar's realtime preempt patches](http://www.kernel.org/pub/linux/kernel/projects/rt)
      * **suse** - [Use OpenSuSE patches](http://kernel.opensuse.org/cgit/kernel-source)
+     * **ubuntu** - [Use Ubuntu patches](http://kernel.ubuntu.com/~kernel-ppa)
      * **uksm** - [Use Ultra Kernel Samepage Merging patches](http://kerneldedup.org)
      * **zen** - [Use ZEN kernel patches](https://github.com/damentz/zen-kernel)
      * **zfs** - [The native Linux kernel port of the ZFS filesystem](http://zfsonlinux.org)
