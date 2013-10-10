@@ -96,8 +96,8 @@ geek-uksm_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/uksm/patch_list" "${UKSM_INF}"
-	mv "${T}/uksm" "${S}/patches/uksm" || die "${RED}mv ${T}/uksm ${S}/patches/uksm failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/uksm/" "${S}/patches/uksm" || die "${RED}rsync -avhW --no-compress --progress ${T}/uksm/ ${S}/patches/uksm failed${NORMAL}"
+	mv "${T}/uksm" "${WORKDIR}/linux-${KV_FULL}-patches/uksm" || die "${RED}mv ${T}/uksm ${WORKDIR}/linux-${KV_FULL}-patches/uksm failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/uksm/" "${WORKDIR}/linux-${KV_FULL}-patches/uksm" || die "${RED}rsync -avhW --no-compress --progress ${T}/uksm/ ${WORKDIR}/linux-${KV_FULL}-patches/uksm failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

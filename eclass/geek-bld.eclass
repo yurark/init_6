@@ -94,8 +94,8 @@ geek-bld_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/bld/patch_list" "${BLD_INF}"
-	mv "${T}/bld" "${S}/patches/bld" || die "${RED}mv ${T}/bld ${S}/patches/bld failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/bld/" "${S}/patches/bld" || die "${RED}rsync -avhW --no-compress --progress ${T}/bld/ ${S}/patches/bld failed${NORMAL}"
+	mv "${T}/bld" "${WORKDIR}/linux-${KV_FULL}-patches/bld" || die "${RED}mv ${T}/bld ${WORKDIR}/linux-${KV_FULL}-patches/bld failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/bld/" "${WORKDIR}/linux-${KV_FULL}-patches/bld" || die "${RED}rsync -avhW --no-compress --progress ${T}/bld/ ${WORKDIR}/linux-${KV_FULL}-patches/bld failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

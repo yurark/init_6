@@ -97,8 +97,8 @@ geek-pf_src_prepare() {
 
 #	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/patch-${PF_VER/KMV/$KMV}.bz2" "${PF_INF}"
 	ApplyPatch "${T}/pf/patch_list" "${PF_INF}"
-	mv "${T}/pf" "${S}/patches/pf" || die "${RED}mv ${T}/pf ${S}/patches/pf failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/pf/" "${S}/patches/pf" || die "${RED}rsync -avhW --no-compress --progress ${T}/pf/ ${S}/patches/pf failed${NORMAL}"
+	mv "${T}/pf" "${WORKDIR}/linux-${KV_FULL}-patches/pf" || die "${RED}mv ${T}/pf ${WORKDIR}/linux-${KV_FULL}-patches/pf failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/pf/" "${WORKDIR}/linux-${KV_FULL}-patches/pf" || die "${RED}rsync -avhW --no-compress --progress ${T}/pf/ ${WORKDIR}/linux-${KV_FULL}-patches/pf failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

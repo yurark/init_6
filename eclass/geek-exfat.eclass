@@ -96,8 +96,8 @@ geek-exfat_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/exfat/patch_list" "${EXFAT_INF}"
-	mv "${T}/exfat" "${S}/patches/exfat" || die "${RED}mv ${T}/exfat ${S}/patches/exfat failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/exfat/" "${S}/patches/exfat" || die "${RED}rsync -avhW --no-compress --progress ${T}/exfat/ ${S}/patches/exfat failed${NORMAL}"
+	mv "${T}/exfat" "${WORKDIR}/linux-${KV_FULL}-patches/exfat" || die "${RED}mv ${T}/exfat ${WORKDIR}/linux-${KV_FULL}-patches/exfat failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/exfat/" "${WORKDIR}/linux-${KV_FULL}-patches/exfat" || die "${RED}rsync -avhW --no-compress --progress ${T}/exfat/ ${WORKDIR}/linux-${KV_FULL}-patches/exfat failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

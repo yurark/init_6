@@ -98,8 +98,8 @@ geek-optimization_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/optimization/patch_list" "${OPTIMIZATION_INF}"
-	mv "${T}/optimization" "${S}/patches/optimization" || die "${RED}mv ${T}/optimization ${S}/patches/optimization failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/optimization/" "${S}/patches/optimization" || die "${RED}rsync -avhW --no-compress --progress ${T}/optimization/ ${S}/patches/optimization failed${NORMAL}"
+	mv "${T}/optimization" "${WORKDIR}/linux-${KV_FULL}-patches/optimization" || die "${RED}mv ${T}/optimization ${WORKDIR}/linux-${KV_FULL}-patches/optimization failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/optimization/" "${WORKDIR}/linux-${KV_FULL}-patches/optimization" || die "${RED}rsync -avhW --no-compress --progress ${T}/optimization/ ${WORKDIR}/linux-${KV_FULL}-patches/optimization failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

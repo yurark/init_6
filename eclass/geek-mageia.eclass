@@ -113,8 +113,8 @@ geek-mageia_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/mageia/patch_list" "${MAGEIA_INF}"
-	mv "${T}/mageia" "${S}/patches/mageia" || die "${RED}mv ${T}/mageia ${S}/patches/mageia failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/mageia/" "${S}/patches/mageia" || die "${RED}rsync -avhW --no-compress --progress ${T}/mageia/ ${S}/patches/mageia failed${NORMAL}"
+	mv "${T}/mageia" "${WORKDIR}/linux-${KV_FULL}-patches/mageia" || die "${RED}mv ${T}/mageia ${WORKDIR}/linux-${KV_FULL}-patches/mageia failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${T}/mageia/" "${WORKDIR}/linux-${KV_FULL}-patches/mageia" || die "${RED}rsync -avhW --no-compress --progress ${T}/mageia/ ${WORKDIR}/linux-${KV_FULL}-patches/mageia failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst
