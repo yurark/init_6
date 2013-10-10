@@ -26,6 +26,7 @@ sys-kernel/geek-sources:optimization - Kernel patch enables gcc optimizations fo
 sys-kernel/geek-sources:pax - Use PAX patches
 sys-kernel/geek-sources:pf - Use pf-kernel patches
 sys-kernel/geek-sources:reiser4 - Use Reiser4 FS patches
+sys-kernel/geek-sources:rifs - A interactivity favor scheduler
 sys-kernel/geek-sources:rt - Use Ingo Molnar's realtime preempt patches
 sys-kernel/geek-sources:suse - Use OpenSuSE patches
 sys-kernel/geek-sources:symlink - Force kernel ebuilds to automatically update the /usr/src/linux symlink

@@ -61,7 +61,7 @@ geek-rifs_init_variables() {
 
 	: ${RIFS_URL:=${RIFS_URL:-"https://code.google.com/p/rifs-scheduler"}}
 
-	: ${RIFS_INF:=${RIFS_INF:-"${YELLOW}RIFS-Scheduler A interactivity favor scheduler - ${RIFS_URL}${NORMAL}"}}
+	: ${RIFS_INF:=${RIFS_INF:-"${YELLOW}RIFS A interactivity favor scheduler - ${RIFS_URL}${NORMAL}"}}
 }
 
 geek-rifs_init_variables
