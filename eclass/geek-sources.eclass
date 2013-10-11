@@ -92,7 +92,7 @@ done
 geek-sources_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx pf zen"}
+	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx pf ubuntu zen"}
 	: ${cfg_file:="/etc/portage/kernel.conf"}
 	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec rsbac ice reiser4 exfat rt bld uksm aufs mageia fedora suse ubuntu brand fix upatch squeue"}
 

@@ -59,7 +59,7 @@ geek-ubuntu_init_variables() {
 
 	: ${UBUNTU_SRC:=${UBUNTU_SRC:-"http://archive.ubuntu.com/ubuntu/pool/main/l/linux/linux_${UBUNTU_VER}.diff.gz"}}
 
-	: ${UBUNTU_URL:=${UBUNTU_URL:-"http://kernel.ubuntu.com/~kernel-ppa/"}}
+	: ${UBUNTU_URL:=${UBUNTU_URL:-"http://www.ubuntu.com"}}
 
 	: ${UBUNTU_INF:="${YELLOW}Ubuntu patches - ${UBUNTU_URL}${NORMAL}"}
 }
