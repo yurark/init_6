@@ -110,7 +110,7 @@ geek-aufs_src_unpack() {
 
 	mkdir ../a ../b || die "${RED}mkdir ../a ../b failed${NORMAL}"
 	cp -r {Documentation,fs,include} ../b || die "${RED}cp -r {Documentation,fs,include} ../b failed${NORMAL}"
-	if [ ${KMV} == "3.2" -o ${KMV} == "3.4" ]; then
+	if [ ${KMV} == "3.0" -o ${KMV} == "3.2" -o ${KMV} == "3.4" ]; then
 		rm ../b/include/linux/Kbuild || die "${RED}rm ../b/include/linux/Kbuild failed${NORMAL}"
 	else
 		rm ../b/include/uapi/linux/Kbuild || die "${RED}rm ../b/include/uapi/linux/Kbuild failed${NORMAL}"

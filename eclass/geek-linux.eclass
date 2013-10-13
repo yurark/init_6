@@ -83,7 +83,7 @@ S="${WORKDIR}"/linux-"${KV_FULL}"
 DEPEND="!build? ( sys-apps/sed
 		  >=sys-devel/binutils-2.11.90.0.31 )"
 RDEPEND="!build? ( >=sys-libs/ncurses-5.2
-		   sys-devel/make 
+		   sys-devel/make
 		   dev-lang/perl
 		   sys-devel/bc )"
 PDEPEND="!build? ( virtual/dev-manager )"
@@ -92,14 +92,27 @@ SLOT=${SLOT:-${KMV}}
 IUSE="${IUSE} symlink"
 
 case "$PR" in
-	r0)	extension="xz"
-		kurl="mirror://kernel/linux/kernel/v${VERSION}.0"
-		kversion="${KMV}"
-		if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
-			pversion="${PV}"
-			pname="patch-${pversion}.${extension}"
-			SRC_URI="${SRC_URI} ${kurl}/${pname}"
-		fi ;;
+	r0)	case "$VERSION" in
+		2)	extension="xz"
+			kurl="mirror://kernel/linux/kernel/v${KMV}/longterm/v${KMV}.${SUBLEVEL}"
+			kversion="${KMV}.${SUBLEVEL}"
+			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
+				pversion="${PV}"
+				pname="patch-${pversion}.${extension}"
+				SRC_URI="${SRC_URI} ${kurl}/${pname}"
+			fi
+		;;
+		3)	extension="xz"
+			kurl="mirror://kernel/linux/kernel/v${VERSION}.0"
+			kversion="${KMV}"
+			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
+				pversion="${PV}"
+				pname="patch-${pversion}.${extension}"
+				SRC_URI="${SRC_URI} ${kurl}/${pname}"
+			fi
+		;;
+		esac
+	;;
 	*)	extension="xz"
 		kurl="mirror://kernel/linux/kernel/v${VERSION}.0/testing"
 		kversion="${VERSION}.$((${PATCHLEVEL} - 1))"
@@ -107,8 +120,13 @@ case "$PR" in
 			pversion="${PVR//r/rc}"
 			pname="patch-${pversion}.${extension}"
 			SRC_URI="${SRC_URI} ${kurl}/${pname}"
-		fi ;;
-	esac
+		fi
+	;;
+esac
+
+case "$VERSION" in
+	2)	kurl="mirror://kernel/linux/kernel/v${KMV}" ;;
+esac
 
 kname="linux-${kversion}.tar.${extension}"
 SRC_URI="${SRC_URI} ${kurl}/${kname}"
