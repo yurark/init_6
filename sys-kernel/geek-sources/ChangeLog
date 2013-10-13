@@ -3,6 +3,11 @@
 # $Header: $
 
 
+*geek-sources-2.6 (13 Oct 2013)
+
+  13 Oct 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
+  Add 2.6.32.61, 2.6.34.14, 3.0.99 kernel support to geek-sources
+
 *geek-sources-3.11.1 (15 Sep 2013)
 
   15 Sep 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
