@@ -9,9 +9,11 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 
 BFQ_VER="2.6.32"
 GRSEC_VER="2.6.32"
+REISER4_VER="2.6.32"
+REISER4_SRC="mirror://sourceforge/project/reiser4/reiser4-for-linux-2.6/reiser4-for-${REISER4_VER}.patch.gz"
 SUSE_VER="3811b6910313cc9564c3e893d6ba75645ee38a6b" # rpm-2.6.32.45-0.3
 
-SUPPORTED_USES="bfq -build grsec suse symlink"
+SUPPORTED_USES="bfq -build grsec reiser4 suse symlink"
 
 inherit geek-sources
 
