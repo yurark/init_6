@@ -22,7 +22,7 @@ echo "Delete all current Manifest"
 find `pwd` -name Manifest -type f -exec rm {} \;
 
 echo "Make all digest"
-find `pwd` -name \*.ebuild -type f -exec ebuild {} digest > /dev/null 2>&1 \;
+find `pwd` -name \*.ebuild -type f -exec ebuild {} digest #> /dev/null 2>&1 \;
 
 echo "Sign all Manifest"
 printf "Enter the passphrase for gpg key:\n"
