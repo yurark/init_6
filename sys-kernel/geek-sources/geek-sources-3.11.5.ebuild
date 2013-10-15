@@ -18,7 +18,7 @@ FEDORA_VER="f20"
 #GENTOO_VER="$KMV"
 GRSEC_VER="${PV}"
 #ICE_VER="$KMV"
-LQX_VER="3.11.3-1"
+LQX_VER="3.11.4-1"
 LQX_SRC="http://liquorix.net/sources/${LQX_VER}.patch.gz"
 MAGEIA_VER="releases/3.11.4/1.mga4"
 OPTIMIZATION_VER="1"
@@ -32,7 +32,7 @@ UKSM_NAME="uksm-${UKSM_VER}-for-v3.10"
 #ZEN_VER="3.10"
 
 #SUPPORTED_USES="aufs bfq bld brand -build cjktty ck exfat fedora gentoo grsec ice lqx mageia optimization pax pf reiser4 -rt suse symlink uksm zen zfs"
-SUPPORTED_USES="aufs bfq bld brand -build cjktty ck exfat fedora gentoo grsec ice lqx mageia optimization pax pf reiser4 suse symlink ubuntu uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build cjktty ck exfat fedora gentoo ice lqx mageia optimization pf reiser4 suse symlink ubuntu uksm zen zfs"
 
 inherit geek-sources
 
