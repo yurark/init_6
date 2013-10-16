@@ -1,2 +1,2 @@
-dev-vcs/git highlight -gtk -subversion
+dev-vcs/git highlight python -gtk -subversion
 dev-vcs/subversion -berkdb python
