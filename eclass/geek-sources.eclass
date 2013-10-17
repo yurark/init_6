@@ -29,7 +29,7 @@
 
 inherit geek-linux geek-utils geek-fix geek-upatch geek-squeue
 
-KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec rsbac ice lqx mageia optimization pax pf reiser4 rifs rt suse symlink ubuntu uksm zen zfs"
+KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec rsbac ice lqx mageia optimization pax pf reiser4 rifs rt suse symlink ubuntu uksm xenomai zen zfs"
 
 # internal function
 #
@@ -78,6 +78,7 @@ for use_flag in ${IUSE}; do
 		suse	)	inherit geek-suse ;;
 		ubuntu	)	inherit geek-ubuntu ;;
 		uksm	)	inherit geek-uksm ;;
+		xenomai)	inherit geek-xenomai ;;
 		zen	)	inherit geek-zen ;;
 		zfs	)	inherit geek-spl geek-zfs ;;
 	esac
@@ -94,7 +95,7 @@ geek-sources_init_variables() {
 
 	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx pf ubuntu zen"}
 	: ${cfg_file:="/etc/portage/kernel.conf"}
-	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec rsbac ice reiser4 exfat rt bld uksm aufs mageia fedora suse ubuntu brand fix upatch squeue"}
+	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec rsbac ice reiser4 exfat rt bld uksm aufs mageia fedora suse ubuntu xenomai brand fix upatch squeue"}
 
 	local xUserOrder=""
 	local xDefOder=""
@@ -169,6 +170,7 @@ geek-sources_src_unpack() {
 				squeue	)	geek-squeue_src_unpack ;;
 				suse	)	geek-suse_src_unpack ;;
 				uksm	)	geek-uksm_src_unpack ;;
+				xenomai)	geek-xenomai_src_unpack ;;
 				zen	)	geek-zen_src_unpack ;;
 				zfs	)	geek-spl_src_unpack; geek-zfs_src_unpack ;;
 			esac
@@ -213,6 +215,7 @@ geek-sources_src_prepare() {
 				ubuntu	)	geek-ubuntu_src_prepare ;;
 				uksm	)	geek-uksm_src_prepare ;;
 				upatch	)	geek-upatch_src_prepare ;;
+				xenomai)	geek-xenomai_src_prepare ;;
 				zen	)	geek-zen_src_prepare ;;
 				zfs	)	geek-spl_src_prepare; geek-zfs_src_prepare ;;
 			esac
