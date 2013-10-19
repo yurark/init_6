@@ -1,0 +1,15 @@
+DEFINED_PHASES=compile install postinst prepare unpack
+DEPEND=app-arch/bzip2 app-arch/gzip app-arch/lrzip app-arch/unzip app-arch/xz-utils !build? ( sys-apps/sed >=sys-devel/binutils-2.11.90.0.31 ) app-arch/bzip2 app-arch/gzip app-arch/lrzip app-arch/unzip app-arch/xz-utils app-arch/bzip2 app-arch/gzip app-arch/lrzip app-arch/unzip app-arch/xz-utils app-arch/bzip2 app-arch/gzip app-arch/lrzip app-arch/unzip app-arch/xz-utils dev-vcs/git app-arch/bzip2 app-arch/gzip app-arch/lrzip app-arch/unzip app-arch/xz-utils aufs? ( dev-vcs/git sys-fs/aufs-util sys-fs/squashfs-tools ) app-arch/bzip2 app-arch/gzip app-arch/lrzip app-arch/unzip app-arch/xz-utils app-arch/bzip2 app-arch/gzip app-arch/lrzip app-arch/unzip app-arch/xz-utils fedora? ( dev-vcs/git ) app-arch/bzip2 app-arch/gzip app-arch/lrzip app-arch/unzip app-arch/xz-utils mageia? ( dev-vcs/subversion ) app-arch/bzip2 app-arch/gzip app-arch/lrzip app-arch/unzip app-arch/xz-utils suse? ( dev-vcs/git ) app-arch/bzip2 app-arch/gzip app-arch/lrzip app-arch/unzip app-arch/xz-utils zfs? ( dev-vcs/git ) app-arch/bzip2 app-arch/gzip app-arch/lrzip app-arch/unzip app-arch/xz-utils zfs? ( dev-vcs/git =sys-fs/zfs-9999[kernel-builtin(+)] )
+DESCRIPTION=Full sources for the Linux kernel including: fedora, grsecurity, mageia and other patches
+EAPI=5
+HOMEPAGE=https://github.com/init6/init_6/wiki/geek-sources
+IUSE=build symlink brand aufs brand -build -deblob fedora mageia suse symlink zfs
+KEYWORDS=~amd64 ~x86
+LICENSE=GPL-2 GPL-3 GPL-3
+PDEPEND=!build? ( virtual/dev-manager )
+RDEPEND=!build? ( >=sys-libs/ncurses-5.2 sys-devel/make dev-lang/perl sys-devel/bc )
+RESTRICT=mirror binchecks strip
+SLOT=3.12
+SRC_URI=mirror://kernel/linux/kernel/v3.0/testing/patch-3.12-rc5.xz mirror://kernel/linux/kernel/v3.0/testing/linux-3.11.tar.xz
+_eclasses_=geek-aufs	944b30f0cbc1f80ee6120ae238140b50	geek-brand	cf5250083ecd9277409ba39302040516	geek-build	f837606a099d998b51b0760fefbcd24d	geek-deblob	79bce19380234b0d12857a5e96080576	geek-fedora	1a4080d4f6018e5f9aa829f6189088b2	geek-fix	bf515748085f3aba3f81e0b2e34b5a8c	geek-linux	ddb4fbb21fdb840792053a8e434a4fa2	geek-mageia	9a0f7b2a8005fe3d7301f19dbaa048aa	geek-patch	8ed71e06f868839ca6fa32446cf844bb	geek-sources	8414a21ac2864656f6427512353b4484	geek-spl	2273f2a7d53963814fb079270cd70f32	geek-squeue	ac922fedb6e6bf709573889650418d5a	geek-suse	f413d3d56036f6bc2972b9833c15cfbd	geek-upatch	fc07fe654c61624bef941333330eb79b	geek-utils	8a2ffcc91acb1034ae91876fd25a1c7d	geek-zfs	d39fcc6cc105eca924287fcdd7828d5f
+_md5_=24cc780253d19f6b776aa2082713c891

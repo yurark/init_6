@@ -1,0 +1,12 @@
+DEFINED_PHASES=compile install unpack
+DEPEND=<dev-lang/python-3
+DESCRIPTION=This package provides video & pgraph firmwares for all NVIDIA chipsets that need them.
+EAPI=5
+HOMEPAGE=http://nouveau.freedesktop.org/wiki/VideoAcceleration/
+KEYWORDS=x86 amd64
+LICENSE=MIT NVIDIA-r1
+RESTRICT=bindist mirror strip
+SLOT=0
+SRC_URI=https://raw.github.com/imirkin/re-vp2/master/extract_firmware.py x86? ( http://us.download.nvidia.com/XFree86/Linux-x86/325.08/NVIDIA-Linux-x86-325.08.run ) amd64? ( http://us.download.nvidia.com/XFree86/Linux-x86_64/325.08/NVIDIA-Linux-x86_64-325.08.run )
+_eclasses_=unpacker	658a981a81fd7cb0767315a541bab01d
+_md5_=e6a877c3c694398899e9688942481caa
