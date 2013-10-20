@@ -125,6 +125,7 @@ geek-zfs_src_prepare() {
 		--includedir=/usr/include \
 		--datarootdir=/usr/share \
 		--enable-linux-builtin=yes \
+		--with-blkid \
 		--with-linux=${S} \
 		--with-linux-obj=${S} \
 		--with-spl="${T}/spl" \
