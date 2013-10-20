@@ -1,2 +1,2 @@
 gnome-base/gnome-menus python
-gnome-base/gvfs fuse gdu gphoto2 bluetooth
+gnome-base/gvfs fuse gdu gphoto2 bluetooth udisks
