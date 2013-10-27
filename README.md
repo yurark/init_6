@@ -55,6 +55,7 @@ In this overlay you will find
      * **pax** - [Use PAX patches](http://pax.grsecurity.net)
      * **pf** - [Use pf-kernel patches](http://pf.natalenko.name)
      * **reiser4** - [Use Reiser4 FS patches](http://sourceforge.net/projects/reiser4)
+     * **rh** - [Use Red Hat Enterprise Linux kernel patches](http://www.redhat.com)
      * **rifs** - [RIFS A interactivity favor scheduler](https://code.google.com/p/rifs-scheduler)
      * **rsbac** - [RSBAC (Rule Set Based Access Control) patches](http://www.rsbac.org)
      * **rt** - [Use Ingo Molnar's realtime preempt patches](http://www.kernel.org/pub/linux/kernel/projects/rt)

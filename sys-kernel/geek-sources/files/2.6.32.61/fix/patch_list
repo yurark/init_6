@@ -1,1 +1,5 @@
+4000_sierra_wireless_usbid_addition.patch
+4305_sqlzma.patch
+4515_reiser4-grsec.patch
+# acpi-ec-add-delay-before-write.patch
 change-default-console-loglevel.patch
