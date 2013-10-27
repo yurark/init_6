@@ -3,6 +3,12 @@
 # $Header: $
 
 
+*geek-rh.eclass (27 Oct 2013)
+
+  27 Oct 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
+  +geek-rh.eclass
+  Add rh (Red Hat Enterprise Linux kernel patches) support to geek-sources-2.6.32.61
+
 *geek-sources-2.6 (13 Oct 2013)
 
   13 Oct 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>

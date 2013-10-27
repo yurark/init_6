@@ -11,9 +11,12 @@ BFQ_VER="2.6.32"
 GRSEC_VER="2.6.32"
 REISER4_VER="2.6.32"
 REISER4_SRC="mirror://sourceforge/project/reiser4/reiser4-for-linux-2.6/reiser4-for-${REISER4_VER}.patch.gz"
+RH_VER="19"
+RH_NAME="kernel-2.6.32-${RH_VER}.el6"
+RH_SRC="http://people.redhat.com/arozansk/el6/19.el6/src/${RH_NAME}.src.rpm"
 SUSE_VER="3811b6910313cc9564c3e893d6ba75645ee38a6b" # rpm-2.6.32.45-0.3
 
-SUPPORTED_USES="bfq -build grsec reiser4 suse symlink"
+SUPPORTED_USES="bfq brand -build grsec reiser4 rh suse symlink"
 
 inherit geek-sources
 
