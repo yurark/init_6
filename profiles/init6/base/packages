@@ -17,4 +17,5 @@
 *sys-kernel/module-rebuild
 *sys-libs/gpm
 *sys-process/htop
+*sys-process/time
 *www-client/lynx
