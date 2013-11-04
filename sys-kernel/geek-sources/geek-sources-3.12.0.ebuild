@@ -8,7 +8,7 @@ DEBLOB_AVAILABLE="0"
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 
 AUFS_VER="3.x-rcN"
-#BFQ_VER="3.11.0-v6r2"
+BFQ_VER="3.12.0-v6r2"
 #BLD_VER="3.11.0"
 #BLD_SRC="https://bld.googlecode.com/files/BLD-${BLD_VER}.patch"
 #CJKTTY_VER="3.11"
@@ -21,7 +21,7 @@ FEDORA_VER="master"
 #LQX_VER="3.11.2-1"
 #LQX_SRC="http://liquorix.net/sources/${LQX_VER}.patch.gz"
 MAGEIA_VER="releases/3.12.0/1.mga4"
-#OPTIMIZATION_VER="1"
+OPTIMIZATION_VER="1"
 #PAX_VER="3.11.1-test10"
 ##PF_VER="3.10.0-pf"
 #REISER4_VER="3.11.1"
@@ -31,7 +31,7 @@ SUSE_VER="master"
 ##ZEN_VER="3.10"
 
 #SUPPORTED_USES="aufs bfq bld brand -build cjktty ck exfat fedora gentoo grsec ice lqx mageia optimization pax pf reiser4 -rt suse symlink uksm zen zfs"
-SUPPORTED_USES="aufs brand -build -deblob fedora mageia suse symlink zfs"
+SUPPORTED_USES="aufs brand -build -deblob exfat fedora gentoo mageia optimization pf suse symlink zen zfs"
 
 inherit geek-sources
 
