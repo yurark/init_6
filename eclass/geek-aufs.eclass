@@ -124,11 +124,12 @@ geek-aufs_src_unpack() {
 	done
 	rm -rf a b || die "${RED}rm -rf a b failed${NORMAL}"
 
-	cp "${CTD}"/aufs3-base.patch "${CWD}"/aufs3-base-${AUFS_VER}-`date +"%Y%m%d"`.patch || die "${RED}cp ${CTD}/aufs3-base.patch ${CWD}/aufs3-base-${aufs_ver}-`date +"%Y%m%d"`.patch failed${NORMAL}"
-	cp "${CTD}"/aufs3-standalone.patch "${CWD}"/aufs3-standalone-${AUFS_VER}-`date +"%Y%m%d"`.patch || die "${RED}cp ${CTD}/aufs3-standalone.patch ${CWD}/aufs3-standalone-${aufs_ver}-`date +"%Y%m%d"`.patch failed${NORMAL}"
-	cp "${CTD}"/aufs3-kbuild.patch "${CWD}"/aufs3-kbuild-${AUFS_VER}-`date +"%Y%m%d"`.patch || die "${RED}cp ${CTD}/aufs3-kbuild.patch ${CWD}/aufs3-kbuild-${aufs_ver}-`date +"%Y%m%d"`.patch failed${NORMAL}"
-	cp "${CTD}"/aufs3-proc_map.patch "${CWD}"/aufs3-proc_map-${AUFS_VER}-`date +"%Y%m%d"`.patch || die "${RED}cp ${CTD}/aufs3-proc_map.patch ${CWD}/aufs3-proc_map-${aufs_ver}-`date +"%Y%m%d"`.patch failed${NORMAL}"
-	cp "${CTD}"/aufs3-loopback.patch "${CWD}"/aufs3-loopback-${AUFS_VER}-`date +"%Y%m%d"`.patch || die "${RED}cp ${CTD}/aufs3-loopback.patch ${CWD}/aufs3-loopback-${aufs_ver}-`date +"%Y%m%d"`.patch failed${NORMAL}"
+	[[ -r "${CTD}/aufs3-base.patch" ]] && (cp "${CTD}"/aufs3-base.patch "${CWD}"/aufs3-base-${AUFS_VER}-`date +"%Y%m%d"`.patch || die "${RED}cp ${CTD}/aufs3-base.patch ${CWD}/aufs3-base-${aufs_ver}-`date +"%Y%m%d"`.patch failed${NORMAL}")
+	[[ -r "${CTD}/aufs3-standalone.patch" ]] && (cp "${CTD}"/aufs3-standalone.patch "${CWD}"/aufs3-standalone-${AUFS_VER}-`date +"%Y%m%d"`.patch || die "${RED}cp ${CTD}/aufs3-standalone.patch ${CWD}/aufs3-standalone-${aufs_ver}-`date +"%Y%m%d"`.patch failed${NORMAL}")
+	[[ -r "${CTD}/aufs3-kbuild.patch" ]] && (cp "${CTD}"/aufs3-kbuild.patch "${CWD}"/aufs3-kbuild-${AUFS_VER}-`date +"%Y%m%d"`.patch || die "${RED}cp ${CTD}/aufs3-kbuild.patch ${CWD}/aufs3-kbuild-${aufs_ver}-`date +"%Y%m%d"`.patch failed${NORMAL}")
+	[[ -r "${CTD}/aufs3-proc_map.patch" ]] && (cp "${CTD}"/aufs3-proc_map.patch "${CWD}"/aufs3-proc_map-${AUFS_VER}-`date +"%Y%m%d"`.patch || die "${RED}cp ${CTD}/aufs3-proc_map.patch ${CWD}/aufs3-proc_map-${aufs_ver}-`date +"%Y%m%d"`.patch failed${NORMAL}")
+	[[ -r "${CTD}/aufs3-mmap.patch" ]] && (cp "${CTD}"/aufs3-mmap.patch "${CWD}"/aufs3-mmap-${AUFS_VER}-`date +"%Y%m%d"`.patch || die "${RED}cp ${CTD}/aufs3-mmap.patch ${CWD}/aufs3-mmap-${aufs_ver}-`date +"%Y%m%d"`.patch failed${NORMAL}")
+	[[ -r "${CTD}/aufs3-loopback.patch" ]] && (cp "${CTD}"/aufs3-loopback.patch "${CWD}"/aufs3-loopback-${AUFS_VER}-`date +"%Y%m%d"`.patch || die "${RED}cp ${CTD}/aufs3-loopback.patch ${CWD}/aufs3-loopback-${aufs_ver}-`date +"%Y%m%d"`.patch failed${NORMAL}")
 
 	rm -rf "${CTD}" || die "${RED}rm -rf ${CTD} failed${NORMAL}"
 
