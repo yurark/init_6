@@ -17,6 +17,7 @@ linux-058.06-hid_sony-add_SMK_link.patch
 linux-059-remove_some_xpad_pids-0.2.patch
 linux-060-add_AUGUST_DVB-T205.patch
 linux-203-stb0899_enable_low_symbol_rate.patch
+linux-210.01-dvbsky-auto-off.patch
 linux-210-dvbsky.patch
 linux-212-mantis_stb0899_faster_lock.patch
 linux-221-ngene-octopus.patch
@@ -26,14 +27,14 @@ linux-701-linksys_aes2500_brcmfmac.patch
 linux-702-Support-for-cheap-Ralink-3070-WiFi-plug.patch
 linux-703-macmini2012-ethernet.patch
 linux-704-Support-for-Ubiquiti-WifiStation.patch
+linux-705-Support-for-Buffalo-WLI-UC-G300HP-V1.patch
+linux-706-Sitecom-N300.patch
 linux-900-hide_tsc_error.patch
 linux-950-saa716x_PCIe_interface_chipset.patch
 linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
 linux-990.11-ALSA-AMD-HD-Audio.patch
-linux-990.12-RADEON-upstream-fix-01.patch
-linux-990.12-RADEON-upstream-fix-02.patch
-linux-990.12-RADEON-upstream-fix-03.patch
 linux-991.01-ptrace_fix.patch
+linux-992.01.i915_pass_mode_to_write_eld.patch
+linux-992.02-i915_set_hdmi_audio_clock.patch
 linux-995-CX24120-13Z_frontend.patch
-linux-998.01-cpufreq-revert-9d3ce4af3be0235d4cf41ea9fd774205a32e58a2.patch
 linux-999.02-A-split-for-ds3000-ts2020-code-forgot-to-change-the-.patch
