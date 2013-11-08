@@ -69,7 +69,7 @@ geek-reiser4_init_variables
 HOMEPAGE="${HOMEPAGE} ${REISER4_URL}"
 
 DEPEND="${RDEPEND}
-	>=sys-fs/reiser4progs-1.0.6"
+	reiser4?        ( >=sys-fs/reiser4progs-1.0.6 )"
 
 SRC_URI="${SRC_URI}
 	reiser4?	( ${REISER4_SRC} )"
