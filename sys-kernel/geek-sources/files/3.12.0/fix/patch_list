@@ -33,6 +33,10 @@ linux-900-hide_tsc_error.patch
 linux-950-saa716x_PCIe_interface_chipset.patch
 linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
 linux-990.11-ALSA-AMD-HD-Audio.patch
+linux-990.12-Radeon-SI-workaround.patch
+linux-990.13-Fix-clock-calculations-by-Pierre-Ossman.patch
+linux-990.14-Use-more-accurate-values-for-fractional-divs-concern.patch
+linux-990.15-Fix-missing-multichannel-PCM-SAD-in-some-cases.patch
 linux-991.01-ptrace_fix.patch
 linux-992.01.i915_pass_mode_to_write_eld.patch
 linux-992.02-i915_set_hdmi_audio_clock.patch
