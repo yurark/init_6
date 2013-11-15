@@ -1,33 +1,23 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-sources.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
-#  Wiki: https://github.com/init6/init_6/wiki/geek-sources
-#
+# @ECLASS: geek-sources.eclass
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (09 Jan 2013)
+# @BLURB: Eclass for building geek kernel.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# geek kernel with any patches easily.
 
-inherit geek-linux geek-utils geek-fix geek-upatch geek-squeue
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-sources.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+inherit geek-linux geek-utils geek-fix geek-upatch geek-squeue geek-vars
 
 KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec rsbac ice lqx mageia optimization pax pf reiser4 rh rifs rt suse symlink ubuntu uksm xenomai zen zfs"
 
@@ -79,7 +69,7 @@ for use_flag in ${IUSE}; do
 		suse	)	inherit geek-suse ;;
 		ubuntu	)	inherit geek-ubuntu ;;
 		uksm	)	inherit geek-uksm ;;
-		xenomai)	inherit geek-xenomai ;;
+		xenomai	)	inherit geek-xenomai ;;
 		zen	)	inherit geek-zen ;;
 		zfs	)	inherit geek-spl geek-zfs ;;
 	esac
@@ -95,7 +85,6 @@ geek-sources_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx pf rh ubuntu zen"}
-	: ${cfg_file:="/etc/portage/kernel.conf"}
 	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec rsbac ice rh reiser4 exfat rt bld uksm aufs mageia fedora suse ubuntu xenomai brand fix upatch squeue"}
 
 	local xUserOrder=""
@@ -106,17 +95,17 @@ geek-sources_init_variables() {
 		xDefOrder="$(echo -n "$DEFAULT_GEEKSOURCES_PATCHING_ORDER" | tr '\n' ' ' | tr -s ' ' | tr ' ' '\n' | sort | tr '\n' ' ' | sed -e 's,^\s*,,' -e 's,\s*$,,')"
 
 		if [ "x${xUserOrder}" = "x${xDefOrder}" ]; then
-			ewarn "${BLUE}Use${NORMAL} ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL} ${BLUE}from${NORMAL} ${RED}${cfg_file}${NORMAL}"
+			ewarn "${BLUE}Use${NORMAL} ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL} ${BLUE}from${NORMAL} ${GREEN}${cfg_file}${NORMAL}"
 		else
-			ewarn "${BLUE}Use${NORMAL} ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL} ${BLUE}from${NORMAL} ${RED}${cfg_file}${NORMAL}"
-			ewarn "${BLUE}Not all USE flag present in GEEKSOURCES_PATCHING_ORDER from${NORMAL} ${RED}${cfg_file}${NORMAL}"
 			difference=$(echo "${xDefOrder} ${xUserOrder}" | awk '{for(i=1;i<=NF;i++){_a[$i]++}for(i in _a){if(_a[i]==1)print i}}' ORS=" ")
-			ewarn "${BLUE}The following flags are missing:${NORMAL} ${RED}${difference}${NORMAL}"
-			ewarn "${BLUE}Probably that"\'"s the plan. In that case, never mind.${NORMAL}"
+			ewarn "${BLUE}Use${NORMAL} ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL} ${BLUE}from${NORMAL} ${GREEN}${cfg_file}${NORMAL}${BR}
+${BLUE}Not all USE flag present in GEEKSOURCES_PATCHING_ORDER from${NORMAL} ${GREEN}${cfg_file}${NORMAL}${BR}
+${BLUE}The following flags are missing:${NORMAL} ${RED}${difference}${NORMAL}${BR}
+${BLUE}Probably that"\'"s the plan. In that case, never mind.${NORMAL}${BR}"
 		fi
 	else
 		GEEKSOURCES_PATCHING_ORDER="${DEFAULT_GEEKSOURCES_PATCHING_ORDER}"
-		ewarn "${BLUE}The order of patching is defined in file${NORMAL} ${RED}${cfg_file}${NORMAL} ${BLUE}with the variable GEEKSOURCES_PATCHING_ORDER is its default value:${NORMAL}
+		ewarn "${BLUE}The order of patching is defined in file${NORMAL} ${GREEN}${cfg_file}${NORMAL} ${BLUE}with the variable GEEKSOURCES_PATCHING_ORDER is its default value:${NORMAL}
 ${RED}GEEKSOURCES_PATCHING_ORDER=\"${GEEKSOURCES_PATCHING_ORDER}\"${NORMAL}
 ${BLUE}You are free to choose any order of patching.${NORMAL}
 ${BLUE}For example, if you like the alphabetical order of patching you must set the variable:${NORMAL}
@@ -172,7 +161,7 @@ geek-sources_src_unpack() {
 				squeue	)	geek-squeue_src_unpack ;;
 				suse	)	geek-suse_src_unpack ;;
 				uksm	)	geek-uksm_src_unpack ;;
-				xenomai)	geek-xenomai_src_unpack ;;
+				xenomai	)	geek-xenomai_src_unpack ;;
 				zen	)	geek-zen_src_unpack ;;
 				zfs	)	geek-spl_src_unpack; geek-zfs_src_unpack ;;
 			esac
@@ -218,7 +207,7 @@ geek-sources_src_prepare() {
 				ubuntu	)	geek-ubuntu_src_prepare ;;
 				uksm	)	geek-uksm_src_prepare ;;
 				upatch	)	geek-upatch_src_prepare ;;
-				xenomai)	geek-xenomai_src_prepare ;;
+				xenomai	)	geek-xenomai_src_prepare ;;
 				zen	)	geek-zen_src_prepare ;;
 				zfs	)	geek-spl_src_prepare; geek-zfs_src_prepare ;;
 			esac
@@ -254,18 +243,39 @@ geek-sources_pkg_postinst() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	geek-linux_pkg_postinst
-	einfo
-	einfo "${BLUE}Wiki:${NORMAL} ${RED}https://github.com/init6/init_6/wiki/geek-sources${NORMAL}"
-	einfo
-	einfo "${BLUE}For more info on this patchset, and how to report problems, see:${NORMAL}"
+	einfo "${BR}${BLUE}Wiki:${NORMAL} ${RED}https://github.com/init6/init_6/wiki/geek-sources${NORMAL}${BR}
+${BLUE}For more info about patchset’s, and how to report problems, see:${NORMAL}${BR}"
 	for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 		if use_if_iuse "${Current_Patch}" || [[ "${Current_Patch}" == "fix" ]] || [[ "${Current_Patch}" == "upatch" ]]; then
 			case "${Current_Patch}" in
 				aufs	) geek-aufs_pkg_postinst ;;
+				bfq	) geek-bfq_pkg_postinst ;;
+				bld	) geek-bld_pkg_postinst ;;
+				brand	) geek-brand_pkg_postinst ;;
+				cjktty	) geek-cjktty_pkg_postinst ;;
+				ck	) geek-ck_pkg_postinst ;;
+				deblob	) geek-deblob_pkg_postinst ;;
+				exfat	) geek-exfat_pkg_postinst ;;
+				fedora	) geek-fedora_pkg_postinst ;;
+				gentoo	) geek-gentoo_pkg_postinst ;;
 				grsec	) geek-grsec_pkg_postinst ;;
 				ice	) geek-ice_pkg_postinst ;;
+				lqx	) geek-lqx_pkg_postinst ;;
+				mageia	) geek-mageia_pkg_postinst ;;
+				optimization ) geek-optimization_pkg_postinst ;;
+				pax	) geek-pax_pkg_postinst ;;
 				pf	) geek-pf_pkg_postinst ;;
 				reiser4	) geek-reiser4_pkg_postinst ;;
+				rh	) geek-rh_pkg_postinst ;;
+				rifs	) geek-rifs_pkg_postinst ;;
+				rsbac	) geek-rsbac_pkg_postinst ;;
+				rt	) geek-rt_pkg_postinst ;;
+				squeue	) geek-squeue_pkg_postinst ;;
+				suse	) geek-suse_pkg_postinst ;;
+				ubuntu	) geek-ubuntu_pkg_postinst ;;
+				uksm	) geek-uksm_pkg_postinst ;;
+				xenomai	) geek-xenomai_pkg_postinst ;;
+				zen	) geek-zen_pkg_postinst ;;
 				zfs	) geek-spl_pkg_postinst; geek-zfs_pkg_postinst ;;
 			esac
 			else continue

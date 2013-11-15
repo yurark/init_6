@@ -1,33 +1,23 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-zen.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
-#  Wiki: https://github.com/init6/init_6/wiki/geek-sources
-#
+# @ECLASS: geek-zen.eclass
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (12 Aug 2013)
+# @BLURB: Eclass for building kernel with zen patchset.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# kernel with zen patches easily.
 
-inherit geek-patch geek-utils
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-zen.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 
@@ -40,28 +30,10 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-zen_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	OLDIFS="$IFS"
-	VER="${PV}"
-	IFS='.'
-	set -- ${VER}
-	IFS="${OLDIFS}"
-
-	# the kernel version (e.g 3 for 3.4.2)
-	VERSION="${1}"
-	# the kernel patchlevel (e.g 4 for 3.4.2)
-	PATCHLEVEL="${2}"
-	# the kernel sublevel (e.g 2 for 3.4.2)
-	SUBLEVEL="${3}"
-	# the kernel major version (e.g 3.4 for 3.4.2)
-	KMV="${1}.${2}"
-
 	: ${ZEN_VER:=${ZEN_VER:-$KMV}}
-
 	: ${ZEN_SRC:=${ZEN_SRC:-"https://github.com/damentz/zen-kernel/compare/torvalds:v${ZEN_VER/KMV/$KMV}...${ZEN_VER/KMV/$KMV}/master.diff"}}
-
 	: ${ZEN_URL:=${ZEN_URL:-"https://github.com/damentz/zen-kernel"}}
-
-	: ${ZEN_INF:=${ZEN_INF:-"${YELLOW}The Zen Kernel - ${ZEN_URL}${NORMAL}"}}
+	: ${ZEN_INF:=${ZEN_INF:-"${YELLOW}The Zen Kernel -${GREEN} ${ZEN_URL}${NORMAL}"}}
 }
 
 geek-zen_init_variables
@@ -98,6 +70,11 @@ geek-zen_src_prepare() {
 	ApplyPatch "${T}/zen/patch_list" "${ZEN_INF}"
 	mv "${T}/zen" "${WORKDIR}/linux-${KV_FULL}-patches/zen" || die "${RED}mv ${T}/zen ${WORKDIR}/linux-${KV_FULL}-patches/zen failed${NORMAL}"
 #	rsync -avhW --no-compress --progress "${T}/zen/" "${WORKDIR}/linux-${KV_FULL}-patches/zen" || die "${RED}rsync -avhW --no-compress --progress ${T}/zen/ ${WORKDIR}/linux-${KV_FULL}-patches/zen failed${NORMAL}"
+
+	local ZEN_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/zen"
+	test -d "${ZEN_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${ZEN_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for zen patchset from${NORMAL} ${GREEN} ${ZEN_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for zen patchset from not existing${GREEN} ${ZEN_FIX_PATCH_DIR}!${NORMAL}"
+	local ZEN_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/zen"
+	test -d "${ZEN_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${ZEN_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for zen patchset from${NORMAL} ${GREEN} ${ZEN_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for zen patchset from not existing${GREEN} ${ZEN_FIX_PATCH_DIR}!${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

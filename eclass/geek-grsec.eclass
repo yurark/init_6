@@ -1,33 +1,23 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-grsec.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
-#  Wiki: https://github.com/init6/init_6/wiki/geek-sources
-#
+# @ECLASS: geek-grsec.eclass
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (12 Aug 2013)
+# @BLURB: Eclass for building kernel with grsec patchset.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# kernel with grsec patches easily.
 
-inherit geek-patch geek-utils
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-grsec.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 
@@ -40,31 +30,10 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-grsec_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	OLDIFS="$IFS"
-	VER="${PV}"
-	IFS='.'
-	set -- ${VER}
-	IFS="${OLDIFS}"
-
-	# the kernel version (e.g 3 for 3.4.2)
-	VERSION="${1}"
-	# the kernel patchlevel (e.g 4 for 3.4.2)
-	PATCHLEVEL="${2}"
-	# the kernel sublevel (e.g 2 for 3.4.2)
-	SUBLEVEL="${3}"
-	# the kernel major version (e.g 3.4 for 3.4.2)
-	KMV="${1}.${2}"
-
-	: ${GEEK_STORE_DIR:="${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/geek"}
-	addwrite "${GEEK_STORE_DIR}" # Disable the sandbox for this dir
-
 	: ${GRSEC_VER:=${GRSEC_VER:-$KMV}}
-
 	: ${GRSEC_SRC:=${GRSEC_SRC:-"git://git.overlays.gentoo.org/proj/hardened-patchset.git"}}
-
 	: ${GRSEC_URL:=${GRSEC_URL:-"http://hardened.gentoo.org"}}
-
-	: ${GRSEC_INF:=${GRSEC_INF:-"${YELLOW}GrSecurity patches - ${GRSEC_URL}${NORMAL}"}}
+	: ${GRSEC_INF:=${GRSEC_INF:-"${YELLOW}GrSecurity patches -${GREEN} ${GRSEC_URL}${NORMAL}"}}
 }
 
 geek-grsec_init_variables
@@ -74,7 +43,9 @@ HOMEPAGE="${HOMEPAGE} ${GRSEC_URL}"
 DEPEND="${DEPEND}
 	grsec?	( dev-vcs/git
 		>=sys-apps/gradm-2.2.2 )"
-	
+
+RDEPEND=">=sys-devel/gcc-4.5"
+
 # @FUNCTION: src_unpack
 # @USAGE:
 # @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
@@ -118,6 +89,11 @@ geek-grsec_src_prepare() {
 	ApplyPatch "${T}/grsec/patch_list" "${GRSEC_INF}"
 	mv "${T}/grsec" "${WORKDIR}/linux-${KV_FULL}-patches/grsec" || die "${RED}mv ${T}/grsec ${WORKDIR}/linux-${KV_FULL}-patches/grsec failed${NORMAL}"
 #	rsync -avhW --no-compress --progress "${T}/grsec/" "${WORKDIR}/linux-${KV_FULL}-patches/grsec" || die "${RED}rsync -avhW --no-compress --progress ${T}/grsec/ ${WORKDIR}/linux-${KV_FULL}-patches/grsec failed${NORMAL}"
+
+	local GRSEC_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/grsec"
+	test -d "${GRSEC_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${GRSEC_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for grsec patchset from${NORMAL} ${GREEN} ${GRSEC_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for grsec patchset from not existing${GREEN} ${GRSEC_FIX_PATCH_DIR}!${NORMAL}"
+	local GRSEC_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/grsec"
+	test -d "${GRSEC_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${GRSEC_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for grsec patchset from${NORMAL} ${GREEN} ${GRSEC_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for grsec patchset from not existing${GREEN} ${GRSEC_FIX_PATCH_DIR}!${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst
@@ -127,17 +103,17 @@ geek-grsec_pkg_postinst() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	local GRADM_COMPAT="sys-apps/gradm-2.9.1"
-	einfo "${BLUE}Hardened Gentoo provides three different predefined grsecurity level:${NORMAL}"
-	einfo "${BLUE}[server], [workstation], and [virtualization].  Those who intend to${NORMAL}"
-	einfo "${BLUE}use one of these predefined grsecurity levels should read the help${NORMAL}"
-	einfo "${BLUE}associated with the level.  Because some options require >=gcc-4.5,${NORMAL}"
-	einfo "${BLUE}users with more, than one version of gcc installed should use gcc-config${NORMAL}"
-	einfo "${BLUE}to select a compatible version.${NORMAL}"
-	einfo
-	einfo "${BLUE}Users of grsecurity's RBAC system must ensure they are using${NORMAL}"
-	einfo "${RED}${GRADM_COMPAT}${NORMAL}${BLUE}, which is compatible with${NORMAL} ${RED}${PF}${NORMAL}${BLUE}.${NORMAL}"
-	einfo "${BLUE}It is strongly recommended that the following command is issued${NORMAL}"
-	einfo "${BLUE}prior to booting a${NORMAL} ${RED}${PF}${NORMAL} ${BLUE}kernel for the first time:${NORMAL}"
-	einfo
-	einfo "${RED}emerge -na =${GRADM_COMPAT}*${NORMAL}"
+	einfo "${BLUE}Hardened Gentoo provides three different predefined grsecurity level:${NORMAL}${BR}
+${BLUE}[server], [workstation], and [virtualization].  Those who intend to${NORMAL}${BR}
+${BLUE}use one of these predefined grsecurity levels should read the help${NORMAL}${BR}
+${BLUE}associated with the level.  Because some options require >=gcc-4.5,${NORMAL}${BR}
+${BLUE}users with more, than one version of gcc installed should use gcc-config${NORMAL}${BR}
+${BLUE}to select a compatible version.${NORMAL}${BR}
+${BR}
+${BLUE}Users of grsecurity's RBAC system must ensure they are using${NORMAL}${BR}
+${RED}${GRADM_COMPAT}${NORMAL}${BLUE}, which is compatible with${NORMAL} ${RED}${PF}${NORMAL}${BLUE}.${NORMAL}${BR}
+${BLUE}It is strongly recommended that the following command is issued${NORMAL}${BR}
+${BLUE}prior to booting a${NORMAL} ${RED}${PF}${NORMAL} ${BLUE}kernel for the first time:${NORMAL}${BR}
+${BR}
+${RED}emerge -na =${GRADM_COMPAT}*${NORMAL}${BR}"
 }

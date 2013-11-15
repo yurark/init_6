@@ -1,31 +1,21 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-brand.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
-#  Wiki: https://github.com/init6/init_6/wiki/geek-sources
-#
+# @ECLASS: geek-brand.eclass
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (12 Aug 2013)
+# @BLURB: Eclass for building kernel with gentoo branding patchset.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# kernel with gentoo branding patches easily.
+
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-brand.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
 inherit geek-patch
 
@@ -41,10 +31,8 @@ geek-brand_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${IUSE:="${IUSE} brand"}
-
 	: ${BRAND_URL:=${BRAND_URL:-"https://github.com/init6/init_6/wiki/geek-sources"}}
-
-	: ${BRAND_INF:=${BRAND_INF:-"${YELLOW}Branding - ${BRAND_URL}${NORMAL}"}}
+	: ${BRAND_INF:=${BRAND_INF:-"${YELLOW}Branding -${GREEN} ${BRAND_URL}${NORMAL}"}}
 }
 
 geek-brand_init_variables
@@ -58,6 +46,11 @@ geek-brand_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${FILESDIR}/${PV}/brand/patch_list" "${BRAND_INF}"
+
+	local BRAND_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/brand"
+	test -d "${BRAND_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${BRAND_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for brand patchset from${NORMAL} ${GREEN} ${BRAND_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for brand patchset from not existing${GREEN} ${BRAND_FIX_PATCH_DIR}!${NORMAL}"
+	local BRAND_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/brand"
+	test -d "${BRAND_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${BRAND_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for brand patchset from${NORMAL} ${GREEN} ${BRAND_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for brand patchset from not existing${GREEN} ${BRAND_FIX_PATCH_DIR}!${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

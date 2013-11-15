@@ -1,33 +1,23 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-suse.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
-#  Wiki: https://github.com/init6/init_6/wiki/geek-sources
-#
+# @ECLASS: geek-suse.eclass
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (12 Aug 2013)
+# @BLURB: Eclass for building kernel with suse patchset.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# kernel with suse patches easily.
 
-inherit geek-patch geek-utils
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-suse.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 
@@ -40,31 +30,10 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-suse_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	OLDIFS="$IFS"
-	VER="${PV}"
-	IFS='.'
-	set -- ${VER}
-	IFS="${OLDIFS}"
-
-	# the kernel version (e.g 3 for 3.4.2)
-	VERSION="${1}"
-	# the kernel patchlevel (e.g 4 for 3.4.2)
-	PATCHLEVEL="${2}"
-	# the kernel sublevel (e.g 2 for 3.4.2)
-	SUBLEVEL="${3}"
-	# the kernel major version (e.g 3.4 for 3.4.2)
-	KMV="${1}.${2}"
-
-	: ${GEEK_STORE_DIR:=${GEEK_STORE_DIR:-"${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/geek"}}
-	addwrite "${GEEK_STORE_DIR}" # Disable the sandbox for this dir
-
 	: ${SUSE_VER:=${SUSE_VER:-stable}}
-
 	: ${SUSE_SRC:=${SUSE_SRC:-"git://kernel.opensuse.org/kernel-source.git"}}
-
 	: ${SUSE_URL:=${SUSE_URL:-"http://www.opensuse.org"}}
-
-	: ${SUSE_INF:=${SUSE_INF:-"${YELLOW}OpenSuSE - ${SUSE_URL}${NORMAL}"}}
+	: ${SUSE_INF:=${SUSE_INF:-"${YELLOW}OpenSuSE -${GREEN} ${SUSE_URL}${NORMAL}"}}
 }
 
 geek-suse_init_variables
@@ -126,6 +95,11 @@ geek-suse_src_prepare() {
 	SmartApplyPatch "${T}/suse/spatch_list" "${YELLOW}OpenSuSE xen - ${SUSE_URL}${NORMAL}"
 	mv "${T}/suse" "${WORKDIR}/linux-${KV_FULL}-patches/suse" || die "${RED}mv ${T}/suse ${WORKDIR}/linux-${KV_FULL}-patches/suse failed${NORMAL}"
 #	rsync -avhW --no-compress --progress "${T}/suse/" "${WORKDIR}/linux-${KV_FULL}-patches/suse" || die "${RED}rsync -avhW --no-compress --progress ${T}/suse/ ${WORKDIR}/linux-${KV_FULL}-patches/suse failed${NORMAL}"
+
+	local SUSE_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/suse"
+	test -d "${SUSE_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${SUSE_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for suse patchset from${NORMAL} ${GREEN} ${SUSE_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for suse patchset from not existing${GREEN} ${SUSE_FIX_PATCH_DIR}!${NORMAL}"
+	local SUSE_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/suse"
+	test -d "${SUSE_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${SUSE_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for suse patchset from${NORMAL} ${GREEN} ${SUSE_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for suse patchset from not existing${GREEN} ${SUSE_FIX_PATCH_DIR}!${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

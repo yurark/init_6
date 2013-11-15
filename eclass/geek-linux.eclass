@@ -1,31 +1,23 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-linux.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
+# @ECLASS: geek-linux.eclass
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (09 Jan 2013)
+# @BLURB: Eclass for building linux kernel.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# linux kernel.
 
-inherit geek-build geek-deblob geek-patch geek-utils
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-linux.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+inherit geek-build geek-deblob geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare src_compile src_install pkg_postinst
 
@@ -33,39 +25,6 @@ EXPORT_FUNCTIONS src_unpack src_prepare src_compile src_install pkg_postinst
 RESTRICT="mirror binchecks strip"
 
 LICENSE="GPL-2"
-
-OLDIFS="$IFS"
-VER="${PV}"
-IFS='.'
-set -- ${VER}
-IFS="${OLDIFS}"
-
-# the kernel version (e.g 3 for 3.4.2)
-VERSION="${1}"
-# the kernel patchlevel (e.g 4 for 3.4.2)
-PATCHLEVEL="${2}"
-# the kernel sublevel (e.g 2 for 3.4.2)
-SUBLEVEL="${3}"
-# the kernel major version (e.g 3.4 for 3.4.2)
-KMV="${1}.${2}"
-
-# Color
-BR="\x1b[0;01m"
-#BLUEDARK="\x1b[34;0m"
-BLUE="\x1b[34;01m"
-#CYANDARK="\x1b[36;0m"
-CYAN="\x1b[36;01m"
-#GRAYDARK="\x1b[30;0m"
-#GRAY="\x1b[30;01m"
-#GREENDARK="\x1b[32;0m"
-#GREEN="\x1b[32;01m"
-#LIGHT="\x1b[37;01m"
-#MAGENTADARK="\x1b[35;0m"
-#MAGENTA="\x1b[35;01m"
-NORMAL="\x1b[0;0m"
-#REDDARK="\x1b[31;0m"
-RED="\x1b[31;01m"
-YELLOW="\x1b[33;01m"
 
 # 0 for 3.4.0
 if [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ] ; then
@@ -139,8 +98,6 @@ SRC_URI="${SRC_URI} ${kurl}/${kname}"
 # all the variables before and after inherit.
 geek-linux_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	: ${cfg_file:="/etc/portage/kernel.conf"}
 
 	local rm_unneeded_arch_cfg=$(source $cfg_file 2>/dev/null; echo ${rm_unneeded_arch})
 	: ${rm_unneeded_arch:=${rm_unneeded_arch_cfg:-no}} # rm_unneeded-arch=yes/no
@@ -280,16 +237,15 @@ geek-linux_src_install() {
 geek-linux_pkg_postinst() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	einfo " ${BLUE}If you are upgrading from a previous kernel, you may be interested${NORMAL}"
-	einfo " ${BLUE}in the following document:${NORMAL}"
-	einfo "   ${BLUE}- General upgrade guide:${NORMAL} ${RED}http://www.gentoo.org/doc/en/kernel-upgrade.xml${NORMAL}"
-	einfo " ${RED}${CATEGORY}/${PN}${NORMAL} ${BLUE}is UNSUPPORTED Gentoo Security.${NORMAL}"
-	einfo " ${BLUE}This means that it is likely to be vulnerable to recent security issues.${NORMAL}"
-	einfo " ${BLUE}For specific information on why this kernel is unsupported, please read:${NORMAL}"
-	einfo " ${RED}http://www.gentoo.org/proj/en/security/kernel.xml${NORMAL}"
-	einfo
-	einfo " ${BLUE}Now is the time to configure and build the kernel.${NORMAL}"
-	einfo
+	einfo " ${BLUE}If you are upgrading from a previous kernel, you may be interested${NORMAL}${BR}
+ ${BLUE}in the following document:${NORMAL}${BR}
+ ${BLUE}- General upgrade guide:${NORMAL} ${RED}http://www.gentoo.org/doc/en/kernel-upgrade.xml${NORMAL}${BR}
+ ${RED}${CATEGORY}/${PN}${NORMAL} ${BLUE}is UNSUPPORTED Gentoo Security.${NORMAL}${BR}
+ ${BLUE}This means that it is likely to be vulnerable to recent security issues.${NORMAL}${BR}
+ ${BLUE}For specific information on why this kernel is unsupported, please read:${NORMAL}${BR}
+ ${RED}http://www.gentoo.org/proj/en/security/kernel.xml${NORMAL}${BR}
+ ${BR}
+ ${BLUE}Now is the time to configure and build the kernel.${NORMAL}${BR}"
 
 	if use deblob; then
 		geek-deblob_pkg_postinst

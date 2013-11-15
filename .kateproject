@@ -1,0 +1,20 @@
+{
+    "name": "Оверлей init_6",
+
+    "projects": [
+	{
+	    "name": "ebuild",
+	    "files": [ { "directory": ".", "filters": ["*.ebuild", "ChangeLog", "*.xml" ], "recursive": 1 } ]
+	},
+
+	{
+	    "name": "eclass",
+	    "files": [ { "directory": "eclass", "filters": ["*.eclass"], "recursive": 1 } ]
+	},
+
+	{
+	    "name": "scripts",
+	    "files": [ { "directory": "scripts", "filters": ["*.sh", "*.*", "*" ], "recursive": 1 } ]
+	}
+    ]
+}

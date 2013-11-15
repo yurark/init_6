@@ -1,38 +1,25 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-patch.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
+# @ECLASS: geek-patch.eclass
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (12 Aug 2013)
+# @BLURB: Eclass for do all work with patches.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for work
+# with patches easily.
 
-EXPORT_FUNCTIONS ApplyPatch SmartApplyPatch
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-patch.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
-# *.gz       -> gunzip -dc    -> app-arch/gzip
-# *.bz|*.bz2 -> bunzip -dc    -> app-arch/bzip2
-# *.lrz      -> lrunzip -dc   -> app-arch/lrzip
-# *.xz       -> xz -dc        -> app-arch/xz-utils
-# *.zip      -> unzip -d      -> app-arch/unzip
-# *.Z        -> uncompress -c -> app-arch/gzip
+inherit geek-vars
+
+EXPORT_FUNCTIONS ApplyPatch SmartApplyPatch ApplyUserPatch
 
 DEPEND="${DEPEND}
 	app-arch/bzip2
@@ -40,7 +27,6 @@ DEPEND="${DEPEND}
 	app-arch/lrzip
 	app-arch/unzip
 	app-arch/xz-utils"
-
 
 # @FUNCTION: init_variables
 # @INTERNAL
@@ -52,8 +38,6 @@ geek-patch_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${patch_cmd:=${patch_cmd:-"patch -p1 -g1 --no-backup-if-mismatch"}}
-
-	: ${cfg_file:="/etc/portage/kernel.conf"}
 
 	local crap_patch_cfg=$(source $cfg_file 2>/dev/null; echo ${crap_patch})
 	: ${crap_patch:=${crap_patch_cfg:-ignore}} # crap_patch=ignore/will_not_pass
@@ -98,6 +82,12 @@ get_test_patch_cmd () {
 # @FUNCTION: ExtractApply
 # @USAGE: ExtractApply "<patch>"
 # @DESCRIPTION: Extract patch from *.gz, *.bz, *.bz2, *.lrz, *.xz, *.zip, *.Z
+# *.gz       -> gunzip -dc    -> app-arch/gzip
+# *.bz|*.bz2 -> bunzip -dc    -> app-arch/bzip2
+# *.lrz      -> lrunzip -dc   -> app-arch/lrzip
+# *.xz       -> xz -dc        -> app-arch/xz-utils
+# *.zip      -> unzip -d      -> app-arch/unzip
+# *.Z        -> uncompress -c -> app-arch/gzip
 ExtractApply() {
 	debug-print-function ${FUNCNAME} "$@"
 
@@ -260,4 +250,28 @@ geek-patch_SmartApplyPatch() {
 	;;
 	*) continue ;;
 	esac
+}
+
+# @FUNCTION: ApplyUserPatch
+# @USAGE:
+# @DESCRIPTION:
+geek-patch_ApplyUserPatch() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	local dir=$1
+	debug-print "$FUNCNAME: dir=$dir"
+	local msg=$2
+	debug-print "$FUNCNAME: msg=$msg"
+
+	if [ -d "${dir}" ]; then
+		if [ -r "${dir}/patch_list" ]; then
+			ApplyPatch "${dir}/patch_list" "${msg}"
+		else
+			ewarn "${BLUE}File${NORMAL} ${RED}${dir}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
+			ewarn "${BLUE}Try to apply the patches if they are there…${NORMAL}"
+			for i in `ls ${dir}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
+				ApplyPatch "${i}" "${msg}"
+			done
+		fi
+	fi
 }
