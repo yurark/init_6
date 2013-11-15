@@ -26,13 +26,14 @@ OPTIMIZATION_VER="1"
 #PAX_VER="3.11.1-test10"
 ##PF_VER="3.10.0-pf"
 #REISER4_VER="3.11.1"
+RT_VER="3.12.0-rt1"
 SUSE_VER="master"
-#UKSM_VER="0.1.2.2"
-#UKSM_NAME="uksm-${UKSM_VER}-for-v3.10"
+UKSM_VER="0.1.2.2"
+UKSM_NAME="uksm-${UKSM_VER}-for-v3.12"
 ##ZEN_VER="3.10"
 
 #SUPPORTED_USES="aufs bfq bld brand -build cjktty ck exfat fedora gentoo grsec ice lqx mageia optimization pax pf reiser4 -rt suse symlink uksm zen zfs"
-SUPPORTED_USES="aufs bfq brand -build -deblob exfat fedora gentoo mageia optimization pf suse symlink zen zfs"
+SUPPORTED_USES="aufs bfq brand -build -deblob exfat fedora gentoo ice mageia optimization pf rt suse symlink uksm zen zfs"
 
 inherit geek-sources
 
