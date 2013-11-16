@@ -68,8 +68,7 @@ geek-zen_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/zen/patch_list" "${ZEN_INF}"
-	mv "${T}/zen" "${WORKDIR}/linux-${KV_FULL}-patches/zen" || die "${RED}mv ${T}/zen ${WORKDIR}/linux-${KV_FULL}-patches/zen failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/zen/" "${WORKDIR}/linux-${KV_FULL}-patches/zen" || die "${RED}rsync -avhW --no-compress --progress ${T}/zen/ ${WORKDIR}/linux-${KV_FULL}-patches/zen failed${NORMAL}"
+	move "${T}/zen" "${WORKDIR}/linux-${KV_FULL}-patches/zen"
 
 	local ZEN_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/zen"
 	test -d "${ZEN_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${ZEN_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for zen patchset from${NORMAL} ${GREEN} ${ZEN_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for zen patchset from not existing${GREEN} ${ZEN_FIX_PATCH_DIR}!${NORMAL}"

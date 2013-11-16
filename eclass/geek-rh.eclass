@@ -90,8 +90,7 @@ geek-rh_src_prepare() {
 	# now 2.6.32
 	ApplyPatch "${T}/rh/patch_list" "${RH_INF}"
 	# now 2.6.32.18
-	mv "${T}/rh" "${WORKDIR}/linux-${KV_FULL}-patches/rh" || die "${RED}mv ${T}/rh ${WORKDIR}/linux-${KV_FULL}-patches/rh failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/rh/" "${WORKDIR}/linux-${KV_FULL}-patches/rh" || die "${RED}rsync -avhW --no-compress --progress ${T}/rh/ ${WORKDIR}/linux-${KV_FULL}-patches/rh failed${NORMAL}"
+	move "${T}/rh" "${WORKDIR}/linux-${KV_FULL}-patches/rh"
 
 	# Comment out EXTRAVERSION added by rh patch:
 	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" "Makefile" || die

@@ -63,9 +63,7 @@ geek-mageia_src_unpack() {
 		svn co "${MAGEIA_SRC}" "${CSD}" > /dev/null 2>&1
 	fi
 
-#	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${CSD}/" "${CTD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/ ${CTD} failed${NORMAL}"
-	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"; (cd "${CSD}"; tar cf - .) | (cd "${CTD}"; tar xpf -)
+	copy "${CSD}" "${CTD}"
 	cd "${CTD}"/"${MAGEIA_VER}"/PATCHES || die "${RED}cd ${CTD}/${MAGEIA_VER}/PATCHES failed${NORMAL}"
 
 	find . -name "*.patch" | xargs -i cp "{}" "${CWD}"
@@ -82,8 +80,7 @@ geek-mageia_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/mageia/patch_list" "${MAGEIA_INF}"
-	mv "${T}/mageia" "${WORKDIR}/linux-${KV_FULL}-patches/mageia" || die "${RED}mv ${T}/mageia ${WORKDIR}/linux-${KV_FULL}-patches/mageia failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/mageia/" "${WORKDIR}/linux-${KV_FULL}-patches/mageia" || die "${RED}rsync -avhW --no-compress --progress ${T}/mageia/ ${WORKDIR}/linux-${KV_FULL}-patches/mageia failed${NORMAL}"
+	move "${T}/mageia" "${WORKDIR}/linux-${KV_FULL}-patches/mageia"
 
 	local MAGEIA_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/mageia"
 	test -d "${MAGEIA_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${MAGEIA_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for mageia patchset from${NORMAL} ${GREEN} ${MAGEIA_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for mageia patchset from not existing${GREEN} ${MAGEIA_FIX_PATCH_DIR}!${NORMAL}"

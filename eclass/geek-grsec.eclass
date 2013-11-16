@@ -66,9 +66,7 @@ geek-grsec_src_unpack() {
 		git clone "${GRSEC_SRC}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches
 	fi
 
-#	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${CSD}/" "${CTD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/ ${CTD} failed${NORMAL}"
-	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"; (cd "${CSD}"; tar cf - .) | (cd "${CTD}"; tar xpf -)
+	copy "${CSD}" "${CTD}"
 
 	cd "${CTD}"/"${GRSEC_VER}" || die "${RED}cd ${CTD}/${GRSEC_VER} failed${NORMAL}"
 
@@ -87,8 +85,7 @@ geek-grsec_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/grsec/patch_list" "${GRSEC_INF}"
-	mv "${T}/grsec" "${WORKDIR}/linux-${KV_FULL}-patches/grsec" || die "${RED}mv ${T}/grsec ${WORKDIR}/linux-${KV_FULL}-patches/grsec failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/grsec/" "${WORKDIR}/linux-${KV_FULL}-patches/grsec" || die "${RED}rsync -avhW --no-compress --progress ${T}/grsec/ ${WORKDIR}/linux-${KV_FULL}-patches/grsec failed${NORMAL}"
+	move "${T}/grsec" "${WORKDIR}/linux-${KV_FULL}-patches/grsec"
 
 	local GRSEC_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/grsec"
 	test -d "${GRSEC_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${GRSEC_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for grsec patchset from${NORMAL} ${GREEN} ${GRSEC_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for grsec patchset from not existing${GREEN} ${GRSEC_FIX_PATCH_DIR}!${NORMAL}"

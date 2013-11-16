@@ -76,9 +76,7 @@ geek-spl_src_unpack() {
 		git clone "${SPL_SRC}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches
 	fi
 
-#	cp -r "${CSD}" "${CWD}" || die "${RED}cp -r ${CSD} ${CWD} failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${CSD}/" "${CTD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/ ${CTD} failed${NORMAL}"
-	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"; (cd "${CSD}"; tar cf - .) | (cd "${CTD}"; tar xpf -)
+	copy "${CSD}" "${CWD}"
 	
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
 

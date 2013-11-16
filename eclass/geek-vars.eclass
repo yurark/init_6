@@ -16,27 +16,6 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
-EXPORT_FUNCTIONS init_variables
-
-set_color() {
-	: ${BR:=${BR:-"\x1b[0;01m"}}
-	#: ${BLUEDARK:=${BLUEDARK:-"\x1b[34;0m"}}
-	: ${BLUE:=${BLUE:-"\x1b[34;01m"}}
-	#: ${CYANDARK:=${CYANDARK:-"\x1b[36;0m"}}
-	: ${CYAN:=${CYAN:-"\x1b[36;01m"}}
-	#: ${GRAYDARK:=${GRAYDARK:-"\x1b[30;0m"}}
-	#: ${GRAY:=${GRAY:-"\x1b[30;01m"}}
-	#: ${GREENDARK:=${GREENDARK:-"\x1b[32;0m"}}
-	: ${GREEN:=${GREEN:-"\x1b[32;01m"}}
-	#: ${LIGHT:=${LIGHT:-"\x1b[37;01m"}}
-	#: ${MAGENTADARK:=${MAGENTADARK:-"\x1b[35;0m"}}
-	#: ${MAGENTA:=${MAGENTA:-"\x1b[35;01m"}}
-	: ${NORMAL:=${NORMAL:-"\x1b[0;0m"}}
-	#: ${REDDARK:=${REDDARK:-"\x1b[31;0m"}}
-	: ${RED:=${RED:-"\x1b[31;01m"}}
-	: ${YELLOW:=${YELLOW:-"\x1b[33;01m"}}
-}
-
 # @FUNCTION: init_variables
 # @INTERNAL
 # @DESCRIPTION:
@@ -75,9 +54,49 @@ geek-vars_init_variables() {
 	check_for_color
 }
 
+set_color() {
+	: ${BR:=${BR:-"\x1b[0;01m"}}
+	#: ${BLUEDARK:=${BLUEDARK:-"\x1b[34;0m"}}
+	: ${BLUE:=${BLUE:-"\x1b[34;01m"}}
+	#: ${CYANDARK:=${CYANDARK:-"\x1b[36;0m"}}
+	: ${CYAN:=${CYAN:-"\x1b[36;01m"}}
+	#: ${GRAYDARK:=${GRAYDARK:-"\x1b[30;0m"}}
+	#: ${GRAY:=${GRAY:-"\x1b[30;01m"}}
+	#: ${GREENDARK:=${GREENDARK:-"\x1b[32;0m"}}
+	: ${GREEN:=${GREEN:-"\x1b[32;01m"}}
+	#: ${LIGHT:=${LIGHT:-"\x1b[37;01m"}}
+	#: ${MAGENTADARK:=${MAGENTADARK:-"\x1b[35;0m"}}
+	#: ${MAGENTA:=${MAGENTA:-"\x1b[35;01m"}}
+	: ${NORMAL:=${NORMAL:-"\x1b[0;0m"}}
+	#: ${REDDARK:=${REDDARK:-"\x1b[31;0m"}}
+	: ${RED:=${RED:-"\x1b[31;01m"}}
+	: ${YELLOW:=${YELLOW:-"\x1b[33;01m"}}
+}
+
+set_no_color() {
+	: ${BR:=${BR:-"\x1b[0;01m"}}
+	#: ${BLUEDARK:=${BLUEDARK:-""}}
+	: ${BLUE:=${BLUE:-""}}
+	#: ${CYANDARK:=${CYANDARK:-""}}
+	: ${CYAN:=${CYAN:-""}}
+	#: ${GRAYDARK:=${GRAYDARK:-""}}
+	#: ${GRAY:=${GRAY:-""}}
+	#: ${GREENDARK:=${GREENDARK:-""}}
+	: ${GREEN:=${GREEN:-""}}
+	#: ${LIGHT:=${LIGHT:-""}}
+	#: ${MAGENTADARK:=${MAGENTADARK:-""}}
+	#: ${MAGENTA:=${MAGENTA:-""}}
+	: ${NORMAL:=${NORMAL:-""}}
+	#: ${REDDARK:=${REDDARK:-""}}
+	: ${RED:=${RED:-""}}
+	: ${YELLOW:=${YELLOW:-""}}
+}
+
 check_for_color() {
 	if [[ ! ${use_colors} == no ]]; then
 		set_color
+	else
+		set_no_color
 	fi
 }
 

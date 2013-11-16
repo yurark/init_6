@@ -65,8 +65,7 @@ geek-exfat_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/exfat/patch_list" "${EXFAT_INF}"
-	mv "${T}/exfat" "${WORKDIR}/linux-${KV_FULL}-patches/exfat" || die "${RED}mv ${T}/exfat ${WORKDIR}/linux-${KV_FULL}-patches/exfat failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/exfat/" "${WORKDIR}/linux-${KV_FULL}-patches/exfat" || die "${RED}rsync -avhW --no-compress --progress ${T}/exfat/ ${WORKDIR}/linux-${KV_FULL}-patches/exfat failed${NORMAL}"
+	move "${T}/exfat" "${WORKDIR}/linux-${KV_FULL}-patches/exfat"
 
 	local EXFAT_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/exfat"
 	test -d "${EXFAT_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${EXFAT_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for exfat patchset from${NORMAL} ${GREEN} ${EXFAT_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for exfat patchset from not existing${GREEN} ${EXFAT_FIX_PATCH_DIR}!${NORMAL}"

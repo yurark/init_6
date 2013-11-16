@@ -67,8 +67,7 @@ geek-optimization_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/optimization/patch_list" "${OPTIMIZATION_INF}"
-	mv "${T}/optimization" "${WORKDIR}/linux-${KV_FULL}-patches/optimization" || die "${RED}mv ${T}/optimization ${WORKDIR}/linux-${KV_FULL}-patches/optimization failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/optimization/" "${WORKDIR}/linux-${KV_FULL}-patches/optimization" || die "${RED}rsync -avhW --no-compress --progress ${T}/optimization/ ${WORKDIR}/linux-${KV_FULL}-patches/optimization failed${NORMAL}"
+	move "${T}/optimization" "${WORKDIR}/linux-${KV_FULL}-patches/optimization"
 
 	local OPTIMIZATION_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/optimization"
 	test -d "${OPTIMIZATION_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${OPTIMIZATION_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for optimization patchset from${NORMAL} ${GREEN} ${OPTIMIZATION_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for optimization patchset from not existing${GREEN} ${OPTIMIZATION_FIX_PATCH_DIR}!${NORMAL}"

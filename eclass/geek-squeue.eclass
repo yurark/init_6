@@ -57,19 +57,16 @@ geek-squeue_src_unpack() {
 	if [ -d ${CSD} ]; then
 		cd ${CSD} || die "${RED}cd ${CSD} failed${NORMAL}"
 		git pull > /dev/null 2>&1
-#		cd "${S}" || die "${RED}cd ${S} failed${NORMAL}"
 	else
 		git clone ${SQUEUE_SRC} ${CSD} > /dev/null 2>&1
 	fi
 
 	if [ -d ${CSD}/queue-${SQUEUE_VER} ] ; then
-		cp -r "${CSD}/queue-${SQUEUE_VER}" "${CWD}" > /dev/null 2>&1; #|| die "${RED}cp -r ${CSD}/queue-${SQUEUE_VER} ${CWD} failed${NORMAL}"
-#		rsync -avhW --no-compress --progress "${CSD}/queue-${SQUEUE_VER}/" "${CWD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/queue-${SQUEUE_VER}/ ${CWD} failed${NORMAL}"
-		mv "${CWD}/series" "${CWD}/patch_list" > /dev/null 2>&1; #|| die "${RED}mv ${CWD}/series ${CWD}/patch_list failed${NORMAL}"
+		copy "${CSD}/queue-${SQUEUE_VER}" "${CWD}" > /dev/null 2>&1;
+		mv "${CWD}/series" "${CWD}/patch_list" > /dev/null 2>&1;
 	elif [ -d ${CSD}/releases/${PV} ]; then
-		cp -r "${CSD}/releases/${PV}" "${CWD}" > /dev/null 2>&1; #|| die "${RED}cp -r ${CSD}/releases/${PV} ${CWD} failed${NORMAL}"
-#		rsync -avhW --no-compress --progress "${CSD}/releases/${PV}/" "${CWD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/releases/${PV}/ ${CWD} failed${NORMAL}"
-		mv "${CWD}/series" "${CWD}/patch_list" > /dev/null 2>&1 || ewarn "There is no stable-queue patch-set this time"; skip_squeue="yes"; #die "${RED}mv ${CWD}/series ${CWD}/patch_list failed${NORMAL}"
+		copy "${CSD}/releases/${PV}" "${CWD}" > /dev/null 2>&1;
+		mv "${CWD}/series" "${CWD}/patch_list" > /dev/null 2>&1 || ewarn "There is no stable-queue patch-set this time"; skip_squeue="yes";
 	else
 		ewarn "There is no stable-queue patch-set this time"
 		skip_squeue="yes";
@@ -86,8 +83,7 @@ geek-squeue_src_prepare() {
 			ewarn "${RED}Skipping update to latest stable queue ...${NORMAL}"
 		else
 			ApplyPatch "${T}/squeue/patch_list" "${SQUEUE_INF}"
-			mv "${T}/squeue" "${WORKDIR}/linux-${KV_FULL}-patches/squeue" || die "${RED}mv ${T}/squeue ${WORKDIR}/linux-${KV_FULL}-patches/squeue failed${NORMAL}"
-#			rsync -avhW --no-compress --progress "${T}/squeue/" "${WORKDIR}/linux-${KV_FULL}-patches/squeue" || die "${RED}rsync -avhW --no-compress --progress ${T}/squeue/ ${WORKDIR}/linux-${KV_FULL}-patches/squeue failed${NORMAL}"
+			move "${T}/squeue" "${WORKDIR}/linux-${KV_FULL}-patches/squeue"
 	fi
 }
 

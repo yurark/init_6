@@ -67,8 +67,7 @@ geek-uksm_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/uksm/patch_list" "${UKSM_INF}"
-	mv "${T}/uksm" "${WORKDIR}/linux-${KV_FULL}-patches/uksm" || die "${RED}mv ${T}/uksm ${WORKDIR}/linux-${KV_FULL}-patches/uksm failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/uksm/" "${WORKDIR}/linux-${KV_FULL}-patches/uksm" || die "${RED}rsync -avhW --no-compress --progress ${T}/uksm/ ${WORKDIR}/linux-${KV_FULL}-patches/uksm failed${NORMAL}"
+	move "${T}/uksm" "${WORKDIR}/linux-${KV_FULL}-patches/uksm"
 
 	local UKSM_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/uksm"
 	test -d "${UKSM_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${UKSM_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for uksm patchset from${NORMAL} ${GREEN} ${UKSM_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for uksm patchset from not existing${GREEN} ${UKSM_FIX_PATCH_DIR}!${NORMAL}"

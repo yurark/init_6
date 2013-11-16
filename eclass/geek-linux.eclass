@@ -213,17 +213,15 @@ geek-linux_src_install() {
 	dodir /usr/src
 	echo ">>> Copying sources ..."
 
-#	mv ${WORKDIR}/linux* "${D}"/usr/src || die "${RED}mv ${WORKDIR}/linux* ${D}/usr/src failed${NORMAL}"
-#	rsync -avhW --no-compress --progress ${WORKDIR}/linux*/ "${D}"/usr/src || die "${RED}rsync -avhW --no-compress --progress ${WORKDIR}/linux*/ ${D}/usr/src failed${NORMAL}"
-	test -d "${D}/usr/src/linux-${KV_FULL}" >/dev/null 2>&1 || mkdir -p "${D}/usr/src/linux-${KV_FULL}"; (cd "${WORKDIR}/linux-${KV_FULL}"; tar cf - .) | (cd "${D}/usr/src/linux-${KV_FULL}"; tar xpf -)
-	test -d "${D}/usr/src/linux-${KV_FULL}-patches" >/dev/null 2>&1 || mkdir -p "${D}/usr/src/linux-${KV_FULL}-patches"; (cd "${WORKDIR}/linux-${KV_FULL}-patches"; tar cf - .) | (cd "${D}/usr/src/linux-${KV_FULL}-patches"; tar xpf -)
+	move "${WORKDIR}/linux-${KV_FULL}" "${D}/usr/src/linux-${KV_FULL}"
+	move "${WORKDIR}/linux-${KV_FULL}-patches" "${D}/usr/src/linux-${KV_FULL}-patches"
 
 	if use symlink; then
 		if [ -h "/usr/src/linux" ]; then
 			addwrite "/usr/src/linux"
 			unlink "/usr/src/linux" || die "${RED}unlink /usr/src/linux failed${NORMAL}"
 		elif [ -d "/usr/src/linux" ]; then
-			mv "/usr/src/linux" "/usr/src/linux-old" || die "${RED}mv /usr/src/linux /usr/src/linux-old failed${NORMAL}"
+			move "/usr/src/linux" "/usr/src/linux-old"
 		fi
 		dosym linux-${KV_FULL} \
 			"/usr/src/linux" ||

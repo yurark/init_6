@@ -65,9 +65,7 @@ geek-aufs_src_unpack() {
 		git_get_all_branches
 	fi
 
-#	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${CSD}/" "${CTD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/ ${CTD} failed${NORMAL}"
-	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"; (cd "${CSD}"; tar cf - .) | (cd "${CTD}"; tar xpf -)
+	copy "${CSD}" "${CTD}"
 	cd "${CTD}"
 
 	dir=( "Documentation" "fs" "include" )
@@ -110,8 +108,7 @@ geek-aufs_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/aufs/patch_list" "${AUFS_INF}"
-	mv "${T}/aufs" "${WORKDIR}/linux-${KV_FULL}-patches/aufs" || die "${RED}mv ${T}/aufs ${WORKDIR}/linux-${KV_FULL}-patches/aufs failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/aufs/" "${WORKDIR}/linux-${KV_FULL}-patches/aufs" || die "${RED}rsync -avhW --no-compress --progress ${T}/aufs/ ${WORKDIR}/linux-${KV_FULL}-patches/aufs failed${NORMAL}"
+	move "${T}/aufs" "${WORKDIR}/linux-${KV_FULL}-patches/aufs"
 
 	local AUFS_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/aufs"
 	test -d "${AUFS_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${AUFS_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for aufs patchset from${NORMAL} ${GREEN} ${AUFS_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for aufs patchset from not existing${GREEN} ${AUFS_FIX_PATCH_DIR}!${NORMAL}"

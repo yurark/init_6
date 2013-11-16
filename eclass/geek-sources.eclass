@@ -29,6 +29,8 @@ KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec 
 USEKnown() {
 	debug-print-function ${FUNCNAME} "$@"
 
+	[[ ${#} -ne 1 ]] && die "Invalid number of args to ${FUNCNAME}()";
+
 	local USE=$1
 	[ "${USE}" == "" ] && die "${RED}Feature not defined!${NORMAL}"
 

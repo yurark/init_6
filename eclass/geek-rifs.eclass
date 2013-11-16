@@ -66,8 +66,7 @@ geek-rifs_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/rifs/patch_list" "${RIFS_INF}"
-	mv "${T}/rifs" "${WORKDIR}/linux-${KV_FULL}-patches/rifs" || die "${RED}mv ${T}/rifs ${WORKDIR}/linux-${KV_FULL}-patches/rifs failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/rifs/" "${WORKDIR}/linux-${KV_FULL}-patches/rifs" || die "${RED}rsync -avhW --no-compress --progress ${T}/rifs/ ${WORKDIR}/linux-${KV_FULL}-patches/rifs failed${NORMAL}"
+	move "${T}/rifs" "${WORKDIR}/linux-${KV_FULL}-patches/rifs"
 
 	local RIFS_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/rifs"
 	test -d "${RIFS_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${RIFS_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for rifs patchset from${NORMAL} ${GREEN} ${RIFS_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for rifs patchset from not existing${GREEN} ${RIFS_FIX_PATCH_DIR}!${NORMAL}"

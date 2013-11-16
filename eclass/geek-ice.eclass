@@ -69,8 +69,7 @@ geek-ice_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/ice/patch_list" "${ICE_INF}"
-	mv "${T}/ice" "${WORKDIR}/linux-${KV_FULL}-patches/ice" || die "${RED}mv ${T}/ice ${WORKDIR}/linux-${KV_FULL}-patches/ice failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/ice/" "${WORKDIR}/linux-${KV_FULL}-patches/ice" || die "${RED}rsync -avhW --no-compress --progress ${T}/ice/ ${WORKDIR}/linux-${KV_FULL}-patches/ice failed${NORMAL}"
+	move "${T}/ice" "${WORKDIR}/linux-${KV_FULL}-patches/ice"
 
 	local ICE_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/ice"
 	test -d "${ICE_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${ICE_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for ice patchset from${NORMAL} ${GREEN} ${ICE_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for ice patchset from not existing${GREEN} ${ICE_FIX_PATCH_DIR}!${NORMAL}"

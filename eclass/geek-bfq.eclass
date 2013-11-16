@@ -62,8 +62,7 @@ geek-bfq_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/bfq/patch_list" "${BFQ_INF}"
-	mv "${T}/bfq" "${WORKDIR}/linux-${KV_FULL}-patches/bfq" || die "${RED}mv ${T}/bfq ${WORKDIR}/linux-${KV_FULL}-patches/bfq failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/bfq/" "${WORKDIR}/linux-${KV_FULL}-patches/bfq" || die "${RED}rsync -avhW --no-compress --progress ${T}/bfq/ ${WORKDIR}/linux-${KV_FULL}-patches/bfq failed${NORMAL}"
+	move "${T}/bfq" "${WORKDIR}/linux-${KV_FULL}-patches/bfq"
 
 	local BFQ_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/bfq"
 	test -d "${BFQ_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${BFQ_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for bfq patchset from${NORMAL} ${GREEN} ${BFQ_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for bfq patchset from not existing${GREEN} ${BFQ_FIX_PATCH_DIR}!${NORMAL}"

@@ -64,8 +64,7 @@ geek-cjktty_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/cjktty/patch_list" "${CJKTTY_INF}"
-	mv "${T}/cjktty" "${WORKDIR}/linux-${KV_FULL}-patches/cjktty" || die "${RED}mv ${T}/cjktty ${WORKDIR}/linux-${KV_FULL}-patches/cjktty failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/cjktty/" "${WORKDIR}/linux-${KV_FULL}-patches/cjktty" || die "${RED}rsync -avhW --no-compress --progress ${T}/cjktty/ ${WORKDIR}/linux-${KV_FULL}-patches/cjktty failed${NORMAL}"
+	move "${T}/cjktty" "${WORKDIR}/linux-${KV_FULL}-patches/cjktty"
 
 	local CJKTTY_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/cjktty"
 	test -d "${CJKTTY_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${CJKTTY_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for cjktty patchset from${NORMAL} ${GREEN} ${CJKTTY_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for cjktty patchset from not existing${GREEN} ${CJKTTY_FIX_PATCH_DIR}!${NORMAL}"

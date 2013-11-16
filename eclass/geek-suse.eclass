@@ -64,9 +64,7 @@ geek-suse_src_unpack() {
 		git clone "${SUSE_SRC}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches
 	fi
 
-#	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${CSD}/" "${CTD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/ ${CTD} failed${NORMAL}"
-	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"; (cd "${CSD}"; tar cf - .) | (cd "${CTD}"; tar xpf -)
+	copy "${CSD}" "${CTD}"
 
 	cd "${CTD}" || die "${RED}cd ${CTD} failed${NORMAL}"
 
@@ -93,8 +91,7 @@ geek-suse_src_prepare() {
 
 	ApplyPatch "${T}/suse/patch_list" "${SUSE_INF}"
 	SmartApplyPatch "${T}/suse/spatch_list" "${YELLOW}OpenSuSE xen - ${SUSE_URL}${NORMAL}"
-	mv "${T}/suse" "${WORKDIR}/linux-${KV_FULL}-patches/suse" || die "${RED}mv ${T}/suse ${WORKDIR}/linux-${KV_FULL}-patches/suse failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/suse/" "${WORKDIR}/linux-${KV_FULL}-patches/suse" || die "${RED}rsync -avhW --no-compress --progress ${T}/suse/ ${WORKDIR}/linux-${KV_FULL}-patches/suse failed${NORMAL}"
+	move "${T}/suse" "${WORKDIR}/linux-${KV_FULL}-patches/suse"
 
 	local SUSE_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/suse"
 	test -d "${SUSE_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${SUSE_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for suse patchset from${NORMAL} ${GREEN} ${SUSE_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for suse patchset from not existing${GREEN} ${SUSE_FIX_PATCH_DIR}!${NORMAL}"

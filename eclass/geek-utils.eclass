@@ -17,7 +17,7 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
-EXPORT_FUNCTIONS use_if_iuse get_from_url git_get_all_branches git_checkout find_crap rm_crap get_config
+EXPORT_FUNCTIONS use_if_iuse get_from_url git_get_all_branches git_checkout find_crap rm_crap get_config copy move
 
 # @FUNCTION: in_iuse
 # @USAGE: <flag>
@@ -46,6 +46,8 @@ in_iuse() {
 geek-utils_use_if_iuse() {
 	debug-print-function ${FUNCNAME} "$@"
 
+	[[ ${#} -ne 1 ]] && die "Invalid number of args to ${FUNCNAME}()";
+
 	in_iuse $1 || return 1
 	use $1
 }
@@ -55,6 +57,8 @@ geek-utils_use_if_iuse() {
 # @DESCRIPTION:
 geek-utils_get_from_url() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	[[ ${#} -ne 2 ]] && die "Invalid number of args to ${FUNCNAME}()";
 
 	local url="$1"
 	local release="$2"
@@ -123,18 +127,48 @@ geek-utils_get_config() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ebegin "Searching for best availiable kernel config"
-		if [ -e "/proc/config.gz" ]; then test -d .config >/dev/null 2>&1 || zcat /proc/config.gz > .config
+		if [ -r "/proc/config.gz" ]; then test -d .config >/dev/null 2>&1 || zcat /proc/config.gz > .config
 			einfo " ${BLUE}Found config from running kernel, updating to match target kernel${NORMAL}"
-		elif [ -e "/boot/config-${FULLVER}" ]; then test -d .config >/dev/null 2>&1 || cat "/boot/config-${FULLVER}" > .config
+		elif [ -r "/boot/config-${FULLVER}" ]; then test -d .config >/dev/null 2>&1 || cat "/boot/config-${FULLVER}" > .config
 			einfo " ${BLUE}Found${NORMAL} ${RED}/boot/config-${FULLVER}${NORMAL}"
-		elif [ -e "/etc/portage/savedconfig/${CATEGORY}/${PN}/config" ]; then test -d .config >/dev/null 2>&1 || cat /etc/portage/savedconfig/${CATEGORY}/${PN}/config > .config
+		elif [ -r "/etc/portage/savedconfig/${CATEGORY}/${PN}/config" ]; then test -d .config >/dev/null 2>&1 || cat /etc/portage/savedconfig/${CATEGORY}/${PN}/config > .config
 			einfo " ${BLUE}Found${NORMAL} ${RED}/etc/portage/savedconfig/${CATEGORY}/${PN}/config${NORMAL}"
-		elif [ -e "/usr/src/linux/.config" ]; then test -d .config >/dev/null 2>&1 || cat /usr/src/linux/.config > .config
+		elif [ -r "/usr/src/linux/.config" ]; then test -d .config >/dev/null 2>&1 || cat /usr/src/linux/.config > .config
 			einfo " ${BLUE}Found${NORMAL} ${RED}/usr/src/linux/.config${NORMAL}"
-		elif [ -e "/usr/src/linux-${KV_FULL}/.config" ]; then test -d .config >/dev/null 2>&1 || cat /usr/src/linux-${KV_FULL}/.config > .config
+		elif [ -r "/usr/src/linux-${KV_FULL}/.config" ]; then test -d .config >/dev/null 2>&1 || cat /usr/src/linux-${KV_FULL}/.config > .config
 			einfo " ${BLUE}Found${NORMAL} ${RED}/usr/src/linux-${KV_FULL}/.config${NORMAL}"
 		else test -d .config >/dev/null 2>&1 || cp arch/${ARCH}/defconfig .config \
 			einfo " ${BLUE}No suitable custom config found, defaulting to defconfig${NORMAL}"
 		fi
 	eend $?
+}
+
+# @FUNCTION: copy
+# @USAGE:
+# @DESCRIPTION:
+geek-utils_copy() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	[[ ${#} -ne 2 ]] && die "Invalid number of args to ${FUNCNAME}()";
+
+	local src=${1}
+	local dst=${2}
+
+#	cp "${src}" "${dst}" || die "${RED}cp ${src} ${dst} failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${src}" "${dst}" || die "${RED}rsync -avhW --no-compress --progress ${src} ${dst} failed${NORMAL}"
+	test -d "${dst}" >/dev/null 2>&1 || mkdir -p "${dst}"; (cd "${src}"; tar cf - .) | (cd "${dst}"; tar xpf -) || die "${RED}cp ${src} ${dst} failed${NORMAL}"
+}
+
+# @FUNCTION: move
+# @USAGE:
+# @DESCRIPTION:
+geek-utils_move() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	[[ ${#} -ne 2 ]] && die "Invalid number of args to ${FUNCNAME}()";
+
+	local src=${1}
+	local dst=${2}
+
+	(copy ${src} ${dst} >/dev/null 2>&1 && rm -rf "${src}") || die "${RED}mv ${src} ${dst} failed${NORMAL}"
 }

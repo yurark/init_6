@@ -45,9 +45,7 @@ geek-build_src_compile() {
 	dodir /usr/src
 	echo ">>> Copying sources ..."
 
-#	mv ${WORKDIR}/linux* "${D}"/usr/src || die "${RED}mv ${WORKDIR}/linux* ${D}/usr/src failed${NORMAL}"
-#	rsync -avhW --no-compress --progress ${WORKDIR}/linux*/ "${D}"/usr/src || die "${RED}rsync -avhW --no-compress --progress ${WORKDIR}/linux*/ ${D}/usr/src failed${NORMAL}"
-	test -d "${D}"/usr/src >/dev/null 2>&1 || mkdir -p "${D}"/usr/src; (cd ${WORKDIR}/linux*; tar cf - .) | (cd "${D}"/usr/src; tar xpf -)
+	move "${WORKDIR}/linux-${KV_FULL}" "${D}/usr/src"
 
 	if use build; then
 		# Find out some info..
@@ -106,11 +104,11 @@ geek-build_src_compile() {
 
 			ebegin " Merging kernel to system (Buildnumber: ${RED}${BUILDNO}${NORMAL})"
 				einfo "  Copying bzImage to ${RED}\"/boot/vmlinuz-${FULLVER}-${BUILDNO}\"${NORMAL}"
-					cp arch/${ARCH}/boot/bzImage /boot/vmlinuz-${FULLVER}-${BUILDNO}
+					copy arch/${ARCH}/boot/bzImage /boot/vmlinuz-${FULLVER}-${BUILDNO}
 				einfo "  Copying System.map to ${RED}\"/boot/System.map-${FULLVER}\"${NORMAL}"
-					cp System.map /boot/System.map-${FULLVER}
+					copy System.map /boot/System.map-${FULLVER}
 				einfo "  Copying .config to ${RED}\"/boot/config-${FULLVER}\"${NORMAL}"
-					cp .config /boot/config-${FULLVER}
+					copy .config /boot/config-${FULLVER}
 				if [[ ${MODULESUPPORT} != "" ]]; then
 					einfo "  Installing modules to ${RED}\"/lib/modules/${FULLVER}/\"${NORMAL}"
 						make modules_install 2>/dev/null

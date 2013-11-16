@@ -91,6 +91,8 @@ get_test_patch_cmd () {
 ExtractApply() {
 	debug-print-function ${FUNCNAME} "$@"
 
+	[[ ${#} -ne 1 ]] && die "Invalid number of args to ${FUNCNAME}()";
+
 	local patch=$1
 	debug-print "$FUNCNAME: patch=$patch"
 	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
@@ -118,6 +120,8 @@ ExtractApply() {
 # All tests completed successfully? run ExtractApply
 Handler() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	[[ ${#} -ne 1 ]] && die "Invalid number of args to ${FUNCNAME}()";
 
 	local patch=$1
 	local patch_base_name=$(basename "$patch")
@@ -182,6 +186,8 @@ Handler() {
 geek-patch_ApplyPatch() {
 	debug-print-function ${FUNCNAME} "$@"
 
+	[[ ${#} -ne 2 ]] && die "Invalid number of args to ${FUNCNAME}()";
+
 	local patch=$1
 	debug-print "$FUNCNAME: patch=$patch"
 	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
@@ -217,6 +223,8 @@ geek-patch_ApplyPatch() {
 # Main function
 geek-patch_SmartApplyPatch() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	[[ ${#} -ne 2 ]] && die "Invalid number of args to ${FUNCNAME}()";
 
 	geek-patch_init_variables
 
@@ -257,6 +265,8 @@ geek-patch_SmartApplyPatch() {
 # @DESCRIPTION:
 geek-patch_ApplyUserPatch() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	[[ ${#} -ne 2 ]] && die "Invalid number of args to ${FUNCNAME}()";
 
 	local dir=$1
 	debug-print "$FUNCNAME: dir=$dir"

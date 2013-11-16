@@ -66,8 +66,7 @@ geek-bld_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/bld/patch_list" "${BLD_INF}"
-	mv "${T}/bld" "${WORKDIR}/linux-${KV_FULL}-patches/bld" || die "${RED}mv ${T}/bld ${WORKDIR}/linux-${KV_FULL}-patches/bld failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/bld/" "${WORKDIR}/linux-${KV_FULL}-patches/bld" || die "${RED}rsync -avhW --no-compress --progress ${T}/bld/ ${WORKDIR}/linux-${KV_FULL}-patches/bld failed${NORMAL}"
+	move "${T}/bld" "${WORKDIR}/linux-${KV_FULL}-patches/bld"
 
 	local BLD_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/bld"
 	test -d "${BLD_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${BLD_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for bld patchset from${NORMAL} ${GREEN} ${BLD_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for bld patchset from not existing${GREEN} ${BLD_FIX_PATCH_DIR}!${NORMAL}"
