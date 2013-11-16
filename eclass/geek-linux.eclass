@@ -99,6 +99,15 @@ SRC_URI="${SRC_URI} ${kurl}/${kname}"
 geek-linux_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
+	local disable_NUMA_cfg=$(source $cfg_file 2>/dev/null; echo ${disable_NUMA})
+	: ${disable_NUMA:=${disable_NUMA_cfg:-yes}} # disable_NUMA=yes/no
+
+	local enable_1k_HZ_ticks_cfg=$(source $cfg_file 2>/dev/null; echo ${enable_1k_HZ_ticks})
+	: ${enable_1k_HZ_ticks:=${enable_1k_HZ_ticks_cfg:-yes}} # enable_1k_HZ_ticks=yes/no
+
+	local enable_BFQ_cfg=$(source $cfg_file 2>/dev/null; echo ${enable_BFQ})
+	: ${enable_BFQ:=${enable_BFQ_cfg:-no}} # enable_BFQ=yes/no
+
 	local rm_unneeded_arch_cfg=$(source $cfg_file 2>/dev/null; echo ${rm_unneeded_arch})
 	: ${rm_unneeded_arch:=${rm_unneeded_arch_cfg:-no}} # rm_unneeded-arch=yes/no
 }
@@ -145,6 +154,21 @@ geek-linux_src_prepare() {
 	ebegin "Cleanup backups after patching"
 		rm_crap
 	eend
+
+	case "$disable_NUMA" in
+	yes)	disable_NUMA ;;
+	no)	einfo "Skipping disabling NUMA from kernel config ..." ;;
+	esac
+
+	case "$enable_1k_HZ_ticks" in
+	yes)	set_1k_HZ_ticks ;;
+	no)	einfo "Skipping set tick rate to 1k ..." ;;
+	esac
+
+	case "$enable_BFQ" in
+	yes)	set_BFQ ;;
+	no)	einfo "Skipping set BFQ as default I/O scheduler ..." ;;
+	esac
 
 	case "$rm_unneeded_arch" in
 	yes)	ebegin "Remove unneeded architectures"
