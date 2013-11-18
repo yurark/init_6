@@ -156,18 +156,24 @@ geek-linux_src_prepare() {
 	eend
 
 	case "$disable_NUMA" in
-	yes)	disable_NUMA ;;
-	no)	einfo "Skipping disabling NUMA from kernel config ..." ;;
+	yes)	ebegin "Disabling NUMA from kernel config"
+			disable_NUMA
+		eend ;;
+	no)	ewarn "Skipping disabling NUMA from kernel config ..." ;;
 	esac
 
 	case "$enable_1k_HZ_ticks" in
-	yes)	set_1k_HZ_ticks ;;
-	no)	einfo "Skipping set tick rate to 1k ..." ;;
+	yes)	ebegin "Set tick rate to 1k"
+			set_1k_HZ_ticks
+		eend ;;
+	no)	ewarn "Skipping set tick rate to 1k ..." ;;
 	esac
 
 	case "$enable_BFQ" in
-	yes)	set_BFQ ;;
-	no)	einfo "Skipping set BFQ as default I/O scheduler ..." ;;
+	yes)	ebegin "Set BFQ as default I/O scheduler"
+			set_BFQ
+		eend ;;
+	no)	ewarn "Skipping set BFQ as default I/O scheduler ..." ;;
 	esac
 
 	case "$rm_unneeded_arch" in
@@ -179,7 +185,7 @@ geek-linux_src_prepare() {
 				rm -rf "${WORKDIR}"/linux-"${KV_FULL}"/arch/{avr32,blackfin,c6x,cris,frv,h8300,hexagon,m32r,m68k,m68knommu,microblaze,mn10300,openrisc,score,tile,unicore32,um,v850,xtensa}
 			fi
 		eend ;;
-	no)	einfo "Skipping remove unneeded architectures ..." ;;
+	no)	ewarn "Skipping remove unneeded architectures ..." ;;
 	esac
 
 	ebegin "Compile ${RED}gen_init_cpio${NORMAL}"
