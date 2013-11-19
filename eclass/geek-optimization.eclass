@@ -69,10 +69,7 @@ geek-optimization_src_prepare() {
 	ApplyPatch "${T}/optimization/patch_list" "${OPTIMIZATION_INF}"
 	move "${T}/optimization" "${WORKDIR}/linux-${KV_FULL}-patches/optimization"
 
-	local OPTIMIZATION_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/optimization"
-	test -d "${OPTIMIZATION_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${OPTIMIZATION_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for optimization patchset from${NORMAL} ${GREEN} ${OPTIMIZATION_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for optimization patchset from not existing${GREEN} ${OPTIMIZATION_FIX_PATCH_DIR}!${NORMAL}"
-	local OPTIMIZATION_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/optimization"
-	test -d "${OPTIMIZATION_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${OPTIMIZATION_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for optimization patchset from${NORMAL} ${GREEN} ${OPTIMIZATION_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for optimization patchset from not existing${GREEN} ${OPTIMIZATION_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "optimization"
 }
 
 # @FUNCTION: pkg_postinst

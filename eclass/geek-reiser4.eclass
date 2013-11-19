@@ -54,10 +54,7 @@ geek-reiser4_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/reiser4-for-${REISER4_VER}.patch.gz" "${REISER4_INF}"
 
-	local REISER4_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/reiser4"
-	test -d "${REISER4_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${REISER4_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for reiser4 patchset from${NORMAL} ${GREEN} ${REISER4_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for reiser4 patchset from not existing${GREEN} ${REISER4_FIX_PATCH_DIR}!${NORMAL}"
-	local REISER4_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/reiser4"
-	test -d "${REISER4_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${REISER4_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for reiser4 patchset from${NORMAL} ${GREEN} ${REISER4_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for reiser4 patchset from not existing${GREEN} ${REISER4_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "reiser4"
 }
 
 

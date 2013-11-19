@@ -84,10 +84,7 @@ geek-fedora_src_prepare() {
 	ApplyPatch "${T}/fedora/patch_list" "${FEDORA_INF}"
 	move "${T}/fedora" "${WORKDIR}/linux-${KV_FULL}-patches/fedora"
 
-	local FEDORA_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/fedora"
-	test -d "${FEDORA_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${FEDORA_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for fedora patchset from${NORMAL} ${GREEN} ${FEDORA_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for fedora patchset from not existing${GREEN} ${FEDORA_FIX_PATCH_DIR}!${NORMAL}"
-	local FEDORA_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/fedora"
-	test -d "${FEDORA_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${FEDORA_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for fedora patchset from${NORMAL} ${GREEN} ${FEDORA_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for fedora patchset from not existing${GREEN} ${FEDORA_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "fedora"
 }
 
 # @FUNCTION: pkg_postinst

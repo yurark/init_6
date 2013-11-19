@@ -51,10 +51,7 @@ geek-ubuntu_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/linux_${UBUNTU_VER}.diff.gz" "${UBUNTU_INF}"
 
-	local UBUNTU_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/ubuntu"
-	test -d "${UBUNTU_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${UBUNTU_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for ubuntu patchset from${NORMAL} ${GREEN} ${UBUNTU_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for ubuntu patchset from not existing${GREEN} ${UBUNTU_FIX_PATCH_DIR}!${NORMAL}"
-	local UBUNTU_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/ubuntu"
-	test -d "${UBUNTU_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${UBUNTU_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for ubuntu patchset from${NORMAL} ${GREEN} ${UBUNTU_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for ubuntu patchset from not existing${GREEN} ${UBUNTU_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "ubuntu"
 
 	# Comment out EXTRAVERSION added by ubuntu patch:
 #	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die

@@ -70,10 +70,7 @@ geek-zen_src_prepare() {
 	ApplyPatch "${T}/zen/patch_list" "${ZEN_INF}"
 	move "${T}/zen" "${WORKDIR}/linux-${KV_FULL}-patches/zen"
 
-	local ZEN_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/zen"
-	test -d "${ZEN_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${ZEN_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for zen patchset from${NORMAL} ${GREEN} ${ZEN_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for zen patchset from not existing${GREEN} ${ZEN_FIX_PATCH_DIR}!${NORMAL}"
-	local ZEN_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/zen"
-	test -d "${ZEN_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${ZEN_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for zen patchset from${NORMAL} ${GREEN} ${ZEN_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for zen patchset from not existing${GREEN} ${ZEN_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "zen"
 }
 
 # @FUNCTION: pkg_postinst

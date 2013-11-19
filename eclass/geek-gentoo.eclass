@@ -86,10 +86,7 @@ geek-gentoo_src_prepare() {
 	ApplyPatch "${T}/gentoo/patch_list" "${GENTOO_INF}"
 	move "${T}/gentoo" "${WORKDIR}/linux-${KV_FULL}-patches/gentoo"
 
-	local GENTOO_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/gentoo"
-	test -d "${GENTOO_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${GENTOO_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for gentoo patchset from${NORMAL} ${GREEN} ${GENTOO_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for gentoo patchset from not existing${GREEN} ${GENTOO_FIX_PATCH_DIR}!${NORMAL}"
-	local GENTOO_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/gentoo"
-	test -d "${GENTOO_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${GENTOO_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for gentoo patchset from${NORMAL} ${GREEN} ${GENTOO_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for gentoo patchset from not existing${GREEN} ${GENTOO_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "gentoo"
 }
 
 # @FUNCTION: pkg_postinst

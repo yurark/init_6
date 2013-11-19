@@ -47,10 +47,7 @@ geek-brand_src_prepare() {
 
 	ApplyPatch "${FILESDIR}/${PV}/brand/patch_list" "${BRAND_INF}"
 
-	local BRAND_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/brand"
-	test -d "${BRAND_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${BRAND_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for brand patchset from${NORMAL} ${GREEN} ${BRAND_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for brand patchset from not existing${GREEN} ${BRAND_FIX_PATCH_DIR}!${NORMAL}"
-	local BRAND_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/brand"
-	test -d "${BRAND_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${BRAND_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for brand patchset from${NORMAL} ${GREEN} ${BRAND_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for brand patchset from not existing${GREEN} ${BRAND_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "brand"
 }
 
 # @FUNCTION: pkg_postinst

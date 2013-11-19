@@ -19,7 +19,7 @@
 
 inherit geek-vars
 
-EXPORT_FUNCTIONS ApplyPatch SmartApplyPatch ApplyUserPatch
+EXPORT_FUNCTIONS ApplyPatch SmartApplyPatch ApplyUserPatch ApplyPatchFix
 
 DEPEND="${DEPEND}
 	app-arch/bzip2
@@ -263,25 +263,62 @@ geek-patch_SmartApplyPatch() {
 # @FUNCTION: ApplyUserPatch
 # @USAGE:
 # @DESCRIPTION:
+# Applies user-provided patches to the source tree. The patches are
+# taken from /etc/portage/patches/<CATEGORY>/<PF|P|PN>[:SLOT]/, where the first
+# of these three directories to exist will be the one to use, ignoring
+# any more general directories which might exist as well.
 geek-patch_ApplyUserPatch() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	[[ ${#} -ne 2 ]] && die "Invalid number of args to ${FUNCNAME}()";
+	[[ $# -ne 0 ]] && die "Invalid number of args to ${FUNCNAME}()";
+
+	# don't clobber any EPATCH vars that the parent might want
+	local EPATCH_SOURCE check base=${PORTAGE_CONFIGROOT%/}/etc/portage/patches
+	for check in ${CATEGORY}/{${P}-${PR},${P},${PN}}{,:${SLOT}}; do
+		EPATCH_SOURCE=${base}/${CTARGET}/${check}
+		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${CHOST}/${check}
+		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${check}
+		if [[ -d ${EPATCH_SOURCE} ]] ; then
+			if [ -r "${EPATCH_SOURCE}/patch_list" ]; then
+				ApplyPatch "${EPATCH_SOURCE}/patch_list" "Applying user patches from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."
+			else
+				ewarn "${BLUE}File${NORMAL} ${RED}${EPATCH_SOURCE}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
+				ewarn "${BLUE}Try to apply the patches if they are there…${NORMAL}"
+				for i in `ls ${EPATCH_SOURCE}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
+					ApplyPatch "${i}" "Applying user patches from ${GREEN}${EPATCH_SOURCE}${NORMAL} ..."
+				done
+			fi
+		fi
+	done
+}
+
+# @FUNCTION: ApplyPatchFix
+# @USAGE:
+# @DESCRIPTION:
+geek-patch_ApplyPatchFix() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	[[ $# -ne 1 ]] && die "Invalid number of args to ${FUNCNAME}()";
 
 	local dir=$1
 	debug-print "$FUNCNAME: dir=$dir"
-	local msg=$2
-	debug-print "$FUNCNAME: msg=$msg"
 
-	if [ -d "${dir}" ]; then
-		if [ -r "${dir}/patch_list" ]; then
-			ApplyPatch "${dir}/patch_list" "${msg}"
-		else
-			ewarn "${BLUE}File${NORMAL} ${RED}${dir}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
-			ewarn "${BLUE}Try to apply the patches if they are there…${NORMAL}"
-			for i in `ls ${dir}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
-				ApplyPatch "${i}" "${msg}"
-			done
+	# don't clobber any EPATCH vars that the parent might want
+	local EPATCH_SOURCE check base=${PORTAGE_CONFIGROOT%/}/etc/portage/patches
+	for check in ${CATEGORY}/{${P}-${PR},${P},${PN}}{,:${SLOT}}/${dir}; do
+		EPATCH_SOURCE=${base}/${CTARGET}/${check}
+		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${CHOST}/${check}
+		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${check}
+		if [[ -d ${EPATCH_SOURCE} ]] ; then
+			if [ -r "${EPATCH_SOURCE}/patch_list" ]; then
+				ApplyPatch "${EPATCH_SOURCE}/patch_list" "Applying patch fix from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."
+			else
+				ewarn "${BLUE}File${NORMAL} ${RED}${EPATCH_SOURCE}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
+				ewarn "${BLUE}Try to apply the patches if they are there…${NORMAL}"
+				for i in `ls ${EPATCH_SOURCE}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
+					ApplyPatch "${i}" "Applying patch fix from ${GREEN}${EPATCH_SOURCE}${NORMAL} ..."
+				done
+			fi
 		fi
-	fi
+	done
 }

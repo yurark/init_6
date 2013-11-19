@@ -66,10 +66,7 @@ geek-cjktty_src_prepare() {
 	ApplyPatch "${T}/cjktty/patch_list" "${CJKTTY_INF}"
 	move "${T}/cjktty" "${WORKDIR}/linux-${KV_FULL}-patches/cjktty"
 
-	local CJKTTY_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/cjktty"
-	test -d "${CJKTTY_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${CJKTTY_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for cjktty patchset from${NORMAL} ${GREEN} ${CJKTTY_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for cjktty patchset from not existing${GREEN} ${CJKTTY_FIX_PATCH_DIR}!${NORMAL}"
-	local CJKTTY_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/cjktty"
-	test -d "${CJKTTY_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${CJKTTY_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for cjktty patchset from${NORMAL} ${GREEN} ${CJKTTY_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for cjktty patchset from not existing${GREEN} ${CJKTTY_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "cjktty"
 }
 
 # @FUNCTION: pkg_postinst

@@ -51,10 +51,7 @@ geek-pax_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/pax-linux-${PAX_VER/KMV/$KMV}.patch" "${PAX_INF}"
 
-	local PAX_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/pax"
-	test -d "${PAX_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${PAX_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for pax patchset from${NORMAL} ${GREEN} ${PAX_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for pax patchset from not existing${GREEN} ${PAX_FIX_PATCH_DIR}!${NORMAL}"
-	local PAX_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/pax"
-	test -d "${PAX_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${PAX_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for pax patchset from${NORMAL} ${GREEN} ${PAX_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for pax patchset from not existing${GREEN} ${PAX_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "pax"
 }
 
 # @FUNCTION: pkg_postinst

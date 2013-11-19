@@ -51,10 +51,7 @@ geek-rt_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/patch-${RT_VER}.patch.xz" "${RT_INF}"
 
-	local RT_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/rt"
-	test -d "${RT_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${RT_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for rt patchset from${NORMAL} ${GREEN} ${RT_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for rt patchset from not existing${GREEN} ${RT_FIX_PATCH_DIR}!${NORMAL}"
-	local RT_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/rt"
-	test -d "${RT_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${RT_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for rt patchset from${NORMAL} ${GREEN} ${RT_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for rt patchset from not existing${GREEN} ${RT_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "rt"
 }
 
 # @FUNCTION: pkg_postinst

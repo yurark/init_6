@@ -87,10 +87,7 @@ geek-grsec_src_prepare() {
 	ApplyPatch "${T}/grsec/patch_list" "${GRSEC_INF}"
 	move "${T}/grsec" "${WORKDIR}/linux-${KV_FULL}-patches/grsec"
 
-	local GRSEC_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/grsec"
-	test -d "${GRSEC_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${GRSEC_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for grsec patchset from${NORMAL} ${GREEN} ${GRSEC_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for grsec patchset from not existing${GREEN} ${GRSEC_FIX_PATCH_DIR}!${NORMAL}"
-	local GRSEC_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/grsec"
-	test -d "${GRSEC_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${GRSEC_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for grsec patchset from${NORMAL} ${GREEN} ${GRSEC_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for grsec patchset from not existing${GREEN} ${GRSEC_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "grsec"
 }
 
 # @FUNCTION: pkg_postinst

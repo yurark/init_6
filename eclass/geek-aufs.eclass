@@ -19,7 +19,7 @@
 
 inherit geek-patch geek-utils geek-vars
 
-EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
+EXPORT_FUNCTIONS pkg_setup src_unpack src_prepare pkg_postinst
 
 # @FUNCTION: init_variables
 # @INTERNAL
@@ -30,7 +30,7 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-aufs_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${AUFS_VER:=${AUFS_VER:-"${KMV}"}}
+	: ${AUFS_VER:=${AUFS_VER:-""}}
 	: ${AUFS_SRC:=${AUFS_SRC:-"git://git.code.sf.net/p/aufs/aufs3-standalone"}}
 	: ${AUFS_URL:=${AUFS_URL:-"http://aufs.sourceforge.net"}}
 	: ${AUFS_INF:="${YELLOW}Another UnionFS -${GREEN} ${AUFS_URL}${NORMAL}"}
@@ -42,6 +42,14 @@ HOMEPAGE="${HOMEPAGE} ${AUFS_URL}"
 
 DEPEND="${DEPEND}
 	aufs?	( dev-vcs/git )"
+
+# @FUNCTION: pkg_setup
+# @USAGE:
+# @DESCRIPTION: Pre-build environment configuration and checks.
+geek-aufs_pkg_setup() {
+	debug-print-function ${FUNCNAME} "$@"
+
+}
 
 # @FUNCTION: src_unpack
 # @USAGE:
@@ -110,10 +118,7 @@ geek-aufs_src_prepare() {
 	ApplyPatch "${T}/aufs/patch_list" "${AUFS_INF}"
 	move "${T}/aufs" "${WORKDIR}/linux-${KV_FULL}-patches/aufs"
 
-	local AUFS_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/aufs"
-	test -d "${AUFS_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${AUFS_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for aufs patchset from${NORMAL} ${GREEN} ${AUFS_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for aufs patchset from not existing${GREEN} ${AUFS_FIX_PATCH_DIR}!${NORMAL}"
-	local AUFS_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/aufs"
-	test -d "${AUFS_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${AUFS_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for aufs patchset from${NORMAL} ${GREEN} ${AUFS_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for aufs patchset from not existing${GREEN} ${AUFS_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "aufs"
 }
 
 # @FUNCTION: pkg_postinst

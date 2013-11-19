@@ -68,10 +68,7 @@ geek-rifs_src_prepare() {
 	ApplyPatch "${T}/rifs/patch_list" "${RIFS_INF}"
 	move "${T}/rifs" "${WORKDIR}/linux-${KV_FULL}-patches/rifs"
 
-	local RIFS_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/rifs"
-	test -d "${RIFS_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${RIFS_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for rifs patchset from${NORMAL} ${GREEN} ${RIFS_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for rifs patchset from not existing${GREEN} ${RIFS_FIX_PATCH_DIR}!${NORMAL}"
-	local RIFS_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/rifs"
-	test -d "${RIFS_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${RIFS_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for rifs patchset from${NORMAL} ${GREEN} ${RIFS_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for rifs patchset from not existing${GREEN} ${RIFS_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "rifs"
 }
 
 # @FUNCTION: pkg_postinst

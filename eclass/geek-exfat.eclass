@@ -67,10 +67,7 @@ geek-exfat_src_prepare() {
 	ApplyPatch "${T}/exfat/patch_list" "${EXFAT_INF}"
 	move "${T}/exfat" "${WORKDIR}/linux-${KV_FULL}-patches/exfat"
 
-	local EXFAT_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/exfat"
-	test -d "${EXFAT_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${EXFAT_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for exfat patchset from${NORMAL} ${GREEN} ${EXFAT_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for exfat patchset from not existing${GREEN} ${EXFAT_FIX_PATCH_DIR}!${NORMAL}"
-	local EXFAT_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/exfat"
-	test -d "${EXFAT_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${EXFAT_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for exfat patchset from${NORMAL} ${GREEN} ${EXFAT_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for exfat patchset from not existing${GREEN} ${EXFAT_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "exfat"
 }
 
 # @FUNCTION: pkg_postinst

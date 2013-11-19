@@ -151,8 +151,7 @@ geek-utils_get_config() {
 geek-utils_set_1k_HZ_ticks() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	if [ "${enable_1k_HZ_ticks}" = "yes" ]; then
-#	einfo "Set tick rate to 1k ..."
+	if [ "${enable_1k_HZ_ticks}" = "yes" ]; then # Set tick rate to 1k ...
 		sed -i -e 's/^CONFIG_HZ_300=y/# CONFIG_HZ_300 is not set/' \
 			-i -e 's/^# CONFIG_HZ_1000 is not set/CONFIG_HZ_1000=y/' \
 			-i -e 's/^CONFIG_HZ=300/CONFIG_HZ=1000/' .config
@@ -168,8 +167,7 @@ geek-utils_disable_NUMA() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	if [ "${disable_NUMA}" = "yes" ]; then
-		if [ "${ARCH}" = "amd64" ]; then
-#			einfo "Disabling NUMA from kernel config ..."
+		if [ "${ARCH}" = "amd64" ]; then # Disabling NUMA from kernel config ...
 			sed -i -e 's/CONFIG_NUMA=y/# CONFIG_NUMA is not set/' \
 				-i -e '/CONFIG_AMD_NUMA=y/d' \
 				-i -e '/CONFIG_X86_64_ACPI_NUMA=y/d' \
@@ -191,8 +189,7 @@ geek-utils_disable_NUMA() {
 geek-utils_set_BFQ() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	if [ "${enable_BFQ}" = "yes" ]; then
-#		einfo "Set BFQ as default I/O scheduler ..."
+	if [ "${enable_BFQ}" = "yes" ]; then # Set BFQ as default I/O scheduler ...
 		sed -i -e '/CONFIG_DEFAULT_IOSCHED/ s,cfq,bfq,' \
 			-i -e s'/CONFIG_DEFAULT_CFQ=y/# CONFIG_DEFAULT_CFQ is not set\nCONFIG_DEFAULT_BFQ=y/' .config
 	fi

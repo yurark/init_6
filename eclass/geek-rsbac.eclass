@@ -52,10 +52,7 @@ geek-rsbac_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/${RSBAC_NAME}" "${RSBAC_INF}"
 
-	local RSBAC_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/rsbac"
-	test -d "${RSBAC_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${RSBAC_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for rsbac patchset from${NORMAL} ${GREEN} ${RSBAC_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for rsbac patchset from not existing${GREEN} ${RSBAC_FIX_PATCH_DIR}!${NORMAL}"
-	local RSBAC_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/rsbac"
-	test -d "${RSBAC_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${RSBAC_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for rsbac patchset from${NORMAL} ${GREEN} ${RSBAC_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for rsbac patchset from not existing${GREEN} ${RSBAC_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "rsbac"
 }
 
 # @FUNCTION: pkg_postinst

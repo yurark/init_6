@@ -82,10 +82,7 @@ geek-mageia_src_prepare() {
 	ApplyPatch "${T}/mageia/patch_list" "${MAGEIA_INF}"
 	move "${T}/mageia" "${WORKDIR}/linux-${KV_FULL}-patches/mageia"
 
-	local MAGEIA_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/mageia"
-	test -d "${MAGEIA_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${MAGEIA_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for mageia patchset from${NORMAL} ${GREEN} ${MAGEIA_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for mageia patchset from not existing${GREEN} ${MAGEIA_FIX_PATCH_DIR}!${NORMAL}"
-	local MAGEIA_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/mageia"
-	test -d "${MAGEIA_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${MAGEIA_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for mageia patchset from${NORMAL} ${GREEN} ${MAGEIA_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for mageia patchset from not existing${GREEN} ${MAGEIA_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "mageia"
 }
 
 # @FUNCTION: pkg_postinst

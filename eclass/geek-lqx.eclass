@@ -51,10 +51,7 @@ geek-lqx_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/${LQX_VER/KMV/$KMV}.patch.gz" "${LQX_INF}"
 
-	local LQX_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/lqx"
-	test -d "${LQX_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${LQX_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for lqx patchset from${NORMAL} ${GREEN} ${LQX_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for lqx patchset from not existing${GREEN} ${LQX_FIX_PATCH_DIR}!${NORMAL}"
-	local LQX_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/lqx"
-	test -d "${LQX_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${LQX_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for lqx patchset from${NORMAL} ${GREEN} ${LQX_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for lqx patchset from not existing${GREEN} ${LQX_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "lqx"
 }
 
 # @FUNCTION: pkg_postinst

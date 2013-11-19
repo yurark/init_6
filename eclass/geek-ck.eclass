@@ -51,10 +51,7 @@ geek-ck_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/patch-${CK_VER}.lrz" "${CK_INF}"
 
-	local CK_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/ck"
-	test -d "${CK_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${CK_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for ck patchset from${NORMAL} ${GREEN} ${CK_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for ck patchset from not existing${GREEN} ${CK_FIX_PATCH_DIR}!${NORMAL}"
-	local CK_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/ck"
-	test -d "${CK_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${CK_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for ck patchset from${NORMAL} ${GREEN} ${CK_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for ck patchset from not existing${GREEN} ${CK_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "ck"
 
 	# Comment out EXTRAVERSION added by CK patch:
 	sed -i -e 's/\(^EXTRAVERSION :=.*$\)/# \1/' "Makefile"

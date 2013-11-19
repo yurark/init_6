@@ -71,10 +71,7 @@ geek-ice_src_prepare() {
 	ApplyPatch "${T}/ice/patch_list" "${ICE_INF}"
 	move "${T}/ice" "${WORKDIR}/linux-${KV_FULL}-patches/ice"
 
-	local ICE_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/ice"
-	test -d "${ICE_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${ICE_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for ice patchset from${NORMAL} ${GREEN} ${ICE_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for ice patchset from not existing${GREEN} ${ICE_FIX_PATCH_DIR}!${NORMAL}"
-	local ICE_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/ice"
-	test -d "${ICE_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${ICE_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for ice patchset from${NORMAL} ${GREEN} ${ICE_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for ice patchset from not existing${GREEN} ${ICE_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "ice"
 }
 
 # @FUNCTION: pkg_postinst

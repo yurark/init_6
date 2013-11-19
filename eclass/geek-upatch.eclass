@@ -27,8 +27,5 @@ EXPORT_FUNCTIONS src_prepare
 geek-upatch_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	# from geek-vars.eclass defauld PATCH_USER_DIR="${PATCH_STORE_DIR}/${PN}/${PV}"
-	test -d "${PATCH_USER_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${PATCH_USER_DIR}" "${YELLOW}Applying user patches from${GREEN} ${PATCH_USER_DIR}${NORMAL}" || einfo "${RED}Skipping apply user patches from not existing${GREEN} ${PATCH_USER_DIR}${RED}!${NORMAL}"
-	local ALT_PATCH_USER_DIR="${PATCH_STORE_DIR}/${PN}";
-	test -d "${ALT_PATCH_USER_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${ALT_PATCH_USER_DIR}" "${YELLOW}Applying user patches from${GREEN} ${ALT_PATCH_USER_DIR}${NORMAL}" || einfo "${RED}Skipping apply user patches from not existing${GREEN} ${ALT_PATCH_USER_DIR}${RED}!${NORMAL}"
+	ApplyUserPatch
 }

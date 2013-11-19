@@ -64,10 +64,7 @@ geek-bfq_src_prepare() {
 	ApplyPatch "${T}/bfq/patch_list" "${BFQ_INF}"
 	move "${T}/bfq" "${WORKDIR}/linux-${KV_FULL}-patches/bfq"
 
-	local BFQ_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/bfq"
-	test -d "${BFQ_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${BFQ_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for bfq patchset from${NORMAL} ${GREEN} ${BFQ_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for bfq patchset from not existing${GREEN} ${BFQ_FIX_PATCH_DIR}!${NORMAL}"
-	local BFQ_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/bfq"
-	test -d "${BFQ_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${BFQ_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for bfq patchset from${NORMAL} ${GREEN} ${BFQ_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for bfq patchset from not existing${GREEN} ${BFQ_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "bfq"
 }
 
 # @FUNCTION: pkg_postinst

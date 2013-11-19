@@ -66,10 +66,7 @@ geek-pf_src_prepare() {
 	ApplyPatch "${T}/pf/patch_list" "${PF_INF}"
 	move "${T}/pf" "${WORKDIR}/linux-${KV_FULL}-patches/pf"
 
-	local PF_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/pf"
-	test -d "${PF_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${PF_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for pf patchset from${NORMAL} ${GREEN} ${PF_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for pf patchset from not existing${GREEN} ${PF_FIX_PATCH_DIR}!${NORMAL}"
-	local PF_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/pf"
-	test -d "${PF_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${PF_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for pf patchset from${NORMAL} ${GREEN} ${PF_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for pf patchset from not existing${GREEN} ${PF_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "pf"
 }
 
 # @FUNCTION: pkg_postinst

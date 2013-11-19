@@ -68,10 +68,7 @@ geek-bld_src_prepare() {
 	ApplyPatch "${T}/bld/patch_list" "${BLD_INF}"
 	move "${T}/bld" "${WORKDIR}/linux-${KV_FULL}-patches/bld"
 
-	local BLD_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/${PV}/bld"
-	test -d "${BLD_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${BLD_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for bld patchset from${NORMAL} ${GREEN} ${BLD_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for bld patchset from not existing${GREEN} ${BLD_FIX_PATCH_DIR}!${NORMAL}"
-	local BLD_FIX_PATCH_DIR="${PATCH_STORE_DIR}/${PN}/bld"
-	test -d "${BLD_FIX_PATCH_DIR}" >/dev/null 2>&1 && ApplyUserPatch "${BLD_FIX_PATCH_DIR}" "${YELLOW}Applying user fixes for bld patchset from${NORMAL} ${GREEN} ${BLD_FIX_PATCH_DIR}${NORMAL}" #|| einfo "${RED}Skipping apply user fixes for bld patchset from not existing${GREEN} ${BLD_FIX_PATCH_DIR}!${NORMAL}"
+	ApplyPatchFix "bld"
 }
 
 # @FUNCTION: pkg_postinst
