@@ -12,8 +12,8 @@ BFQ_VER="3.12.0-v6r2"
 #BLD_VER="3.11.0"
 #BLD_SRC="https://bld.googlecode.com/files/BLD-${BLD_VER}.patch"
 #CJKTTY_VER="3.11"
-#CK_VER="3.11-ck1"
-##CK_SRC="http://ck.kolivas.org/patches/3.0/${KMV}/${CK_VER}/patch-${CK_VER}.lrz"
+CK_VER="3.12-ck1"
+CK_SRC="http://ck.kolivas.org/patches/3.0/${KMV}/${CK_VER}/patch-${CK_VER}.lrz"
 FEDORA_VER="master"
 ##GENTOO_VER="$KMV"
 #GRSEC_VER="${PV}"
@@ -31,7 +31,7 @@ SUSE_VER="master"
 ##ZEN_VER="3.10"
 
 #SUPPORTED_USES="aufs bfq bld brand -build cjktty ck exfat fedora gentoo grsec ice lqx mageia optimization pax pf reiser4 -rt suse symlink uksm zen zfs"
-SUPPORTED_USES="aufs bfq brand -build -deblob exfat fedora gentoo mageia optimization pf suse symlink zen zfs"
+SUPPORTED_USES="aufs bfq brand -build -deblob ck exfat fedora gentoo mageia optimization pf suse symlink zen zfs"
 
 inherit geek-sources
 
