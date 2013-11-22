@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit bash-completion eutils
+inherit bash-completion-r1 eutils
 
 DESCRIPTION="A Portage analysis toolkit"
 HOMEPAGE="http://catmur.co.uk/gentoo/udept"
