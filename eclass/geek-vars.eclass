@@ -3,10 +3,12 @@
 # $Header: $
 
 # @ECLASS: geek-vars.eclass
+# This file is part of sys-kernel/geek-sources project.
 # @MAINTAINER:
 # Andrey Ovcharov <sudormrfhalt@gmail.com>
 # @AUTHOR:
 # Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (14 Nov 2013)
+# @LICENSE: http://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3
 # @BLURB: The geek-vars eclass defines some default variables.
 # @DESCRIPTION:
 # The geek-vars eclass defines some default variables.

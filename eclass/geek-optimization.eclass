@@ -3,10 +3,12 @@
 # $Header: $
 
 # @ECLASS: geek-optimization.eclass
+# This file is part of sys-kernel/geek-sources project.
 # @MAINTAINER:
 # Andrey Ovcharov <sudormrfhalt@gmail.com>
 # @AUTHOR:
 # Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (19 Aug 2013)
+# @LICENSE: http://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3
 # @BLURB: Eclass for building kernel with optimization patchset.
 # @DESCRIPTION:
 # This eclass provides functionality and default ebuild variables for building
