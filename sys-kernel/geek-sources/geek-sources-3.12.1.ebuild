@@ -31,7 +31,7 @@ SUSE_VER="master"
 ##ZEN_VER="3.10"
 
 #SUPPORTED_USES="aufs bfq bld brand -build cjktty ck exfat fedora gentoo grsec ice lqx mageia optimization pax pf reiser4 -rt suse symlink uksm zen zfs"
-SUPPORTED_USES="aufs bfq bld brand -build -deblob ck exfat fedora gentoo mageia optimization pf suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq brand -build -deblob ck exfat fedora gentoo mageia optimization pf suse symlink zen zfs"
 
 inherit geek-sources
 
