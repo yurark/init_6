@@ -131,7 +131,7 @@ geek-aufs_pkg_postinst() {
 
 	einfo "${AUFS_INF}"
 	has_version sys-fs/aufs-util && \
-		einfo "${YELLOW}In order to use vars FS you need to install ${NORMAL}sys-fs/aufs-util"
+		einfo "${YELLOW}In order to use vars FS you need to install ${NORMAL}${RED}sys-fs/aufs-util${NORMAL}"
 	has_version sys-fs/squashfs-tools && \
-		einfo "${YELLOW}In order to use rw vars FS you need to install ${NORMAL}sys-fs/squashfs-tools"
+		einfo "${YELLOW}In order to use rw vars FS you need to install ${NORMAL}${RED}sys-fs/squashfs-tools${NORMAL}"
 }
