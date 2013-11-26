@@ -32,7 +32,7 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-grsec_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${GRSEC_VER:=${GRSEC_VER:-$KMV}}
+	: ${GRSEC_VER:=${GRSEC_VER:-"${KSV}"}}
 	: ${GRSEC_SRC:=${GRSEC_SRC:-"git://git.overlays.gentoo.org/proj/hardened-patchset.git"}}
 	: ${GRSEC_URL:=${GRSEC_URL:-"http://hardened.gentoo.org"}}
 	: ${GRSEC_INF:=${GRSEC_INF:-"${YELLOW}GrSecurity patches -${GREEN} ${GRSEC_URL}${NORMAL}"}}

@@ -33,14 +33,11 @@ geek-vars_init_variables() {
 	set -- ${VER}
 	IFS="${OLDIFS}"
 
-	# the kernel version (e.g 3 for 3.4.2)
-	VERSION="${1}"
-	# the kernel patchlevel (e.g 4 for 3.4.2)
-	PATCHLEVEL="${2}"
-	# the kernel sublevel (e.g 2 for 3.4.2)
-	SUBLEVEL="${3}"
-	# the kernel major version (e.g 3.4 for 3.4.2)
-	KMV="${1}.${2}"
+	VERSION="${1}" # the kernel version (e.g 3 for 3.4.2)
+	PATCHLEVEL="${2}" # the kernel patchlevel (e.g 4 for 3.4.2)
+	SUBLEVEL="${3}" # the kernel sublevel (e.g 2 for 3.4.2)
+	KMV="${1}.${2}" # the kernel major version (e.g 3.4 for 3.4.2)
+	KSV="${1}.${2}.${3}" # the original kernel version (eg 2.6.0 for 2.6.0-test11)
 
 	: ${cfg_file:="/etc/portage/kernel.conf"}
 

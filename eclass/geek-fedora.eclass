@@ -32,7 +32,7 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-fedora_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${FEDORA_VER:=${FEDORA_VER:-f19}}
+	: ${FEDORA_VER:=${FEDORA_VER:-"master"}}
 	: ${FEDORA_SRC:=${FEDORA_SRC:-"git://pkgs.fedoraproject.org/kernel.git"}}
 	: ${FEDORA_URL:=${FEDORA_URL:-"http://fedoraproject.org"}}
 	: ${FEDORA_INF:=${FEDORA_INF:-"${YELLOW}Fedora -${GREEN} ${FEDORA_URL}${NORMAL}"}}

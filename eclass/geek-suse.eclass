@@ -32,7 +32,7 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-suse_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${SUSE_VER:=${SUSE_VER:-stable}}
+	: ${SUSE_VER:=${SUSE_VER:-"stable"}}
 	: ${SUSE_SRC:=${SUSE_SRC:-"git://kernel.opensuse.org/kernel-source.git"}}
 	: ${SUSE_URL:=${SUSE_URL:-"http://www.opensuse.org"}}
 	: ${SUSE_INF:=${SUSE_INF:-"${YELLOW}OpenSuSE -${GREEN} ${SUSE_URL}${NORMAL}"}}

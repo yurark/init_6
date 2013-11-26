@@ -32,7 +32,7 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-ice_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${ICE_VER:=${ICE_VER:-$KMV}}
+	: ${ICE_VER:=${ICE_VER:-"${KSV}"}}
 	: ${ICE_SRC:=${ICE_SRC:-"https://github.com/NigelCunningham/tuxonice-kernel/compare/vanilla-${ICE_VER/KMV/$KMV}...tuxonice-${ICE_VER/KMV/$KMV}.diff"}}
 	: ${ICE_URL:=${ICE_URL:-"http://tuxonice.net"}}
 	: ${ICE_INF:=${ICE_INF:-"${YELLOW}TuxOnIce -${GREEN} ${ICE_URL}${NORMAL}"}}

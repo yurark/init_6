@@ -32,7 +32,7 @@ EXPORT_FUNCTIONS pkg_setup src_unpack src_prepare pkg_postinst
 geek-aufs_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${AUFS_VER:=${AUFS_VER:-""}}
+	: ${AUFS_VER:=${AUFS_VER:-"${KMV}"}}
 	: ${AUFS_SRC:=${AUFS_SRC:-"git://git.code.sf.net/p/aufs/aufs3-standalone"}}
 	: ${AUFS_URL:=${AUFS_URL:-"http://aufs.sourceforge.net"}}
 	: ${AUFS_INF:="${YELLOW}Another UnionFS -${GREEN} ${AUFS_URL}${NORMAL}"}

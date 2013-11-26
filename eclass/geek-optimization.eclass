@@ -32,7 +32,7 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-optimization_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${OPTIMIZATION_VER:=${OPTIMIZATION_VER:-$KMV}}
+	: ${OPTIMIZATION_VER:=${OPTIMIZATION_VER:-"1"}}
 	: ${OPTIMIZATION_SRC:=${OPTIMIZATION_SRC:-"https://raw.github.com/graysky2/kernel_gcc_patch/master/kernel-${KMV/./}-gcc48-${OPTIMIZATION_VER}.patch"}}
 	: ${OPTIMIZATION_URL:=${OPTIMIZATION_URL:-"https://github.com/graysky2/kernel_gcc_patch"}}
 	: ${OPTIMIZATION_INF:=${OPTIMIZATION_INF:-"${YELLOW}Kernel patch enables gcc optimizations for additional CPUs -${GREEN} ${OPTIMIZATION_URL}${NORMAL}"}}
