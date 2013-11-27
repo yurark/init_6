@@ -129,9 +129,6 @@ geek-sources_src_unpack() {
 	einfo "${BLUE}Disable fixes -->${NORMAL} ${RED}$disable_fixes${NORMAL}"
 	einfo "${BLUE}Remove unneeded architectures -->${NORMAL} ${RED}$rm_unneeded_arch${NORMAL}"
 	einfo "${BLUE}Skip stable-queue -->${NORMAL} ${RED}$skip_squeue${NORMAL}"
-	einfo "${BLUE}Disable NUMA -->${NORMAL} ${RED}$disable_NUMA${NORMAL}"
-	einfo "${BLUE}Set tick rate to 1k -->${NORMAL} ${RED}$enable_1k_HZ_ticks${NORMAL}"
-	einfo "${BLUE}Set BFQ as default I/O scheduler -->${NORMAL} ${RED}$enable_BFQ${NORMAL}"
 
 	geek-sources_init_variables
 

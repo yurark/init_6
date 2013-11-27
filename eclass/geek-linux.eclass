@@ -157,27 +157,6 @@ geek-linux_src_prepare() {
 		rm_crap
 	eend
 
-	case "$disable_NUMA" in
-	yes)	ebegin "Disabling NUMA from kernel config"
-			disable_NUMA
-		eend ;;
-	no)	ewarn "Skipping disabling NUMA from kernel config ..." ;;
-	esac
-
-	case "$enable_1k_HZ_ticks" in
-	yes)	ebegin "Set tick rate to 1k"
-			set_1k_HZ_ticks
-		eend ;;
-	no)	ewarn "Skipping set tick rate to 1k ..." ;;
-	esac
-
-	case "$enable_BFQ" in
-	yes)	ebegin "Set BFQ as default I/O scheduler"
-			set_BFQ
-		eend ;;
-	no)	ewarn "Skipping set BFQ as default I/O scheduler ..." ;;
-	esac
-
 	case "$rm_unneeded_arch" in
 	yes)	ebegin "Remove unneeded architectures"
 			if use x86 || use amd64; then

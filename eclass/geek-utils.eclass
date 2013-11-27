@@ -19,7 +19,7 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
-EXPORT_FUNCTIONS use_if_iuse get_from_url git_get_all_branches git_checkout find_crap rm_crap get_config set_1k_HZ_ticks disable_NUMA set_BFQ copy move
+EXPORT_FUNCTIONS use_if_iuse get_from_url git_get_all_branches git_checkout find_crap rm_crap get_config copy move
 
 # @FUNCTION: in_iuse
 # @USAGE: <flag>
@@ -143,58 +143,6 @@ geek-utils_get_config() {
 			einfo " ${BLUE}No suitable custom config found, defaulting to defconfig${NORMAL}"
 		fi
 	eend $?
-}
-
-# @FUNCTION: set_1k_HZ_ticks
-# @USAGE:
-# @DESCRIPTION:
-# Optionally set tickrate to 1000 to avoid suspend issues as reported here:
-# http://ck-hack.blogspot.com/2013/09/bfs-0441-311-ck1.html?showComment=1379234249615#c4156123736313039413
-geek-utils_set_1k_HZ_ticks() {
-	debug-print-function ${FUNCNAME} "$@"
-
-	if [ "${enable_1k_HZ_ticks}" = "yes" ]; then # Set tick rate to 1k ...
-		sed -i -e 's/^CONFIG_HZ_300=y/# CONFIG_HZ_300 is not set/' \
-			-i -e 's/^# CONFIG_HZ_1000 is not set/CONFIG_HZ_1000=y/' \
-			-i -e 's/^CONFIG_HZ=300/CONFIG_HZ=1000/' .config
-	fi
-}
-
-# @FUNCTION: disable_NUMA
-# @USAGE:
-# @DESCRIPTION:
-# Optionally disable NUMA since >99% of users have mono-socket systems.
-# For more, see: https://bugs.archlinux.org/task/31187
-geek-utils_disable_NUMA() {
-	debug-print-function ${FUNCNAME} "$@"
-
-	if [ "${disable_NUMA}" = "yes" ]; then
-		if [ "${ARCH}" = "amd64" ]; then # Disabling NUMA from kernel config ...
-			sed -i -e 's/CONFIG_NUMA=y/# CONFIG_NUMA is not set/' \
-				-i -e '/CONFIG_AMD_NUMA=y/d' \
-				-i -e '/CONFIG_X86_64_ACPI_NUMA=y/d' \
-				-i -e '/CONFIG_NODES_SPAN_OTHER_NODES=y/d' \
-				-i -e '/# CONFIG_NUMA_EMU is not set/d' \
-				-i -e '/CONFIG_NODES_SHIFT=6/d' \
-				-i -e '/CONFIG_NEED_MULTIPLE_NODES=y/d' \
-				-i -e '/# CONFIG_MOVABLE_NODE is not set/d' \
-				-i -e '/CONFIG_USE_PERCPU_NUMA_NODE_ID=y/d' \
-				-i -e '/CONFIG_ACPI_NUMA=y/d' .config
-		fi
-	fi
-}
-
-# @FUNCTION: set_BFQ
-# @USAGE:
-# @DESCRIPTION:
-# Optionally enable BFQ as the default I/O scheduler
-geek-utils_set_BFQ() {
-	debug-print-function ${FUNCNAME} "$@"
-
-	if [ "${enable_BFQ}" = "yes" ]; then # Set BFQ as default I/O scheduler ...
-		sed -i -e '/CONFIG_DEFAULT_IOSCHED/ s,cfq,bfq,' \
-			-i -e s'/CONFIG_DEFAULT_CFQ=y/# CONFIG_DEFAULT_CFQ is not set\nCONFIG_DEFAULT_BFQ=y/' .config
-	fi
 }
 
 # @FUNCTION: copy

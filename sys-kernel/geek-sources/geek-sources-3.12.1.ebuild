@@ -7,6 +7,7 @@ DEBLOB_AVAILABLE="1"
 
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 
+AUFS_VER="3.x-rcN"
 BFQ_VER="3.12.0-v6r2"
 BLD_VER="3.12.0"
 #LQX_VER="3.11.2-1"
