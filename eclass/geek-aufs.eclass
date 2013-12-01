@@ -35,7 +35,7 @@ geek-aufs_init_variables() {
 	: ${AUFS_VER:=${AUFS_VER:-"${KMV}"}}
 	: ${AUFS_SRC:=${AUFS_SRC:-"git://git.code.sf.net/p/aufs/aufs3-standalone"}}
 	: ${AUFS_URL:=${AUFS_URL:-"http://aufs.sourceforge.net"}}
-	: ${AUFS_INF:="${YELLOW}Another UnionFS -${GREEN} ${AUFS_URL}${NORMAL}"}
+	: ${AUFS_INF:="${YELLOW}Another UnionFS version ${GREEN}${AUFS_VER}${YELLOW} from ${GREEN}${AUFS_URL}${NORMAL}"}
 }
 
 geek-aufs_init_variables

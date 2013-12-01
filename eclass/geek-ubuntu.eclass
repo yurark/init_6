@@ -32,10 +32,10 @@ EXPORT_FUNCTIONS src_prepare pkg_postinst
 geek-ubuntu_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${UBUNTU_VER:=${UBUNTU_VER:-3.2.0-55.85}}
+	: ${UBUNTU_VER:=${UBUNTU_VER:-"3.2.0-55.85"}}
 	: ${UBUNTU_SRC:=${UBUNTU_SRC:-"mirror://ubuntu/pool/main/l/linux/linux_${UBUNTU_VER}.diff.gz"}}
 	: ${UBUNTU_URL:=${UBUNTU_URL:-"http://www.ubuntu.com"}}
-	: ${UBUNTU_INF:="${YELLOW}Ubuntu patches -${GREEN} ${UBUNTU_URL}${NORMAL}"}
+	: ${UBUNTU_INF:="${YELLOW}Ubuntu patches version ${GREEN}${UBUNTU_VER}${YELLOW} from ${GREEN}${UBUNTU_URL}${NORMAL}"}
 }
 
 geek-ubuntu_init_variables

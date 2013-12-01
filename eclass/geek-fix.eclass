@@ -45,6 +45,6 @@ geek-fix_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	if [ "${disable_fixes}" = "no" ]; then
-		ApplyPatch "${FILESDIR}/${PV}/fix/patch_list" "${YELLOW}Fixes for current kernel${NORMAL}"
+		ApplyPatch "${FILESDIR}/${PV}/fix/patch_list" "${YELLOW}Fixes for current kernel from ${GREEN}${FILESDIR}/${PV}/fix/patch_list${NORMAL}"
 	fi
 }

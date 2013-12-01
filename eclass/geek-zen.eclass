@@ -35,7 +35,7 @@ geek-zen_init_variables() {
 	: ${ZEN_VER:=${ZEN_VER:-"${KMV}"}}
 	: ${ZEN_SRC:=${ZEN_SRC:-"https://github.com/damentz/zen-kernel/compare/torvalds:v${ZEN_VER/KMV/$KMV}...${ZEN_VER/KMV/$KMV}/master.diff"}}
 	: ${ZEN_URL:=${ZEN_URL:-"https://github.com/damentz/zen-kernel"}}
-	: ${ZEN_INF:=${ZEN_INF:-"${YELLOW}The Zen Kernel -${GREEN} ${ZEN_URL}${NORMAL}"}}
+	: ${ZEN_INF:=${ZEN_INF:-"${YELLOW}The Zen Kernel version ${GREEN}${ZEN_VER}${YELLOW} from ${GREEN}${ZEN_URL}${NORMAL}"}}
 }
 
 geek-zen_init_variables

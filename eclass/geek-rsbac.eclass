@@ -32,11 +32,11 @@ EXPORT_FUNCTIONS src_prepare pkg_postinst
 geek-rsbac_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${RSBAC_VER:=${RSBAC_VER:-$KMV}}
+	: ${RSBAC_VER:=${RSBAC_VER:-"${KMV}"}}
 	: ${RSBAC_NAME:=${RSBAC_NAME:-patch-linux-${PV}-rsbac-${RSBAC_VER/KMV/$KMV}.diff.xz}}
 	: ${RSBAC_SRC:=${RSBAC_SRC:-"http://download.rsbac.org/patches/${RSBAC_VER/KMV/$KMV}/${RSBAC_NAME}"}}
 	: ${RSBAC_URL:=${RSBAC_URL:-"http://www.rsbac.org"}}
-	: ${RSBAC_INF=${RSBAC_INF:-"${YELLOW}RSBAC (Rule Set Based Access Control) patches -${GREEN} ${RSBAC_URL}${NORMAL}"}}
+	: ${RSBAC_INF=${RSBAC_INF:-"${YELLOW}RSBAC (Rule Set Based Access Control) patches version ${GREEN}${RSBAC_VER}${YELLOW} from ${GREEN}${RSBAC_URL}${NORMAL}"}}
 }
 
 geek-rsbac_init_variables

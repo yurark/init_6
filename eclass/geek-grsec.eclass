@@ -35,7 +35,7 @@ geek-grsec_init_variables() {
 	: ${GRSEC_VER:=${GRSEC_VER:-"${KSV}"}}
 	: ${GRSEC_SRC:=${GRSEC_SRC:-"git://git.overlays.gentoo.org/proj/hardened-patchset.git"}}
 	: ${GRSEC_URL:=${GRSEC_URL:-"http://hardened.gentoo.org"}}
-	: ${GRSEC_INF:=${GRSEC_INF:-"${YELLOW}GrSecurity patches -${GREEN} ${GRSEC_URL}${NORMAL}"}}
+	: ${GRSEC_INF:=${GRSEC_INF:-"${YELLOW}GrSecurity patches version ${GREEN}${GRSEC_VER}${YELLOW} from ${GREEN}${GRSEC_URL}${NORMAL}"}}
 }
 
 geek-grsec_init_variables

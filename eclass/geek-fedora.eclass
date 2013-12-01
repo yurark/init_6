@@ -35,7 +35,7 @@ geek-fedora_init_variables() {
 	: ${FEDORA_VER:=${FEDORA_VER:-"master"}}
 	: ${FEDORA_SRC:=${FEDORA_SRC:-"git://pkgs.fedoraproject.org/kernel.git"}}
 	: ${FEDORA_URL:=${FEDORA_URL:-"http://fedoraproject.org"}}
-	: ${FEDORA_INF:=${FEDORA_INF:-"${YELLOW}Fedora -${GREEN} ${FEDORA_URL}${NORMAL}"}}
+	: ${FEDORA_INF:=${FEDORA_INF:-"${YELLOW}Fedora version ${GREEN}${FEDORA_VER}${YELLOW} from ${GREEN}${FEDORA_URL}${NORMAL}"}}
 }
 
 geek-fedora_init_variables

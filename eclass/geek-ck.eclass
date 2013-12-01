@@ -35,7 +35,7 @@ geek-ck_init_variables() {
 	: ${CK_VER:=${CK_VER:-"${KMV}-ck1"}}
 	: ${CK_SRC:=${CK_SRC:-"http://ck.kolivas.org/patches/3.0/${KMV}/${CK_VER}/patch-${CK_VER}.lrz"}}
 	: ${CK_URL:=${CK_URL:-"http://users.on.net/~ckolivas/kernel"}}
-	: ${CK_INF:=${CK_INF:-"${YELLOW}Con Kolivas high performance patchset -${GREEN} ${CK_URL}${NORMAL}"}}
+	: ${CK_INF:=${CK_INF:-"${YELLOW}Con Kolivas high performance patchset version ${GREEN}${CK_VER}${YELLOW} from ${GREEN}${CK_URL}${NORMAL}"}}
 }
 
 geek-ck_init_variables

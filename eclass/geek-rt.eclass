@@ -32,10 +32,10 @@ EXPORT_FUNCTIONS src_prepare pkg_postinst
 geek-rt_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${RT_VER:=${RT_VER:-$KMV}}
+	: ${RT_VER:=${RT_VER:-"${KMV}"}}
 	: ${RT_SRC:=${RT_SRC:-"mirror://kernel/linux/kernel/projects/rt/${KMV}/patch-${RT_VER/KMV/$KMV}.patch.xz"}}
 	: ${RT_URL:=${RT_URL:-"http://www.kernel.org/pub/linux/kernel/projects/rt"}}
-	: ${RT_INF:=${RT_INF:-"${YELLOW}Ingo Molnar"\'"s realtime preempt patches -${GREEN} ${RT_URL}${NORMAL}"}}
+	: ${RT_INF:=${RT_INF:-"${YELLOW}Ingo Molnar"\'"s realtime preempt patches version ${GREEN}${RT_VER}${YELLOW} from ${GREEN}${RT_URL}${NORMAL}"}}
 }
 
 geek-rt_init_variables

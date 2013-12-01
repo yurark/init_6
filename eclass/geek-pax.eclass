@@ -32,10 +32,10 @@ EXPORT_FUNCTIONS src_prepare pkg_postinst
 geek-pax_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${PAX_VER:=${PAX_VER:-$KMV}}
+	: ${PAX_VER:=${PAX_VER:-"${KMV}"}}
 	: ${PAX_SRC:=${PAX_SRC:-"http://grsecurity.net/test/pax-linux-${PAX_VER/KMV/$KMV}.patch"}}
 	: ${PAX_URL:=${PAX_URL:-"http://pax.grsecurity.net"}}
-	: ${PAX_INF=${PAX_INF:-"${YELLOW}PAX patches -${GREEN} ${PAX_URL}${NORMAL}"}}
+	: ${PAX_INF=${PAX_INF:-"${YELLOW}PAX patches version ${GREEN}${PAX_VER}${YELLOW} from ${GREEN}${PAX_URL}${NORMAL}"}}
 }
 
 geek-pax_init_variables

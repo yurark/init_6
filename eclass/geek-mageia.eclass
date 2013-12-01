@@ -32,10 +32,10 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-mageia_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${MAGEIA_VER:=${MAGEIA_VER:-$KMV}}
+	: ${MAGEIA_VER:=${MAGEIA_VER:-"releases/${KSV}/1.mga4"}}
 	: ${MAGEIA_SRC:=${MAGEIA_SRC:-"svn://svn.mageia.org/svn/packages/cauldron/kernel"}}
 	: ${MAGEIA_URL:=${MAGEIA_URL:-"http://www.mageia.org"}}
-	: ${MAGEIA_INF:=${MAGEIA_INF:-"${YELLOW}Mageia -${GREEN} ${MAGEIA_URL}${NORMAL}"}}
+	: ${MAGEIA_INF:=${MAGEIA_INF:-"${YELLOW}Mageia version ${GREEN}${MAGEIA_VER}${YELLOW} from ${GREEN}${MAGEIA_URL}${NORMAL}"}}
 }
 
 geek-mageia_init_variables

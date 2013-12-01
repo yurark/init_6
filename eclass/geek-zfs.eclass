@@ -32,10 +32,10 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-zfs_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${ZFS_VER:=${ZFS_VER:-master}}
+	: ${ZFS_VER:=${ZFS_VER:-"master"}}
 	: ${ZFS_SRC:=${ZFS_SRC:-"git://github.com/zfsonlinux/zfs.git"}}
 	: ${ZFS_URL:=${ZFS_URL:-"http://zfsonlinux.org"}}
-	: ${ZFS_INF:=${ZFS_INF:-"${YELLOW}Integrate Native ZFS on Linux -${GREEN} ${ZFS_URL}${NORMAL}"}}
+	: ${ZFS_INF:=${ZFS_INF:-"${YELLOW}Integrate Native ZFS on Linux version ${GREEN}${ZFS_VER}${YELLOW} from ${GREEN}${ZFS_URL}${NORMAL}"}}
 }
 
 geek-zfs_init_variables

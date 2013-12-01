@@ -39,7 +39,7 @@ geek-rh_init_variables() {
 	http://ftp.redhat.com/pub/redhat/linux/enterprise/6Server/en/os/SRPMS/${RH_NAME}.src.rpm
 	http://ftp.redhat.com/pub/redhat/linux/enterprise/6Workstation/en/os/SRPMS/${RH_NAME}.src.rpm"}}
 	: ${RH_URL:=${RH_URL:-"http://www.redhat.com"}}
-	: ${RH_INF:="${YELLOW}Red Hat Enterprise Linux kernel patches -${GREEN} ${RH_URL}${NORMAL}"}
+	: ${RH_INF:="${YELLOW}Red Hat Enterprise Linux kernel patches version ${GREEN}${RH_VER}${YELLOW} from ${GREEN}${RH_URL}${NORMAL}"}
 }
 
 geek-rh_init_variables

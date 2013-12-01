@@ -32,10 +32,10 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-pf_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${PF_VER:=${PF_VER:-$KMV}}
+	: ${PF_VER:=${PF_VER:-"${KMV}"}}
 	: ${PF_SRC:=${PF_SRC:-"https://github.com/pfactum/pf-kernel/compare/mirrors:v${KMV}...pf-${PF_VER/KMV/$KMV}.diff"}}
 	: ${PF_URL:=${PF_URL:-"http://pf.natalenko.name"}}
-	: ${PF_INF:=${PF_INF:-"${YELLOW}pf-kernel patches -${GREEN} ${PF_URL}${NORMAL}"}}
+	: ${PF_INF:=${PF_INF:-"${YELLOW}pf-kernel patches version ${GREEN}${PF_VER}${YELLOW} from ${GREEN}${PF_URL}${NORMAL}"}}
 }
 
 geek-pf_init_variables

@@ -35,7 +35,7 @@ geek-suse_init_variables() {
 	: ${SUSE_VER:=${SUSE_VER:-"stable"}}
 	: ${SUSE_SRC:=${SUSE_SRC:-"git://kernel.opensuse.org/kernel-source.git"}}
 	: ${SUSE_URL:=${SUSE_URL:-"http://www.opensuse.org"}}
-	: ${SUSE_INF:=${SUSE_INF:-"${YELLOW}OpenSuSE -${GREEN} ${SUSE_URL}${NORMAL}"}}
+	: ${SUSE_INF:=${SUSE_INF:-"${YELLOW}OpenSuSE patches version ${GREEN}${SUSE_VER}${YELLOW} from ${GREEN}${SUSE_URL}${NORMAL}"}}
 }
 
 geek-suse_init_variables

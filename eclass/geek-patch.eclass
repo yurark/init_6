@@ -282,12 +282,12 @@ geek-patch_ApplyUserPatch() {
 		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${check}
 		if [[ -d ${EPATCH_SOURCE} ]] ; then
 			if [ -r "${EPATCH_SOURCE}/patch_list" ]; then
-				ApplyPatch "${EPATCH_SOURCE}/patch_list" "Applying user patches from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."
+				ApplyPatch "${EPATCH_SOURCE}/patch_list" "${YELLOW}Applying user patches from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."
 			else
 				ewarn "${BLUE}File${NORMAL} ${RED}${EPATCH_SOURCE}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
 				ewarn "${BLUE}Try to apply the patches if they are there…${NORMAL}"
 				for i in `ls ${EPATCH_SOURCE}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
-					ApplyPatch "${i}" "Applying user patches from ${GREEN}${EPATCH_SOURCE}${NORMAL} ..."
+					ApplyPatch "${i}" "${YELLOW}Applying user patches from ${GREEN}${EPATCH_SOURCE}${NORMAL} ..."
 				done
 			fi
 		fi
@@ -313,12 +313,12 @@ geek-patch_ApplyPatchFix() {
 		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${check}
 		if [[ -d ${EPATCH_SOURCE} ]] ; then
 			if [ -r "${EPATCH_SOURCE}/patch_list" ]; then
-				ApplyPatch "${EPATCH_SOURCE}/patch_list" "Applying patch fix from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."
+				ApplyPatch "${EPATCH_SOURCE}/patch_list" "${YELLOW}Applying patch fix from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."
 			else
 				ewarn "${BLUE}File${NORMAL} ${RED}${EPATCH_SOURCE}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
 				ewarn "${BLUE}Try to apply the patches if they are there…${NORMAL}"
 				for i in `ls ${EPATCH_SOURCE}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
-					ApplyPatch "${i}" "Applying patch fix from ${GREEN}${EPATCH_SOURCE}${NORMAL} ..."
+					ApplyPatch "${i}" "${YELLOW}Applying patch fix from ${GREEN}${EPATCH_SOURCE}${NORMAL} ..."
 				done
 			fi
 		fi

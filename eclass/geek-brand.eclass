@@ -34,7 +34,7 @@ geek-brand_init_variables() {
 
 	: ${IUSE:="${IUSE} brand"}
 	: ${BRAND_URL:=${BRAND_URL:-"https://github.com/init6/init_6/wiki/geek-sources"}}
-	: ${BRAND_INF:=${BRAND_INF:-"${YELLOW}Branding -${GREEN} ${BRAND_URL}${NORMAL}"}}
+	: ${BRAND_INF:=${BRAND_INF:-"${YELLOW}Branding from ${GREEN}${BRAND_URL}${NORMAL}"}}
 }
 
 geek-brand_init_variables

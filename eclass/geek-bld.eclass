@@ -32,10 +32,10 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-bld_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${BLD_VER:=${BLD_VER:-$KMV}}
+	: ${BLD_VER:=${BLD_VER:-"${KMV}"}}
 	: ${BLD_SRC:=${BLD_SRC:-"https://bld.googlecode.com/files/BLD-${BLD_VER}.patch"}}
 	: ${BLD_URL:=${BLD_URL:-"http://code.google.com/p/bld"}}
-	: ${BLD_INF:=${BLD_INF:-"${YELLOW}Alternate CPU load distribution technique for Linux kernel scheduler -${GREEN} ${BLD_URL}${NORMAL}"}}
+	: ${BLD_INF:=${BLD_INF:-"${YELLOW}Alternate CPU load distribution technique for Linux kernel scheduler version ${GREEN}${BLD_VER}${YELLOW} from ${GREEN}${BLD_URL}${NORMAL}"}}
 }
 
 geek-bld_init_variables

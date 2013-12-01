@@ -40,6 +40,8 @@ linux-991.01-ptrace_fix.patch
 linux-992.01.i915_pass_mode_to_write_eld.patch
 linux-992.02-i915_set_hdmi_audio_clock.patch
 linux-992.03-i915_fix_clamping_to_limited_range.patch
+linux-992.04-ALSA-hda-Force-buffer-alignment-for-Haswell-HDMI-con.patch
+linux-992.05-ALSA-hda-Name-Haswell-HDMI-controllers-better.patch
 linux-994.0001-Squashfs-Refactor-decompressor-interface-and-code.patch
 linux-994.0002-squashfs-Enhance-parallel-I-O.patch
 linux-994.0003-Squashfs-add-multi-threaded-decompression-using-perc.patch

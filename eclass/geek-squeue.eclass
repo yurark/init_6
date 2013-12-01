@@ -35,7 +35,7 @@ geek-squeue_init_variables() {
 	: ${SQUEUE_VER:=${SQUEUE_VER:-"${KMV}"}}
 	: ${SQUEUE_SRC:=${SQUEUE_SRC:-"git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git"}}
 	: ${SQUEUE_URL:=${SQUEUE_URL:-"http://git.kernel.org/cgit/linux/kernel/git/stable/stable-queue.git"}}
-	: ${SQUEUE_INF:=${SQUEUE_INF:-"${YELLOW}Stable-queue patch-set -${GREEN} ${SQUEUE_URL}${NORMAL}"}}
+	: ${SQUEUE_INF:=${SQUEUE_INF:-"${YELLOW}Stable-queue patch-set version ${GREEN}${SQUEUE_VER}${YELLOW} from ${GREEN}${SQUEUE_URL}${NORMAL}"}}
 	local skip_squeue_cfg=$(source $cfg_file 2>/dev/null; echo ${skip_squeue})
 	: ${skip_squeue:=${skip_squeue_cfg:-no}} # skip_squeue=yes/no
 }

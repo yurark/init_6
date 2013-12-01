@@ -32,10 +32,10 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-gentoo_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${GENTOO_VER:=${GENTOO_VER:-$KMV}}
+	: ${GENTOO_VER:=${GENTOO_VER:-"${KMV}"}}
 	: ${GENTOO_SRC:=${GENTOO_SRC:-"svn://anonsvn.gentoo.org/linux-patches/genpatches-2.6/trunk"}}
 	: ${GENTOO_URL:=${GENTOO_URL:-"http://dev.gentoo.org/~mpagano/genpatches"}}
-	: ${GENTOO_INF:=${GENTOO_INF:-"${YELLOW}Gentoo patches -${GREEN} ${GENTOO_URL}${NORMAL}"}}
+	: ${GENTOO_INF:=${GENTOO_INF:-"${YELLOW}Gentoo patches version ${GREEN}${GENTOO_VER}${YELLOW} from ${GREEN}${GENTOO_URL}${NORMAL}"}}
 }
 
 geek-gentoo_init_variables

@@ -38,13 +38,13 @@ geek-xenomai_init_variables() {
 	: ${XENOMAI_NAME:=${XENOMAI_NAME:-xenomai-${XENOMAI_VER}.tar.bz2}}
 	: ${XENOMAI_SRC:=${XENOMAI_SRC:-"http://download.gna.org/xenomai/stable/${XENOMAI_NAME}"}}
 	: ${XENOMAI_URL:=${XENOMAI_URL:-"http://www.xenomai.org"}}
-	: ${XENOMAI_INF:="${YELLOW}Real-Time Framework for Linux -${GREEN} ${XENOMAI_URL}${NORMAL}"}
+	: ${XENOMAI_INF:="${YELLOW}Real-Time Framework for Linux version ${GREEN}${XENOMAI_VER}${YELLOW} from ${GREEN}${XENOMAI_URL}${NORMAL}"}
 
 	: ${ADEOS_VER:=${ADEOS_VER:-"2.6.38.8-x86-2.11-03"}}
 	: ${ADEOS_NAME:=${ADEOS_NAME:-adeos-ipipe-${ADEOS_VER}.patch}}
 	: ${ADEOS_SRC:=${ADEOS_SRC:-"http://download.gna.org/adeos/patches/v2.6/x86/${ADEOS_NAME}"}}
 	: ${ADEOS_URL:=${ADEOS_URL:-"http://gna.org/projects/adeos"}}
-	: ${ADEOS_INF:="${YELLOW}Interrupt pipeline patches for the Linux kernel -${GREEN} ${ADEOS_URL}${NORMAL}"}
+	: ${ADEOS_INF:="${YELLOW}Interrupt pipeline patches for the Linux kernel version ${GREEN}${ADEOS_VER}${YELLOW} from ${GREEN}${ADEOS_URL}${NORMAL}"}
 }
 
 geek-xenomai_init_variables
