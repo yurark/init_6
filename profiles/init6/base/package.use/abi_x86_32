@@ -6,6 +6,7 @@ dev-libs/elfutils abi_x86_32
 dev-libs/expat abi_x86_32
 dev-libs/glib abi_x86_32
 dev-libs/gmp abi_x86_32
+dev-libs/json-c abi_x86_32
 dev-libs/libffi abi_x86_32
 dev-libs/libpcre abi_x86_32
 dev-libs/libpthread-stubs abi_x86_32
@@ -31,9 +32,12 @@ media-libs/vo-amrwbenc abi_x86_32
 media-sound/cdparanoia abi_x86_32
 media-sound/wavpack abi_x86_32
 sys-apps/attr abi_x86_32
+sys-apps/dbus abi_x86_32
 sys-apps/systemd abi_x86_32
+sys-apps/tcp-wrappers abi_x86_32
 sys-devel/llvm abi_x86_32
 sys-libs/e2fsprogs-libs abi_x86_32
+sys-libs/gdbm abi_x86_32
 sys-libs/gpm abi_x86_32
 sys-libs/libavc1394 abi_x86_32
 sys-libs/libraw1394 abi_x86_32
