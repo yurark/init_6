@@ -89,6 +89,8 @@ Static sets:
 	Meta sets:
 	----------
 
+	@arx		= Arx libertatis stuff
+	@chromium	= Chromium stuff
 	@core		= Only stage3 core stuff
 	@e17		= enlightenment 17 stuff
 	@gnome		= Gnome set
