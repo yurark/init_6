@@ -21,7 +21,7 @@
 
 inherit geek-linux geek-utils geek-fix geek-upatch geek-squeue geek-vars
 
-KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec rsbac ice lqx mageia optimization pax pf reiser4 rh rifs rt suse symlink ubuntu uksm xenomai zen zfs"
+KNOWN_USES="adeos aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec rsbac ice lqx mageia optimization pax pf reiser4 rh rifs rt suse symlink ubuntu uksm xenomai zen zfs"
 
 # internal function
 #
@@ -47,6 +47,7 @@ done
 
 for use_flag in ${IUSE}; do
 	case ${use_flag} in
+		adeos	)	inherit geek-adeos ;;
 		aufs	)	inherit geek-aufs ;;
 		bfq	)	inherit geek-bfq ;;
 		bld	)	inherit geek-bld ;;
@@ -89,7 +90,7 @@ geek-sources_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx pf rh ubuntu zen"}
-	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec rsbac ice rh reiser4 exfat rt bld uksm aufs mageia fedora suse ubuntu xenomai brand fix upatch squeue"}
+	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec rsbac ice rh reiser4 exfat rt adeos bld uksm aufs mageia fedora suse ubuntu xenomai brand fix upatch squeue"}
 
 	local xUserOrder=""
 	local xDefOder=""
@@ -148,6 +149,7 @@ geek-sources_src_unpack() {
 		if use_if_iuse "${Current_Patch}" || [ "${Current_Patch}" = "fix" ] || [ "${Current_Patch}" = "upatch" ] || [ "${Current_Patch}" = "squeue" ]; then
 			einfo "Unpack - ${Current_Patch}"
 			case "${Current_Patch}" in
+				adeos	)	geek-adeos_src_unpack ;;
 				aufs	)	geek-aufs_src_unpack ;;
 				bfq	)	geek-bfq_src_unpack ;;
 				bld	)	geek-bld_src_unpack ;;
@@ -184,6 +186,7 @@ geek-sources_src_prepare() {
 		if use_if_iuse "${Current_Patch}" || [ "${Current_Patch}" = "fix" ] || [ "${Current_Patch}" = "upatch" ] || [ "${Current_Patch}" = "squeue" ]; then
 #			einfo "Prepare - ${Current_Patch}"
 			case "${Current_Patch}" in
+				adeos	)	geek-adeos_src_prepare ;;
 				aufs	)	geek-aufs_src_prepare ;;
 				bfq	)	geek-bfq_src_prepare ;;
 				bld	)	geek-bld_src_prepare ;;
@@ -252,6 +255,7 @@ ${BLUE}For more info about patchset’s, and how to report problems, see:${NORMA
 	for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 		if use_if_iuse "${Current_Patch}" || [[ "${Current_Patch}" == "fix" ]] || [[ "${Current_Patch}" == "upatch" ]]; then
 			case "${Current_Patch}" in
+				adeos	) geek-adeos_pkg_postinst ;;
 				aufs	) geek-aufs_pkg_postinst ;;
 				bfq	) geek-bfq_pkg_postinst ;;
 				bld	) geek-bld_pkg_postinst ;;

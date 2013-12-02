@@ -39,20 +39,16 @@ geek-xenomai_init_variables() {
 	: ${XENOMAI_SRC:=${XENOMAI_SRC:-"http://download.gna.org/xenomai/stable/${XENOMAI_NAME}"}}
 	: ${XENOMAI_URL:=${XENOMAI_URL:-"http://www.xenomai.org"}}
 	: ${XENOMAI_INF:="${YELLOW}Real-Time Framework for Linux version ${GREEN}${XENOMAI_VER}${YELLOW} from ${GREEN}${XENOMAI_URL}${NORMAL}"}
-
-	: ${ADEOS_VER:=${ADEOS_VER:-"2.6.38.8-x86-2.11-03"}}
-	: ${ADEOS_NAME:=${ADEOS_NAME:-adeos-ipipe-${ADEOS_VER}.patch}}
-	: ${ADEOS_SRC:=${ADEOS_SRC:-"http://download.gna.org/adeos/patches/v2.6/x86/${ADEOS_NAME}"}}
-	: ${ADEOS_URL:=${ADEOS_URL:-"http://gna.org/projects/adeos"}}
-	: ${ADEOS_INF:="${YELLOW}Interrupt pipeline patches for the Linux kernel version ${GREEN}${ADEOS_VER}${YELLOW} from ${GREEN}${ADEOS_URL}${NORMAL}"}
 }
 
 geek-xenomai_init_variables
 
-HOMEPAGE="${HOMEPAGE} ${XENOMAI_URL} ${ADEOS_URL}"
+HOMEPAGE="${HOMEPAGE} ${XENOMAI_URL}"
 
 SRC_URI="${SRC_URI}
-	xenomai?	( ${XENOMAI_SRC} ${ADEOS_SRC} )"
+	xenomai?	( ${XENOMAI_SRC} )"
+
+RDEPEND="sys-apps/ed"
 
 # @FUNCTION: src_unpack
 # @USAGE:
@@ -74,18 +70,10 @@ geek-xenomai_src_unpack() {
 geek-xenomai_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
-#	ApplyPatch "${FILESDIR}/prepare-kernel.patch" "${XENOMAI_INF}" || die "patch failed"
+	einfo "${XENOMAI_INF}"
+	"${T}/xenomai/xenomai-${XENOMAI_VER}/"scripts/prepare-kernel.sh --linux=${S} --arch=x86 --default || die "prepare kernel failed"
 
-	einfo "${ADEOS_INF}\n${XENOMAI_INF}"
-	"${T}/xenomai/xenomai-${XENOMAI_VER}/"scripts/prepare-kernel.sh --linux=${S} --adeos=${DISTDIR}/${ADEOS_NAME} --default || die "prepare kernel failed"
-
-#	cd ${S}
-#	ApplyPatch ${FILESDIR}/discontinued_latency_watchdog.patch || die "patch failed"
-
-#	mv "${T}/xenomai" "${WORKDIR}/linux-${KV_FULL}-patches/xenomai" || die "${RED}mv ${T}/xenomai ${WORKDIR}/linux-${KV_FULL}-patches/xenomai failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/xenomai/" "${WORKDIR}/linux-${KV_FULL}-patches/xenomai" || die "${RED}rsync -avhW --no-compress --progress ${T}/xenomai/ ${WORKDIR}/linux-${KV_FULL}-patches/xenomai failed${NORMAL}"
-
-	rm -rf "${T}/xenomai" || die "${RED}rm -rf ${T}/xenomai failed${NORMAL}"
+#	rm -rf "${T}/xenomai" || die "${RED}rm -rf ${T}/xenomai failed${NORMAL}"
 }
 
 # @FUNCTION: pkg_postinst

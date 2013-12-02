@@ -52,15 +52,24 @@ PDEPEND="!build? ( virtual/dev-manager )"
 SLOT=${SLOT:-${KMV}}
 IUSE="${IUSE} symlink"
 
-case "$PR" in
-	r0)	case "$VERSION" in
+case "${PR}" in
+	r0)	case "${VERSION}" in
 		2)	extension="xz"
-			kurl="mirror://kernel/linux/kernel/v${KMV}/longterm/v${KMV}.${SUBLEVEL}"
-			kversion="${KMV}.${SUBLEVEL}"
+			case "${PATCHLEVEL}" in
+			4)	kurl="mirror://kernel/linux/kernel/v${KMV}"
+				kversion="${PV}"
+				SKIP_UPDATE=1
+			;;
+			6)	kurl="mirror://kernel/linux/kernel/v${KMV}/longterm/v${KMV}.${SUBLEVEL}"
+				kversion="${KSV}"
+			;;
+			esac
 			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
-				pversion="${PV}"
-				pname="patch-${pversion}.${extension}"
-				SRC_URI="${SRC_URI} ${kurl}/${pname}"
+				if [ "${PATCHLEVEL}" = 6 ]; then
+					pversion="${PV}"
+					pname="patch-${pversion}.${extension}"
+					SRC_URI="${SRC_URI} ${kurl}/${pname}"
+				fi
 			fi
 		;;
 		3)	extension="xz"
@@ -74,19 +83,36 @@ case "$PR" in
 		;;
 		esac
 	;;
-	*)	extension="xz"
-		kurl="mirror://kernel/linux/kernel/v${VERSION}.0/testing"
-		kversion="${VERSION}.$((${PATCHLEVEL} - 1))"
-		if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
-			pversion="${PVR//r/rc}"
-			pname="patch-${pversion}.${extension}"
-			SRC_URI="${SRC_URI} ${kurl}/${pname}"
-		fi
+	*)	case "${VERSION}" in
+		2)	extension="xz"
+			case "${PATCHLEVEL}" in
+			4)	kurl="mirror://kernel/linux/kernel/v${KMV}"
+				kversion="${PV}"
+				SKIP_UPDATE=1
+			;;
+			6)	kurl="mirror://kernel/linux/kernel/v${KMV}/longterm/v${KMV}.${SUBLEVEL}"
+				kversion="${KSV}"
+			;;
+			esac
+			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
+				if [ "${PATCHLEVEL}" = 6 ]; then
+					pversion="${PV}"
+					pname="patch-${pversion}.${extension}"
+					SRC_URI="${SRC_URI} ${kurl}/${pname}"
+				fi
+			fi
+		;;
+		3)	extension="xz"
+			kurl="mirror://kernel/linux/kernel/v${VERSION}.0/testing"
+			kversion="${VERSION}.$((${PATCHLEVEL} - 1))"
+			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
+				pversion="${PVR//r/rc}"
+				pname="patch-${pversion}.${extension}"
+				SRC_URI="${SRC_URI} ${kurl}/${pname}"
+			fi
+		;;
+		esac
 	;;
-esac
-
-case "$VERSION" in
-	2)	kurl="mirror://kernel/linux/kernel/v${KMV}" ;;
 esac
 
 kname="linux-${kversion}.tar.${extension}"
@@ -100,15 +126,6 @@ SRC_URI="${SRC_URI} ${kurl}/${kname}"
 # all the variables before and after inherit.
 geek-linux_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	local disable_NUMA_cfg=$(source $cfg_file 2>/dev/null; echo ${disable_NUMA})
-	: ${disable_NUMA:=${disable_NUMA_cfg:-yes}} # disable_NUMA=yes/no
-
-	local enable_1k_HZ_ticks_cfg=$(source $cfg_file 2>/dev/null; echo ${enable_1k_HZ_ticks})
-	: ${enable_1k_HZ_ticks:=${enable_1k_HZ_ticks_cfg:-yes}} # enable_1k_HZ_ticks=yes/no
-
-	local enable_BFQ_cfg=$(source $cfg_file 2>/dev/null; echo ${enable_BFQ})
-	: ${enable_BFQ:=${enable_BFQ_cfg:-no}} # enable_BFQ=yes/no
 
 	local rm_unneeded_arch_cfg=$(source $cfg_file 2>/dev/null; echo ${rm_unneeded_arch})
 	: ${rm_unneeded_arch:=${rm_unneeded_arch_cfg:-no}} # rm_unneeded-arch=yes/no
