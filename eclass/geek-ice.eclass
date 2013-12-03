@@ -43,8 +43,7 @@ geek-ice_init_variables
 HOMEPAGE="${HOMEPAGE} ${ICE_URL}"
 
 DEPEND="${DEPEND}
-	ice?	( dev-vcs/git
-		>=sys-apps/tuxonice-userui-1.0
+	ice?	( >=sys-apps/tuxonice-userui-1.0
 		|| ( >=sys-power/hibernate-script-2.0 sys-power/pm-utils ) )"
 
 # @FUNCTION: src_unpack

@@ -58,9 +58,9 @@ geek-squeue_src_unpack() {
 
 	if [ -d ${CSD} ]; then
 		cd ${CSD} || die "${RED}cd ${CSD} failed${NORMAL}"
-		git pull > /dev/null 2>&1
+		git pull > /dev/null 2>&1 &
 	else
-		git clone ${SQUEUE_SRC} ${CSD} > /dev/null 2>&1
+		git clone ${SQUEUE_SRC} ${CSD} > /dev/null 2>&1 &
 	fi
 
 	if [ -d ${CSD}/queue-${SQUEUE_VER} ] ; then

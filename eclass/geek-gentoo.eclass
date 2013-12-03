@@ -59,10 +59,10 @@ geek-gentoo_src_unpack() {
 	if [ -d ${CSD} ]; then
 		cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
 		if [ -e ".svn" ]; then # git
-			svn up
+			svn up &
 		fi
 	else
-		svn co "${GENTOO_SRC}" "${CSD}" > /dev/null 2>&1
+		svn co "${GENTOO_SRC}" "${CSD}" > /dev/null 2>&1 &
 	fi
 
 	copy "${CSD}" "${CTD}"

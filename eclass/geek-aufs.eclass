@@ -67,12 +67,12 @@ geek-aufs_src_unpack() {
 	if [ -d "${CSD}" ]; then
 		cd "${CSD}"
 		if [ -e ".git" ]; then # git
-			git fetch --all && git pull --all
+			git fetch --all && git pull --all &
 		fi
 	else
-		git clone "${AUFS_SRC}" "${CSD}"
+		git clone "${AUFS_SRC}" "${CSD}" &
 		cd "${CSD}"
-		git_get_all_branches
+		git_get_all_branches &
 	fi
 
 	copy "${CSD}" "${CTD}"

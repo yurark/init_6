@@ -59,10 +59,10 @@ geek-mageia_src_unpack() {
 	if [ -d ${CSD} ]; then
 	cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
 		if [ -e ".svn" ]; then # subversion
-			svn up
+			svn up &
 		fi
 	else
-		svn co "${MAGEIA_SRC}" "${CSD}" > /dev/null 2>&1
+		svn co "${MAGEIA_SRC}" "${CSD}" > /dev/null 2>&1 &
 	fi
 
 	copy "${CSD}" "${CTD}"

@@ -42,8 +42,6 @@ DEPEND="${RDEPEND}
 [[ -n ${LIVE_EBUILD} ]] && DEPEND="${DEPEND} dev-vcs/cvs" # needed only for SCM source tree (autopoint uses cvs)
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-4.8.9-unknown-opts.patch"
-
 	[[ -n ${LIVE_EBUILD} ]] && ./autogen.sh
 }
 
