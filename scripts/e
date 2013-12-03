@@ -1,5 +1,13 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # /root/.bin/Gentoo/e - portage management tool
+
+package_use="/etc/portage/package.use"
+package_keywords="/etc/portage/package.keywords"
+package_mask="/etc/portage/package.mask"
+package_unmask="/etc/portage/package.unmask"
+
+category=$(eix -en# "$@" | cut -d" " -f1 | sed -e 's/^[<>=]*//' -e 's/\/.*//')
+#package=$(eix -en# "$@" | cut -d" " -f1 | sed  -e 's/^[<>=]*[a-z]*\-[a-z]*\///' -e 's/\-[0-9].*$//')
 
 if [[ -z $@ ]]; then
   echo "e <option> <*option2/pkg> - portage management tasks:
@@ -16,13 +24,14 @@ if [[ -z $@ ]]; then
   i | install   - installs package (will use binary if available)
   k | keyword   - add keyword for unsupport archtechtures
   l | list      - lists files installed to a package
+  m | manifest  - generate and sign all manifest in <overlay>
   o | owns      - check the file's owning package
   p | pretend   - check details of how a package is going to be added
   q | query     - search for an installed package
   r | remove    - remove package(s)
   s | search    - search for a package
   t | searchdes - search the description of packages
-  u | upgrade   - emerge world (upgrade everything)
+  u | upgrade   - emerge @world (upgrade everything)
   x | check     - check installed pkg(s) integrity
   y | sync      - sync the portage database
   z | revdep    - rebuild dependencies
@@ -47,7 +56,7 @@ fi
 # etc-update (add?)
 # --resume --skipfirst (add?)
 
-case $1 in
+case "$1" in
     1 | oneshot )       shift
                         emerge --oneshot "$@"
                         ;;
@@ -78,7 +87,8 @@ case $1 in
     e | elog )          less /var/log/portage/elog/summary.log
                         ;;
     f | flag )          shift
-                        echo "$@" >> /etc/portage/package.use
+                        [ -r "${package_use}" ] && echo "$@" >> "${package_use}"
+                        [ -d "${package_use}" ] && echo "$@" >> "${package_use}/${category}"
                         ;;
     g | useinfo )       shift
                         equery uses "$@"
@@ -90,10 +100,56 @@ case $1 in
                         emerge --usepkg --ask "$@"
                         ;;
     k | keyword )       shift
-                        echo -e "$@ **" >> /etc/portage/package.keywords
+                        [ -r "${package_keywords}" ] && echo -e "$@ **" >> "${package_keywords}"
+                        [ -d "${package_keywords}" ] && echo -e "$@ **" >> "${package_keywords}/${category}"
                         ;;
     l | ls | list )     shift
                         equery files "$@"
+                        ;;
+    m | manifest )      shift
+                        if [ -r "/etc/portage/make.conf" ]; then
+                          if [ -z "${PORTDIR}" ]; then
+                            PORTDIR=$(source "/etc/portage/make.conf" 2>/dev/null ; echo ${PORTDIR})
+                          fi
+                        fi
+
+                        if [ -r "/etc/layman/layman.cfg" ]; then
+                          layman_base_dir=$(grep ^storage "/etc/layman/layman.cfg"|sed "s/.*:.//")
+                        fi
+
+                        if [ -z "${1}" ]; then
+                          overlay_dir=$(for file in $(layman -Nl | cut -d" " -f3 | sed "/ *#/d; /^$/d"); do echo "$file" | grep -o --color=never "$1"; done)
+                        else
+                          echo "There is no any overlay ${1}"; exit 1
+                        fi
+
+                        base_dir="${layman_base_dir}/${overlay_dir}"
+
+                        [ -d "${base_dir}" ] && echo "cd ${base_dir}"; cd "${base_dir}" || echo "There is no any ${base_dir}"; exit 1
+
+                        echo "Prepare ebuild\`s and ChangeLog"
+                        for file in $(find "${base_dir}" \( -name "*.ebuild" -o -name "ChangeLog" \)); do
+                          cp "${file}" "${file}~";
+                          [ -r "${PORTDIR}/header.txt" ] && echo "`cat ${PORTDIR}/header.txt`" > "${file}";
+                          [ -r "${base_dir}/header.txt" ] && echo "`cat ${base_dir}/header.txt`" > "${file}";
+                          echo "" >> "${file}";
+                          echo "`sed '1,4d' "${file}~"`" >> "${file}";
+                          rm -rf "${file}~";
+                        done;
+
+                        echo "Delete all current Manifest"
+                        find "${base_dir}" -name Manifest -type f -exec rm {} \;
+
+                        echo "Make all digest"
+                        find "${base_dir}" -name \*.ebuild -type f -exec ebuild {} digest \; #> /dev/null 2>&1 \;
+
+                        echo "Sign all Manifest"
+                        printf "Enter the passphrase for gpg key:\n"
+                        read "PASSPHRASE"
+                        for file in $(find "${base_dir}" -iname Manifest); do
+                          gpg --yes --batch --passphrase="${PASSPHRASE}" --clearsign "${file}";
+                          mv "${file}".asc "${file}"
+                        done;
                         ;;
     o | own )           shift
                         equery belongs "$@"
@@ -113,25 +169,30 @@ case $1 in
     t | searchdes )     shift
                         eix -S "$@"
                         ;;
-    u | upgrade )       emerge --update --newuse --deep --ask world
+    u | upgrade )       emerge --update --newuse --deep --ask @world
                         ;;
     x | check )         shift
                         equery check "$@"
                         ;;
-    y | sync )          eix-sync
+    y | sync )          emerge --sync #eix-sync
                         ;;
     z | revdep )        revdep-rebuild
                         ;;
     freeze )            shift
-                        echo "$1" >> /etc/portage/package.mask
-                        echo "$2" >> /etc/portage/package.unmask
+                        [ -r "${package_mask}" ] && echo "$1" >> "${package_mask}"
+                        [ -r "${package_unmask}" ] && echo "$2" >> "${package_unmask}"
+                        [ -d "${package_mask}" ] && echo "$1" >> "${package_mask}/${category}"
+                        [ -d "${package_unmask}" ] && echo "$2" >> "${package_unmask}/${category}"
                         ;;
     unfreeze )          shift
-                        sed -i "/$@/d" /etc/portage/package.mask
-                        sed -i "/$@/d" /etc/portage/package.unmask
+                        [ -r "${package_mask}" ] && sed -i "/$@/d" "${package_mask}"
+                        [ -r "${package_unmask}" ] && sed -i "/$@/d" "${package_unmask}"
+                        [ -d "${package_mask}" ] && sed -i "/$@/d" "${package_mask}/${category}"
+                        [ -d "${package_unmask}" ] && sed -i "/$@/d" "${package_unmask}/${category}"
                         ;;
     unmask )            shift
-                        echo "$@" >> /etc/portage/package.unmask
+                        [ -r "${package_unmask}" ] && echo "$@" >> "${package_unmask}"
+                        [ -d "${package_unmask}" ] && echo "$@" >> "${package_unmask}/${category}"
                         ;;
     gcl )               gcc-config -l
                         ;;
@@ -145,4 +206,3 @@ case $1 in
                         ;;
     * )                 emerge "$@"
 esac
-
