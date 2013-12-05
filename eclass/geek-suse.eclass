@@ -72,10 +72,10 @@ geek-suse_src_unpack() {
 
 	git_checkout "${SUSE_VER}" > /dev/null 2>&1 git pull > /dev/null 2>&1
 
-	[ -e "patches.kernel.org" ] && rm -rf patches.kernel.org > /dev/null 2>&1
-	[ -e "patches.rpmify" ] && rm -rf patches.rpmify > /dev/null 2>&1
+	[ -d "patches.kernel.org" ] && rm -rf "patches.kernel.org" > /dev/null 2>&1
+	[ -d "patches.rpmify" ] && rm -rf "patches.rpmify" > /dev/null 2>&1
 
-	awk '!/(#|^$)/ && !/^(\+(needs|tren|trenn|hare|xen|jbeulich|jeffm|agruen|still|philips|disabled))|patches\.(kernel|rpmify|xen).*/{gsub(/[ \t]/,"") ; print $1}' series.conf > patch_list
+	awk '!/(#|^$)/ && !/^(\+(needs|tren|trenn|hare|xen|jbeulich|jeffm|agruen|still|philips|disabled|olh))|patches\.(kernel|rpmify|xen).*/{gsub(/[ \t]/,"") ; print $1}' series.conf > patch_list
 	grep patches.xen series.conf > spatch_list
 
 	cp -r patches.*/ "${CWD}" || die "${RED}cp -r patches.*/ ${CWD} failed${NORMAL}"

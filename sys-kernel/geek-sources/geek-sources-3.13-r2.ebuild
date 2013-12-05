@@ -15,7 +15,7 @@ BLD_VER="3.13-rc1"
 #MAGEIA_VER="releases/3.12.0/0.rc7.2.mga4"
 #PAX_VER="3.11.1-test10"
 #REISER4_VER="3.11.1"
-SUSE_VER="vanilla"
+SUSE_VER="master"
 #UKSM_VER="0.1.2.2"
 #UKSM_NAME="uksm-${UKSM_VER}-for-v3.10"
 
