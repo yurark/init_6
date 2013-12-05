@@ -168,6 +168,10 @@ geek-linux_src_prepare() {
 		sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile
 	eend
 
+	if [ ! "${EXTRAVERSION}" = "-geek" ]; then
+		sed -i -e 's/CONFIG_FLAGS=""/CONFIG_FLAGS="GEEK"/;s/CONFIG_FLAGS="SMP"/CONFIG_FLAGS="$CONFIG_FLAGS SMP"/' scripts/mkcompile_h
+	fi
+
 	get_config
 
 	ebegin "Cleanup backups after patching"

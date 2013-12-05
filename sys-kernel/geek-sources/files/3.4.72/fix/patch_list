@@ -1,5 +1,4 @@
 change-default-console-loglevel.patch
-geek-tag-3.4.patch
 
 linux-003-no_dev_console.patch
 linux-004_lower_undefined_mode_timeout.patch
