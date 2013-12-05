@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# /root/.bin/Gentoo/e - portage management tool
+
+# e - portage management tool
 
 #Test if user is root
 if [ "$(id -u 2>/dev/null)" != "0" ]; then
@@ -113,41 +114,26 @@ case "$1" in
                         equery files "$@"
                         ;;
     m | manifest )      shift
-                        if [ -r "/etc/portage/make.conf" ]; then
-                          if [ -z "${PORTDIR}" ]; then
-                            PORTDIR=$(source "/etc/portage/make.conf" 2>/dev/null ; echo ${PORTDIR})
-                          fi
-                        fi
-
-                        if [ -r "/etc/layman/layman.cfg" ]; then
-                          layman_base_dir=$(grep ^storage "/etc/layman/layman.cfg"|sed "s/.*:.//")
-                        fi
-
-                        if [ -z "${2}" ]; then
-                          overlay_dir=$(for file in $(layman -Nl | cut -d" " -f3 | sed "/ *#/d; /^$/d"); do echo "$file" | grep -o --color=never "$1"; done)
-                        else
-                          echo "There is no any overlay ${2}"; exit 1
-                        fi
-
-                        base_dir="${layman_base_dir}/${overlay_dir}"
-
-                        [ -d "${base_dir}" ] && echo "cd ${base_dir}"; cd "${base_dir}" #|| echo "There is no any ${base_dir}"; exit 1
+                        [ -z "${PORTDIR}" ] && PORTDIR=$(portageq envvar PORTDIR)
+                        [ -z "${ROOT}" ] && ROOT=$(portageq envvar ROOT);
+                        [ -z "${2}" ] && REPO_ROOT=$(portageq get_repo_path "${ROOT}" "${1}")
+                        [ -d "${REPO_ROOT}" ] && ( echo "cd ${REPO_ROOT}"; cd "${REPO_ROOT}" ) || ( echo "There is no any overlay ${2} and/or ${REPO_ROOT}"; exit 1 )
 
                         echo "Prepare ebuild\`s and ChangeLog"
-                        for file in $(find "${base_dir}" \( -name "*.ebuild" -o -name "ChangeLog" \)); do
+                        for file in $(find "${REPO_ROOT}" \( -name "*.ebuild" -o -name "ChangeLog" \)); do
                           cp "${file}" "${file}~";
                           [ -r "${PORTDIR}/header.txt" ] && echo "`cat ${PORTDIR}/header.txt`" > "${file}";
-                          [ -r "${base_dir}/header.txt" ] && echo "`cat ${base_dir}/header.txt`" > "${file}";
+                          [ -r "${REPO_ROOT}/header.txt" ] && echo "`cat ${REPO_ROOT}/header.txt`" > "${file}";
                           echo "" >> "${file}";
                           echo "`sed '1,4d' "${file}~"`" >> "${file}";
                           rm -rf "${file}~";
                         done;
 
                         echo "Delete all current Manifest"
-                        find "${base_dir}" -name Manifest -type f -exec rm {} \;
+                        find "${REPO_ROOT}" -name Manifest -type f -exec rm {} \;
 
                         echo "Make all digest"
-                        find "${base_dir}" -name \*.ebuild -type f -exec ebuild {} digest \; #> /dev/null 2>&1 \;
+                        find "${REPO_ROOT}" -name \*.ebuild -type f -exec ebuild {} digest \; #> /dev/null 2>&1 \;
 
                         echo "Sign all Manifest"
                         echo -n "Enter the passphrase for gpg key: "
@@ -155,7 +141,7 @@ case "$1" in
                         read PASSPHRASE
                         stty echo
 
-                        for file in $(find "${base_dir}" -iname Manifest); do
+                        for file in $(find "${REPO_ROOT}" -iname Manifest); do
                           gpg --yes --batch --passphrase="${PASSPHRASE}" --clearsign "${file}";
                           mv "${file}".asc "${file}"
                         done;
