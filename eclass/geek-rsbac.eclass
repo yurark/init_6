@@ -54,7 +54,7 @@ geek-rsbac_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/${RSBAC_NAME}" "${RSBAC_INF}"
 
-	ApplyPatchFix "rsbac"
+	ApplyUserPatch "rsbac"
 }
 
 # @FUNCTION: pkg_postinst

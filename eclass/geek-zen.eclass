@@ -72,7 +72,7 @@ geek-zen_src_prepare() {
 	ApplyPatch "${T}/zen/patch_list" "${ZEN_INF}"
 	move "${T}/zen" "${WORKDIR}/linux-${KV_FULL}-patches/zen"
 
-	ApplyPatchFix "zen"
+	ApplyUserPatch "zen"
 }
 
 # @FUNCTION: pkg_postinst

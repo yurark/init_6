@@ -86,7 +86,7 @@ geek-fedora_src_prepare() {
 	ApplyPatch "${T}/fedora/patch_list" "${FEDORA_INF}"
 	move "${T}/fedora" "${WORKDIR}/linux-${KV_FULL}-patches/fedora"
 
-	ApplyPatchFix "fedora"
+	ApplyUserPatch "fedora"
 }
 
 # @FUNCTION: pkg_postinst

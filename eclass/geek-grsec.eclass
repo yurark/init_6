@@ -89,7 +89,7 @@ geek-grsec_src_prepare() {
 	ApplyPatch "${T}/grsec/patch_list" "${GRSEC_INF}"
 	move "${T}/grsec" "${WORKDIR}/linux-${KV_FULL}-patches/grsec"
 
-	ApplyPatchFix "grsec"
+	ApplyUserPatch "grsec"
 }
 
 # @FUNCTION: pkg_postinst

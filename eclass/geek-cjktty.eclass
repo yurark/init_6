@@ -68,7 +68,7 @@ geek-cjktty_src_prepare() {
 	ApplyPatch "${T}/cjktty/patch_list" "${CJKTTY_INF}"
 	move "${T}/cjktty" "${WORKDIR}/linux-${KV_FULL}-patches/cjktty"
 
-	ApplyPatchFix "cjktty"
+	ApplyUserPatch "cjktty"
 }
 
 # @FUNCTION: pkg_postinst

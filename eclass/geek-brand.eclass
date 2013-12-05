@@ -49,7 +49,7 @@ geek-brand_src_prepare() {
 
 	ApplyPatch "${FILESDIR}/${PV}/brand/patch_list" "${BRAND_INF}"
 
-	ApplyPatchFix "brand"
+	ApplyUserPatch "brand"
 }
 
 # @FUNCTION: pkg_postinst

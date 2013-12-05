@@ -53,7 +53,7 @@ geek-ubuntu_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/linux_${UBUNTU_VER}.diff.gz" "${UBUNTU_INF}"
 
-	ApplyPatchFix "ubuntu"
+	ApplyUserPatch "ubuntu"
 
 	# Comment out EXTRAVERSION added by ubuntu patch:
 #	sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile || die

@@ -56,7 +56,7 @@ geek-reiser4_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/reiser4-for-${REISER4_VER}.patch.gz" "${REISER4_INF}"
 
-	ApplyPatchFix "reiser4"
+	ApplyUserPatch "reiser4"
 }
 
 

@@ -53,7 +53,7 @@ geek-ck_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/patch-${CK_VER}.lrz" "${CK_INF}"
 
-	ApplyPatchFix "ck"
+	ApplyUserPatch "ck"
 
 	# Comment out EXTRAVERSION added by CK patch:
 	sed -i -e 's/\(^EXTRAVERSION :=.*$\)/# \1/' "Makefile"

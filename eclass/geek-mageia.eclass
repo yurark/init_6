@@ -84,7 +84,7 @@ geek-mageia_src_prepare() {
 	ApplyPatch "${T}/mageia/patch_list" "${MAGEIA_INF}"
 	move "${T}/mageia" "${WORKDIR}/linux-${KV_FULL}-patches/mageia"
 
-	ApplyPatchFix "mageia"
+	ApplyUserPatch "mageia"
 }
 
 # @FUNCTION: pkg_postinst

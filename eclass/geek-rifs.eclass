@@ -70,7 +70,7 @@ geek-rifs_src_prepare() {
 	ApplyPatch "${T}/rifs/patch_list" "${RIFS_INF}"
 	move "${T}/rifs" "${WORKDIR}/linux-${KV_FULL}-patches/rifs"
 
-	ApplyPatchFix "rifs"
+	ApplyUserPatch "rifs"
 }
 
 # @FUNCTION: pkg_postinst

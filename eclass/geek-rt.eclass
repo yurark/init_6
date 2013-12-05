@@ -53,7 +53,7 @@ geek-rt_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/patch-${RT_VER}.patch.xz" "${RT_INF}"
 
-	ApplyPatchFix "rt"
+	ApplyUserPatch "rt"
 }
 
 # @FUNCTION: pkg_postinst

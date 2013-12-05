@@ -71,7 +71,7 @@ geek-uksm_src_prepare() {
 	ApplyPatch "${T}/uksm/patch_list" "${UKSM_INF}"
 	move "${T}/uksm" "${WORKDIR}/linux-${KV_FULL}-patches/uksm"
 
-	ApplyPatchFix "uksm"
+	ApplyUserPatch "uksm"
 }
 
 # @FUNCTION: pkg_postinst

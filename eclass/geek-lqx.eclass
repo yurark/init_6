@@ -53,7 +53,7 @@ geek-lqx_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/${LQX_VER/KMV/$KMV}.patch.gz" "${LQX_INF}"
 
-	ApplyPatchFix "lqx"
+	ApplyUserPatch "lqx"
 }
 
 # @FUNCTION: pkg_postinst

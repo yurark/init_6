@@ -71,7 +71,7 @@ geek-optimization_src_prepare() {
 	ApplyPatch "${T}/optimization/patch_list" "${OPTIMIZATION_INF}"
 	move "${T}/optimization" "${WORKDIR}/linux-${KV_FULL}-patches/optimization"
 
-	ApplyPatchFix "optimization"
+	ApplyUserPatch "optimization"
 }
 
 # @FUNCTION: pkg_postinst

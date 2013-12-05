@@ -72,7 +72,7 @@ geek-ice_src_prepare() {
 	ApplyPatch "${T}/ice/patch_list" "${ICE_INF}"
 	move "${T}/ice" "${WORKDIR}/linux-${KV_FULL}-patches/ice"
 
-	ApplyPatchFix "ice"
+	ApplyUserPatch "ice"
 }
 
 # @FUNCTION: pkg_postinst

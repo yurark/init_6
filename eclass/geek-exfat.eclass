@@ -69,7 +69,7 @@ geek-exfat_src_prepare() {
 	ApplyPatch "${T}/exfat/patch_list" "${EXFAT_INF}"
 	move "${T}/exfat" "${WORKDIR}/linux-${KV_FULL}-patches/exfat"
 
-	ApplyPatchFix "exfat"
+	ApplyUserPatch "exfat"
 }
 
 # @FUNCTION: pkg_postinst

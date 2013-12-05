@@ -92,10 +92,10 @@ geek-suse_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/suse/patch_list" "${SUSE_INF}"
-	SmartApplyPatch "${T}/suse/spatch_list" "${YELLOW}OpenSuSE xen - ${SUSE_URL}${NORMAL}"
+	ApplyPatch "${T}/suse/spatch_list" "${YELLOW}OpenSuSE xen - ${SUSE_URL}${NORMAL}"
 	move "${T}/suse" "${WORKDIR}/linux-${KV_FULL}-patches/suse"
 
-	ApplyPatchFix "suse"
+	ApplyUserPatch "suse"
 }
 
 # @FUNCTION: pkg_postinst

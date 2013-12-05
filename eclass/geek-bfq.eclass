@@ -66,7 +66,7 @@ geek-bfq_src_prepare() {
 	ApplyPatch "${T}/bfq/patch_list" "${BFQ_INF}"
 	move "${T}/bfq" "${WORKDIR}/linux-${KV_FULL}-patches/bfq"
 
-	ApplyPatchFix "bfq"
+	ApplyUserPatch "bfq"
 }
 
 # @FUNCTION: pkg_postinst

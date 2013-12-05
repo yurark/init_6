@@ -70,7 +70,7 @@ geek-bld_src_prepare() {
 	ApplyPatch "${T}/bld/patch_list" "${BLD_INF}"
 	move "${T}/bld" "${WORKDIR}/linux-${KV_FULL}-patches/bld"
 
-	ApplyPatchFix "bld"
+	ApplyUserPatch "bld"
 }
 
 # @FUNCTION: pkg_postinst

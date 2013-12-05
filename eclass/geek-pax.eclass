@@ -53,7 +53,7 @@ geek-pax_src_prepare() {
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/pax-linux-${PAX_VER/KMV/$KMV}.patch" "${PAX_INF}"
 
-	ApplyPatchFix "pax"
+	ApplyUserPatch "pax"
 }
 
 # @FUNCTION: pkg_postinst

@@ -88,7 +88,7 @@ geek-gentoo_src_prepare() {
 	ApplyPatch "${T}/gentoo/patch_list" "${GENTOO_INF}"
 	move "${T}/gentoo" "${WORKDIR}/linux-${KV_FULL}-patches/gentoo"
 
-	ApplyPatchFix "gentoo"
+	ApplyUserPatch "gentoo"
 }
 
 # @FUNCTION: pkg_postinst

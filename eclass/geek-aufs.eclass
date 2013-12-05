@@ -120,7 +120,7 @@ geek-aufs_src_prepare() {
 	ApplyPatch "${T}/aufs/patch_list" "${AUFS_INF}"
 	move "${T}/aufs" "${WORKDIR}/linux-${KV_FULL}-patches/aufs"
 
-	ApplyPatchFix "aufs"
+	ApplyUserPatch "aufs"
 }
 
 # @FUNCTION: pkg_postinst

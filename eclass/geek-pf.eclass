@@ -68,7 +68,7 @@ geek-pf_src_prepare() {
 	ApplyPatch "${T}/pf/patch_list" "${PF_INF}"
 	move "${T}/pf" "${WORKDIR}/linux-${KV_FULL}-patches/pf"
 
-	ApplyPatchFix "pf"
+	ApplyUserPatch "pf"
 }
 
 # @FUNCTION: pkg_postinst

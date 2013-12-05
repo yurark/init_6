@@ -21,7 +21,7 @@
 
 inherit geek-vars
 
-EXPORT_FUNCTIONS ApplyPatch SmartApplyPatch ApplyUserPatch ApplyPatchFix
+EXPORT_FUNCTIONS ApplyPatch ApplyUserPatch
 
 DEPEND="${DEPEND}
 	app-arch/bzip2
@@ -182,6 +182,7 @@ Handler() {
 # @FUNCTION: ApplyPatch
 # @USAGE:
 # ApplyPatch "${FILESDIR}/${PVR}/patch_list" "Patch set description"
+# ApplyPatch "${FILESDIR}/${PVR}/spatch_list" "Patch set description"
 # ApplyPatch "${FILESDIR}/<patch>" "Patch description"
 # @DESCRIPTION:
 # Main function
@@ -210,7 +211,23 @@ geek-patch_ApplyPatch() {
 			eend $?
 		done < "$patch"
 	;;
-	*) # else is patch
+	spatch_list) # smart list of patches
+		index=1
+		for var in $(grep -v '^#' "${patch}"); do
+			ebegin "Applying $var"
+				Handler "${patch_dir_name}/${var}" || no_luck="1"
+				[ "${no_luck}" = "1" ] && break || ok_array[$index]="${var}"; index=$(expr $index + 1)
+			eend
+		done
+		if [ "${no_luck}" = "1" ]; then
+			for var in `seq ${#ok_array[@]} -1 1`; do
+				ebegin "${BLUE}Reversing patch <--${NORMAL} ${RED}${ok_array[var]}${NORMAL}"
+					patch_cmd="patch -p1 -g1 -R" # reverse argument to patch
+					ExtractApply "${patch_dir_name}/${ok_array[var]}" &>/dev/null
+				eend $?
+			done
+		fi
+	;;	*) # else is patch
 		ebegin "Applying $patch_base_name"
 			Handler "$patch"
 		eend $?
@@ -218,52 +235,10 @@ geek-patch_ApplyPatch() {
 	esac
 }
 
-# @FUNCTION: SmartApplyPatch
-# @USAGE:
-# SmartApplyPatch "${FILESDIR}/${PVR}/spatch_list" "Patch set description"
-# @DESCRIPTION:
-# Main function
-geek-patch_SmartApplyPatch() {
-	debug-print-function ${FUNCNAME} "$@"
-
-	[[ ${#} -ne 2 ]] && die "Invalid number of args to ${FUNCNAME}()";
-
-	geek-patch_init_variables
-
-	local patch=$1
-	debug-print "$FUNCNAME: patch=$patch"
-	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
-	local msg=$2
-	debug-print "$FUNCNAME: msg=$msg"
-	shift
-	echo
-	einfo "${msg}"
-	patch_base_name=$(basename "${patch}")
-	patch_dir_name=$(dirname "${patch}")
-	case ${patch_base_name} in
-	spatch_list) # list of patches
-		for var in $(grep -v '^#' "${patch}"); do
-			ebegin "Applying $var"
-				Handler "${patch_dir_name}/${var}" || no_luck="1"
-				[ "${no_luck}" = "1" ] && break
-			eend
-		done
-		if [ "${no_luck}" = "1" ]; then
-			local vars=($(grep -v '^#' ${patch}))
-			for var in $(seq $((${#vars[@]} - 1)) -1 0); do
-				ebegin "${BLUE}Reversing patch <--${NORMAL} ${RED}${vars[$var]}${NORMAL}"
-					patch_cmd="patch -p1 -g1 -R" # reverse argument to patch
-					ExtractApply "${patch_dir_name}/${vars[$var]}" &>/dev/null
-				eend $?
-			done
-		fi
-	;;
-	*) continue ;;
-	esac
-}
-
 # @FUNCTION: ApplyUserPatch
 # @USAGE:
+# ApplyUserPatch
+# ApplyUserPatch "patch_set_name" # for apply user fix of patch set
 # @DESCRIPTION:
 # Applies user-provided patches to the source tree. The patches are
 # taken from /etc/portage/patches/<CATEGORY>/<PF|P|PN>[:SLOT]/, where the first
@@ -271,36 +246,6 @@ geek-patch_SmartApplyPatch() {
 # any more general directories which might exist as well.
 geek-patch_ApplyUserPatch() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	[[ $# -ne 0 ]] && die "Invalid number of args to ${FUNCNAME}()";
-
-	# don't clobber any EPATCH vars that the parent might want
-	local EPATCH_SOURCE check base=${PORTAGE_CONFIGROOT%/}/etc/portage/patches
-	for check in ${CATEGORY}/{${P}-${PR},${P},${PN}}{,:${SLOT}}; do
-		EPATCH_SOURCE=${base}/${CTARGET}/${check}
-		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${CHOST}/${check}
-		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${check}
-		if [[ -d ${EPATCH_SOURCE} ]] ; then
-			if [ -r "${EPATCH_SOURCE}/patch_list" ]; then
-				ApplyPatch "${EPATCH_SOURCE}/patch_list" "${YELLOW}Applying user patches from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."
-			else
-				ewarn "${BLUE}File${NORMAL} ${RED}${EPATCH_SOURCE}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
-				ewarn "${BLUE}Try to apply the patches if they are there…${NORMAL}"
-				for i in `ls ${EPATCH_SOURCE}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
-					ApplyPatch "${i}" "${YELLOW}Applying user patches from ${GREEN}${EPATCH_SOURCE}${NORMAL} ..."
-				done
-			fi
-		fi
-	done
-}
-
-# @FUNCTION: ApplyPatchFix
-# @USAGE:
-# @DESCRIPTION:
-geek-patch_ApplyPatchFix() {
-	debug-print-function ${FUNCNAME} "$@"
-
-	[[ $# -ne 1 ]] && die "Invalid number of args to ${FUNCNAME}()";
 
 	local dir=$1
 	debug-print "$FUNCNAME: dir=$dir"
@@ -313,12 +258,12 @@ geek-patch_ApplyPatchFix() {
 		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${check}
 		if [[ -d ${EPATCH_SOURCE} ]] ; then
 			if [ -r "${EPATCH_SOURCE}/patch_list" ]; then
-				ApplyPatch "${EPATCH_SOURCE}/patch_list" "${YELLOW}Applying patch fix from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."
+				ApplyPatch "${EPATCH_SOURCE}/patch_list" "${YELLOW}Applying user patches from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."
 			else
 				ewarn "${BLUE}File${NORMAL} ${RED}${EPATCH_SOURCE}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
 				ewarn "${BLUE}Try to apply the patches if they are there…${NORMAL}"
 				for i in `ls ${EPATCH_SOURCE}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
-					ApplyPatch "${i}" "${YELLOW}Applying patch fix from ${GREEN}${EPATCH_SOURCE}${NORMAL} ..."
+					ApplyPatch "${i}" "${YELLOW}Applying user patches from ${GREEN}${EPATCH_SOURCE}${NORMAL} ..."
 				done
 			fi
 		fi
