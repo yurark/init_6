@@ -22,6 +22,7 @@
     <flag name='ice'>Use TuxOnIce patches.</flag>
     <flag name='lqx'>Use Liquorix patches.</flag>
     <flag name='mageia'>Use Mandriva/Mageia patches.</flag>
+    <flag name='openvz'>RHEL6 kernel with OpenVZ patchset.</flag>
     <flag name='optimization'>Kernel patch enables gcc optimizations for additional CPUs.</flag>
     <flag name='pax'>Use PAX patches.</flag>
     <flag name='pf'>Use pf-kernel patches.</flag>
@@ -32,7 +33,6 @@
     <flag name='rt'>Use Ingo Molnar's realtime preempt patches.</flag>
     <flag name='suse'>Use OpenSuSE patches.</flag>
     <flag name='symlink'>Force kernel ebuilds to automatically update the /usr/src/linux symlink</flag>
-    <flag name='ubuntu'>Use Ubuntu patches.</flag>
     <flag name='uksm'>Use Ultra Kernel Samepage Merging patches.</flag>
     <flag name='zen'>Use zen-kernel patches.</flag>
     <flag name='zfs'>The native Linux kernel port of the ZFS filesystem.</flag>

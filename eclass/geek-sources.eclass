@@ -21,7 +21,7 @@
 
 inherit geek-linux geek-utils geek-fix geek-upatch geek-squeue geek-vars
 
-KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec rsbac ice lqx mageia optimization pax pf reiser4 rh rifs rt suse symlink ubuntu uksm zen zfs"
+KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec rsbac ice lqx mageia openvz optimization pax pf reiser4 rh rifs rt suse symlink uksm zen zfs"
 
 # internal function
 #
@@ -62,6 +62,7 @@ for use_flag in ${IUSE}; do
 		ice	)	inherit geek-ice ;;
 		lqx	)	inherit geek-lqx ;;
 		mageia	)	inherit geek-mageia ;;
+		openvz	)	inherit geek-openvz ;;
 		optimization	)	inherit geek-optimization ;;
 		pax	)	inherit geek-pax ;;
 		pf	)	inherit geek-pf ;;
@@ -71,12 +72,13 @@ for use_flag in ${IUSE}; do
 		rsbac	)	inherit geek-rsbac ;;
 		rt	)	inherit geek-rt ;;
 		suse	)	inherit geek-suse ;;
-		ubuntu	)	inherit geek-ubuntu ;;
 		uksm	)	inherit geek-uksm ;;
 		zen	)	inherit geek-zen ;;
 		zfs	)	inherit geek-spl geek-zfs ;;
 	esac
 done
+
+EXPORT_FUNCTIONS src_unpack src_prepare src_compile src_install pkg_postinst
 
 # @FUNCTION: init_variables
 # @INTERNAL
@@ -87,8 +89,8 @@ done
 geek-sources_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx pf rh ubuntu zen"}
-	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec rsbac ice rh reiser4 exfat rt bld uksm aufs mageia fedora suse ubuntu brand fix upatch squeue"}
+	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx openvz pf rh zen"}
+	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec rsbac ice rh openvz reiser4 exfat rt bld uksm aufs mageia fedora suse brand fix upatch squeue"}
 
 	local xUserOrder=""
 	local xDefOder=""
@@ -196,6 +198,7 @@ geek-sources_src_prepare() {
 				ice	)	geek-ice_src_prepare ;;
 				lqx	)	geek-lqx_src_prepare ;;
 				mageia	)	geek-mageia_src_prepare ;;
+				openvz	)	geek-openvz_src_prepare ;;
 				optimization	)	geek-optimization_src_prepare ;;
 				pax	)	geek-pax_src_prepare ;;
 				pf	)	geek-pf_src_prepare ;;
@@ -206,7 +209,6 @@ geek-sources_src_prepare() {
 				rt	)	geek-rt_src_prepare ;;
 				squeue	)	geek-squeue_src_prepare ;;
 				suse	)	geek-suse_src_prepare ;;
-				ubuntu	)	geek-ubuntu_src_prepare ;;
 				uksm	)	geek-uksm_src_prepare ;;
 				upatch	)	geek-upatch_src_prepare ;;
 				zen	)	geek-zen_src_prepare ;;
@@ -263,6 +265,7 @@ ${BLUE}For more info about patchset’s, and how to report problems, see:${NORMA
 				ice	) geek-ice_pkg_postinst ;;
 				lqx	) geek-lqx_pkg_postinst ;;
 				mageia	) geek-mageia_pkg_postinst ;;
+				openvz	) geek-openvz_pkg_postinst ;;
 				optimization ) geek-optimization_pkg_postinst ;;
 				pax	) geek-pax_pkg_postinst ;;
 				pf	) geek-pf_pkg_postinst ;;
@@ -273,7 +276,6 @@ ${BLUE}For more info about patchset’s, and how to report problems, see:${NORMA
 				rt	) geek-rt_pkg_postinst ;;
 				squeue	) geek-squeue_pkg_postinst ;;
 				suse	) geek-suse_pkg_postinst ;;
-				ubuntu	) geek-ubuntu_pkg_postinst ;;
 				uksm	) geek-uksm_pkg_postinst ;;
 				zen	) geek-zen_pkg_postinst ;;
 				zfs	) geek-spl_pkg_postinst; geek-zfs_pkg_postinst ;;
@@ -282,5 +284,3 @@ ${BLUE}For more info about patchset’s, and how to report problems, see:${NORMA
 		fi
 	done
 }
-
-EXPORT_FUNCTIONS src_unpack src_prepare src_compile src_install pkg_postinst
