@@ -32,9 +32,9 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-suse_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${SUSE_VER:=${SUSE_VER:-"stable"}}
-	: ${SUSE_SRC:=${SUSE_SRC:-"git://kernel.opensuse.org/kernel-source.git"}}
-	: ${SUSE_URL:=${SUSE_URL:-"http://www.opensuse.org"}}
+	: ${SUSE_VER:=${SUSE_VER:-"stable"}} # Patchset version
+	: ${SUSE_SRC:=${SUSE_SRC:-"git://kernel.opensuse.org/kernel-source.git"}} # Patchset sources url
+	: ${SUSE_URL:=${SUSE_URL:-"http://www.opensuse.org"}} # Patchset url
 	: ${SUSE_INF:=${SUSE_INF:-"${YELLOW}OpenSuSE patches version ${GREEN}${SUSE_VER}${YELLOW} from ${GREEN}${SUSE_URL}${NORMAL}"}}
 }
 

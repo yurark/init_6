@@ -32,9 +32,9 @@ EXPORT_FUNCTIONS src_prepare pkg_postinst
 geek-reiser4_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${REISER4_VER:=${REISER4_VER:-"${KMV}"}}
-	: ${REISER4_SRC:=${REISER4_SRC:-"mirror://sourceforge/project/reiser4/reiser4-for-linux-3.x/reiser4-for-${REISER4_VER/PV/$PV}.patch.gz"}}
-	: ${REISER4_URL:=${REISER4_URL:-"http://sourceforge.net/projects/reiser4"}}
+	: ${REISER4_VER:=${REISER4_VER:-"${KMV}"}} # Patchset version
+	: ${REISER4_SRC:=${REISER4_SRC:-"mirror://sourceforge/project/reiser4/reiser4-for-linux-3.x/reiser4-for-${REISER4_VER/PV/$PV}.patch.gz"}} # Patchset sources url
+	: ${REISER4_URL:=${REISER4_URL:-"http://sourceforge.net/projects/reiser4"}} # Patchset url
 	: ${REISER4_INF:=${REISER4_INF:-"${YELLOW}ReiserFS v4 version ${GREEN}${REISER4_VER}${YELLOW} from ${GREEN}${REISER4_URL}${NORMAL}"}}
 }
 

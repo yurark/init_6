@@ -32,9 +32,9 @@ EXPORT_FUNCTIONS src_prepare pkg_postinst
 geek-lqx_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${LQX_VER:=${LQX_VER:-"${KMV}"}}
-	: ${LQX_SRC:=${LQX_SRC:-"http://liquorix.net/sources/${LQX_VER/KMV/$KMV}.patch.gz"}}
-	: ${LQX_URL:=${LQX_URL:-"http://liquorix.net"}}
+	: ${LQX_VER:=${LQX_VER:-"${KMV}"}} # Patchset version
+	: ${LQX_SRC:=${LQX_SRC:-"http://liquorix.net/sources/${LQX_VER/KMV/$KMV}.patch.gz"}} # Patchset sources url
+	: ${LQX_URL:=${LQX_URL:-"http://liquorix.net"}} # Patchset url
 	: ${LQX_INF:=${LQX_INF:-"${YELLOW}Liquorix patches version ${GREEN}${LQX_VER}${YELLOW} from ${GREEN}${LQX_URL}${NORMAL}"}}
 }
 

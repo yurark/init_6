@@ -33,7 +33,7 @@ geek-brand_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${IUSE:="${IUSE} brand"}
-	: ${BRAND_URL:=${BRAND_URL:-"https://github.com/init6/init_6/wiki/geek-sources"}}
+	: ${BRAND_URL:=${BRAND_URL:-"https://github.com/init6/init_6/wiki/geek-sources"}} # Patchset url
 	: ${BRAND_INF:=${BRAND_INF:-"${YELLOW}Branding from ${GREEN}${BRAND_URL}${NORMAL}"}}
 }
 

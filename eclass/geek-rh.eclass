@@ -32,13 +32,13 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-rh_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${RH_VER:=${RH_VER:-"19"}} # rh patchset based on kernel-2.6.32-19.el6.src.rpm
+	: ${RH_VER:=${RH_VER:-"19"}} # Patchset version based on kernel-2.6.32-19.el6.src.rpm
 	: ${RH_NAME:=${RH_NAME:-kernel-${VERSION}.${PATCHLEVEL}.${SUBLEVEL}-${RH_VER/KMV/$KMV}.el6}}
 	: ${RH_SRC:=${RH_SRC:-"http://ftp.redhat.com/pub/redhat/linux/enterprise/6Client/en/os/SRPMS/${RH_NAME}.src.rpm
 	http://ftp.redhat.com/pub/redhat/linux/enterprise/6ComputeNode/en/os/SRPMS/${RH_NAME}.src.rpm
 	http://ftp.redhat.com/pub/redhat/linux/enterprise/6Server/en/os/SRPMS/${RH_NAME}.src.rpm
-	http://ftp.redhat.com/pub/redhat/linux/enterprise/6Workstation/en/os/SRPMS/${RH_NAME}.src.rpm"}}
-	: ${RH_URL:=${RH_URL:-"http://www.redhat.com"}}
+	http://ftp.redhat.com/pub/redhat/linux/enterprise/6Workstation/en/os/SRPMS/${RH_NAME}.src.rpm"}} # Patchset sources url
+	: ${RH_URL:=${RH_URL:-"http://www.redhat.com"}} # Patchset url
 	: ${RH_INF:="${YELLOW}Red Hat Enterprise Linux kernel patches version ${GREEN}${RH_VER}${YELLOW} from ${GREEN}${RH_URL}${NORMAL}"}
 }
 

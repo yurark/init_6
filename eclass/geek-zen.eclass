@@ -32,9 +32,9 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-zen_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${ZEN_VER:=${ZEN_VER:-"${KMV}"}}
-	: ${ZEN_SRC:=${ZEN_SRC:-"https://github.com/damentz/zen-kernel/compare/torvalds:v${ZEN_VER/KMV/$KMV}...${ZEN_VER/KMV/$KMV}/master.diff"}}
-	: ${ZEN_URL:=${ZEN_URL:-"https://github.com/damentz/zen-kernel"}}
+	: ${ZEN_VER:=${ZEN_VER:-"${KMV}"}} # Patchset version
+	: ${ZEN_SRC:=${ZEN_SRC:-"https://github.com/damentz/zen-kernel/compare/torvalds:v${ZEN_VER/KMV/$KMV}...${ZEN_VER/KMV/$KMV}/master.diff"}} # Patchset sources url
+	: ${ZEN_URL:=${ZEN_URL:-"https://github.com/damentz/zen-kernel"}} # Patchset url
 	: ${ZEN_INF:=${ZEN_INF:-"${YELLOW}The Zen Kernel version ${GREEN}${ZEN_VER}${YELLOW} from ${GREEN}${ZEN_URL}${NORMAL}"}}
 }
 

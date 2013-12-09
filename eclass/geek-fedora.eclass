@@ -32,9 +32,9 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-fedora_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${FEDORA_VER:=${FEDORA_VER:-"master"}}
-	: ${FEDORA_SRC:=${FEDORA_SRC:-"git://pkgs.fedoraproject.org/kernel.git"}}
-	: ${FEDORA_URL:=${FEDORA_URL:-"http://fedoraproject.org"}}
+	: ${FEDORA_VER:=${FEDORA_VER:-"master"}} # Patchset version
+	: ${FEDORA_SRC:=${FEDORA_SRC:-"git://pkgs.fedoraproject.org/kernel.git"}} # Patchset sources url
+	: ${FEDORA_URL:=${FEDORA_URL:-"http://fedoraproject.org"}} # Patchset url
 	: ${FEDORA_INF:=${FEDORA_INF:-"${YELLOW}Fedora version ${GREEN}${FEDORA_VER}${YELLOW} from ${GREEN}${FEDORA_URL}${NORMAL}"}}
 }
 

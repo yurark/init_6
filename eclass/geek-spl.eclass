@@ -32,9 +32,9 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-spl_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${SPL_VER:=${SPL_VER:-"master"}}
-	: ${SPL_SRC:=${SPL_SRC:-"git://github.com/zfsonlinux/spl.git"}}
-	: ${SPL_URL=${SPL_URL:-"http://zfsonlinux.org"}}
+	: ${SPL_VER:=${SPL_VER:-"master"}} # Patchset version
+	: ${SPL_SRC:=${SPL_SRC:-"git://github.com/zfsonlinux/spl.git"}} # Patchset sources url
+	: ${SPL_URL=${SPL_URL:-"http://zfsonlinux.org"}} # Patchset url
 	: ${SPL_INF:=${SPL_INF:-"${YELLOW}Integrate Solaris Porting Layer version ${GREEN}${SPL_VER}${YELLOW} from ${GREEN}${SPL_URL}${NORMAL}"}}
 }
 

@@ -32,11 +32,11 @@ EXPORT_FUNCTIONS src_prepare pkg_postinst
 geek-openvz_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${OPENVZ_VER:=${OPENVZ_VER:-"${KMV}"}}
+	: ${OPENVZ_VER:=${OPENVZ_VER:-"${KMV}"}} # Patchset version
 	: ${OPENVZ_SRC:=${OPENVZ_SRC:-"http://download.openvz.org/kernel/branches/rhel6-${KSV}/${OPENVZ_VER}/patches/patch-${OPENVZ_VER}-combined.gz
 	http://download.openvz.org/kernel/branches/rhel6-${KSV}/${OPENVZ_VER}/configs/config-${KSV}-${OPENVZ_VER}.i686
-	http://download.openvz.org/kernel/branches/rhel6-${KSV}/${OPENVZ_VER}/configs/config-${KSV}-${OPENVZ_VER}.x86_64"}}
-	: ${OPENVZ_URL:=${OPENVZ_URL:-"http://www.openvz.org"}}
+	http://download.openvz.org/kernel/branches/rhel6-${KSV}/${OPENVZ_VER}/configs/config-${KSV}-${OPENVZ_VER}.x86_64"}} # Patchset sources url
+	: ${OPENVZ_URL:=${OPENVZ_URL:-"http://www.openvz.org"}} # Patchset url
 	: ${OPENVZ_INF:=${OPENVZ_INF:-"${YELLOW}RHEL6 kernel with OpenVZ patchset version ${GREEN}${OPENVZ_VER}${YELLOW} from ${GREEN}${OPENVZ_URL}${NORMAL}"}}
 }
 

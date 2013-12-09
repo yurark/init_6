@@ -32,9 +32,9 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-bfq_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${BFQ_VER:=${BFQ_VER:-"${KMV}"}}
-	: ${BFQ_SRC:=${BFQ_SRC:-"http://algo.ing.unimo.it/people/paolo/disk_sched/patches"}}
-	: ${BFQ_URL:=${BFQ_URL:-"http://algo.ing.unimo.it/people/paolo/disk_sched/"}}
+	: ${BFQ_VER:=${BFQ_VER:-"${KMV}"}} # Patchset version
+	: ${BFQ_SRC:=${BFQ_SRC:-"http://algo.ing.unimo.it/people/paolo/disk_sched/patches"}} # Patchset sources url
+	: ${BFQ_URL:=${BFQ_URL:-"http://algo.ing.unimo.it/people/paolo/disk_sched/"}} # Patchset url
 	: ${BFQ_INF:=${BFQ_INF:-"${YELLOW}Budget Fair Queueing Budget I/O Scheduler version ${GREEN}${BFQ_VER}${YELLOW} from ${GREEN}${BFQ_URL}${NORMAL}"}}
 }
 

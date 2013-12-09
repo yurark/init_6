@@ -32,10 +32,10 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-uksm_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${UKSM_VER:=${UKSM_VER:-"${KMV}"}}
+	: ${UKSM_VER:=${UKSM_VER:-"${KMV}"}} # Patchset version
 	: ${UKSM_NAME:=${UKSM_NAME:-uksm-${UKSM_VER}-for-v${KMV}.ge.1}}
-	: ${UKSM_SRC:=${UKSM_SRC:-"http://kerneldedup.org/download/uksm/${UKSM_VER}/${UKSM_NAME}.patch"}}
-	: ${UKSM_URL:=${UKSM_URL:-"http://kerneldedup.org"}}
+	: ${UKSM_SRC:=${UKSM_SRC:-"http://kerneldedup.org/download/uksm/${UKSM_VER}/${UKSM_NAME}.patch"}} # Patchset sources url
+	: ${UKSM_URL:=${UKSM_URL:-"http://kerneldedup.org"}} # Patchset url
 	: ${UKSM_INF:=${UKSM_INF:-"${YELLOW}Ultra Kernel Samepage Merging version ${GREEN}${UKSM_NAME}.patch${YELLOW} from ${GREEN}${UKSM_URL}${NORMAL}"}}
 }
 

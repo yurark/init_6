@@ -24,7 +24,6 @@ linux-221-ngene-octopus.patch
 linux-222-stb0899_signal_quality.patch
 linux-223-Fix-video-artifacts-with-tt-3600-s2-usb.patch
 linux-701-linksys_aes2500_brcmfmac.patch
-linux-702-Support-for-cheap-Ralink-3070-WiFi-plug.patch
 linux-703-macmini2012-ethernet.patch
 linux-704-Support-for-Ubiquiti-WifiStation.patch
 linux-705-Support-for-Buffalo-WLI-UC-G300HP-V1.patch
@@ -34,13 +33,11 @@ linux-950-saa716x_PCIe_interface_chipset.patch
 linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
 linux-990.11-ALSA-AMD-HD-Audio.patch
 linux-990.12-Radeon-SI-workaround.patch
-linux-990.13-Fix-clock-calculations-by-Pierre-Ossman.patch
 linux-990.15-Fix-missing-multichannel-PCM-SAD-in-some-cases.patch
 linux-991.01-ptrace_fix.patch
 linux-992.01.i915_pass_mode_to_write_eld.patch
 linux-992.02-i915_set_hdmi_audio_clock.patch
 linux-992.03-i915_fix_clamping_to_limited_range.patch
-linux-992.04-ALSA-hda-Force-buffer-alignment-for-Haswell-HDMI-con.patch
 linux-992.05-ALSA-hda-Name-Haswell-HDMI-controllers-better.patch
 linux-994.0001-Squashfs-Refactor-decompressor-interface-and-code.patch
 linux-994.0002-squashfs-Enhance-parallel-I-O.patch

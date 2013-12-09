@@ -32,9 +32,9 @@ EXPORT_FUNCTIONS src_prepare pkg_postinst
 geek-ck_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${CK_VER:=${CK_VER:-"${KMV}-ck1"}}
-	: ${CK_SRC:=${CK_SRC:-"http://ck.kolivas.org/patches/3.0/${KMV}/${CK_VER}/patch-${CK_VER}.lrz"}}
-	: ${CK_URL:=${CK_URL:-"http://users.on.net/~ckolivas/kernel"}}
+	: ${CK_VER:=${CK_VER:-"${KMV}-ck1"}} # Patchset version
+	: ${CK_SRC:=${CK_SRC:-"http://ck.kolivas.org/patches/3.0/${KMV}/${CK_VER}/patch-${CK_VER}.lrz"}} # Patchset sources url
+	: ${CK_URL:=${CK_URL:-"http://users.on.net/~ckolivas/kernel"}} # Patchset url
 	: ${CK_INF:=${CK_INF:-"${YELLOW}Con Kolivas high performance patchset version ${GREEN}${CK_VER}${YELLOW} from ${GREEN}${CK_URL}${NORMAL}"}}
 }
 

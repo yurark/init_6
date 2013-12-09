@@ -32,9 +32,9 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-exfat_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${EXFAT_VER:=${EXFAT_VER:-"${KMV}"}}
-	: ${EXFAT_SRC:=${EXFAT_SRC:-"https://github.com/damentz/zen-kernel/compare/torvalds:v${EXFAT_VER/KMV/$KMV}...${EXFAT_VER/KMV/$KMV}/exfat.diff"}}
-	: ${EXFAT_URL:=${EXFAT_URL:-"http://opensource.samsung.com/reception/receptionSub.do?method=search&searchValue=exfat"}}
+	: ${EXFAT_VER:=${EXFAT_VER:-"${KMV}"}} # Patchset version
+	: ${EXFAT_SRC:=${EXFAT_SRC:-"https://github.com/damentz/zen-kernel/compare/torvalds:v${EXFAT_VER/KMV/$KMV}...${EXFAT_VER/KMV/$KMV}/exfat.diff"}} # Patchset sources url
+	: ${EXFAT_URL:=${EXFAT_URL:-"http://opensource.samsung.com/reception/receptionSub.do?method=search&searchValue=exfat"}} # Patchset url
 	: ${EXFAT_INF:=${EXFAT_INF:-"${YELLOW}Samsung’s exFAT fs Linux driver version ${GREEN}${EXFAT_VER}${YELLOW} from ${GREEN}${EXFAT_URL}${NORMAL}"}}
 }
 

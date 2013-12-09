@@ -32,9 +32,9 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-cjktty_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${CJKTTY_VER:=${CJKTTY_VER:-"${KMV}"}}
-	: ${CJKTTY_SRC:=${CJKTTY_SRC:-"https://github.com/Gentoo-zh/linux-cjktty/compare/torvalds:v${CJKTTY_VER/KMV/$KMV}...${CJKTTY_VER/KMV/$KMV}-utf8.diff"}}
-	: ${CJKTTY_URL:=${CJKTTY_URL:-"https://github.com/Gentoo-zh/linux-cjktty"}} # http://sourceforge.net/projects/cjktty
+	: ${CJKTTY_VER:=${CJKTTY_VER:-"${KMV}"}} # Patchset version
+	: ${CJKTTY_SRC:=${CJKTTY_SRC:-"https://github.com/Gentoo-zh/linux-cjktty/compare/torvalds:v${CJKTTY_VER/KMV/$KMV}...${CJKTTY_VER/KMV/$KMV}-utf8.diff"}} # Patchset sources url
+	: ${CJKTTY_URL:=${CJKTTY_URL:-"https://github.com/Gentoo-zh/linux-cjktty"}}  # Patchset url
 	: ${CJKTTY_INF:=${CJKTTY_INF:-"${YELLOW}CJK support for tty framebuffer vt version ${GREEN}${CJKTTY_VER}${YELLOW} from ${GREEN}${CJKTTY_URL}${NORMAL}"}}
 }
 

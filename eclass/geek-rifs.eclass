@@ -32,9 +32,9 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-rifs_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${RIFS_VER:=${RIFS_VER:-"${KMV}"}}
-	: ${RIFS_SRC:=${RIFS_SRC:-"https://rifs-scheduler.googlecode.com/files/rifs-kernel${RIFS_VER}"}}
-	: ${RIFS_URL:=${RIFS_URL:-"https://code.google.com/p/rifs-scheduler"}}
+	: ${RIFS_VER:=${RIFS_VER:-"${KMV}"}} # Patchset version
+	: ${RIFS_SRC:=${RIFS_SRC:-"https://rifs-scheduler.googlecode.com/files/rifs-kernel${RIFS_VER}"}} # Patchset sources url
+	: ${RIFS_URL:=${RIFS_URL:-"https://code.google.com/p/rifs-scheduler"}} # Patchset url
 	: ${RIFS_INF:=${RIFS_INF:-"${YELLOW}RIFS A interactivity favor scheduler version ${GREEN}${RIFS_VER}${YELLOW} from ${GREEN}${RIFS_URL}${NORMAL}"}}
 }
 
