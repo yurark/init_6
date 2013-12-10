@@ -24,7 +24,6 @@ linux-221-ngene-octopus.patch
 linux-222-stb0899_signal_quality.patch
 linux-223-Fix-video-artifacts-with-tt-3600-s2-usb.patch
 linux-701-linksys_aes2500_brcmfmac.patch
-linux-702-Support-for-cheap-Ralink-3070-WiFi-plug.patch
 linux-703-macmini2012-ethernet.patch
 linux-704-Support-for-Ubiquiti-WifiStation.patch
 linux-705-Support-for-Buffalo-WLI-UC-G300HP-V1.patch
