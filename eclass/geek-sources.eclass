@@ -21,7 +21,7 @@
 
 inherit geek-linux geek-utils geek-fix geek-upatch geek-squeue geek-vars
 
-KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec rsbac ice lqx mageia openvz optimization pax pf reiser4 rh rifs rt suse symlink uksm zen zfs"
+KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec rsbac ice lqx mageia openvz openwrt optimization pax pf reiser4 rh rifs rt suse symlink uksm zen zfs"
 
 # internal function
 #
@@ -63,6 +63,7 @@ for use_flag in ${IUSE}; do
 		lqx	)	inherit geek-lqx ;;
 		mageia	)	inherit geek-mageia ;;
 		openvz	)	inherit geek-openvz ;;
+		openwrt	)	inherit geek-openwrt ;;
 		optimization	)	inherit geek-optimization ;;
 		pax	)	inherit geek-pax ;;
 		pf	)	inherit geek-pf ;;
@@ -90,7 +91,7 @@ geek-sources_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx openvz pf rh zen"}
-	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec rsbac ice rh openvz reiser4 exfat rt bld uksm aufs mageia fedora suse brand fix upatch squeue"}
+	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec rsbac ice rh openvz openwrt reiser4 exfat rt bld uksm aufs mageia fedora suse brand fix upatch squeue"}
 
 	local xUserOrder=""
 	local xDefOder=""
@@ -159,6 +160,7 @@ geek-sources_src_unpack() {
 				grsec	)	geek-grsec_src_unpack ;;
 				ice	)	geek-ice_src_unpack ;;
 				mageia	)	geek-mageia_src_unpack ;;
+				openwrt	)	geek-openwrt_src_unpack ;;
 				optimization	)	geek-optimization_src_unpack ;;
 				pf	)	geek-pf_src_unpack ;;
 				rh	)	geek-rh_src_unpack ;;
@@ -199,6 +201,7 @@ geek-sources_src_prepare() {
 				lqx	)	geek-lqx_src_prepare ;;
 				mageia	)	geek-mageia_src_prepare ;;
 				openvz	)	geek-openvz_src_prepare ;;
+				openwrt	)	geek-openwrt_src_prepare ;;
 				optimization	)	geek-optimization_src_prepare ;;
 				pax	)	geek-pax_src_prepare ;;
 				pf	)	geek-pf_src_prepare ;;
@@ -266,6 +269,7 @@ ${BLUE}For more info about patchset’s, and how to report problems, see:${NORMA
 				lqx	) geek-lqx_pkg_postinst ;;
 				mageia	) geek-mageia_pkg_postinst ;;
 				openvz	) geek-openvz_pkg_postinst ;;
+				openwrt	) geek-openwrt_pkg_postinst ;;
 				optimization ) geek-optimization_pkg_postinst ;;
 				pax	) geek-pax_pkg_postinst ;;
 				pf	) geek-pf_pkg_postinst ;;

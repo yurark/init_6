@@ -59,7 +59,7 @@ geek-uksm_src_unpack() {
 	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
 	wget "${UKSM_SRC}" -O "${CWD}/${UKSM_NAME}.patch" > /dev/null 2>&1
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
-	ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list	
+	ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list
 }
 
 # @FUNCTION: src_prepare

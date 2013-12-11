@@ -16,7 +16,7 @@ REISER4_VER="3.9.2"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.1"
 
-SUPPORTED_USES="aufs bfq brand -build cjktty ck fedora gentoo grsec ice mageia optimization pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq brand -build cjktty ck fedora gentoo grsec ice mageia openwrt optimization pax pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 

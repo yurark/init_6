@@ -86,7 +86,7 @@ Red Hat typically only ensures that their kernels build using their
 own official kernel configurations. Significant variations from these
 configurations can result in build failures.
 
-For best results, always start with a .config provided by the OpenVZ 
+For best results, always start with a .config provided by the OpenVZ
 team from:${NORMAL}
 
 ${GREEN}http://wiki.openvz.org/Download/kernel/rhel6/${OVZ_KERNEL}.${NORMAL}

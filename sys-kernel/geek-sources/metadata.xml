@@ -23,6 +23,7 @@
     <flag name='lqx'>Use Liquorix patches.</flag>
     <flag name='mageia'>Use Mandriva/Mageia patches.</flag>
     <flag name='openvz'>RHEL6 kernel with OpenVZ patchset.</flag>
+    <flag name='openwrt'>OpenWrt kernel patches.</flag>
     <flag name='optimization'>Kernel patch enables gcc optimizations for additional CPUs.</flag>
     <flag name='pax'>Use PAX patches.</flag>
     <flag name='pf'>Use pf-kernel patches.</flag>
