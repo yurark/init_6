@@ -66,6 +66,7 @@ geek-openwrt_src_unpack() {
 	fi
 
 	copy "${CSD}" "${CTD}"
+	copy "${CTD}/files" "${WORKDIR}/linux-${KV_FULL}"
 	cd "${CTD}/patches-${OPENWRT_VER}" || die "${RED}cd ${CTD}/patches-${OPENWRT_VER} failed${NORMAL}"
 
 	ls -1 | grep ".patch" > "$CWD"/patch_list

@@ -24,13 +24,11 @@ S="${WORKDIR}/iso-latin-1-${PV}"
 RESTRICT="strip binchecks"
 
 src_compile() {
-	cd "${S}"
-	txt2psf "iso-latin-1-8x16.txt" "iso-latin-1-8x16.psf"
-	psfaddtable "iso-latin-1-8x16.psf" "iso-latin-1-8x16.table" "iso-latin-1-8x16.psfu" && if [ -f "iso-latin-1-8x16.psf" ]; then rm "iso-latin-1-8x16.psf"; fi
-	gzip "iso-latin-1-8x16.psfu"
+	emake || die "Build failed!"
 }
 
 src_install() {
+	cd "${S}/${MY_PN}-8x16-${PV}"
 	insinto ${FONTDIR}
 	doins "${MY_PN}-8x16.psfu.gz"
 }
