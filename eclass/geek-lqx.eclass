@@ -59,12 +59,6 @@ geek-lqx_src_prepare() {
 
 	cp "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/config.i386" arch/x86/configs/i386_defconfig || die
 	cp "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/config.amd64" arch/x86/configs/x86_64_defconfig || die
-	rm -f .config >/dev/null
-	local GENTOOARCH="${ARCH}"
-	unset ARCH
-	make -s mrproper || die "make mrproper failed"
-	make -s include/linux/version.h || die "make include/linux/version.h failed"
-	ARCH="${GENTOOARCH}"
 }
 
 # @FUNCTION: pkg_postinst
