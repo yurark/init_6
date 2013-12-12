@@ -33,7 +33,9 @@ geek-lqx_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${LQX_VER:=${LQX_VER:-"${KMV}"}} # Patchset version
-	: ${LQX_SRC:=${LQX_SRC:-"http://liquorix.net/sources/${LQX_VER/KMV/$KMV}.patch.gz"}} # Patchset sources url
+	: ${LQX_SRC:=${LQX_SRC:-"http://liquorix.net/sources/${LQX_VER}.patch.gz
+	http://liquorix.net/sources/${KMV}/config.i386
+	http://liquorix.net/sources/${KMV}/config.amd64"}} # Patchset sources url
 	: ${LQX_URL:=${LQX_URL:-"http://liquorix.net"}} # Patchset url
 	: ${LQX_INF:=${LQX_INF:-"${YELLOW}Liquorix patches version ${GREEN}${LQX_VER}${YELLOW} from ${GREEN}${LQX_URL}${NORMAL}"}}
 }
@@ -54,6 +56,15 @@ geek-lqx_src_prepare() {
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/${LQX_VER/KMV/$KMV}.patch.gz" "${LQX_INF}"
 
 	ApplyUserPatch "lqx"
+
+	cp "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/config.i386" arch/x86/configs/i386_defconfig || die
+	cp "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/config.amd64" arch/x86/configs/x86_64_defconfig || die
+	rm -f .config >/dev/null
+	local GENTOOARCH="${ARCH}"
+	unset ARCH
+	make -s mrproper || die "make mrproper failed"
+	make -s include/linux/version.h || die "make include/linux/version.h failed"
+	ARCH="${GENTOOARCH}"
 }
 
 # @FUNCTION: pkg_postinst

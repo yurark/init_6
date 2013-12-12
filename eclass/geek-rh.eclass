@@ -34,10 +34,12 @@ geek-rh_init_variables() {
 
 	: ${RH_VER:=${RH_VER:-"19"}} # Patchset version based on kernel-2.6.32-19.el6.src.rpm
 	: ${RH_NAME:=${RH_NAME:-kernel-${VERSION}.${PATCHLEVEL}.${SUBLEVEL}-${RH_VER/KMV/$KMV}.el6}}
-	: ${RH_SRC:=${RH_SRC:-"http://ftp.redhat.com/pub/redhat/linux/enterprise/6Client/en/os/SRPMS/${RH_NAME}.src.rpm
-	http://ftp.redhat.com/pub/redhat/linux/enterprise/6ComputeNode/en/os/SRPMS/${RH_NAME}.src.rpm
-	http://ftp.redhat.com/pub/redhat/linux/enterprise/6Server/en/os/SRPMS/${RH_NAME}.src.rpm
-	http://ftp.redhat.com/pub/redhat/linux/enterprise/6Workstation/en/os/SRPMS/${RH_NAME}.src.rpm"}} # Patchset sources url
+	SRC_URI_PREFIX="http://ftp.redhat.com/pub/redhat/linux/enterprise"
+	: ${RH_SRC:=${RH_SRC:-"${SRC_URI_PREFIX}/6Client/en/os/SRPMS/${RH_NAME}.src.rpm
+	${SRC_URI_PREFIX}/6ComputeNode/en/os/SRPMS/${RH_NAME}.src.rpm
+	${SRC_URI_PREFIX}/6Server/en/os/SRPMS/${RH_NAME}.src.rpm
+	${SRC_URI_PREFIX}/6Workstation/en/os/SRPMS/${RH_NAME}.src.rpm"}} # Patchset sources url
+
 	: ${RH_URL:=${RH_URL:-"http://www.redhat.com"}} # Patchset url
 	: ${RH_INF:="${YELLOW}Red Hat Enterprise Linux kernel patches version ${GREEN}${RH_VER}${YELLOW} from ${GREEN}${RH_URL}${NORMAL}"}
 }

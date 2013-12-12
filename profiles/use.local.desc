@@ -21,7 +21,7 @@ sys-kernel/geek-sources:gentoo - Use Gentoo kernel patches
 sys-kernel/geek-sources:grsec - Use hardened-patchset which includes a grsecurity patches
 sys-kernel/geek-sources:ice - Use TuxOnIce patches
 sys-kernel/geek-sources:lqx - Use Liquorix patches
-sys-kernel/geek-sources:mageia - Use Mandriva/Mageia patches
+sys-kernel/geek-sources:mageia - Use Mageia patches
 sys-kernel/geek-sources:optimization - Kernel patch enables gcc optimizations for additional CPUs
 sys-kernel/geek-sources:pax - Use PAX patches
 sys-kernel/geek-sources:pf - Use pf-kernel patches

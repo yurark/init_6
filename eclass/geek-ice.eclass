@@ -32,8 +32,9 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-ice_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${ICE_VER:=${ICE_VER:-"${KSV}"}} # Patchset version
-	: ${ICE_SRC:=${ICE_SRC:-"https://github.com/NigelCunningham/tuxonice-kernel/compare/vanilla-${ICE_VER/KMV/$KMV}...tuxonice-${ICE_VER/KMV/$KMV}.diff"}} # Patchset sources url
+	: ${ICE_VER:=${ICE_VER:-"${KMV}"}} # Patchset version
+#	: ${ICE_SRC:=${ICE_SRC:-"https://github.com/NigelCunningham/tuxonice-kernel/compare/vanilla-${ICE_VER/KMV/$KMV}...tuxonice-${ICE_VER/KMV/$KMV}.diff"}} # Patchset sources url
+	: ${ICE_SRC:=${ICE_SRC:-"git://github.com/NigelCunningham/tuxonice-kernel.git"}} # Patchset sources url
 	: ${ICE_URL:=${ICE_URL:-"http://tuxonice.net"}} # Patchset url
 	: ${ICE_INF:=${ICE_INF:-"${YELLOW}TuxOnIce version ${GREEN}${ICE_VER}${YELLOW} from ${GREEN}${ICE_URL}${NORMAL}"}}
 }
@@ -54,10 +55,26 @@ geek-ice_src_unpack() {
 
 	local CSD="${GEEK_STORE_DIR}/ice"
 	local CWD="${T}/ice"
+#	local CTD="${T}/ice"$$
 	shift
 	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
+	if [ -d "${CSD}" ]; then
+		cd "${CSD}"
+		if [ -e ".git" ]; then # git
+			git fetch --all && git pull --all
+		fi
+	else
+		git clone "${ICE_SRC}" "${CSD}"
+		cd "${CSD}"
+		git_get_all_branches
+	fi
+
+	git_checkout "vanilla-${ICE_VER}" > /dev/null 2>&1 git pull > /dev/null 2>&1
+	git_checkout "tuxonice-${ICE_VER}" > /dev/null 2>&1 git pull > /dev/null 2>&1
+
 	dest="${CWD}"/tuxonice-kernel-"${PV}"-`date +"%Y%m%d"`.patch
-	wget "${ICE_SRC}" -O "${dest}" > /dev/null 2>&1
+#	wget "${ICE_SRC}" -O "${dest}" > /dev/null 2>&1
+	git diff "vanilla-${ICE_VER}" "tuxonice-${ICE_VER}" > "$dest";
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
 	ls -1 | grep ".patch" | xargs -I{} xz "{}" | xargs -I{} cp "{}" "${CWD}"
 	ls -1 "${CWD}" | grep ".patch.xz" > "${CWD}"/patch_list

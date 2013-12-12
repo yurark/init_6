@@ -82,6 +82,7 @@ geek-squeue_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	if [ "${skip_squeue}" = "yes" ]; then
+			echo
 			ewarn "${RED}Skipping update to latest stable queue ...${NORMAL}"
 		else
 			ApplyPatch "${T}/squeue/patch_list" "${SQUEUE_INF}"
