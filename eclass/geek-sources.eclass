@@ -21,7 +21,7 @@
 
 inherit geek-linux geek-utils geek-fix geek-upatch geek-squeue geek-vars
 
-KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec rsbac ice lqx mageia openvz openwrt optimization pax pf reiser4 rh rifs rt suse symlink uksm zen zfs"
+KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec hardened ice lqx mageia openvz openwrt optimization pax pf reiser4 rh rifs rt rsbac suse symlink uksm zen zfs"
 
 # internal function
 #
@@ -59,6 +59,7 @@ for use_flag in ${IUSE}; do
 		fedora	)	inherit geek-fedora ;;
 		gentoo	)	inherit geek-gentoo ;;
 		grsec	)	inherit geek-grsec ;;
+		hardened	)	inherit geek-hardened ;;
 		ice	)	inherit geek-ice ;;
 		lqx	)	inherit geek-lqx ;;
 		mageia	)	inherit geek-mageia ;;
@@ -91,7 +92,7 @@ geek-sources_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx openvz pf rh zen"}
-	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec rsbac ice rh openvz openwrt reiser4 exfat rt bld uksm aufs mageia fedora suse brand fix upatch squeue"}
+	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec hardened rsbac ice rh openvz openwrt reiser4 exfat rt bld uksm aufs mageia fedora suse brand fix upatch squeue"}
 
 	local xUserOrder=""
 	local xDefOder=""
@@ -157,7 +158,7 @@ geek-sources_src_unpack() {
 				exfat	)	geek-exfat_src_unpack ;;
 				fedora	)	geek-fedora_src_unpack ;;
 				gentoo	)	geek-gentoo_src_unpack ;;
-				grsec	)	geek-grsec_src_unpack ;;
+				hardened	)	geek-hardened_src_unpack ;;
 				ice	)	geek-ice_src_unpack ;;
 				mageia	)	geek-mageia_src_unpack ;;
 				openwrt	)	geek-openwrt_src_unpack ;;
@@ -197,6 +198,7 @@ geek-sources_src_prepare() {
 				fix	)	geek-fix_src_prepare ;;
 				gentoo	)	geek-gentoo_src_prepare ;;
 				grsec	)	geek-grsec_src_prepare ;;
+				hardened	)	geek-hardened_src_prepare ;;
 				ice	)	geek-ice_src_prepare ;;
 				lqx	)	geek-lqx_src_prepare ;;
 				mageia	)	geek-mageia_src_prepare ;;
@@ -265,6 +267,7 @@ ${BLUE}For more info about patchset’s, and how to report problems, see:${NORMA
 				fedora	) geek-fedora_pkg_postinst ;;
 				gentoo	) geek-gentoo_pkg_postinst ;;
 				grsec	) geek-grsec_pkg_postinst ;;
+				hardened	) geek-hardened_pkg_postinst ;;
 				ice	) geek-ice_pkg_postinst ;;
 				lqx	) geek-lqx_pkg_postinst ;;
 				mageia	) geek-mageia_pkg_postinst ;;

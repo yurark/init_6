@@ -11,6 +11,8 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 BFQ_VER="3.12.0-v6r2"
 BLD_VER="3.12.0"
 CK_VER="3.12-ck2"
+GRSEC_VER="3.0-3.12.4-201312081754"
+GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 LQX_VER="3.12.4-1"
 MAGEIA_VER="releases/3.12.3/1.mga4"
 PAX_VER="3.12.4-test3"
@@ -20,8 +22,8 @@ RT_VER="3.12.1-rt4"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v3.12"
 
-#SUPPORTED_USES="aufs bfq bld brand -build cjktty ck exfat fedora gentoo grsec ice lqx mageia openwrt optimization pax pf reiser4 -rt suse symlink uksm zen zfs"
-SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo grsec ice lqx mageia openwrt optimization pax pf rt suse symlink uksm zen zfs"
+#SUPPORTED_USES="aufs bfq bld brand -build cjktty ck exfat fedora gentoo grsec hardened ice lqx mageia openwrt optimization pax pf reiser4 -rt suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo grsec hardened ice lqx mageia openwrt optimization pax pf rt suse symlink uksm zen zfs"
 
 inherit geek-sources
 

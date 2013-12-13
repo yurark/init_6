@@ -21,7 +21,7 @@
 
 inherit geek-patch geek-utils geek-vars
 
-EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
+EXPORT_FUNCTIONS src_prepare pkg_postinst
 
 # @FUNCTION: init_variables
 # @INTERNAL
@@ -33,52 +33,22 @@ geek-grsec_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${GRSEC_VER:=${GRSEC_VER:-"${KSV}"}} # Patchset version
-	: ${GRSEC_SRC:=${GRSEC_SRC:-"git://git.overlays.gentoo.org/proj/hardened-patchset.git"}} # Patchset sources url
-	: ${GRSEC_URL:=${GRSEC_URL:-"http://hardened.gentoo.org"}} # Patchset url
-	: ${GRSEC_INF:=${GRSEC_INF:-"${YELLOW}GrSecurity patches version ${GREEN}${GRSEC_VER}${YELLOW} from ${GREEN}${GRSEC_URL}${NORMAL}"}}
+	: ${GRSEC_SRC:=${GRSEC_SRC:-"https://grsecurity.net/stable/grsecurity-${GRSEC_VER}.patch"}} # Patchset sources url
+	: ${GRSEC_URL:=${GRSEC_URL:-"https://grsecurity.net"}} # Patchset url
+	: ${GRSEC_INF:=${GRSEC_INF:-"${YELLOW}GrSecurity patch version ${GREEN}${GRSEC_VER}${YELLOW} from ${GREEN}${GRSEC_URL}${NORMAL}"}}
 }
 
 geek-grsec_init_variables
 
 HOMEPAGE="${HOMEPAGE} ${GRSEC_URL}"
 
+SRC_URI="${SRC_URI}
+	grsec?	( ${GRSEC_SRC} )"
+
 DEPEND="${DEPEND}
-	grsec?	( dev-vcs/git
-		>=sys-apps/gradm-2.2.2 )"
+	grsec?	( >=sys-apps/gradm-2.2.2 )"
 
 RDEPEND=">=sys-devel/gcc-4.5"
-
-# @FUNCTION: src_unpack
-# @USAGE:
-# @DESCRIPTION: Extract source packages and do any necessary patching or fixes.
-geek-grsec_src_unpack() {
-	debug-print-function ${FUNCNAME} "$@"
-
-	local CSD="${GEEK_STORE_DIR}/grsec"
-	local CWD="${T}/grsec"
-	local CTD="${T}/grsec"$$
-	shift
-	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
-	if [ -d ${CSD} ]; then
-	cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
-		if [ -e ".git" ]; then # git
-			git fetch --all && git pull --all
-		fi
-	else
-		git clone "${GRSEC_SRC}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches
-	fi
-
-	copy "${CSD}" "${CTD}"
-
-	cd "${CTD}"/"${GRSEC_VER}" || die "${RED}cd ${CTD}/${GRSEC_VER} failed${NORMAL}"
-
-	ls -1 | grep "linux" | xargs -I{} rm -rf "{}"
-	ls -1 | xargs -I{} cp "{}" "${CWD}"
-
-	rm -rf "${CTD}" || die "${RED}rm -rf ${CTD} failed${NORMAL}"
-
-	ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list
-}
 
 # @FUNCTION: src_prepare
 # @USAGE:
@@ -86,8 +56,7 @@ geek-grsec_src_unpack() {
 geek-grsec_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	ApplyPatch "${T}/grsec/patch_list" "${GRSEC_INF}"
-	move "${T}/grsec" "${WORKDIR}/linux-${KV_FULL}-patches/grsec"
+	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/grsecurity-${GRSEC_VER}.patch" "${GRSEC_INF}"
 
 	ApplyUserPatch "grsec"
 }
@@ -98,18 +67,5 @@ geek-grsec_src_prepare() {
 geek-grsec_pkg_postinst() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	local GRADM_COMPAT="sys-apps/gradm-2.9.1"
-	einfo "${BLUE}Hardened Gentoo provides three different predefined grsecurity level:${NORMAL}${BR}
-${BLUE}[server], [workstation], and [virtualization].  Those who intend to${NORMAL}${BR}
-${BLUE}use one of these predefined grsecurity levels should read the help${NORMAL}${BR}
-${BLUE}associated with the level.  Because some options require >=gcc-4.5,${NORMAL}${BR}
-${BLUE}users with more, than one version of gcc installed should use gcc-config${NORMAL}${BR}
-${BLUE}to select a compatible version.${NORMAL}${BR}
-${BR}
-${BLUE}Users of grsecurity's RBAC system must ensure they are using${NORMAL}${BR}
-${RED}${GRADM_COMPAT}${NORMAL}${BLUE}, which is compatible with${NORMAL} ${RED}${PF}${NORMAL}${BLUE}.${NORMAL}${BR}
-${BLUE}It is strongly recommended that the following command is issued${NORMAL}${BR}
-${BLUE}prior to booting a${NORMAL} ${RED}${PF}${NORMAL} ${BLUE}kernel for the first time:${NORMAL}${BR}
-${BR}
-${RED}emerge -na =${GRADM_COMPAT}*${NORMAL}${BR}"
+	einfo "${GRSEC_INF}"
 }

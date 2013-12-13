@@ -18,7 +18,8 @@
     <flag name='exfat'>Samsung’s exFAT fs Linux driver.</flag>
     <flag name='fedora'>Use Fedora kernel patches.</flag>
     <flag name='gentoo'>Use Gentoo kernel patches.</flag>
-    <flag name='grsec'>Use hardened-patchset which includes a grsecurity patches.</flag>
+    <flag name='grsec'>Use GrSecurity patch.</flag>
+    <flag name='hardened'>Use Gentoo Hardened patches.</flag>
     <flag name='ice'>Use TuxOnIce patches.</flag>
     <flag name='lqx'>Use Liquorix patches.</flag>
     <flag name='mageia'>Use Mageia patches.</flag>
