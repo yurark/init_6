@@ -9,7 +9,7 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 
 BFQ_VER="3.2.0-v6r1"
 FEDORA_VER="8959a0e95fa1ab409603d38059342e7a99668418" # 3.2
-GRSEC_VER="3.0-3.2.53-201312081752"
+GRSEC_VER="3.0-3.2.53-201312132200"
 LQX_VER="3.2.28-1"
 LQX_SRC="http://liquorix.net/sources/legacy/${LQX_VER}.patch.gz"
 MAGEIA_VER="releases/3.2.9/2.mga2"
