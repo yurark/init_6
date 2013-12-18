@@ -145,6 +145,7 @@ case "$1" in
                           gpg --yes --batch --passphrase="${PASSPHRASE}" --clearsign "${file}";
                           mv "${file}".asc "${file}"
                         done;
+                        echo
                         ;;
     o | own )           shift
                         equery belongs "$@"

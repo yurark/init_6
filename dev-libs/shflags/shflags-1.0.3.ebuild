@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI=5
 
 DESCRIPTION="Simplified handling of command-line flags in Bourne based shells"
 HOMEPAGE="http://code.google.com/p/${PN}/"

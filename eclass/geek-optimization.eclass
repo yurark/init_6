@@ -32,8 +32,8 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-optimization_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${OPTIMIZATION_VER:=${OPTIMIZATION_VER:-"1"}} # Patchset version
-	: ${OPTIMIZATION_SRC:=${OPTIMIZATION_SRC:-"https://raw.github.com/graysky2/kernel_gcc_patch/master/kernel-${KMV/./}-gcc48-${OPTIMIZATION_VER}.patch"}} # Patchset sources url
+	: ${OPTIMIZATION_VER:=${OPTIMIZATION_VER:-""}} # Patchset version
+	: ${OPTIMIZATION_SRC:=${OPTIMIZATION_SRC:-"https://github.com/graysky2/kernel_gcc_patch/raw/master/enable_additional_cpu_optimizations_for_gcc.patch"}} # Patchset sources url
 	: ${OPTIMIZATION_URL:=${OPTIMIZATION_URL:-"https://github.com/graysky2/kernel_gcc_patch"}} # Patchset url
 	: ${OPTIMIZATION_INF:=${OPTIMIZATION_INF:-"${YELLOW}Kernel patch enables gcc optimizations for additional CPUs version ${GREEN}${OPTIMIZATION_VER}${YELLOW} from ${GREEN}${OPTIMIZATION_URL}${NORMAL}"}}
 }
@@ -55,7 +55,7 @@ geek-optimization_src_unpack() {
 	local CWD="${T}/optimization"
 	shift
 	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
-	dest="${CWD}"/kernel-${KMV/./}-gcc48-${OPTIMIZATION_VER}.patch
+	dest="${CWD}"/enable_additional_cpu_optimizations_for_gcc.patch
 	wget "${OPTIMIZATION_SRC}" -O "${dest}" > /dev/null 2>&1
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
 	ls -1 | grep ".patch" | xargs -I{} xz "{}" | xargs -I{} cp "{}" "${CWD}"

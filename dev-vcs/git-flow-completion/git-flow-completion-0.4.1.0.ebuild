@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI=5
 
 DESCRIPTION="git flow completion for bash and zsh"
 GITHUB_USER="bobthecow"

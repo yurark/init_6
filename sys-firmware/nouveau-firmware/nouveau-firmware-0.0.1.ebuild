@@ -32,7 +32,6 @@ src_unpack() {
 }
 
 src_compile() {
-	cd "${S}"
 	python2 "${DISTDIR}"/extract_firmware.py
 }
 

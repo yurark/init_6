@@ -3,20 +3,15 @@
 # $Header: $
 
 EAPI="5"
-DEBLOB_AVAILABLE="1"
+DEBLOB_AVAILABLE="0"
 
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 
-BFQ_VER="3.9.0-v6r2"
-FEDORA_VER="f19"
-MAGEIA_VER="releases/3.9.8/1.mga4"
-OPTIMIZATION_VER="2"
-PAX_VER="3.9.9-test14"
-REISER4_VER="3.9.2"
-UKSM_VER="0.1.2.2"
-UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.1"
+AUFS_VER="3.x-rcN"
+BLD_VER="3.13-rc1"
+SUSE_VER="master"
 
-SUPPORTED_USES="aufs bfq brand -build cjktty ck fedora gentoo hardened ice mageia openwrt optimization pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bld brand -build -deblob fedora optimization suse symlink zfs"
 
 inherit geek-sources
 

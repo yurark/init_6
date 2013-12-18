@@ -87,7 +87,6 @@ all_ruby_unpack() {
 }
 
 each_ruby_prepare() {
-	
 	# fix path to repo and gitlab-shell hooks
 	test -d "${GITLAB_SHELL_HOOKS}" || die "Gitlab Shell hooks directory not found: \"${GITLAB_SHELL_HOOKS}. Have you properly installed dev-vcs/gitlab-shell"?
 
@@ -136,7 +135,7 @@ each_ruby_prepare() {
 		-e '/^gem "thin"/ s/$/, group: :thin/' \
 		-e '/^gem "unicorn"/ s/$/, group: :unicorn/' \
 		Gemfile || die "failed to modify Gemfile"
-	
+
 	# change cache_store
 	if use memcached; then
 		sed -i \
@@ -169,7 +168,7 @@ each_ruby_install() {
 
 	## Link gitlab-shell into git home
 	dosym "${GITLAB_SHELL}" "${GIT_HOME}/gitlab-shell"
-	
+
 	## Install configs ##
 
 	insinto "${conf}"

@@ -41,5 +41,5 @@ src_install() {
 	dodoc AUTHORS
 	sed -i -e \
 		"s:/etc/init.d/functions.sh:/usr/$(get_libdir)/misc/core-functions.sh:g" \
-		"${D}"/usr/sbin/${PN}
+		"${D}/usr/sbin/${PN}"
 }
