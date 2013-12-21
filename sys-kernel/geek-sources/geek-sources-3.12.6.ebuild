@@ -14,14 +14,14 @@ CK_VER="3.12-ck2"
 GRSEC_VER="3.0-3.12.5-201312151212"
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 LQX_VER="3.12.5-1"
-PAX_VER="3.12.5-test6"
+PAX_VER="3.12.6-test8"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
-#REISER4_VER="3.11.1"
+REISER4_VER="3.12.6"
 RT_VER="3.12.5-rt7"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v3.12"
 
-SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo grsec hardened ice lqx mageia openwrt optimization pax pf rt suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo grsec hardened ice lqx mageia openwrt optimization pax pf reiser4 rt suse symlink uksm zen zfs"
 
 inherit geek-sources
 
