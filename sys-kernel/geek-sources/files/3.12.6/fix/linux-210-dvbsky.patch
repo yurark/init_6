@@ -6099,3 +6099,4 @@ diff -urN a/include/media/rc-map.h b/include/media/rc-map.h
  #define RC_MAP_EMPTY                     "rc-empty"
  #define RC_MAP_EM_TERRATEC               "rc-em-terratec"
  #define RC_MAP_ENCORE_ENLTV2             "rc-encore-enltv2"
+
