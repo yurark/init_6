@@ -1,0 +1,9 @@
+Title: nouveau-firmware package move
+Author: Andrey Ovcharov <sudormrfhalt@gmail.com>
+Content-Type: text/plain
+Posted: 2013-11-17
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: x11-drivers/nouveau-firmware
+
+Starting from November 17, 2013, I move x11-drivers/nouveau-firmware to sys-firmware/nouveau-firmware

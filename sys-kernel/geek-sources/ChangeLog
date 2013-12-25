@@ -3,6 +3,14 @@
 # $Header: $
 
 
+*geek-openvz.eclass (07 Dec 2013)
+
+  07 Dec 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
+  +geek-openvz.eclass
+  Add openvz kernel with OpenVZ patchset
+  -geek-ubuntu.eclass
+  -geek-xenomai.eclass
+
 *geek-rh.eclass (27 Oct 2013)
 
   27 Oct 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>

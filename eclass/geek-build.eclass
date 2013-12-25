@@ -1,31 +1,23 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-build.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
-#  Wiki: https://github.com/init6/init_6/wiki/geek-sources
-#
+# @ECLASS: geek-brand.eclass
+# This file is part of sys-kernel/geek-sources project.
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (12 Aug 2013)
+# @LICENSE: http://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3
+# @BLURB: Eclass for building kernel.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# kernel.
+
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-build.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
 inherit geek-utils
 
@@ -55,9 +47,7 @@ geek-build_src_compile() {
 	dodir /usr/src
 	echo ">>> Copying sources ..."
 
-#	mv ${WORKDIR}/linux* "${D}"/usr/src || die "${RED}mv ${WORKDIR}/linux* ${D}/usr/src failed${NORMAL}"
-#	rsync -avhW --no-compress --progress ${WORKDIR}/linux*/ "${D}"/usr/src || die "${RED}rsync -avhW --no-compress --progress ${WORKDIR}/linux*/ ${D}/usr/src failed${NORMAL}"
-	test -d "${D}"/usr/src >/dev/null 2>&1 || mkdir -p "${D}"/usr/src; (cd ${WORKDIR}/linux*; tar cf - .) | (cd "${D}"/usr/src; tar xpf -)
+	move "${WORKDIR}/linux-${KV_FULL}" "${D}/usr/src"
 
 	if use build; then
 		# Find out some info..
@@ -116,11 +106,11 @@ geek-build_src_compile() {
 
 			ebegin " Merging kernel to system (Buildnumber: ${RED}${BUILDNO}${NORMAL})"
 				einfo "  Copying bzImage to ${RED}\"/boot/vmlinuz-${FULLVER}-${BUILDNO}\"${NORMAL}"
-					cp arch/${ARCH}/boot/bzImage /boot/vmlinuz-${FULLVER}-${BUILDNO}
+					copy arch/${ARCH}/boot/bzImage /boot/vmlinuz-${FULLVER}-${BUILDNO}
 				einfo "  Copying System.map to ${RED}\"/boot/System.map-${FULLVER}\"${NORMAL}"
-					cp System.map /boot/System.map-${FULLVER}
+					copy System.map /boot/System.map-${FULLVER}
 				einfo "  Copying .config to ${RED}\"/boot/config-${FULLVER}\"${NORMAL}"
-					cp .config /boot/config-${FULLVER}
+					copy .config /boot/config-${FULLVER}
 				if [[ ${MODULESUPPORT} != "" ]]; then
 					einfo "  Installing modules to ${RED}\"/lib/modules/${FULLVER}/\"${NORMAL}"
 						make modules_install 2>/dev/null

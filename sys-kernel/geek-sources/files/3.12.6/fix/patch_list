@@ -17,7 +17,6 @@ linux-058.06-hid_sony-add_SMK_link.patch
 linux-059-remove_some_xpad_pids-0.2.patch
 linux-060-add_AUGUST_DVB-T205.patch
 linux-203-stb0899_enable_low_symbol_rate.patch
-linux-210.01-dvbsky-auto-off.patch
 linux-210-dvbsky.patch
 linux-212-mantis_stb0899_faster_lock.patch
 linux-221-ngene-octopus.patch
@@ -32,8 +31,18 @@ linux-900-hide_tsc_error.patch
 linux-950-saa716x_PCIe_interface_chipset.patch
 linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
 linux-990.11-ALSA-AMD-HD-Audio.patch
+linux-990.12-Radeon-SI-workaround.patch
+linux-990.15-Fix-missing-multichannel-PCM-SAD-in-some-cases.patch
 linux-991.01-ptrace_fix.patch
 linux-992.01.i915_pass_mode_to_write_eld.patch
 linux-992.02-i915_set_hdmi_audio_clock.patch
+linux-992.05-ALSA-hda-Name-Haswell-HDMI-controllers-better.patch
+linux-994.0001-Squashfs-Refactor-decompressor-interface-and-code.patch
+linux-994.0002-squashfs-Enhance-parallel-I-O.patch
+linux-994.0003-Squashfs-add-multi-threaded-decompression-using-perc.patch
+linux-994.0004-Squashfs-Generalise-paging-handling-in-the-decompres.patch
+linux-994.0005-Squashfs-Restructure-squashfs_readpage.patch
+linux-994.0006-Squashfs-Directly-decompress-into-the-page-cache-for.patch
+linux-994.0007-Squashfs-Check-stream-is-not-NULL-in-decompressor_mu.patch
 linux-995-CX24120-13Z_frontend.patch
 linux-999.02-A-split-for-ds3000-ts2020-code-forgot-to-change-the-.patch

@@ -1,33 +1,25 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-cjktty.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
-#  Wiki: https://github.com/init6/init_6/wiki/geek-sources
-#
+# @ECLASS: geek-cjktty.eclass
+# This file is part of sys-kernel/geek-sources project.
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (19 Aug 2013)
+# @LICENSE: http://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3
+# @BLURB: Eclass for building kernel with cjktty patchset.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# kernel with cjktty patches easily.
 
-inherit geek-patch geek-utils
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-cjktty.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 
@@ -40,36 +32,15 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-cjktty_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	OLDIFS="$IFS"
-	VER="${PV}"
-	IFS='.'
-	set -- ${VER}
-	IFS="${OLDIFS}"
-
-	# the kernel version (e.g 3 for 3.4.2)
-	VERSION="${1}"
-	# the kernel patchlevel (e.g 4 for 3.4.2)
-	PATCHLEVEL="${2}"
-	# the kernel sublevel (e.g 2 for 3.4.2)
-	SUBLEVEL="${3}"
-	# the kernel major version (e.g 3.4 for 3.4.2)
-	KMV="${1}.${2}"
-
-	: ${CJKTTY_VER:=${CJKTTY_VER:-$KMV}}
-
-	: ${CJKTTY_SRC:=${CJKTTY_SRC:-"https://github.com/Gentoo-zh/linux-cjktty/compare/torvalds:v${CJKTTY_VER/KMV/$KMV}...${CJKTTY_VER/KMV/$KMV}-utf8.diff"}}
-
-	: ${CJKTTY_URL:=${CJKTTY_URL:-"https://github.com/Gentoo-zh/linux-cjktty"}} # http://sourceforge.net/projects/cjktty
-
-	: ${CJKTTY_INF:=${CJKTTY_INF:-"${YELLOW}CJK support for tty framebuffer vt - ${CJKTTY_URL}${NORMAL}"}}
+	: ${CJKTTY_VER:=${CJKTTY_VER:-"${KMV}"}} # Patchset version
+	: ${CJKTTY_SRC:=${CJKTTY_SRC:-"https://github.com/Gentoo-zh/linux-cjktty/compare/torvalds:v${CJKTTY_VER/KMV/$KMV}...${CJKTTY_VER/KMV/$KMV}-utf8.diff"}} # Patchset sources url
+	: ${CJKTTY_URL:=${CJKTTY_URL:-"https://github.com/Gentoo-zh/linux-cjktty"}}  # Patchset url
+	: ${CJKTTY_INF:=${CJKTTY_INF:-"${YELLOW}CJK support for tty framebuffer vt version ${GREEN}${CJKTTY_VER}${YELLOW} from ${GREEN}${CJKTTY_URL}${NORMAL}"}}
 }
 
 geek-cjktty_init_variables
 
 HOMEPAGE="${HOMEPAGE} ${CJKTTY_URL}"
-
-#SRC_URI="${SRC_URI}
-#	cjktty?	( ${CJKTTY_SRC} )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
@@ -95,8 +66,9 @@ geek-cjktty_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/cjktty/patch_list" "${CJKTTY_INF}"
-	mv "${T}/cjktty" "${WORKDIR}/linux-${KV_FULL}-patches/cjktty" || die "${RED}mv ${T}/cjktty ${WORKDIR}/linux-${KV_FULL}-patches/cjktty failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/cjktty/" "${WORKDIR}/linux-${KV_FULL}-patches/cjktty" || die "${RED}rsync -avhW --no-compress --progress ${T}/cjktty/ ${WORKDIR}/linux-${KV_FULL}-patches/cjktty failed${NORMAL}"
+	move "${T}/cjktty" "${WORKDIR}/linux-${KV_FULL}-patches/cjktty"
+
+	ApplyUserPatch "cjktty"
 }
 
 # @FUNCTION: pkg_postinst

@@ -1,31 +1,25 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-utils.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
+# @ECLASS: geek-utils.eclass
+# This file is part of sys-kernel/geek-sources project.
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (12 Aug 2013)
+# @LICENSE: http://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3
+# @BLURB: Eclass with utils for building kernel.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# kernel.
 
-EXPORT_FUNCTIONS use_if_iuse get_from_url git_get_all_branches git_checkout find_crap rm_crap get_config
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-utils.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+EXPORT_FUNCTIONS use_if_iuse get_from_url git_get_all_branches git_checkout find_crap rm_crap get_config copy move
 
 # @FUNCTION: in_iuse
 # @USAGE: <flag>
@@ -54,6 +48,8 @@ in_iuse() {
 geek-utils_use_if_iuse() {
 	debug-print-function ${FUNCNAME} "$@"
 
+	[[ ${#} -ne 1 ]] && die "Invalid number of args to ${FUNCNAME}()";
+
 	in_iuse $1 || return 1
 	use $1
 }
@@ -63,6 +59,8 @@ geek-utils_use_if_iuse() {
 # @DESCRIPTION:
 geek-utils_get_from_url() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	[[ ${#} -ne 2 ]] && die "Invalid number of args to ${FUNCNAME}()";
 
 	local url="$1"
 	local release="$2"
@@ -131,18 +129,48 @@ geek-utils_get_config() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ebegin "Searching for best availiable kernel config"
-		if [ -e "/proc/config.gz" ]; then test -d .config >/dev/null 2>&1 || zcat /proc/config.gz > .config
+		if [ -r "/proc/config.gz" ]; then test -d .config >/dev/null 2>&1 || zcat /proc/config.gz > .config
 			einfo " ${BLUE}Found config from running kernel, updating to match target kernel${NORMAL}"
-		elif [ -e "/boot/config-${FULLVER}" ]; then test -d .config >/dev/null 2>&1 || cat "/boot/config-${FULLVER}" > .config
+		elif [ -r "/boot/config-${FULLVER}" ]; then test -d .config >/dev/null 2>&1 || cat "/boot/config-${FULLVER}" > .config
 			einfo " ${BLUE}Found${NORMAL} ${RED}/boot/config-${FULLVER}${NORMAL}"
-		elif [ -e "/etc/portage/savedconfig/${CATEGORY}/${PN}/config" ]; then test -d .config >/dev/null 2>&1 || cat /etc/portage/savedconfig/${CATEGORY}/${PN}/config > .config
+		elif [ -r "/etc/portage/savedconfig/${CATEGORY}/${PN}/config" ]; then test -d .config >/dev/null 2>&1 || cat /etc/portage/savedconfig/${CATEGORY}/${PN}/config > .config
 			einfo " ${BLUE}Found${NORMAL} ${RED}/etc/portage/savedconfig/${CATEGORY}/${PN}/config${NORMAL}"
-		elif [ -e "/usr/src/linux/.config" ]; then test -d .config >/dev/null 2>&1 || cat /usr/src/linux/.config > .config
+		elif [ -r "/usr/src/linux/.config" ]; then test -d .config >/dev/null 2>&1 || cat /usr/src/linux/.config > .config
 			einfo " ${BLUE}Found${NORMAL} ${RED}/usr/src/linux/.config${NORMAL}"
-		elif [ -e "/usr/src/linux-${KV_FULL}/.config" ]; then test -d .config >/dev/null 2>&1 || cat /usr/src/linux-${KV_FULL}/.config > .config
+		elif [ -r "/usr/src/linux-${KV_FULL}/.config" ]; then test -d .config >/dev/null 2>&1 || cat /usr/src/linux-${KV_FULL}/.config > .config
 			einfo " ${BLUE}Found${NORMAL} ${RED}/usr/src/linux-${KV_FULL}/.config${NORMAL}"
 		else test -d .config >/dev/null 2>&1 || cp arch/${ARCH}/defconfig .config \
 			einfo " ${BLUE}No suitable custom config found, defaulting to defconfig${NORMAL}"
 		fi
 	eend $?
+}
+
+# @FUNCTION: copy
+# @USAGE:
+# @DESCRIPTION:
+geek-utils_copy() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	[[ ${#} -ne 2 ]] && die "Invalid number of args to ${FUNCNAME}()";
+
+	local src=${1}
+	local dst=${2}
+
+#	cp "${src}" "${dst}" || die "${RED}cp ${src} ${dst} failed${NORMAL}"
+#	rsync -avhW --no-compress --progress "${src}" "${dst}" || die "${RED}rsync -avhW --no-compress --progress ${src} ${dst} failed${NORMAL}"
+	test -d "${dst}" >/dev/null 2>&1 || mkdir -p "${dst}"; (cd "${src}"; tar cf - .) | (cd "${dst}"; tar xpf -) || die "${RED}cp ${src} ${dst} failed${NORMAL}"
+}
+
+# @FUNCTION: move
+# @USAGE:
+# @DESCRIPTION:
+geek-utils_move() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	[[ ${#} -ne 2 ]] && die "Invalid number of args to ${FUNCNAME}()";
+
+	local src=${1}
+	local dst=${2}
+
+	(copy ${src} ${dst} >/dev/null 2>&1 && rm -rf "${src}") || die "${RED}mv ${src} ${dst} failed${NORMAL}"
 }

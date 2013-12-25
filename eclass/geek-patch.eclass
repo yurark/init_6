@@ -1,38 +1,27 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-patch.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
+# @ECLASS: geek-patch.eclass
+# This file is part of sys-kernel/geek-sources project.
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (12 Aug 2013)
+# @LICENSE: http://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3
+# @BLURB: Eclass for do all work with patches.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for work
+# with patches easily.
 
-EXPORT_FUNCTIONS ApplyPatch SmartApplyPatch
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-patch.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
-# *.gz       -> gunzip -dc    -> app-arch/gzip
-# *.bz|*.bz2 -> bunzip -dc    -> app-arch/bzip2
-# *.lrz      -> lrunzip -dc   -> app-arch/lrzip
-# *.xz       -> xz -dc        -> app-arch/xz-utils
-# *.zip      -> unzip -d      -> app-arch/unzip
-# *.Z        -> uncompress -c -> app-arch/gzip
+inherit geek-vars
+
+EXPORT_FUNCTIONS ApplyPatch ApplyUserPatch
 
 DEPEND="${DEPEND}
 	app-arch/bzip2
@@ -40,7 +29,6 @@ DEPEND="${DEPEND}
 	app-arch/lrzip
 	app-arch/unzip
 	app-arch/xz-utils"
-
 
 # @FUNCTION: init_variables
 # @INTERNAL
@@ -52,8 +40,6 @@ geek-patch_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${patch_cmd:=${patch_cmd:-"patch -p1 -g1 --no-backup-if-mismatch"}}
-
-	: ${cfg_file:="/etc/portage/kernel.conf"}
 
 	local crap_patch_cfg=$(source $cfg_file 2>/dev/null; echo ${crap_patch})
 	: ${crap_patch:=${crap_patch_cfg:-ignore}} # crap_patch=ignore/will_not_pass
@@ -98,8 +84,16 @@ get_test_patch_cmd () {
 # @FUNCTION: ExtractApply
 # @USAGE: ExtractApply "<patch>"
 # @DESCRIPTION: Extract patch from *.gz, *.bz, *.bz2, *.lrz, *.xz, *.zip, *.Z
+# *.gz       -> gunzip -dc    -> app-arch/gzip
+# *.bz|*.bz2 -> bunzip -dc    -> app-arch/bzip2
+# *.lrz      -> lrunzip -dc   -> app-arch/lrzip
+# *.xz       -> xz -dc        -> app-arch/xz-utils
+# *.zip      -> unzip -d      -> app-arch/unzip
+# *.Z        -> uncompress -c -> app-arch/gzip
 ExtractApply() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	[[ ${#} -ne 1 ]] && die "Invalid number of args to ${FUNCNAME}()";
 
 	local patch=$1
 	debug-print "$FUNCNAME: patch=$patch"
@@ -128,6 +122,8 @@ ExtractApply() {
 # All tests completed successfully? run ExtractApply
 Handler() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	[[ ${#} -ne 1 ]] && die "Invalid number of args to ${FUNCNAME}()";
 
 	local patch=$1
 	local patch_base_name=$(basename "$patch")
@@ -186,11 +182,14 @@ Handler() {
 # @FUNCTION: ApplyPatch
 # @USAGE:
 # ApplyPatch "${FILESDIR}/${PVR}/patch_list" "Patch set description"
+# ApplyPatch "${FILESDIR}/${PVR}/spatch_list" "Patch set description"
 # ApplyPatch "${FILESDIR}/<patch>" "Patch description"
 # @DESCRIPTION:
 # Main function
 geek-patch_ApplyPatch() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	[[ ${#} -ne 2 ]] && die "Invalid number of args to ${FUNCNAME}()";
 
 	local patch=$1
 	debug-print "$FUNCNAME: patch=$patch"
@@ -212,7 +211,23 @@ geek-patch_ApplyPatch() {
 			eend $?
 		done < "$patch"
 	;;
-	*) # else is patch
+	spatch_list) # smart list of patches
+		index=1
+		for var in $(grep -v '^#' "${patch}"); do
+			ebegin "Applying $var"
+				Handler "${patch_dir_name}/${var}" || no_luck="1"
+				[ "${no_luck}" = "1" ] && break || ok_array[$index]="${var}"; index=$(expr $index + 1)
+			eend
+		done
+		if [ "${no_luck}" = "1" ]; then
+			for var in `seq ${#ok_array[@]} -1 1`; do
+				ebegin "${BLUE}Reversing patch <--${NORMAL} ${RED}${ok_array[var]}${NORMAL}"
+					patch_cmd="patch -p1 -g1 -R" # reverse argument to patch
+					ExtractApply "${patch_dir_name}/${ok_array[var]}" &>/dev/null
+				eend $?
+			done
+		fi
+	;;	*) # else is patch
 		ebegin "Applying $patch_base_name"
 			Handler "$patch"
 		eend $?
@@ -220,44 +235,37 @@ geek-patch_ApplyPatch() {
 	esac
 }
 
-# @FUNCTION: SmartApplyPatch
+# @FUNCTION: ApplyUserPatch
 # @USAGE:
-# SmartApplyPatch "${FILESDIR}/${PVR}/spatch_list" "Patch set description"
+# ApplyUserPatch
+# ApplyUserPatch "patch_set_name" # for apply user fix of patch set
 # @DESCRIPTION:
-# Main function
-geek-patch_SmartApplyPatch() {
+# Applies user-provided patches to the source tree. The patches are
+# taken from /etc/portage/patches/<CATEGORY>/<PF|P|PN>[:SLOT]/, where the first
+# of these three directories to exist will be the one to use, ignoring
+# any more general directories which might exist as well.
+geek-patch_ApplyUserPatch() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	geek-patch_init_variables
+	local dir=$1
+	debug-print "$FUNCNAME: dir=$dir"
 
-	local patch=$1
-	debug-print "$FUNCNAME: patch=$patch"
-	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
-	local msg=$2
-	debug-print "$FUNCNAME: msg=$msg"
-	shift
-	echo
-	einfo "${msg}"
-	patch_base_name=$(basename "${patch}")
-	patch_dir_name=$(dirname "${patch}")
-	case ${patch_base_name} in
-	spatch_list) # list of patches
-		for var in $(grep -v '^#' "${patch}"); do
-			ebegin "Applying $var"
-				Handler "${patch_dir_name}/${var}" || no_luck="1"
-				[ "${no_luck}" = "1" ] && break
-			eend
-		done
-		if [ "${no_luck}" = "1" ]; then
-			local vars=($(grep -v '^#' ${patch}))
-			for var in $(seq $((${#vars[@]} - 1)) -1 0); do
-				ebegin "${BLUE}Reversing patch <--${NORMAL} ${RED}${vars[$var]}${NORMAL}"
-					patch_cmd="patch -p1 -g1 -R" # reverse argument to patch
-					ExtractApply "${patch_dir_name}/${vars[$var]}" &>/dev/null
-				eend $?
-			done
+	# don't clobber any EPATCH vars that the parent might want
+	local EPATCH_SOURCE check base=${PORTAGE_CONFIGROOT%/}/etc/portage/patches
+	for check in ${CATEGORY}/{${P}-${PR},${P},${PN}}{,:${SLOT}}/${dir}; do
+		EPATCH_SOURCE=${base}/${CTARGET}/${check}
+		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${CHOST}/${check}
+		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${check}
+		if [[ -d ${EPATCH_SOURCE} ]] ; then
+			if [ -r "${EPATCH_SOURCE}/patch_list" ]; then
+				ApplyPatch "${EPATCH_SOURCE}/patch_list" "${YELLOW}Applying user patches from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."
+			else
+				ewarn "${BLUE}File${NORMAL} ${RED}${EPATCH_SOURCE}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
+				ewarn "${BLUE}Try to apply the patches if they are there…${NORMAL}"
+				for i in `ls ${EPATCH_SOURCE}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
+					ApplyPatch "${i}" "${YELLOW}Applying user patches from ${GREEN}${EPATCH_SOURCE}${NORMAL} ..."
+				done
+			fi
 		fi
-	;;
-	*) continue ;;
-	esac
+	done
 }

@@ -1,33 +1,25 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-pf.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
-#  Wiki: https://github.com/init6/init_6/wiki/geek-sources
-#
+# @ECLASS: geek-pf.eclass
+# This file is part of sys-kernel/geek-sources project.
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (12 Aug 2013)
+# @LICENSE: http://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3
+# @BLURB: Eclass for building kernel with pf patchset.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# kernel with pf patches easily.
 
-inherit geek-patch geek-utils
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-pf.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 
@@ -40,37 +32,15 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-pf_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	OLDIFS="$IFS"
-	VER="${PV}"
-	IFS='.'
-	set -- ${VER}
-	IFS="${OLDIFS}"
-
-	# the kernel version (e.g 3 for 3.4.2)
-	VERSION="${1}"
-	# the kernel patchlevel (e.g 4 for 3.4.2)
-	PATCHLEVEL="${2}"
-	# the kernel sublevel (e.g 2 for 3.4.2)
-	SUBLEVEL="${3}"
-	# the kernel major version (e.g 3.4 for 3.4.2)
-	KMV="${1}.${2}"
-
-	: ${PF_VER:=${PF_VER:-$KMV}}
-
-#	: ${PF_SRC:=${PF_SRC:-"http://pf.natalenko.name/sources/${KMV}/patch-${PF_VER/KMV/$KMV}.bz2"}}
-	: ${PF_SRC:=${PF_SRC:-"https://github.com/pfactum/pf-kernel/compare/mirrors:v${KMV}...pf-${PF_VER/KMV/$KMV}.diff"}}
-
-	: ${PF_URL:=${PF_URL:-"http://pf.natalenko.name"}}
-
-	: ${PF_INF:=${PF_INF:-"${YELLOW}pf-kernel patches - ${PF_URL}${NORMAL}"}}
+	: ${PF_VER:=${PF_VER:-"${KMV}"}} # Patchset version
+	: ${PF_SRC:=${PF_SRC:-"https://github.com/pfactum/pf-kernel/compare/mirrors:v${KMV}...pf-${PF_VER/KMV/$KMV}.diff"}} # Patchset sources url
+	: ${PF_URL:=${PF_URL:-"http://pf.natalenko.name"}} # Patchset url
+	: ${PF_INF:=${PF_INF:-"${YELLOW}pf-kernel patches version ${GREEN}${PF_VER}${YELLOW} from ${GREEN}${PF_URL}${NORMAL}"}}
 }
 
 geek-pf_init_variables
 
 HOMEPAGE="${HOMEPAGE} ${PF_URL}"
-
-#SRC_URI="${SRC_URI}
-#	pf?( ${PF_SRC} )"
 
 # @FUNCTION: src_unpack
 # @USAGE:
@@ -95,10 +65,10 @@ geek-pf_src_unpack() {
 geek-pf_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
-#	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/patch-${PF_VER/KMV/$KMV}.bz2" "${PF_INF}"
 	ApplyPatch "${T}/pf/patch_list" "${PF_INF}"
-	mv "${T}/pf" "${WORKDIR}/linux-${KV_FULL}-patches/pf" || die "${RED}mv ${T}/pf ${WORKDIR}/linux-${KV_FULL}-patches/pf failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/pf/" "${WORKDIR}/linux-${KV_FULL}-patches/pf" || die "${RED}rsync -avhW --no-compress --progress ${T}/pf/ ${WORKDIR}/linux-${KV_FULL}-patches/pf failed${NORMAL}"
+	move "${T}/pf" "${WORKDIR}/linux-${KV_FULL}-patches/pf"
+
+	ApplyUserPatch "pf"
 }
 
 # @FUNCTION: pkg_postinst

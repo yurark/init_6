@@ -25,16 +25,12 @@ If you've never worked with a overlay, please read [Gentoo Overlays: Users' Guid
 In this overlay you will find
 -----------------------------
  * [app-admin/perl-cleaner](https://github.com/init6/init_6/tree/master/app-admin/perl-cleaner), [app-admin/python-updater](https://github.com/init6/init_6/tree/master/app-admin/python-updater), [app-portage/gentoolkit](https://github.com/init6/init_6/tree/master/app-portage/gentoolkit), [sys-devel/binutils-config](https://github.com/init6/init_6/tree/master/sys-devel/binutils-config), [sys-devel/gcc-config](https://github.com/init6/init_6/tree/master/sys-devel/gcc-config) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219) 
- * [app-emulation/wine](https://github.com/init6/init_6/tree/master/app-emulation/wine) with desktop and icon files and with with [with Maarten Lankhorst's multimedia patches, including PulseAudio support](http://repo.or.cz/w/wine/multimedia.git)
- * [app-misc/mc](https://github.com/init6/init_6/tree/master/app-misc/mc) with desktop and icon files
  * [dev-vcs/gitflow](https://github.com/init6/init_6/tree/master/dev-vcs/gitflow) fix for [bug #419943](https://bugs.gentoo.org/show_bug.cgi?id=419943)
- * [media-fonts/monaco](https://github.com/init6/init_6/tree/master/media-fonts/monaco) fix for [bug #281939](https://bugs.gentoo.org/show_bug.cgi?id=281939)
- * [media-video/mpv](https://github.com/init6/init_6/tree/master/media-video/mpv) [Video player based on MPlayer/mplayer2](http://mpv.io)
- * [net-irc/irssi](https://github.com/init6/init_6/tree/master/net-irc/irssi) with desktop and icon files
  * [net-wireless/broadcom-sta](https://github.com/init6/init_6/tree/master/net-wireless/broadcom-sta) fix for [bug #484676](https://bugs.gentoo.org/show_bug.cgi?id=484676)
  * [sets/*](https://github.com/init6/init_6/blob/master/sets/README.md)
  * [sys-apps/squashed-portage](https://github.com/init6/init_6/tree/master/sys-apps/squashed-portage) [squashed-portage](https://github.com/init6/squashed-portage) by the old wiki [squashed portage tree](http://web.archive.org/web/20130412155603/http://en.gentoo-wiki.com/wiki/Squashed_Portage_Tree) or [mirror](https://github.com/init6/init_6/wiki/squashed-portage-tree). [project wiki](https://github.com/init6/init_6/wiki/squashed-portage-tree)
  * [sys-firmware/intel-ucode](https://github.com/init6/init_6/tree/master/sys-firmware/intel-ucode) intel IA32 microcode update data
+ * [sys-firmware/nouveau-firmware](https://github.com/init6/init_6/tree/master/sys-firmware/nouveau-firmware) fix for [bug #480832](https://bugs.gentoo.org/show_bug.cgi?id=480832)
  * [sys-kernel/vanilla-sources](https://github.com/init6/init_6/blob/master/sys-kernel/vanilla-sources/vanilla-sources-9999.ebuild) live 9999 git ebuild
  * [sys-kernel/geek-sources](https://github.com/init6/init_6/tree/master/sys-kernel/geek-sources) [Full geek`s kernel linux sources including](https://github.com/init6/init_6/wiki/geek-sources):
      * **aufs** - [Another Union FS](http://aufs.sourceforge.net)
@@ -50,7 +46,9 @@ In this overlay you will find
      * **grsec** - [Use hardened-patchset](http://git.overlays.gentoo.org/gitweb/?p=proj/hardened-patchset.git;a=summary) which includes a [grsecurity patches](http://grsecurity.net)
      * **ice** - [Use TuxOnIce patches](https://github.com/NigelCunningham/tuxonice-kernel)
      * **lqx** - [Use liquorix patches](http://liquorix.net)
-     * **mageia** - [Use Mandriva/Mageia patches](http://svnweb.mageia.org/packages/cauldron/kernel)
+     * **mageia** - [Use Mageia patches](http://svnweb.mageia.org/packages/cauldron/kernel)
+     * **openvz** - [RHEL6 kernel with OpenVZ patchset](http://openvz.org)
+     * **openwrt** - [OpenWrt kernel patches](https://openwrt.org)
      * **optimization** - [Kernel patch enables gcc optimizations for additional CPUs](https://github.com/graysky2/kernel_gcc_patch)
      * **pax** - [Use PAX patches](http://pax.grsecurity.net)
      * **pf** - [Use pf-kernel patches](http://pf.natalenko.name)
@@ -60,15 +58,67 @@ In this overlay you will find
      * **rsbac** - [RSBAC (Rule Set Based Access Control) patches](http://www.rsbac.org)
      * **rt** - [Use Ingo Molnar's realtime preempt patches](http://www.kernel.org/pub/linux/kernel/projects/rt)
      * **suse** - [Use OpenSuSE patches](http://kernel.opensuse.org/cgit/kernel-source)
-     * **ubuntu** - [Use Ubuntu patches](http://kernel.ubuntu.com/~kernel-ppa)
      * **uksm** - [Use Ultra Kernel Samepage Merging patches](http://kerneldedup.org)
      * **zen** - [Use ZEN kernel patches](https://github.com/damentz/zen-kernel)
      * **zfs** - [The native Linux kernel port of the ZFS filesystem](http://zfsonlinux.org)
  * [sys-kernel/rh-sources](https://github.com/init6/init_6/tree/master/sys-kernel/rh-sources) Full sources including the Red Hat Enterprise Linux sources patchset for the 2.6 kernel tree
  * [sys-libs/core-functions](https://github.com/init6/init_6/tree/master/sys-libs/core-functions) provide alternative for /etc/init.d/functions.sh fix for [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
- * [x11-drivers/nouveau-firmware](https://github.com/init6/init_6/tree/master/x11-drivers/nouveau-firmware) fix for [bug #480832](https://bugs.gentoo.org/show_bug.cgi?id=480832)
 
 and many fixes and patches…
+
+Dynamic sets:
+-------------
+
+	@init6-rebuild	= rebuilds all installed packages from this overlay.
+			nice for rebuilding, as it will rebuild also
+			all dependencies (simple rerun of emerge on some static set will not)
+
+	@init6-all	= all ebuilds from overlay, excluding those listed
+			into @init6-broken (see below). Still
+			broken ebuild might be fetched as
+			dependencies. Use it, if you want to install
+			and try all known packages from overlay.
+
+Static sets:
+-------------
+
+	Meta sets:
+	----------
+
+	@arx		= Arx libertatis stuff
+	@chromium	= Chromium stuff
+	@core		= Only stage3 core stuff
+	@e17		= enlightenment 17 stuff
+	@gnome		= Gnome set
+	@kernel		= Only kernel. Read [Depclean Tricks sets.conf](http://www.gentoo-pr.org/node/18)
+	@portage	= Portage stuff set
+	@toolchain	= Only toolchain
+	@wireless	= wireless stuff set
+	@X		= X stuff set
+	@kde-4.11	= Custom Kde set
+
+	Kde sub sets:
+	----------
+
+	@kdeadmin-4.11
+	@kdeartwork-4.11
+	@kdebase-4.11
+	@kde-baseapps-4.11
+	@kdebase-runtime-4.11
+	@kdebase-workspace-4.11
+	@kdegraphics-4.11
+	@kdelibs-4.11
+	@kdemultimedia-4.11
+	@kdenetwork-4.11
+	@kdepim-4.11
+	@kdeutils-4.11
+
+Developer sets:
+---------------
+
+	@init6-broken	= List of programs known to be broken for a long time
+			Used by @init6-all script for
+			excluding and filtering them out
 
 Contribute to this overlay
 --------------------------
