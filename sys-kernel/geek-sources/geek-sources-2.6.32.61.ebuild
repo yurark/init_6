@@ -8,7 +8,7 @@ DEBLOB_AVAILABLE="1"
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 
 BFQ_VER="2.6.32"
-GRSEC_VER="2.9.1-2.6.32.61-201312081751"
+GRSEC_VER="2.9.1-2.6.32.61-201312081751" # 12/08/13 17:52
 PAX_VER="2.6.32.60-test215"
 REISER4_VER="2.6.32"
 REISER4_SRC="mirror://sourceforge/project/reiser4/reiser4-for-linux-2.6/reiser4-for-${REISER4_VER}.patch.gz"
