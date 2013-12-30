@@ -1,0 +1,20 @@
+# live etoile
+=gnustep-libs/addresseskit-9999
+=gnustep-libs/camaelon-9999
+=gnustep-libs/coreobject-9999
+=gnustep-libs/etoile-foundation-9999
+=gnustep-libs/etoile-serialize-9999
+=gnustep-libs/etoile-ui-9999
+=gnustep-libs/etoile-wildmenus-9999
+=gnustep-libs/iconkit-9999
+=gnustep-libs/languagekit-9999
+=gnustep-libs/lucenekit-9999
+=gnustep-libs/mediakit-9999
+=gnustep-libs/ogrekit-9999
+=gnustep-libs/popplerkit-9999
+=gnustep-libs/scriptkit-9999
+=gnustep-libs/smalltalkkit-9999
+=gnustep-libs/systemconfig-9999
+=gnustep-libs/unitkit-9999
+=gnustep-libs/xmppkit-9999
+=gnustep-libs/xwindowserverkit-9999
