@@ -1,0 +1,6 @@
+CFLAGS="-Os -march=pentium-m -mtune=nocona -pipe -fomit-frame-pointer"
+CXXFLAGS="${CFLAGS}"
+FFLAGS="${CFLAGS}"
+FCFLAGS="${CFLAGS}"
+
+USE="${USE} sse sse2 mmx"

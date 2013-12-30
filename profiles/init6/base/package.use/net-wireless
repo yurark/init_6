@@ -1,0 +1,2 @@
+net-wireless/bluez -test-programs
+net-wireless/wpa_supplicant -qt4

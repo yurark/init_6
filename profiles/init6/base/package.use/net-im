@@ -1,0 +1,3 @@
+net-im/empathy gnome-online-accounts
+net-im/pidgin -eds -ncurses -spell -xscreensaver -gstreamer
+net-im/telepathy-connection-managers -icq irc jabber sip msn

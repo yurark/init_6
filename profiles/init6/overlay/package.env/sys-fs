@@ -1,0 +1,2 @@
+sys-fs/cryptsetup python_all
+sys-fs/lvm2 no_multilib_strict

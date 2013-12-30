@@ -1,0 +1,6 @@
+app-portage/eix
+app-portage/euses
+app-portage/eclass-manpages
+sys-apps/squashed-portage
+app-portage/layman
+app-portage/gentoolkit

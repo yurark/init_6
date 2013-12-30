@@ -1,0 +1,83 @@
+# Copyright 2004-2013 Gentoo Foundation.
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+# Adding -Wl,--hash-style=gnu to default LDFLAGS for linux/amd64 dev profile
+# This will help developers track packages, that don't respect LDFLAGS, down
+# more effectively
+LDFLAGS="${LDFLAGS} -Wl,--warn-once -Wl,--hash-style=gnu"
+
+#Adding -frecord-gcc-switches to help track down packages which don't respect *FLAGS
+#should probably leave a note in /etc/portage/make.conf about keeping this when override
+#GRAPHITE="-falign-functions=4 -fforce-addr -floop-block -floop-interchange -floop-strip-mine -fno-ident -fomit-frame-pointer -ftracer -ftree-loop-distribution -fweb"
+#CFLAGS="${CFLAGS} -frecord-gcc-switches -ftree-vectorize -mstackrealign -pipe ${GRAPHITE}"
+CFLAGS="${CFLAGS} -frecord-gcc-switches -ftree-vectorize -mstackrealign -pipe"
+CXXFLAGS="${CXXFLAGS} ${CFLAGS}"
+CPPFLAGS="${CPPFLAGS} ${CFLAGS}"
+
+FEATURES="${FEATURES} buildpkg clean-logs fixlafiles multilib-strict news parallel-fetch preserve-libs protect-owned sfperms unknown-features-warn unmerge-orphans userfetch userpriv usersandbox usersync"
+
+#for major use of binpkgs, we need to "fix" a few of gentoo's flaws:
+#a package built against kernel A will attempt to be used even when remerging on kernel B (often to hilarious consequences)
+#so we will define a long list of such packages and exclude them from being built and used (catch it on both ends to avoid issues)
+#GENTOO_BINPKG_RESTRICTED="sys-kernel/compat-drivers sys-kernel/ax88179_178a x11-drivers/ati-drivers x11-drivers/nvidia-drivers sys-fs/zfs-kmod sys-kernel/spl sys-power/bbswitch \
+#			app-emulation/virtualbox-modules app-emulation/vmware-modules app-emulation/open-vm-tools-kmod"
+EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --ask-enter-invalid --keep-going=y --binpkg-respect-use=y --tree --verbose --with-bdeps=y --autounmask=n --quiet-build=n"
+#EMERGE_DEFAULT_OPTS="${EMERGE_DEFAULT_OPTS} --buildpkg-exclude \"${GENTOO_BINPKG_RESTRICTED}\" --usepkg-exclude \"${GENTOO_BINPKG_RESTRICTED}\""
+
+# Default:		"rsync://rsync.gentoo.org/gentoo-portage"
+# North America:	"rsync://rsync.namerica.gentoo.org/gentoo-portage"
+# South America:	"rsync://rsync.samerica.gentoo.org/gentoo-portage"
+# Europe:		"rsync://rsync.europe.gentoo.org/gentoo-portage"
+# Asia:			"rsync://rsync.asia.gentoo.org/gentoo-portage"
+# Australia:		"rsync://rsync.au.gentoo.org/gentoo-portage"
+SYNC="rsync://rsync.gentoo.org/gentoo-portage"
+
+INPUT_DEVICES="keyboard mouse synaptics evdev v4l"
+
+PORTAGE_ECLASS_WARNING_ENABLE="0"
+PORTAGE_ELOG_CLASSES="log warn error info"
+PORTAGE_ELOG_SYSTEM="echo:log,warn"
+PORT_LOGDIR="/var/log/portage"
+
+# Log eqawarn messages
+PORTAGE_ELOG_CLASSES="${PORTAGE_ELOG_CLASSES} qa"
+
+PORTAGE_NICENESS="19"
+
+VIDEO_CARDS="fbdev nouveau v4l"
+
+# Some more forced targets
+# ruby
+RUBY_TARGETS="ruby20"
+# python
+USE_PYTHON="3.3"
+PYTHON_TARGETS="python3_3"
+# php
+PHP_TARGETS="php5-3"
+
+USE="${USE} -avahi -consolekit -cups -gnome-keyring -java -kerberos -ldap -mms -nautilus -openrc -orc -perl -python -samba -webkit -zeitgeist -zeroconf X X509 a52 aac acpi alsa apng asf bluetooth branding cairo cdda colord dbus device-mapper djvu dri dts dv dvd dvi egl exif extras fam ffmpeg flac g3dvl gif gles1 gles2 gnome gnutls gstreamer gtk gtk3 icu introspection ipv6 jbig jpeg jpeg2k lame libkms libnotify lzma lzo mad mp3 mp4 mpeg networkmanager new-login nsplugin ogg opengl pdf png policykit pulseaudio qt3support qt4 semantic-desktop spell sqlite sse3 ssse3 startup-notification svg symlink systemd theora threads tiff truetype v4l vidix vorbis vpx wavpack x264 xattr xcomposite xinerama xml xorg xscreensaver xv xvid xvmc"
+
+#-----------------------------
+USE="truetype X new-login xorg xscreensaver xv xcomposite xinerama opengl egl gles1 gles2 xvmc \
+jpeg gif tiff png apng svg pdf djvu dvi jbig jpeg2k exif \
+alsa mad vidix asf dvd mp4 aac x264 xvid nsplugin mp3 gstreamer cdda vpx a52 dv ffmpeg pulseaudio dts \
+theora ogg vorbis wavpack flac lame mpeg v4l \
+ipv6 lzma lzo symlink sqlite spell xml extras device-mapper acpi sse3 ssse3 branding xattr g3dvl X509 \
+fam dbus threads systemd policykit gnutls \
+-samba -java -perl -python -kerberos -ldap -avahi -zeroconf -gnome-keyring -consolekit -zeitgeist -nautilus \
+-cups -openrc -webkit -mms \
+gtk gtk3 cairo gnome colord libnotify startup-notification connman libkms introspection \
+qt3support qt4 semantic-desktop icu networkmanager bluetooth"
+#------------------------------
+
+#PORTAGE_BZIP2_COMMAND="lbzip2"
+
+QEMU_SOFTMMU_TARGETS="arm i386 x86_64"
+QEMU_USER_TARGETS="arm i386 x86_64"
+
+# Standard PC (BIOS)
+GRUB_PLATFORMS="${GRUB_PLATFORMS} pc"
+
+#mgorny suggested this speeds up sync, in my testing it makes a rather large difference
+PORTAGE_RSYNC_EXTRA_OPTS="--omit-dir-times"

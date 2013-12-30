@@ -1,0 +1,3 @@
+media-sound/alsa-tools -gtk
+media-sound/banshee mtp
+media-sound/pulseaudio -bluetooth

@@ -1,0 +1,8 @@
+sys-apps/busybox static
+sys-apps/groff -X
+sys-apps/hwdata-gentoo binary-drivers
+sys-apps/kmod tools
+sys-apps/pciutils -zlib
+sys-apps/portage python3
+sys-apps/systemd audit gcrypt python gudev firmware-loader keymap
+sys-apps/util-linux static-libs

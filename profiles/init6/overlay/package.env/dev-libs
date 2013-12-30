@@ -1,0 +1,9 @@
+dev-libs/boost python_all
+dev-libs/glib python_all
+dev-libs/gobject-introspection python_all
+dev-libs/libnl python_all
+dev-libs/libpeas python_all
+dev-libs/libpwquality python_all
+dev-libs/libxml2 python_all
+dev-libs/libxslt python_all
+dev-libs/protobuf python_all

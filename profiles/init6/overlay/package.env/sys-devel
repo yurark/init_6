@@ -1,0 +1,2 @@
+sys-devel/gcc no-tmpfs
+sys-devel/llvm python_all no-tmpfs

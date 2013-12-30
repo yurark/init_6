@@ -1,3 +1,0 @@
-media-libs/fontconfig cleartype -ubuntu
-media-libs/freetype -bindist cleartype -ubuntu fontforge utils
-x11-libs/libXft cleartype -ubuntu

@@ -1,0 +1,18 @@
+dev-libs/apr-util -berkdb
+dev-libs/boost -icu
+dev-libs/DirectFB bmp fbcon mng mpeg2 multicore vdpau
+dev-libs/ecore evas fbcon curl
+dev-libs/e_dbus bluetooth
+dev-libs/elfutils static-libs
+dev-libs/folks eds vala
+dev-libs/libgcrypt static-libs
+dev-libs/libgpg-error static-libs
+dev-libs/libpcre static-libs
+dev-libs/libpeas python
+dev-libs/libxml2 python
+dev-libs/nettle gmp
+dev-libs/openobex bluetooth syslog usb
+dev-libs/popt static-libs
+dev-libs/xerces-c xqilla
+dev-libs/xmlrpc-c curl
+dev-libs/weston editor examples fbdev unwind view wayland-compositor xwayland

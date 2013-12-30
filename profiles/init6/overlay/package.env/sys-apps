@@ -1,0 +1,4 @@
+sys-apps/file python_all
+sys-apps/portage python_all
+sys-apps/systemd python_all no_multilib_strict
+sys-apps/usbutils python_all

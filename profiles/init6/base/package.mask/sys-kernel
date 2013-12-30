@@ -1,0 +1,7 @@
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# live 9999 ebuild`s
+=sys-kernel/vanilla-sources-9999
+
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Kernel mainline 2013-12-22
+=sys-kernel/geek-sources-3.13-r5

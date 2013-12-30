@@ -1,0 +1,5 @@
+media-libs/alsa-lib python_all
+media-libs/gexiv2 python_all
+media-libs/lcms python_all
+media-libs/mesa python_all
+media-libs/mutagen python_all

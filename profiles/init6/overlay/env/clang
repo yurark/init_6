@@ -1,0 +1,3 @@
+# Environment override named clang
+CC=clang
+CXX=clang++

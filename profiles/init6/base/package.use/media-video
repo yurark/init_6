@@ -1,0 +1,6 @@
+media-video/ffmpeg faac vdpau vaapi amr network openssl rtmp 3dnow 3dnowext mmxext opus
+media-video/libav faac vdpau vaapi amr custom-cflags network openssl rtmp 3dnow 3dnowext mmxext
+media-video/mplayer2 fbcon ftp md5sum mmxext vdpau -cdio 3dnow 3dnowext bluray bs2b directfb radio
+media-video/mplayer -dxr3 -live -directfb -fbcon -bluray -twolame -toolame dvdnav openal mmxext radio rtc rar tga zoran cpudetection cddb cdparanoia 3dnow 3dnowext bl ftp lirc md5sum pnm
+media-video/mpv vdpau -cdio bluray bs2b -radio -quvi encode -lcms -mng vaapi
+media-video/totem python youtube

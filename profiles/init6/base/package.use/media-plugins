@@ -1,0 +1,2 @@
+media-plugins/alsa-plugins -ffmpeg libsamplerate
+media-plugins/gst-plugins-meta http taglib

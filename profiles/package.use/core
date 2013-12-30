@@ -1,6 +1,0 @@
-app-misc/mc chdir slang
-sys-apps/busybox -make-symlinks -savedconfig
-sys-apps/v86d x86emu
-sys-boot/grub -custom-cflags -debug mkfont -static
-sys-devel/gcc -gtk objc objc++ objc-gc graphite
-sys-fs/udev extras

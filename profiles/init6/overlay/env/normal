@@ -1,0 +1,3 @@
+CFLAGS="-O2 -pipe"
+CXXFLAGS="-O2 -pipe"
+LDFLAGS=""

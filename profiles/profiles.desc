@@ -1,0 +1,18 @@
+amd64           init6/default/linux/amd64			stable
+amd64           init6/default/linux/amd64/bleeding_edge		dev
+amd64           init6/hardened/linux/amd64			stable
+amd64           init6/hardened/linux/amd64/binary		dev
+amd64           init6/hardened/linux/amd64/bleeding_edge	dev
+
+x86             init6/default/linux/x86				stable
+x86             init6/default/linux/x86/bleeding_edge		dev
+x86             init6/hardened/linux/x86			stable
+x86             init6/hardened/linux/x86/binary			dev
+x86             init6/hardened/linux/x86/bleeding_edge		dev
+
+arm             init6/default/linux/arm				stable
+arm             init6/default/linux/arm/bleeding_edge		dev
+arm             init6/hardened/linux/arm			stable
+arm             init6/hardened/linux/arm/bleeding_edge		dev
+#arm             init6/hardened/linux/uclibc/arm			dev
+#arm             init6/hardened/linux/uclibc/arm/bleeding_edge	dev

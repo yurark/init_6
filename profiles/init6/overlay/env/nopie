@@ -1,0 +1,4 @@
+# Disable PIE
+CFLAGS="${CFLAGS} -nopie"
+CXXFLAGS="${CXXFLAGS} -nopie"
+LDFLAGS="${LDFLAGS} -nopie"

@@ -1,0 +1,3 @@
+app-text/lcdf-typetools kpathsea
+app-text/recode -nls
+app-text/texlive -truetype

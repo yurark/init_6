@@ -1,0 +1,2 @@
+net-dns/avahi autoipd -utils howl-compat mdnsresponder-compat python
+net-dns/dnsmasq -dbus
