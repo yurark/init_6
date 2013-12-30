@@ -1,12 +1,11 @@
-http://bugs.gentoo.org/126080
-
---- src/Makefile
-+++ src/Makefile
-@@ -220,7 +220,7 @@
+diff -urN a/src/Makefile b/src/Makefile
+--- a/src/Makefile	2013-11-24 15:05:56.000000000 +0200
++++ b/src/Makefile	2013-12-30 23:24:30.061522376 +0200
+@@ -255,7 +255,7 @@
  # build targets
  # -----------------------------------------------------------------------------
  
--all: libgame_dir game_em_dir game_sp_dir $(PROGNAME)
+-all: $(AUTOCONF) libgame_dir game_em_dir game_sp_dir $(PROGNAME)
 +all: $(PROGNAME)
  
  $(PROGNAME): $(RNDLIBS) $(TIMESTAMP_FILE) $(OBJS) $(ICON)
