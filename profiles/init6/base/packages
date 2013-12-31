@@ -21,7 +21,7 @@
 *sys-apps/smartmontools
 *sys-apps/usbutils
 *sys-boot/grub
-*sys-kernel/module-rebuild
+#*sys-kernel/module-rebuild # sys-kernel/module-rebuild -> emerge @module-rebuild
 *sys-libs/gpm
 *sys-process/htop
 *sys-process/time
