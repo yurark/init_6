@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI="5"
 inherit flag-o-matic eutils games
 
 DESCRIPTION="A Boulderdash clone"
@@ -101,8 +101,11 @@ src_install() {
 	else
 		dosym rocksndiamonds.x11 "${GAMES_BINDIR}/rocksndiamonds"
 	fi
-	insinto "${GAMES_DATADIR}/${PN}"
-	doins -r docs graphics levels music sounds || die "doins failed"
+#	insinto "${GAMES_DATADIR}/${PN}"
+#	doins -r docs graphics levels music sounds || die "doins -r failed"
+#	Screw You Guys, I'm Going Home
+	dodir "${GAMES_DATADIR}/${PN}"
+	cp -R docs graphics levels music sounds ${D}/${GAMES_DATADIR}/${PN}/
 
 	newman rocksndiamonds.{1,6}
 	dodoc CREDITS ChangeLog README
@@ -111,3 +114,5 @@ src_install() {
 
 	prepgamesdirs
 }
+
+
