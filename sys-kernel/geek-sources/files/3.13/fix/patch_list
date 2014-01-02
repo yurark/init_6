@@ -17,7 +17,9 @@ linux-058.06-hid_sony-add_SMK_link.patch
 linux-059-remove_some_xpad_pids-0.2.patch
 linux-060-add_AUGUST_DVB-T205.patch
 linux-203-stb0899_enable_low_symbol_rate.patch
+linux-210-dvbsky.patch
 linux-212-mantis_stb0899_faster_lock.patch
+linux-221-ngene-octopus.patch
 linux-222-stb0899_signal_quality.patch
 linux-223-Fix-video-artifacts-with-tt-3600-s2-usb.patch
 linux-701-linksys_aes2500_brcmfmac.patch
@@ -27,7 +29,10 @@ linux-705-Support-for-Buffalo-WLI-UC-G300HP-V1.patch
 linux-706-Sitecom-N300.patch
 linux-900-hide_tsc_error.patch
 linux-950-saa716x_PCIe_interface_chipset.patch
+linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
 linux-991.01-ptrace_fix.patch
-linux-992.03-i915_fix_clamping_to_limited_range.patch
+linux-992-0001-drm-radeon-set-correct-pipe-config-for-Hawaii-in-DCE.patch
+linux-992-0002-drm-radeon-expose-render-backend-mask-to-the-userspa.patch
+linux-992-0003-drm-radeon-set-correct-pipe-config-for-Hawaii-in-DCE.patch
+linux-992-0004-drm-radeon-Bump-version-for-CIK-DCE-tiling-fix.patch
 linux-995-CX24120-13Z_frontend.patch
-linux-999.91-nouveau-Fixed_the_hwmon_undeclared_build_error.patch
