@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -17,7 +17,7 @@ MAGEIA_VER="releases/3.10.10/3.mga4"
 OPTIMIZATION_VER="2"
 PAX_VER="3.10.12-test26"
 REISER4_VER="3.10"
-RT_VER="3.10.24-rt22"
+RT_VER="3.10.25-rt23"
 RSBAC_VER="1.4.7"
 RSBAC_NAME="patch-linux-3.10.7-rsbac-${RSBAC_VER}.diff.xz"
 UKSM_VER="0.1.2.2"

@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -11,7 +11,7 @@ BFQ_VER="3.11.0-v6r2"
 BLD_VER="3.11.0"
 FEDORA_VER="f20"
 MAGEIA_VER="releases/3.11.4/1.mga4"
-PAX_VER="3.11.8-test13"
+PAX_VER="3.11.9-test14"
 REISER4_VER="3.11.1"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v3.10"
