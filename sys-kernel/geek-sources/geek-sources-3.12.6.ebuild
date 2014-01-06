@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -11,10 +11,10 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 BFQ_VER="3.12.0-v6r2"
 BLD_VER="3.12.0"
 CK_VER="3.12-ck2"
-GRSEC_VER="3.0-3.12.6-201312311105" # 12/31/13 11:06
+GRSEC_VER="3.0-3.12.6-201401021726" # 01/02/14 17:30
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 LQX_VER="3.12.6-1"
-MAGEIA_VER="releases/3.12.6/2.mga4"
+MAGEIA_VER="releases/3.12.6/3.mga4"
 PAX_VER="3.12.6-test9"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 REISER4_VER="3.12.6"
