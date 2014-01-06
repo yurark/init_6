@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,7 +15,7 @@ REISER4_SRC="mirror://sourceforge/project/reiser4/reiser4-for-linux-2.6/reiser4-
 RH_VER="19"
 RH_NAME="kernel-2.6.32-${RH_VER}.el6"
 RH_SRC="http://people.redhat.com/arozansk/el6/19.el6/src/${RH_NAME}.src.rpm"
-OPENVZ_VER="042stab084.12"
+OPENVZ_VER="042stab084.14"
 SUSE_VER="3811b6910313cc9564c3e893d6ba75645ee38a6b" # rpm-2.6.32.45-0.3
 
 SUPPORTED_USES="bfq brand -build grsec hardened openvz pax reiser4 rh suse symlink"

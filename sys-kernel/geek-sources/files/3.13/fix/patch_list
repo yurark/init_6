@@ -31,8 +31,4 @@ linux-900-hide_tsc_error.patch
 linux-950-saa716x_PCIe_interface_chipset.patch
 linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
 linux-991.01-ptrace_fix.patch
-linux-992-0001-drm-radeon-set-correct-pipe-config-for-Hawaii-in-DCE.patch
-linux-992-0002-drm-radeon-expose-render-backend-mask-to-the-userspa.patch
-linux-992-0003-drm-radeon-set-correct-pipe-config-for-Hawaii-in-DCE.patch
-linux-992-0004-drm-radeon-Bump-version-for-CIK-DCE-tiling-fix.patch
 linux-995-CX24120-13Z_frontend.patch
