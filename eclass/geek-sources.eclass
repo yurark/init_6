@@ -21,7 +21,7 @@
 
 inherit geek-linux geek-utils geek-fix geek-upatch geek-squeue geek-vars
 
-KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec hardened ice lqx mageia openvz openwrt optimization pax pf reiser4 rh rifs rt rsbac suse symlink uksm zen zfs"
+KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec hardened ice lqx mageia openvz openwrt optimization pax pf reiser4 rh rt rsbac suse symlink uksm zen zfs"
 
 # internal function
 #
@@ -70,7 +70,6 @@ for use_flag in ${IUSE}; do
 		pf	)	inherit geek-pf ;;
 		reiser4	)	inherit geek-reiser4 ;;
 		rh	)	inherit geek-rh ;;
-		rifs	)	inherit geek-rifs ;;
 		rsbac	)	inherit geek-rsbac ;;
 		rt	)	inherit geek-rt ;;
 		suse	)	inherit geek-suse ;;
@@ -92,7 +91,7 @@ geek-sources_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx openvz pf rh zen"}
-	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq rifs ck cjktty gentoo grsec hardened rsbac ice rh openvz openwrt reiser4 exfat rt bld uksm aufs mageia fedora suse brand fix upatch squeue"}
+	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimization pax lqx pf zen bfq ck cjktty gentoo grsec hardened rsbac ice rh openvz openwrt reiser4 exfat rt bld uksm aufs mageia fedora suse brand fix upatch squeue"}
 
 	local xUserOrder=""
 	local xDefOder=""
@@ -165,7 +164,6 @@ geek-sources_src_unpack() {
 				optimization	)	geek-optimization_src_unpack ;;
 				pf	)	geek-pf_src_unpack ;;
 				rh	)	geek-rh_src_unpack ;;
-				rifs	)	geek-rifs_src_unpack ;;
 				squeue	)	geek-squeue_src_unpack ;;
 				suse	)	geek-suse_src_unpack ;;
 				uksm	)	geek-uksm_src_unpack ;;
@@ -209,7 +207,6 @@ geek-sources_src_prepare() {
 				pf	)	geek-pf_src_prepare ;;
 				reiser4	)	geek-reiser4_src_prepare ;;
 				rh	)	geek-rh_src_prepare ;;
-				rifs	)	geek-rifs_src_prepare ;;
 				rsbac	)	geek-rsbac_src_prepare ;;
 				rt	)	geek-rt_src_prepare ;;
 				squeue	)	geek-squeue_src_prepare ;;
@@ -278,7 +275,6 @@ ${BLUE}For more info about patchset’s, and how to report problems, see:${NORMA
 				pf	) geek-pf_pkg_postinst ;;
 				reiser4	) geek-reiser4_pkg_postinst ;;
 				rh	) geek-rh_pkg_postinst ;;
-				rifs	) geek-rifs_pkg_postinst ;;
 				rsbac	) geek-rsbac_pkg_postinst ;;
 				rt	) geek-rt_pkg_postinst ;;
 				squeue	) geek-squeue_pkg_postinst ;;
