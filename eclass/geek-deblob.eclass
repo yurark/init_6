@@ -41,8 +41,8 @@ if [[ ${DEBLOB_AVAILABLE} == "1" ]]; then
 
 	DEBLOB_A="deblob-${DEBLOB_PV}"
 	DEBLOB_CHECK_A="deblob-check-${DEBLOB_PV}"
-	DEBLOB_HOMEPAGE="http://www.fsfla.org/svnwiki/selibre/linux-libre/"
-	DEBLOB_URI_PATH="download/releases/LATEST-${DEBLOB_PV}.N"
+	DEBLOB_HOMEPAGE="http://linux-libre.fsfla.org/pub/linux-libre"
+	DEBLOB_URI_PATH="releases/LATEST-${DEBLOB_PV}.N"
 	if ! has "${EAPI:-0}" 0 1; then
 		DEBLOB_CHECK_URI="${DEBLOB_HOMEPAGE}/${DEBLOB_URI_PATH}/deblob-check -> ${DEBLOB_CHECK_A}"
 	else
