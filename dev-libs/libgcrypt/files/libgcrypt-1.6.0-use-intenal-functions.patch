@@ -1,0 +1,21 @@
+From: Michal Vyskoci<mvyskocil@suse.com>
+Subject: Use internall malloc in fips.c
+
+
+---
+ src/fips.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: libgcrypt-1.6.0/src/fips.c
+===================================================================
+--- libgcrypt-1.6.0.orig/src/fips.c
++++ libgcrypt-1.6.0/src/fips.c
+@@ -613,7 +613,7 @@ check_binary_integrity (void)
+         err = gpg_error (GPG_ERR_INTERNAL);
+       else
+         {
+-          fname = gcry_malloc (strlen (info.dli_fname) + 1 + 5 + 1 );
++          fname = _gcry_malloc (strlen (info.dli_fname) + 1 + 5 + 1 );
+           if (!fname)
+             err = gpg_error_from_syserror ();
+           else
