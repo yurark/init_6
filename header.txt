@@ -2,6 +2,3 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-  10 Dec 2013; Andrey Ovcharov <sudormrfhalt@gmail.com> iso_latin_1-0.0.3.ebuild :
-  Initial commit
-  Added to the fonts herd

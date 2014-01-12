@@ -24,14 +24,28 @@ If you've never worked with a overlay, please read [Gentoo Overlays: Users' Guid
 
 In this overlay you will find
 -----------------------------
- * [app-admin/perl-cleaner](https://github.com/init6/init_6/tree/master/app-admin/perl-cleaner), [app-admin/python-updater](https://github.com/init6/init_6/tree/master/app-admin/python-updater), [app-portage/gentoolkit](https://github.com/init6/init_6/tree/master/app-portage/gentoolkit), [sys-devel/binutils-config](https://github.com/init6/init_6/tree/master/sys-devel/binutils-config), [sys-devel/gcc-config](https://github.com/init6/init_6/tree/master/sys-devel/gcc-config) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219) 
+ * [app-admin/perl-cleaner](https://github.com/init6/init_6/tree/master/app-admin/perl-cleaner) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [app-admin/python-updater](https://github.com/init6/init_6/tree/master/app-admin/python-updater) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [app-portage/gentoolkit](https://github.com/init6/init_6/tree/master/app-portage/gentoolkit) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [app-portage/udept](https://github.com/init6/init_6/tree/master/app-portage/udept) is a collection of Portage scripts, maintenance tools and analysis tools, written in bash and powered by the dep engine
+ * [dev-libs/shflags](https://github.com/init6/init_6/tree/master/dev-libs/shflags) Simplified handling of command-line flags in Bourne based shells
+ * [dev-vcs/git-flow-completion](https://github.com/init6/init_6/tree/master/dev-vcs/git-flow-completion) git flow completion for bash and zsh
  * [dev-vcs/gitflow](https://github.com/init6/init_6/tree/master/dev-vcs/gitflow) fix for [bug #419943](https://bugs.gentoo.org/show_bug.cgi?id=419943)
+ * [dev-vcs/gitlab-shell](https://github.com/init6/init_6/tree/master/dev-vcs/gitlab-shell) GitLab Shell is a free SSH access and repository management application
+ * [games-arcade/rocksndiamonds](https://github.com/init6/init_6/tree/master/games-arcade/rocksndiamonds) A Boulderdash clone
+ * [games-fps/quake2-groundzero-data](https://github.com/init6/init_6/tree/master/games-fps/quake2-groundzero-data) Quake 2: Ground Zero data files
+ * [games-fps/quake2-reckoning-data](https://github.com/init6/init_6/tree/master/games-fps/quake2-reckoning-data) Quake 2: The Reckoning data files
+ * [games-fps/yamagi-quake2](https://github.com/init6/init_6/tree/master/games-fps/yamagi-quake2) An enhanced client for id Software's Quake II with full 64-bit support
+ * [games-fps/yamagi-quake2-ctf](https://github.com/init6/init_6/tree/master/games-fps/yamagi-quake2-ctf) Three Wave Caputure The Flag
+ * [games-fps/yamagi-quake2-rogue](https://github.com/init6/init_6/tree/master/games-fps/yamagi-quake2-rogue) Quake II Mission Pack 2 - Ground Zero
+ * [games-fps/yamagi-quake2-xatrix](https://github.com/init6/init_6/tree/master/games-fps/yamagi-quake2-xatrix) Quake II Mission Pack 1 - The Reckoning
+ * [media-fonts/iso_latin_1](https://github.com/init6/init_6/tree/master/media-fonts/iso_latin_1) iso-latin-1 based linux console font
  * [net-wireless/broadcom-sta](https://github.com/init6/init_6/tree/master/net-wireless/broadcom-sta) fix for [bug #484676](https://bugs.gentoo.org/show_bug.cgi?id=484676)
- * [sets/*](https://github.com/init6/init_6/blob/master/sets/README.md)
  * [sys-apps/squashed-portage](https://github.com/init6/init_6/tree/master/sys-apps/squashed-portage) [squashed-portage](https://github.com/init6/squashed-portage) by the old wiki [squashed portage tree](http://web.archive.org/web/20130412155603/http://en.gentoo-wiki.com/wiki/Squashed_Portage_Tree) or [mirror](https://github.com/init6/init_6/wiki/squashed-portage-tree). [project wiki](https://github.com/init6/init_6/wiki/squashed-portage-tree)
+ * [sys-devel/binutils-config](https://github.com/init6/init_6/tree/master/sys-devel/binutils-config) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [sys-devel/gcc-config](https://github.com/init6/init_6/tree/master/sys-devel/gcc-config) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
  * [sys-firmware/intel-ucode](https://github.com/init6/init_6/tree/master/sys-firmware/intel-ucode) intel IA32 microcode update data
  * [sys-firmware/nouveau-firmware](https://github.com/init6/init_6/tree/master/sys-firmware/nouveau-firmware) fix for [bug #480832](https://bugs.gentoo.org/show_bug.cgi?id=480832)
- * [sys-kernel/vanilla-sources](https://github.com/init6/init_6/blob/master/sys-kernel/vanilla-sources/vanilla-sources-9999.ebuild) live 9999 git ebuild
  * [sys-kernel/geek-sources](https://github.com/init6/init_6/tree/master/sys-kernel/geek-sources) [Full geek`s kernel linux sources including](https://github.com/init6/init_6/wiki/geek-sources):
      * **aufs** - [Another Union FS](http://aufs.sourceforge.net)
      * **bfq** - [Budget Fair Queueing Budget I/O Scheduler](http://algo.ing.unimo.it/people/paolo/disk_sched/sources.php)
@@ -54,7 +68,6 @@ In this overlay you will find
      * **pf** - [Use pf-kernel patches](http://pf.natalenko.name)
      * **reiser4** - [Use Reiser4 FS patches](http://sourceforge.net/projects/reiser4)
      * **rh** - [Use Red Hat Enterprise Linux kernel patches](http://www.redhat.com)
-     * **rifs** - [RIFS A interactivity favor scheduler](https://code.google.com/p/rifs-scheduler)
      * **rsbac** - [RSBAC (Rule Set Based Access Control) patches](http://www.rsbac.org)
      * **rt** - [Use Ingo Molnar's realtime preempt patches](http://www.kernel.org/pub/linux/kernel/projects/rt)
      * **suse** - [Use OpenSuSE patches](http://kernel.opensuse.org/cgit/kernel-source)
@@ -62,7 +75,9 @@ In this overlay you will find
      * **zen** - [Use ZEN kernel patches](https://github.com/damentz/zen-kernel)
      * **zfs** - [The native Linux kernel port of the ZFS filesystem](http://zfsonlinux.org)
  * [sys-kernel/rh-sources](https://github.com/init6/init_6/tree/master/sys-kernel/rh-sources) Full sources including the Red Hat Enterprise Linux sources patchset for the 2.6 kernel tree
+ * [sys-kernel/vanilla-sources](https://github.com/init6/init_6/blob/master/sys-kernel/vanilla-sources/vanilla-sources-9999.ebuild) live 9999 git ebuild
  * [sys-libs/core-functions](https://github.com/init6/init_6/tree/master/sys-libs/core-functions) provide alternative for /etc/init.d/functions.sh fix for [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [www-apps/gitlabhq](https://github.com/init6/init_6/tree/master/www-apps/gitlabhq) GitLab is a free project and repository management application
 
 and many fixes and patches…
 
@@ -89,29 +104,30 @@ Static sets:
 	@chromium	= Chromium stuff
 	@core		= Only stage3 core stuff
 	@e17		= enlightenment 17 stuff
+	@etoile		- etoile stuff
 	@gnome		= Gnome set
 	@kernel		= Only kernel. Read [Depclean Tricks sets.conf](http://www.gentoo-pr.org/node/18)
 	@portage	= Portage stuff set
 	@toolchain	= Only toolchain
 	@wireless	= wireless stuff set
 	@X		= X stuff set
-	@kde-4.11	= Custom Kde set
+	@kde-4.12	= Custom Kde set
 
 	Kde sub sets:
 	----------
 
-	@kdeadmin-4.11
-	@kdeartwork-4.11
-	@kdebase-4.11
-	@kde-baseapps-4.11
-	@kdebase-runtime-4.11
-	@kdebase-workspace-4.11
-	@kdegraphics-4.11
-	@kdelibs-4.11
-	@kdemultimedia-4.11
-	@kdenetwork-4.11
-	@kdepim-4.11
-	@kdeutils-4.11
+	@kdeadmin-4.12
+	@kdeartwork-4.12
+	@kdebase-4.12
+	@kde-baseapps-4.12
+	@kdebase-runtime-4.12
+	@kdebase-workspace-4.12
+	@kdegraphics-4.12
+	@kdelibs-4.12
+	@kdemultimedia-4.12
+	@kdenetwork-4.12
+	@kdepim-4.12
+	@kdeutils-4.12
 
 Developer sets:
 ---------------
