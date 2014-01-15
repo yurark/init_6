@@ -7,6 +7,6 @@ media-libs/gd fontconfig
 media-libs/gst-plugins-base:1.0 theora
 media-libs/lcms python
 media-libs/libsdl custom-cflags -joystick
-media-libs/mesa classic gallium llvm shared-glapi -bindist gbm openvg osmesa shared-dricore vdpau wayland
+media-libs/mesa gallium llvm shared-glapi -bindist gbm openvg osmesa shared-dricore vdpau -classic -gles1 xa llvm-shared-libs
 media-libs/x264 10bit custom-cflags
 media-libs/xine-lib imagemagick vdpau vaapi
