@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-zfs.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_ZFS} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_ZFS="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-zfs_init_variables() {
 	: ${ZFS_SRC:=${ZFS_SRC:-"git://github.com/zfsonlinux/zfs.git"}} # Patchset sources url
 	: ${ZFS_URL:=${ZFS_URL:-"http://zfsonlinux.org"}} # Patchset url
 	: ${ZFS_INF:=${ZFS_INF:-"${YELLOW}Integrate Native ZFS on Linux version ${GREEN}${ZFS_VER}${YELLOW} from ${GREEN}${ZFS_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: ZFS_VER=${ZFS_VER}"
+	debug-print "${FUNCNAME}: ZFS_SRC=${ZFS_SRC}"
+	debug-print "${FUNCNAME}: ZFS_URL=${ZFS_URL}"
+	debug-print "${FUNCNAME}: ZFS_INF=${ZFS_INF}"
 }
 
 geek-zfs_init_variables
@@ -45,8 +58,10 @@ HOMEPAGE="${HOMEPAGE} ${ZFS_URL}"
 LICENSE="${LICENSE} GPL-3"
 
 DEPEND="${DEPEND}
-	zfs?	( dev-vcs/git
-		=sys-fs/zfs-9999[kernel-builtin(+)] )"
+	zfs?	(
+		dev-vcs/git
+		sys-fs/zfs[kernel-builtin(+)]
+	)"
 
 # @FUNCTION: src_unpack
 # @USAGE:
@@ -115,3 +130,5 @@ geek-zfs_pkg_postinst() {
 
 	einfo "${ZFS_INF}"
 }
+
+fi

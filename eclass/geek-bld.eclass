@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-bld.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_BLD} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_BLD="recur -_+^+_- spank"
+
 inherit geek-patch geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-bld_init_variables() {
 	: ${BLD_SRC:=${BLD_SRC:-"https://bld.googlecode.com/files/BLD-${BLD_VER}.patch"}} # Patchset sources url
 	: ${BLD_URL:=${BLD_URL:-"http://code.google.com/p/bld"}} # Patchset url
 	: ${BLD_INF:=${BLD_INF:-"${YELLOW}Alternate CPU load distribution technique for Linux kernel scheduler version ${GREEN}${BLD_VER}${YELLOW} from ${GREEN}${BLD_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: BLD_VER=${BLD_VER}"
+	debug-print "${FUNCNAME}: BLD_SRC=${BLD_SRC}"
+	debug-print "${FUNCNAME}: BLD_URL=${BLD_URL}"
+	debug-print "${FUNCNAME}: BLD_INF=${BLD_INF}"
 }
 
 geek-bld_init_variables
@@ -81,3 +94,5 @@ geek-bld_pkg_postinst() {
 
 	einfo "${BLD_INF}"
 }
+
+fi

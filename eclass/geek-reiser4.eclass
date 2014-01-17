@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-reiser4.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_REISER4} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_REISER4="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-reiser4_init_variables() {
 	: ${REISER4_SRC:=${REISER4_SRC:-"mirror://sourceforge/project/reiser4/reiser4-for-linux-3.x/reiser4-for-${REISER4_VER/PV/$PV}.patch.gz"}} # Patchset sources url
 	: ${REISER4_URL:=${REISER4_URL:-"http://sourceforge.net/projects/reiser4"}} # Patchset url
 	: ${REISER4_INF:=${REISER4_INF:-"${YELLOW}ReiserFS v4 version ${GREEN}${REISER4_VER}${YELLOW} from ${GREEN}${REISER4_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: REISER4_VER=${REISER4_VER}"
+	debug-print "${FUNCNAME}: REISER4_SRC=${REISER4_SRC}"
+	debug-print "${FUNCNAME}: REISER4_URL=${REISER4_URL}"
+	debug-print "${FUNCNAME}: REISER4_INF=${REISER4_INF}"
 }
 
 geek-reiser4_init_variables
@@ -72,3 +85,5 @@ geek-reiser4_pkg_postinst() {
 		ewarn
 	fi
 }
+
+fi

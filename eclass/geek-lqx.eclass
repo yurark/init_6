@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-lqx.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_LQX} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_LQX="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_prepare pkg_postinst
@@ -38,6 +46,11 @@ geek-lqx_init_variables() {
 	http://liquorix.net/sources/${KMV}/config.amd64"}} # Patchset sources url
 	: ${LQX_URL:=${LQX_URL:-"http://liquorix.net"}} # Patchset url
 	: ${LQX_INF:=${LQX_INF:-"${YELLOW}Liquorix patches version ${GREEN}${LQX_VER}${YELLOW} from ${GREEN}${LQX_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: LQX_VER=${LQX_VER}"
+	debug-print "${FUNCNAME}: LQX_SRC=${LQX_SRC}"
+	debug-print "${FUNCNAME}: LQX_URL=${LQX_URL}"
+	debug-print "${FUNCNAME}: LQX_INF=${LQX_INF}"
 }
 
 geek-lqx_init_variables
@@ -69,3 +82,5 @@ geek-lqx_pkg_postinst() {
 
 	einfo "${LQX_INF}"
 }
+
+fi

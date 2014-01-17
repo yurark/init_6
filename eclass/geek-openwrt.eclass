@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-openwrt.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_OPENWRT} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_OPENWRT="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-openwrt_init_variables() {
 	: ${OPENWRT_SRC:=${OPENWRT_SRC:-"svn://svn.openwrt.org/openwrt/trunk/target/linux/generic"}} # Patchset sources url
 	: ${OPENWRT_URL:=${OPENWRT_URL:-"https://openwrt.org"}} # Patchset url
 	: ${OPENWRT_INF:=${OPENWRT_INF:-"${YELLOW}OpenWrt patches version ${GREEN}${OPENWRT_VER}${YELLOW} from ${GREEN}${OPENWRT_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: OPENWRT_VER=${OPENWRT_VER}"
+	debug-print "${FUNCNAME}: OPENWRT_SRC=${OPENWRT_SRC}"
+	debug-print "${FUNCNAME}: OPENWRT_URL=${OPENWRT_URL}"
+	debug-print "${FUNCNAME}: OPENWRT_INF=${OPENWRT_INF}"
 }
 
 geek-openwrt_init_variables
@@ -100,3 +113,5 @@ geek-openwrt_pkg_postinst() {
 
 	einfo "${OPENWRT_INF}"
 }
+
+fi

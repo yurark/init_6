@@ -1,0 +1,4 @@
+gentoo:default/linux/arm/13.0/armv7a
+gentoo:targets/desktop
+init6:init6/arch/arm/armv7a
+init6:init6/base

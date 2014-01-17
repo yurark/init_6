@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-sources.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_SOURCES} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_SOURCES="recur -_+^+_- spank"
+
 inherit geek-linux geek-utils geek-fix geek-upatch geek-squeue geek-vars
 
 KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec hardened ice lqx mageia openvz openwrt optimization pax pf reiser4 rh rt rsbac suse symlink uksm zen zfs"
@@ -119,6 +127,9 @@ ${RED}echo 'GEEKSOURCES_PATCHING_ORDER=\"`echo ${GEEKSOURCES_PATCHING_ORDER} | s
 ${BLUE}Otherwise i will use the default value of GEEKSOURCES_PATCHING_ORDER!${NORMAL}
 ${BLUE}And may the Force be with you…${NORMAL}"
 	fi
+
+	debug-print "${FUNCNAME}: SKIP_KERNEL_PATCH_UPDATE=${SKIP_KERNEL_PATCH_UPDATE}"
+	debug-print "${FUNCNAME}: DEFAULT_GEEKSOURCES_PATCHING_ORDER=${DEFAULT_GEEKSOURCES_PATCHING_ORDER}"
 }
 
 # @FUNCTION: src_unpack
@@ -287,3 +298,5 @@ ${BLUE}For more info about patchset’s, and how to report problems, see:${NORMA
 		fi
 	done
 }
+
+fi

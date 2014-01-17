@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-aufs.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_AUFS} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_AUFS="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS pkg_setup src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-aufs_init_variables() {
 	: ${AUFS_SRC:=${AUFS_SRC:-"git://git.code.sf.net/p/aufs/aufs3-standalone"}} # Patchset sources url
 	: ${AUFS_URL:=${AUFS_URL:-"http://aufs.sourceforge.net"}} # Patchset url
 	: ${AUFS_INF:="${YELLOW}Another UnionFS version ${GREEN}${AUFS_VER}${YELLOW} from ${GREEN}${AUFS_URL}${NORMAL}"}
+
+	debug-print "${FUNCNAME}: AUFS_VER=${AUFS_VER}"
+	debug-print "${FUNCNAME}: AUFS_SRC=${AUFS_SRC}"
+	debug-print "${FUNCNAME}: AUFS_URL=${AUFS_URL}"
+	debug-print "${FUNCNAME}: AUFS_INF=${AUFS_INF}"
 }
 
 geek-aufs_init_variables
@@ -135,3 +148,5 @@ geek-aufs_pkg_postinst() {
 	has_version sys-fs/squashfs-tools && \
 		einfo "${YELLOW}In order to use rw vars FS you need to install ${NORMAL}${RED}sys-fs/squashfs-tools${NORMAL}"
 }
+
+fi

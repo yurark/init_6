@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-exfat.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_EXFAT} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_EXFAT="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-exfat_init_variables() {
 	: ${EXFAT_SRC:=${EXFAT_SRC:-"https://github.com/damentz/zen-kernel/compare/torvalds:v${EXFAT_VER/KMV/$KMV}...${EXFAT_VER/KMV/$KMV}/exfat.diff"}} # Patchset sources url
 	: ${EXFAT_URL:=${EXFAT_URL:-"http://opensource.samsung.com/reception/receptionSub.do?method=search&searchValue=exfat"}} # Patchset url
 	: ${EXFAT_INF:=${EXFAT_INF:-"${YELLOW}Samsung’s exFAT fs Linux driver version ${GREEN}${EXFAT_VER}${YELLOW} from ${GREEN}${EXFAT_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: EXFAT_VER=${EXFAT_VER}"
+	debug-print "${FUNCNAME}: EXFAT_SRC=${EXFAT_SRC}"
+	debug-print "${FUNCNAME}: EXFAT_URL=${EXFAT_URL}"
+	debug-print "${FUNCNAME}: EXFAT_INF=${EXFAT_INF}"
 }
 
 geek-exfat_init_variables
@@ -80,3 +93,5 @@ geek-exfat_pkg_postinst() {
 
 	einfo "${EXFAT_INF}"
 }
+
+fi

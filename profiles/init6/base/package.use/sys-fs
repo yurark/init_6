@@ -1,3 +1,4 @@
 sys-fs/lvm2 -lvm1 readline static-libs -udev -thin
 sys-fs/ntfs3g ntfsprogs
 sys-fs/cryptsetup static
+sys-fs/zfs kernel-builtin

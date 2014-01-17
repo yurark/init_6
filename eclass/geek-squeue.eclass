@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-squeue.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_SQUEUE} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_SQUEUE="recur -_+^+_- spank"
+
 inherit geek-patch geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -38,6 +46,12 @@ geek-squeue_init_variables() {
 	: ${SQUEUE_INF:=${SQUEUE_INF:-"${YELLOW}Stable-queue patch-set version ${GREEN}${SQUEUE_VER}${YELLOW} from ${GREEN}${SQUEUE_URL}${NORMAL}"}}
 	local skip_squeue_cfg=$(source $cfg_file 2>/dev/null; echo ${skip_squeue})
 	: ${skip_squeue:=${skip_squeue_cfg:-no}} # skip_squeue=yes/no
+
+	debug-print "${FUNCNAME}: SQUEUE_VER=${SQUEUE_VER}"
+	debug-print "${FUNCNAME}: SQUEUE_SRC=${SQUEUE_SRC}"
+	debug-print "${FUNCNAME}: SQUEUE_URL=${SQUEUE_URL}"
+	debug-print "${FUNCNAME}: SQUEUE_INF=${SQUEUE_INF}"
+	debug-print "${FUNCNAME}: skip_squeue=${skip_squeue}"
 }
 
 geek-squeue_init_variables
@@ -98,3 +112,5 @@ geek-squeue_pkg_postinst() {
 
 	einfo "${SQUEUE_INF}"
 }
+
+fi

@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-patch.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_PATCH} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_PATCH="recur -_+^+_- spank"
+
 inherit geek-vars
 
 EXPORT_FUNCTIONS ApplyPatch ApplyUserPatch
@@ -43,6 +51,10 @@ geek-patch_init_variables() {
 
 	local crap_patch_cfg=$(source $cfg_file 2>/dev/null; echo ${crap_patch})
 	: ${crap_patch:=${crap_patch_cfg:-ignore}} # crap_patch=ignore/will_not_pass
+
+	debug-print "${FUNCNAME}: patch_cmd=${patch_cmd}"
+	debug-print "${FUNCNAME}: crap_patch=${crap_patch}"
+
 }
 
 geek-patch_init_variables
@@ -262,3 +274,5 @@ geek-patch_ApplyUserPatch() {
 		fi
 	done
 }
+
+fi

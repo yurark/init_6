@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-rh.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_RH} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_RH="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils rpm geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -42,6 +50,12 @@ geek-rh_init_variables() {
 
 	: ${RH_URL:=${RH_URL:-"http://www.redhat.com"}} # Patchset url
 	: ${RH_INF:="${YELLOW}Red Hat Enterprise Linux kernel patches version ${GREEN}${RH_VER}${YELLOW} from ${GREEN}${RH_URL}${NORMAL}"}
+
+	debug-print "${FUNCNAME}: RH_VER=${RH_VER}"
+	debug-print "${FUNCNAME}: RH_NAME=${RH_NAME}"
+	debug-print "${FUNCNAME}: RH_SRC=${RH_SRC}"
+	debug-print "${FUNCNAME}: RH_URL=${RH_URL}"
+	debug-print "${FUNCNAME}: RH_INF=${RH_INF}"
 }
 
 geek-rh_init_variables
@@ -108,3 +122,5 @@ geek-rh_pkg_postinst() {
 
 	einfo "${RH_INF}"
 }
+
+fi

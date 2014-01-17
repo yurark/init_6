@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-pf.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_PF} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_PF="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-pf_init_variables() {
 	: ${PF_SRC:=${PF_SRC:-"https://github.com/pfactum/pf-kernel/compare/mirrors:v${KMV}...pf-${PF_VER/KMV/$KMV}.diff"}} # Patchset sources url
 	: ${PF_URL:=${PF_URL:-"http://pf.natalenko.name"}} # Patchset url
 	: ${PF_INF:=${PF_INF:-"${YELLOW}pf-kernel patches version ${GREEN}${PF_VER}${YELLOW} from ${GREEN}${PF_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: PF_VER=${PF_VER}"
+	debug-print "${FUNCNAME}: PF_SRC=${PF_SRC}"
+	debug-print "${FUNCNAME}: PF_URL=${PF_URL}"
+	debug-print "${FUNCNAME}: PF_INF=${PF_INF}"
 }
 
 geek-pf_init_variables
@@ -79,3 +92,5 @@ geek-pf_pkg_postinst() {
 
 	einfo "${BLUE}Linux kernel fork with new features, including the -ck patchset (BFS), BFQ, TuxOnIce and UKSM${NORMAL}"
 }
+
+fi

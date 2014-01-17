@@ -1,3 +1,4 @@
-gentoo:default/linux/x86/13.0/desktop
-init6:init6/base
+gentoo:default/linux/x86/13.0
+gentoo:targets/desktop
 init6:init6/arch/x86
+init6:init6/base

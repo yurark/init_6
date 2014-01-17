@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-rt.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_RT} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_RT="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-rt_init_variables() {
 	: ${RT_SRC:=${RT_SRC:-"mirror://kernel/linux/kernel/projects/rt/${KMV}/patch-${RT_VER/KMV/$KMV}.patch.xz"}} # Patchset sources url
 	: ${RT_URL:=${RT_URL:-"http://www.kernel.org/pub/linux/kernel/projects/rt"}} # Patchset url
 	: ${RT_INF:=${RT_INF:-"${YELLOW}Ingo Molnar"\'"s realtime preempt patches version ${GREEN}${RT_VER}${YELLOW} from ${GREEN}${RT_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: RT_VER=${RT_VER}"
+	debug-print "${FUNCNAME}: RT_SRC=${RT_SRC}"
+	debug-print "${FUNCNAME}: RT_URL=${RT_URL}"
+	debug-print "${FUNCNAME}: RT_INF=${RT_INF}"
 }
 
 geek-rt_init_variables
@@ -64,3 +77,5 @@ geek-rt_pkg_postinst() {
 
 	einfo "${RT_INF}"
 }
+
+fi

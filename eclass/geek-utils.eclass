@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-utils.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_UTILS} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_UTILS="recur -_+^+_- spank"
+
 EXPORT_FUNCTIONS use_if_iuse get_from_url git_get_all_branches git_checkout find_crap rm_crap get_config copy move
 
 # @FUNCTION: in_iuse
@@ -174,3 +182,5 @@ geek-utils_move() {
 
 	(copy ${src} ${dst} >/dev/null 2>&1 && rm -rf "${src}") || die "${RED}mv ${src} ${dst} failed${NORMAL}"
 }
+
+fi
