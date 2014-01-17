@@ -13,6 +13,6 @@ dev-libs/libxml2 python
 dev-libs/nettle gmp
 dev-libs/openobex bluetooth syslog usb
 dev-libs/popt static-libs
+dev-libs/weston editor examples fbdev unwind view wayland-compositor xwayland
 dev-libs/xerces-c xqilla
 dev-libs/xmlrpc-c curl
-dev-libs/weston editor examples fbdev unwind view wayland-compositor xwayland

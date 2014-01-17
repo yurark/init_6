@@ -6,5 +6,5 @@ FCFLAGS="${CFLAGS}"
 QEMU_SOFTMMU_TARGETS="arm i386 x86_64"
 QEMU_USER_TARGETS="arm i386 x86_64"
 
-GRUB_PLATFORMS="coreboot efi-32 efi-64 emu multiboot pc qemu"
-
+#GRUB_PLATFORMS="coreboot efi-32 efi-64 emu multiboot pc qemu"
+GRUB_PLATFORMS="${GRUB_PLATFORMS} pc"
