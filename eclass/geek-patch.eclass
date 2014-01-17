@@ -144,11 +144,8 @@ Handler() {
 			fi
 		else
 			ewarn "${BLUE}Skipping empty patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
-		fi
-	;;
-	*)
-		local C=$(wc -l "$patch" | awk '{print $1}')
-		if [ "$C" -gt 8 ]; then # 8 lines
+		fi ;;
+	*)	if [[ "$(wc -l "$patch" | awk '{print $1}')" -gt 8 ]]; then # 8 lines
 			get_test_patch_cmd
 			if ExtractApply "$patch" &>/dev/null; then
 				get_patch_cmd
@@ -159,21 +156,18 @@ Handler() {
 			fi
 		else
 			ewarn "${BLUE}Skipping empty patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
-		fi
-	;;
+		fi ;;
 	esac
 
 	case "$crap_patch" in
 	will_not_pass) find_crap
-	if [[ "${crap}" == 1 ]]; then
-		ebegin "${BLUE}Reversing crap patch <--${NORMAL} ${RED}$patch_base_name${NORMAL}"
-			patch_cmd="patch -p1 -g1 -R"; # reverse argument to patch
-			ExtractApply "$patch" &>/dev/null
-			rm_crap
-		eend
-	fi
-
-	;;
+		if [[ "${crap}" == 1 ]]; then
+			ebegin "${BLUE}Reversing crap patch <--${NORMAL} ${RED}$patch_base_name${NORMAL}"
+				patch_cmd="patch -p1 -g1 -R"; # reverse argument to patch
+				ExtractApply "$patch" &>/dev/null
+				rm_crap
+			eend
+		fi ;;
 	esac
 
 	get_patch_cmd
@@ -209,8 +203,7 @@ geek-patch_ApplyPatch() {
 			ebegin "Applying $line"
 				Handler "$patch_dir_name/$line"
 			eend $?
-		done < "$patch"
-	;;
+		done < "$patch" ;;
 	spatch_list) # smart list of patches
 		index=1
 		for var in $(grep -v '^#' "${patch}"); do
@@ -226,12 +219,11 @@ geek-patch_ApplyPatch() {
 					ExtractApply "${patch_dir_name}/${ok_array[var]}" &>/dev/null
 				eend $?
 			done
-		fi
-	;;	*) # else is patch
+		fi ;;
+	*) # else is patch
 		ebegin "Applying $patch_base_name"
 			Handler "$patch"
-		eend $?
-	;;
+		eend $? ;;
 	esac
 }
 
@@ -251,11 +243,12 @@ geek-patch_ApplyUserPatch() {
 	debug-print "$FUNCNAME: dir=$dir"
 
 	# don't clobber any EPATCH vars that the parent might want
-	local EPATCH_SOURCE check base=${PORTAGE_CONFIGROOT%/}/etc/portage/patches
+	local EPATCH_SOURCE check
+	[[ ${PORTAGE_CONFIGROOT} == "/" ]] && local base="/etc/portage/patches" || local base="${PORTAGE_CONFIGROOT}/etc/portage/patches";
 	for check in ${CATEGORY}/{${P}-${PR},${P},${PN}}{,:${SLOT}}/${dir}; do
-		EPATCH_SOURCE=${base}/${CTARGET}/${check}
-		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${CHOST}/${check}
-		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=${base}/${check}
+		EPATCH_SOURCE=$(echo ${base}/${CTARGET}/${check} | replace '//' '') # Remove unnecessary slashes from a given path
+		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=$(echo ${base}/${CHOST}/${check} | replace '//' '')
+		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=$(echo ${base}/${check} | replace '//' '')
 		if [[ -d ${EPATCH_SOURCE} ]] ; then
 			if [ -r "${EPATCH_SOURCE}/patch_list" ]; then
 				ApplyPatch "${EPATCH_SOURCE}/patch_list" "${YELLOW}Applying user patches from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."

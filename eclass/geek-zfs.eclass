@@ -19,7 +19,7 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
-inherit geek-patch geek-utils geek-vars multilib
+inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 
@@ -90,7 +90,7 @@ geek-zfs_src_prepare() {
 	[ -e autogen.sh ] && ./autogen.sh > /dev/null 2>&1
 	./configure \
 		--prefix=$(PREFIX)/ \
-		--libdir=$(PREFIX)/$(get_libdir) \
+		--libdir=$(PREFIX)/lib \
 		--includedir=/usr/include \
 		--datarootdir=/usr/share \
 		--enable-linux-builtin=yes \

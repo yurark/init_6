@@ -35,7 +35,7 @@ geek-pax_init_variables() {
 	: ${PAX_VER:=${PAX_VER:-"${KMV}"}} # Patchset version
 	: ${PAX_SRC:=${PAX_SRC:-"http://grsecurity.net/test/pax-linux-${PAX_VER/KMV/$KMV}.patch"}} # Patchset sources url
 	: ${PAX_URL:=${PAX_URL:-"http://pax.grsecurity.net"}} # Patchset url
-	: ${PAX_INF=${PAX_INF:-"${YELLOW}PAX patches version ${GREEN}${PAX_VER}${YELLOW} from ${GREEN}${PAX_URL}${NORMAL}"}}
+	: ${PAX_INF:=${PAX_INF:-"${YELLOW}PAX patches version ${GREEN}${PAX_VER}${YELLOW} from ${GREEN}${PAX_URL}${NORMAL}"}}
 }
 
 geek-pax_init_variables
