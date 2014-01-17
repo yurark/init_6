@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-mageia.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_MAGEIA} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_MAGEIA="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-mageia_init_variables() {
 	: ${MAGEIA_SRC:=${MAGEIA_SRC:-"svn://svn.mageia.org/svn/packages/cauldron/kernel"}} # Patchset sources url
 	: ${MAGEIA_URL:=${MAGEIA_URL:-"http://www.mageia.org"}} # Patchset url
 	: ${MAGEIA_INF:=${MAGEIA_INF:-"${YELLOW}Mageia version ${GREEN}${MAGEIA_VER}${YELLOW} from ${GREEN}${MAGEIA_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: MAGEIA_VER=${MAGEIA_VER}"
+	debug-print "${FUNCNAME}: MAGEIA_SRC=${MAGEIA_SRC}"
+	debug-print "${FUNCNAME}: MAGEIA_URL=${MAGEIA_URL}"
+	debug-print "${FUNCNAME}: MAGEIA_INF=${MAGEIA_INF}"
 }
 
 geek-mageia_init_variables
@@ -95,3 +108,5 @@ geek-mageia_pkg_postinst() {
 
 	einfo "${MAGEIA_INF}"
 }
+
+fi

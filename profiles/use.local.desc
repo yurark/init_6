@@ -27,12 +27,10 @@ sys-kernel/geek-sources:pax - Use PAX patches
 sys-kernel/geek-sources:pf - Use pf-kernel patches
 sys-kernel/geek-sources:reiser4 - Use Reiser4 FS patches
 sys-kernel/geek-sources:rh - Use Red Hat Enterprise Linux kernel patches
-sys-kernel/geek-sources:rifs - A interactivity favor scheduler
 sys-kernel/geek-sources:rsbac - RSBAC (Rule Set Based Access Control) patches
 sys-kernel/geek-sources:rt - Use Ingo Molnar's realtime preempt patches
 sys-kernel/geek-sources:suse - Use OpenSuSE patches
 sys-kernel/geek-sources:symlink - Force kernel ebuilds to automatically update the /usr/src/linux symlink
-sys-kernel/geek-sources:ubuntu - Use Ubuntu patches
 sys-kernel/geek-sources:uksm - Use Ultra Kernel Samepage Merging patches
 sys-kernel/geek-sources:zen - Use zen-kernel patches
 sys-kernel/geek-sources:zfs - The native Linux kernel port of the ZFS filesystem

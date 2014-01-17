@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-cjktty.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_CJKTTY} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_CJKTTY="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-cjktty_init_variables() {
 	: ${CJKTTY_SRC:=${CJKTTY_SRC:-"https://github.com/Gentoo-zh/linux-cjktty/compare/torvalds:v${CJKTTY_VER/KMV/$KMV}...${CJKTTY_VER/KMV/$KMV}-utf8.diff"}} # Patchset sources url
 	: ${CJKTTY_URL:=${CJKTTY_URL:-"https://github.com/Gentoo-zh/linux-cjktty"}}  # Patchset url
 	: ${CJKTTY_INF:=${CJKTTY_INF:-"${YELLOW}CJK support for tty framebuffer vt version ${GREEN}${CJKTTY_VER}${YELLOW} from ${GREEN}${CJKTTY_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: CJKTTY_VER=${CJKTTY_VER}"
+	debug-print "${FUNCNAME}: CJKTTY_SRC=${CJKTTY_SRC}"
+	debug-print "${FUNCNAME}: CJKTTY_URL=${CJKTTY_URL}"
+	debug-print "${FUNCNAME}: CJKTTY_INF=${CJKTTY_INF}"
 }
 
 geek-cjktty_init_variables
@@ -79,3 +92,5 @@ geek-cjktty_pkg_postinst() {
 
 	einfo "${CJKTTY_INF}"
 }
+
+fi

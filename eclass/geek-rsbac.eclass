@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-rsbac.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_RSBAC} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_RSBAC="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_prepare pkg_postinst
@@ -36,7 +44,13 @@ geek-rsbac_init_variables() {
 	: ${RSBAC_NAME:=${RSBAC_NAME:-patch-linux-${PV}-rsbac-${RSBAC_VER/KMV/$KMV}.diff.xz}}
 	: ${RSBAC_SRC:=${RSBAC_SRC:-"http://download.rsbac.org/patches/${RSBAC_VER/KMV/$KMV}/${RSBAC_NAME}"}} # Patchset sources url
 	: ${RSBAC_URL:=${RSBAC_URL:-"http://www.rsbac.org"}} # Patchset url
-	: ${RSBAC_INF=${RSBAC_INF:-"${YELLOW}RSBAC (Rule Set Based Access Control) patches version ${GREEN}${RSBAC_VER}${YELLOW} from ${GREEN}${RSBAC_URL}${NORMAL}"}}
+	: ${RSBAC_INF:=${RSBAC_INF:-"${YELLOW}RSBAC (Rule Set Based Access Control) patches version ${GREEN}${RSBAC_VER}${YELLOW} from ${GREEN}${RSBAC_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: RSBAC_VER=${RSBAC_VER}"
+	debug-print "${FUNCNAME}: RSBAC_NAME=${RSBAC_NAME}"
+	debug-print "${FUNCNAME}: RSBAC_SRC=${RSBAC_SRC}"
+	debug-print "${FUNCNAME}: RSBAC_URL=${RSBAC_URL}"
+	debug-print "${FUNCNAME}: RSBAC_INF=${RSBAC_INF}"
 }
 
 geek-rsbac_init_variables
@@ -65,3 +79,5 @@ geek-rsbac_pkg_postinst() {
 
 	einfo "${RSBAC_INF}"
 }
+
+fi

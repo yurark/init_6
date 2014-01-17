@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-ck.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_CK} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_CK="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-ck_init_variables() {
 	: ${CK_SRC:=${CK_SRC:-"http://ck.kolivas.org/patches/3.0/${KMV}/${CK_VER}/patch-${CK_VER}.lrz"}} # Patchset sources url
 	: ${CK_URL:=${CK_URL:-"http://users.on.net/~ckolivas/kernel"}} # Patchset url
 	: ${CK_INF:=${CK_INF:-"${YELLOW}Con Kolivas high performance patchset version ${GREEN}${CK_VER}${YELLOW} from ${GREEN}${CK_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: CK_VER=${CK_VER}"
+	debug-print "${FUNCNAME}: CK_SRC=${CK_SRC}"
+	debug-print "${FUNCNAME}: CK_URL=${CK_URL}"
+	debug-print "${FUNCNAME}: CK_INF=${CK_INF}"
 }
 
 geek-ck_init_variables
@@ -67,3 +80,5 @@ geek-ck_pkg_postinst() {
 
 	einfo "${CK_INF}"
 }
+
+fi

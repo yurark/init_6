@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-fix.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_FIX} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_FIX="recur -_+^+_- spank"
+
 inherit geek-patch geek-vars
 
 EXPORT_FUNCTIONS src_prepare
@@ -34,6 +42,8 @@ geek-fix_init_variables() {
 
 	local disable_fixes_cfg=$(source $cfg_file 2>/dev/null; echo ${disable_fixes})
 	: ${disable_fixes:=${disable_fixes_cfg:-no}} # disable_fixes=yes/no
+
+	debug-print "${FUNCNAME}: disable_fixes=${disable_fixes}"
 }
 
 geek-fix_init_variables
@@ -48,3 +58,5 @@ geek-fix_src_prepare() {
 		ApplyPatch "${FILESDIR}/${PV}/fix/patch_list" "${YELLOW}Fixes for current kernel from ${GREEN}${FILESDIR}/${PV}/fix/patch_list${NORMAL}"
 	fi
 }
+
+fi

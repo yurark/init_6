@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-brand.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_BRAND} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_BRAND="recur -_+^+_- spank"
+
 inherit geek-patch
 
 EXPORT_FUNCTIONS src_prepare pkg_postinst
@@ -35,6 +43,9 @@ geek-brand_init_variables() {
 	: ${IUSE:="${IUSE} brand"}
 	: ${BRAND_URL:=${BRAND_URL:-"https://github.com/init6/init_6/wiki/geek-sources"}} # Patchset url
 	: ${BRAND_INF:=${BRAND_INF:-"${YELLOW}Branding from ${GREEN}${BRAND_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: BRAND_URL=${BRAND_URL}"
+	debug-print "${FUNCNAME}: BRAND_INF=${BRAND_INF}"
 }
 
 geek-brand_init_variables
@@ -60,3 +71,5 @@ geek-brand_pkg_postinst() {
 
 	einfo "${BRAND_INF}"
 }
+
+fi

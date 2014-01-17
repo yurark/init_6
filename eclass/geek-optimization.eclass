@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-optimization.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_OPTIMIZATION} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_OPTIMIZATION="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-optimization_init_variables() {
 	: ${OPTIMIZATION_SRC:=${OPTIMIZATION_SRC:-"https://github.com/graysky2/kernel_gcc_patch/raw/master/enable_additional_cpu_optimizations_for_gcc.patch"}} # Patchset sources url
 	: ${OPTIMIZATION_URL:=${OPTIMIZATION_URL:-"https://github.com/graysky2/kernel_gcc_patch"}} # Patchset url
 	: ${OPTIMIZATION_INF:=${OPTIMIZATION_INF:-"${YELLOW}Kernel patch enables gcc optimizations for additional CPUs version ${GREEN}${OPTIMIZATION_VER}${YELLOW} from ${GREEN}${OPTIMIZATION_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: OPTIMIZATION_VER=${OPTIMIZATION_VER}"
+	debug-print "${FUNCNAME}: OPTIMIZATION_SRC=${OPTIMIZATION_SRC}"
+	debug-print "${FUNCNAME}: OPTIMIZATION_URL=${OPTIMIZATION_URL}"
+	debug-print "${FUNCNAME}: OPTIMIZATION_INF=${OPTIMIZATION_INF}"
 }
 
 geek-optimization_init_variables
@@ -82,3 +95,5 @@ geek-optimization_pkg_postinst() {
 
 	einfo "${OPTIMIZATION_INF}"
 }
+
+fi

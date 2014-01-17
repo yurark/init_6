@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-fedora.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_FEDORA} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_FEDORA="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-fedora_init_variables() {
 	: ${FEDORA_SRC:=${FEDORA_SRC:-"git://pkgs.fedoraproject.org/kernel.git"}} # Patchset sources url
 	: ${FEDORA_URL:=${FEDORA_URL:-"http://fedoraproject.org"}} # Patchset url
 	: ${FEDORA_INF:=${FEDORA_INF:-"${YELLOW}Fedora version ${GREEN}${FEDORA_VER}${YELLOW} from ${GREEN}${FEDORA_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: FEDORA_VER=${FEDORA_VER}"
+	debug-print "${FUNCNAME}: FEDORA_SRC=${FEDORA_SRC}"
+	debug-print "${FUNCNAME}: FEDORA_URL=${FEDORA_URL}"
+	debug-print "${FUNCNAME}: FEDORA_INF=${FEDORA_INF}"
 }
 
 geek-fedora_init_variables
@@ -97,3 +110,5 @@ geek-fedora_pkg_postinst() {
 
 	einfo "${FEDORA_INF}"
 }
+
+fi

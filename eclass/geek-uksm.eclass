@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-uksm.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_UKSM} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_UKSM="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -37,6 +45,12 @@ geek-uksm_init_variables() {
 	: ${UKSM_SRC:=${UKSM_SRC:-"http://kerneldedup.org/download/uksm/${UKSM_VER}/${UKSM_NAME}.patch"}} # Patchset sources url
 	: ${UKSM_URL:=${UKSM_URL:-"http://kerneldedup.org"}} # Patchset url
 	: ${UKSM_INF:=${UKSM_INF:-"${YELLOW}Ultra Kernel Samepage Merging version ${GREEN}${UKSM_NAME}.patch${YELLOW} from ${GREEN}${UKSM_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: UKSM_VER=${UKSM_VER}"
+	debug-print "${FUNCNAME}: UKSM_NAME=${UKSM_NAME}"
+	debug-print "${FUNCNAME}: UKSM_SRC=${UKSM_SRC}"
+	debug-print "${FUNCNAME}: UKSM_URL=${UKSM_URL}"
+	debug-print "${FUNCNAME}: UKSM_INF=${UKSM_INF}"
 }
 
 geek-uksm_init_variables
@@ -82,3 +96,5 @@ geek-uksm_pkg_postinst() {
 
 	einfo "${UKSM_INF}"
 }
+
+fi

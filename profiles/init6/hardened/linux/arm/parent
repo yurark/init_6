@@ -1,5 +1,0 @@
-gentoo:hardened/linux/arm/armv7a
-gentoo:targets/desktop
-init6:init6/arch/arm
-../base
-init6:init6/base

@@ -1,3 +1,4 @@
-gentoo:default/linux/amd64/13.0/desktop
-init6:init6/base
+gentoo:default/linux/amd64/13.0
+gentoo:targets/desktop
 init6:init6/arch/amd64
+init6:init6/base

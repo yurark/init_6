@@ -1,12 +1,13 @@
 app-admin
-app-emulation
-app-misc
 app-portage
 dev-libs
 dev-vcs
+games-arcade
+games-fps
+gnustep-apps
+gnustep-base
+gnustep-libs
 media-fonts
-media-video
-net-irc
 net-wireless
 sys-apps
 sys-devel
@@ -14,4 +15,5 @@ sys-firmware
 sys-kernel
 sys-libs
 virtual
-x11-drivers
+www-apps
+x11-themes

@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-grsec.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_GRSEC} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_GRSEC="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-grsec_init_variables() {
 	: ${GRSEC_SRC:=${GRSEC_SRC:-"https://grsecurity.net/stable/grsecurity-${GRSEC_VER}.patch"}} # Patchset sources url
 	: ${GRSEC_URL:=${GRSEC_URL:-"https://grsecurity.net"}} # Patchset url
 	: ${GRSEC_INF:=${GRSEC_INF:-"${YELLOW}GrSecurity patch version ${GREEN}${GRSEC_VER}${YELLOW} from ${GREEN}${GRSEC_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: GRSEC_VER=${GRSEC_VER}"
+	debug-print "${FUNCNAME}: GRSEC_SRC=${GRSEC_SRC}"
+	debug-print "${FUNCNAME}: GRSEC_URL=${GRSEC_URL}"
+	debug-print "${FUNCNAME}: GRSEC_INF=${GRSEC_INF}"
 }
 
 geek-grsec_init_variables
@@ -69,3 +82,5 @@ geek-grsec_pkg_postinst() {
 
 	einfo "${GRSEC_INF}"
 }
+
+fi

@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-suse.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_SUSE} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_SUSE="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-suse_init_variables() {
 	: ${SUSE_SRC:=${SUSE_SRC:-"git://kernel.opensuse.org/kernel-source.git"}} # Patchset sources url
 	: ${SUSE_URL:=${SUSE_URL:-"http://www.opensuse.org"}} # Patchset url
 	: ${SUSE_INF:=${SUSE_INF:-"${YELLOW}OpenSuSE patches version ${GREEN}${SUSE_VER}${YELLOW} from ${GREEN}${SUSE_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: SUSE_VER=${SUSE_VER}"
+	debug-print "${FUNCNAME}: SUSE_SRC=${SUSE_SRC}"
+	debug-print "${FUNCNAME}: SUSE_URL=${SUSE_URL}"
+	debug-print "${FUNCNAME}: SUSE_INF=${SUSE_INF}"
 }
 
 geek-suse_init_variables
@@ -106,3 +119,5 @@ geek-suse_pkg_postinst() {
 
 	einfo "${SUSE_INF}"
 }
+
+fi

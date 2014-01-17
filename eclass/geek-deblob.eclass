@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-deblob.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_DEBLOB} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_DEBLOB="recur -_+^+_- spank"
+
 inherit geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_compile pkg_postinst
@@ -96,3 +104,5 @@ geek-deblob_pkg_postinst() {
 
 	einfo " ${BLUE}Deblobbed kernels are UNSUPPORTED by Gentoo Security.${NORMAL}"
 }
+
+fi

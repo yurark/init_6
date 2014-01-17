@@ -18,6 +18,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-vars.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_VARS} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_VARS="recur -_+^+_- spank"
+
 # @FUNCTION: init_variables
 # @INTERNAL
 # @DESCRIPTION:
@@ -51,6 +59,17 @@ geek-vars_init_variables() {
 	local use_colors_cfg=$(source $cfg_file 2>/dev/null; echo ${use_colors})
 	: ${use_colors:=${use_colors_cfg:-yes}} # use_colors=yes/no
 	check_for_color
+
+	debug-print "${FUNCNAME}: VERSION=${VERSION}"
+	debug-print "${FUNCNAME}: PATCHLEVEL=${PATCHLEVEL}"
+	debug-print "${FUNCNAME}: SUBLEVEL=${SUBLEVEL}"
+	debug-print "${FUNCNAME}: KMV=${KMV}"
+	debug-print "${FUNCNAME}: KSV=${KSV}"
+	debug-print "${FUNCNAME}: cfg_file=${cfg_file}"
+	debug-print "${FUNCNAME}: GEEK_STORE_DIR=${GEEK_STORE_DIR}"
+	debug-print "${FUNCNAME}: PATCH_STORE_DIR=${PATCH_STORE_DIR}"
+	debug-print "${FUNCNAME}: PATCH_USER_DIR=${PATCH_USER_DIR}"
+	debug-print "${FUNCNAME}: use_colors=${use_colors}"
 }
 
 set_color() {
@@ -100,3 +119,5 @@ check_for_color() {
 }
 
 geek-vars_init_variables
+
+fi

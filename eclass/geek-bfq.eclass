@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-bfq.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_BFQ} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_BFQ="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-bfq_init_variables() {
 	: ${BFQ_SRC:=${BFQ_SRC:-"http://algo.ing.unimo.it/people/paolo/disk_sched/patches"}} # Patchset sources url
 	: ${BFQ_URL:=${BFQ_URL:-"http://algo.ing.unimo.it/people/paolo/disk_sched/"}} # Patchset url
 	: ${BFQ_INF:=${BFQ_INF:-"${YELLOW}Budget Fair Queueing Budget I/O Scheduler version ${GREEN}${BFQ_VER}${YELLOW} from ${GREEN}${BFQ_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: BFQ_VER=${BFQ_VER}"
+	debug-print "${FUNCNAME}: BFQ_SRC=${BFQ_SRC}"
+	debug-print "${FUNCNAME}: BFQ_URL=${BFQ_URL}"
+	debug-print "${FUNCNAME}: BFQ_INF=${BFQ_INF}"
 }
 
 geek-bfq_init_variables
@@ -77,3 +90,5 @@ geek-bfq_pkg_postinst() {
 
 	einfo "${BFQ_INF}"
 }
+
+fi

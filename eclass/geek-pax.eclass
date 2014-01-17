@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-pax.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_PAX} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_PAX="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-pax_init_variables() {
 	: ${PAX_SRC:=${PAX_SRC:-"http://grsecurity.net/test/pax-linux-${PAX_VER/KMV/$KMV}.patch"}} # Patchset sources url
 	: ${PAX_URL:=${PAX_URL:-"http://pax.grsecurity.net"}} # Patchset url
 	: ${PAX_INF:=${PAX_INF:-"${YELLOW}PAX patches version ${GREEN}${PAX_VER}${YELLOW} from ${GREEN}${PAX_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: PAX_VER=${PAX_VER}"
+	debug-print "${FUNCNAME}: PAX_SRC=${PAX_SRC}"
+	debug-print "${FUNCNAME}: PAX_URL=${PAX_URL}"
+	debug-print "${FUNCNAME}: PAX_INF=${PAX_INF}"
 }
 
 geek-pax_init_variables
@@ -64,3 +77,5 @@ geek-pax_pkg_postinst() {
 
 	einfo "${PAX_INF}"
 }
+
+fi

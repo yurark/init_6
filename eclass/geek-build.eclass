@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-# @ECLASS: geek-brand.eclass
+# @ECLASS: geek-build.eclass
 # This file is part of sys-kernel/geek-sources project.
 # @MAINTAINER:
 # Andrey Ovcharov <sudormrfhalt@gmail.com>
@@ -18,6 +18,14 @@
 # https://github.com/init6/init_6/blob/master/eclass/geek-build.eclass
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-build.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_BUILD} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_BUILD="recur -_+^+_- spank"
 
 inherit geek-utils
 
@@ -138,3 +146,5 @@ geek-build_src_compile() {
 		eend $?
 	fi
 }
+
+fi

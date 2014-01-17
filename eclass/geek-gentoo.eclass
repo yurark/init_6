@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-gentoo.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_GENTOO} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_GENTOO="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-gentoo_init_variables() {
 	: ${GENTOO_SRC:=${GENTOO_SRC:-"svn://anonsvn.gentoo.org/linux-patches/genpatches-2.6/trunk"}} # Patchset sources url
 	: ${GENTOO_URL:=${GENTOO_URL:-"http://dev.gentoo.org/~mpagano/genpatches"}} # Patchset url
 	: ${GENTOO_INF:=${GENTOO_INF:-"${YELLOW}Gentoo patches version ${GREEN}${GENTOO_VER}${YELLOW} from ${GREEN}${GENTOO_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: GENTOO_VER=${GENTOO_VER}"
+	debug-print "${FUNCNAME}: GENTOO_SRC=${GENTOO_SRC}"
+	debug-print "${FUNCNAME}: GENTOO_URL=${GENTOO_URL}"
+	debug-print "${FUNCNAME}: GENTOO_INF=${GENTOO_INF}"
 }
 
 geek-gentoo_init_variables
@@ -99,3 +112,5 @@ geek-gentoo_pkg_postinst() {
 
 	einfo "${GENTOO_INF}"
 }
+
+fi

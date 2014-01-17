@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-openvz.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_OPENVZ} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_OPENVZ="recur -_+^+_- spank"
+
 inherit geek-patch geek-vars
 
 EXPORT_FUNCTIONS src_prepare pkg_postinst
@@ -38,6 +46,11 @@ geek-openvz_init_variables() {
 	http://download.openvz.org/kernel/branches/rhel6-${KSV}/${OPENVZ_VER}/configs/config-${KSV}-${OPENVZ_VER}.x86_64"}} # Patchset sources url
 	: ${OPENVZ_URL:=${OPENVZ_URL:-"http://www.openvz.org"}} # Patchset url
 	: ${OPENVZ_INF:=${OPENVZ_INF:-"${YELLOW}RHEL6 kernel with OpenVZ patchset version ${GREEN}${OPENVZ_VER}${YELLOW} from ${GREEN}${OPENVZ_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: OPENVZ_VER=${OPENVZ_VER}"
+	debug-print "${FUNCNAME}: OPENVZ_SRC=${OPENVZ_SRC}"
+	debug-print "${FUNCNAME}: OPENVZ_URL=${OPENVZ_URL}"
+	debug-print "${FUNCNAME}: OPENVZ_INF=${OPENVZ_INF}"
 }
 
 geek-openvz_init_variables
@@ -98,3 +111,5 @@ Slight modifications to the kernel configuration necessary for booting
 are usually fine. If you are using genkernel, the default configuration
 should be sufficient for your needs.${NORMAL}"
 }
+
+fi

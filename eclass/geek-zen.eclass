@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-zen.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_ZEN} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_ZEN="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-zen_init_variables() {
 	: ${ZEN_SRC:=${ZEN_SRC:-"https://github.com/damentz/zen-kernel/compare/torvalds:v${ZEN_VER/KMV/$KMV}...${ZEN_VER/KMV/$KMV}/master.diff"}} # Patchset sources url
 	: ${ZEN_URL:=${ZEN_URL:-"https://github.com/damentz/zen-kernel"}} # Patchset url
 	: ${ZEN_INF:=${ZEN_INF:-"${YELLOW}The Zen Kernel version ${GREEN}${ZEN_VER}${YELLOW} from ${GREEN}${ZEN_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: ZEN_VER=${ZEN_VER}"
+	debug-print "${FUNCNAME}: ZEN_SRC=${ZEN_SRC}"
+	debug-print "${FUNCNAME}: ZEN_URL=${ZEN_URL}"
+	debug-print "${FUNCNAME}: ZEN_INF=${ZEN_INF}"
 }
 
 geek-zen_init_variables
@@ -83,3 +96,5 @@ geek-zen_pkg_postinst() {
 
 	einfo "${ZEN_INF}"
 }
+
+fi

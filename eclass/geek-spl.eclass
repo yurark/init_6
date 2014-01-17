@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-spl.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_SPL} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_SPL="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-spl_init_variables() {
 	: ${SPL_SRC:=${SPL_SRC:-"git://github.com/zfsonlinux/spl.git"}} # Patchset sources url
 	: ${SPL_URL:=${SPL_URL:-"http://zfsonlinux.org"}} # Patchset url
 	: ${SPL_INF:=${SPL_INF:-"${YELLOW}Integrate Solaris Porting Layer version ${GREEN}${SPL_VER}${YELLOW} from ${GREEN}${SPL_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: SPL_VER=${SPL_VER}"
+	debug-print "${FUNCNAME}: SPL_SRC=${SPL_SRC}"
+	debug-print "${FUNCNAME}: SPL_URL=${SPL_URL}"
+	debug-print "${FUNCNAME}: SPL_INF=${SPL_INF}"
 }
 
 geek-spl_init_variables
@@ -118,3 +131,5 @@ geek-spl_pkg_postinst() {
 
 	einfo "${SPL_INF}"
 }
+
+fi

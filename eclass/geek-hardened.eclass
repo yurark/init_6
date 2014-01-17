@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-hardened.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_HARDENED} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_HARDENED="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -36,6 +44,11 @@ geek-hardened_init_variables() {
 	: ${HARDENED_SRC:=${HARDENED_SRC:-"git://git.overlays.gentoo.org/proj/hardened-patchset.git"}} # Patchset sources url
 	: ${HARDENED_URL:=${HARDENED_URL:-"http://hardened.gentoo.org"}} # Patchset url
 	: ${HARDENED_INF:=${HARDENED_INF:-"${YELLOW}Hardened patchset version ${GREEN}${HARDENED_VER}${YELLOW} from ${GREEN}${HARDENED_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: HARDENED_VER=${HARDENED_VER}"
+	debug-print "${FUNCNAME}: HARDENED_SRC=${HARDENED_SRC}"
+	debug-print "${FUNCNAME}: HARDENED_URL=${HARDENED_URL}"
+	debug-print "${FUNCNAME}: HARDENED_INF=${HARDENED_INF}"
 }
 
 geek-hardened_init_variables
@@ -113,3 +126,5 @@ ${BLUE}prior to booting a${NORMAL} ${RED}${PF}${NORMAL} ${BLUE}kernel for the fi
 ${BR}
 ${RED}emerge -na =${GRADM_COMPAT}*${NORMAL}${BR}"
 }
+
+fi

@@ -19,6 +19,14 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-ice.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_ICE} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_ICE="recur -_+^+_- spank"
+
 inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
@@ -37,6 +45,11 @@ geek-ice_init_variables() {
 	: ${ICE_SRC:=${ICE_SRC:-"git://github.com/NigelCunningham/tuxonice-kernel.git"}} # Patchset sources url
 	: ${ICE_URL:=${ICE_URL:-"http://tuxonice.net"}} # Patchset url
 	: ${ICE_INF:=${ICE_INF:-"${YELLOW}TuxOnIce version ${GREEN}${ICE_VER}${YELLOW} from ${GREEN}${ICE_URL}${NORMAL}"}}
+
+	debug-print "${FUNCNAME}: ICE_VER=${ICE_VER}"
+	debug-print "${FUNCNAME}: ICE_SRC=${ICE_SRC}"
+	debug-print "${FUNCNAME}: ICE_URL=${ICE_URL}"
+	debug-print "${FUNCNAME}: ICE_INF=${ICE_INF}"
 }
 
 geek-ice_init_variables
@@ -109,3 +122,5 @@ ${BLUE}If there are issues with this kernel, please direct any${NORMAL}${BR}
 ${BLUE}queries to the tuxonice-users mailing list:${NORMAL}${BR}
 ${RED}http://lists.tuxonice.net/mailman/listinfo/tuxonice-users/${NORMAL}${BR}"
 }
+
+fi
