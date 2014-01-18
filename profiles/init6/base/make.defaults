@@ -66,7 +66,7 @@ theora ogg vorbis wavpack flac lame mpeg v4l \
 ipv6 lzma lzo symlink sqlite spell xml extras device-mapper acpi sse3 ssse3 branding xattr g3dvl X509 \
 fam dbus threads systemd policykit gnutls \
 -samba -java -perl -python -kerberos -ldap -avahi -zeroconf -gnome-keyring -consolekit -zeitgeist -nautilus \
--cups -openrc -webkit -mms \
+-cups -openrc -webkit -mms -sdl -xcb \
 gtk gtk3 cairo gnome colord libnotify startup-notification connman libkms introspection \
 qt3support qt4 semantic-desktop icu networkmanager bluetooth"
 #------------------------------

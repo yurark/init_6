@@ -46,3 +46,10 @@ linux-994.0006-Squashfs-Directly-decompress-into-the-page-cache-for.patch
 linux-994.0007-Squashfs-Check-stream-is-not-NULL-in-decompressor_mu.patch
 linux-995-CX24120-13Z_frontend.patch
 linux-999.02-A-split-for-ds3000-ts2020-code-forgot-to-change-the-.patch
+
+# allow criu without expert option set
+# patch from fedora
+criu-no-expert.patch
+
+# add Gentoo patches
+2700_ThinkPad-30-brightness-control-fix.patch

@@ -32,3 +32,10 @@ linux-950-saa716x_PCIe_interface_chipset.patch
 linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
 linux-991.01-ptrace_fix.patch
 linux-995-CX24120-13Z_frontend.patch
+
+# allow criu without expert option set
+# patch from fedora
+criu-no-expert.patch
+
+# add Gentoo patches
+2700_ThinkPad-30-brightness-control-fix.patch

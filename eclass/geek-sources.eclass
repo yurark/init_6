@@ -260,6 +260,8 @@ geek-sources_pkg_postinst() {
 
 	geek-linux_pkg_postinst
 	einfo "${BR}${BLUE}Wiki:${NORMAL} ${RED}https://github.com/init6/init_6/wiki/geek-sources${NORMAL}${BR}
+${BLUE}Bugs:${NORMAL} ${RED}https://github.com/init6/init_6/issues${NORMAL}${BR}
+${BLUE}Donate:${NORMAL} ${RED}https://github.com/init6/init_6/wiki/donate${NORMAL}${BR}
 ${BLUE}For more info about patchset’s, and how to report problems, see:${NORMAL}${BR}"
 	for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 		if use_if_iuse "${Current_Patch}" || [[ "${Current_Patch}" == "fix" ]] || [[ "${Current_Patch}" == "upatch" ]]; then
