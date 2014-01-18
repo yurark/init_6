@@ -1,6 +1,21 @@
-# Copyright 2009-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
-# Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# ChangeLog for app-portage/udept
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/app-portage/udept/ChangeLog,v 1.14 2010/11/07 22:06:47 zmedico Exp $
+
+  07 Nov 2010; Zac Medico <zmedico@gentoo.org>
+  -files/bash-completion-install.diff:
+  Bug #344167 - Remove unused bash-completion-install.diff.
+
+  07 Apr 2010; Jeremy Olexa <darkside@gentoo.org>
+  udept-0.5.99.0.2.95-r1.ebuild:
+  Due to portage's environment filtering, variables that start with BASH_
+  cannot be used. As such, s/BASH_COMPLETION_NAME/BASHCOMPLETION_NAME/g for
+  bug 312671
+
+  31 Mar 2010; Paul Varner <fuzzyray@gentoo.org> -udept-0.5.96.2.ebuild,
+  -udept-0.5.99.0.2.95.ebuild, udept-0.5.99.0.2.95-r1.ebuild:
+  Remove older ebuilds and fix current ebuild to generate the correct
+  'eselect bashcomp enable' command.
 
   03 Feb 2008; Ryan Hill <dirtyepic@gentoo.org>
   udept-0.5.99.0.2.95-r1.ebuild:
@@ -54,3 +69,4 @@
   Thanks to Ed Catmur for the software package and intial ebuild,
   Patrick Zimmermann for Bug #129813 and David Shakaryan for the
   ebuild submission to the Sunrise overlay.
+
