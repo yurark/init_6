@@ -1,0 +1,77 @@
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c	2011-05-31 09:54:29.291946721 +0200
+@@ -20,8 +20,8 @@
+
+ static int ovl_copy_up_xattr(struct dentry *old, struct dentry *new)
+ {
+-	ssize_t list_size, size;
+-	char *buf, *name, *value;
++	ssize_t list_size, size, size_max, res;
++	char *buf, *name, *value, *val;
+ 	int error;
+
+ 	if (!old->d_inode->i_op->getxattr ||
+@@ -40,7 +40,8 @@ static int ovl_copy_up_xattr(struct dent
+ 		return -ENOMEM;
+
+ 	error = -ENOMEM;
+-	value = kmalloc(XATTR_SIZE_MAX, GFP_KERNEL);
++	size_max = XATTR_SIZE_MAX;
++	value = kmalloc(size_max, GFP_KERNEL);
+ 	if (!value)
+ 		goto out;
+
+@@ -51,11 +52,28 @@ static int ovl_copy_up_xattr(struct dent
+ 	}
+
+ 	for (name = buf; name < (buf + list_size); name += strlen(name) + 1) {
+-		size = vfs_getxattr(old, name, value, XATTR_SIZE_MAX);
++		size = vfs_getxattr(old, name, NULL, 0);
+ 		if (size <= 0) {
+ 			error = size;
+ 			goto out_free_value;
+ 		}
++
++		if (size > size_max) {
++			size_max = size;
++			val = krealloc(value, size_max, GFP_KERNEL);
++			if (!val) {
++				error = -ENOMEM;
++				goto out_free_value;
++			}
++			value = val;
++		}
++
++		res = vfs_getxattr(old, name, value, size);
++		if (res <= 0) {
++			error = res;
++			goto out_free_value;
++		}
++
+ 		error = vfs_setxattr(new, name, value, size, 0);
+ 		if (error)
+ 			goto out_free_value;
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c	2011-05-31 10:01:28.986622751 +0200
+@@ -248,6 +248,7 @@ ssize_t ovl_listxattr(struct dentry *den
+ int ovl_removexattr(struct dentry *dentry, const char *name)
+ {
+ 	int err;
++	ssize_t size;
+ 	struct path realpath;
+ 	enum ovl_path_type type;
+
+@@ -257,9 +258,11 @@ int ovl_removexattr(struct dentry *dentr
+
+ 	type = ovl_path_real(dentry, &realpath);
+ 	if (type == OVL_PATH_LOWER) {
+-		err = vfs_getxattr(realpath.dentry, name, NULL, 0);
+-		if (err < 0)
++		size = vfs_getxattr(realpath.dentry, name, NULL, 0);
++		if (size < 0) {
++			err = size;
+ 			return err;
++		}
+
+ 		err = ovl_copy_up(dentry);
+ 		if (err)

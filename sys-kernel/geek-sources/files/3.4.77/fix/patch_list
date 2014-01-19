@@ -50,3 +50,10 @@ fix-acerhdf-1810T-bios.patch
 # fix cosmetic fat issue
 # https://bugs.archlinux.org/task/32916
 3.4.23-fat.patch
+
+2400_kcopy-patch-for-infiniband-driver.patch
+ata-prefer-ata-drivers-over-ide-drivers-when-both-are-built.patch
+cpufreq_ondemand_performance_optimise_default_settings.patch
+FX01-fix-serious-progressive-ext4-data-corruption-bug.patch
+net-wireless-ath9k-testfix.patch
+net-wireless-rt2800usb_disable_ps.patch

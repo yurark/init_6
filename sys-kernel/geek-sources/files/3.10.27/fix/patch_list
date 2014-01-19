@@ -34,7 +34,6 @@ linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
 linux-990.07-ALSA-hda-hdmi-Fallback-to-ALSA-allocation-when-selec.patch
 linux-995-CX24120-13Z_frontend.patch
 linux-998.01-cpufreq-revert-9d3ce4af3be0235d4cf41ea9fd774205a32e58a2.patch
-linux-999.01-smsdvb-fix-kernel-panic-on-inserting-DVB-T-stick.patch
 
 # fix zram
 3.10.13-Revert-zram-use-zram--lock-to-protect-zram_free_page-in-swap-free-notify-path.patch
@@ -43,8 +42,9 @@ linux-999.01-smsdvb-fix-kernel-panic-on-inserting-DVB-T-stick.patch
 # patch from fedora
 criu-no-expert.patch
 
-# fix Logitech issue - see:
-# https://lkml.org/lkml/2013/7/18/262, https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1194649
-# https://bugzilla.kernel.org/show_bug.cgi?id=60507, https://bugs.archlinux.org/task/35991
-# https://bugzilla.redhat.com/show_bug.cgi?id=989138
-1-2-Revert-Revert-HID-Fix-logitech-dj-missing-Unifying-device-issue.patch
+cpufreq-ondemand-Change-the-calculation-of-target-frequency.patch
+kernel-esfq.patch
+kernelvariables.patch
+mei-check-if-the-hardware-reset-succeeded.patch
+mei-check-whether-hw-start-has-succeeded.patch
+mei-print-correct-device-state-during-unexpected-reset.patch

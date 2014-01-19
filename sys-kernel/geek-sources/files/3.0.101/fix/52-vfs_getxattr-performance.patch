@@ -1,0 +1,41 @@
+--- a/fs/overlayfs/super.c
++++ b/fs/overlayfs/super.c	2011-05-31 15:07:21.364344718 +0200
+@@ -189,9 +189,6 @@ u64 ovl_dentry_version_get(struct dentry
+
+ bool ovl_is_whiteout(struct dentry *dentry)
+ {
+-	int res;
+-	char val;
+-
+ 	if (!dentry)
+ 		return false;
+ 	if (!dentry->d_inode)
+@@ -199,26 +196,15 @@ bool ovl_is_whiteout(struct dentry *dent
+ 	if (!S_ISLNK(dentry->d_inode->i_mode))
+ 		return false;
+
+-	res = vfs_getxattr(dentry, ovl_whiteout_xattr, &val, 1);
+-	if (res == 1 && val == 'y')
+-		return true;
+-
+-	return false;
++	return (vfs_getxattr(dentry, ovl_whiteout_xattr, NULL, 0) > 0);
+ }
+
+ static bool ovl_is_opaquedir(struct dentry *dentry)
+ {
+-	int res;
+-	char val;
+-
+ 	if (!S_ISDIR(dentry->d_inode->i_mode))
+ 		return false;
+
+-	res = vfs_getxattr(dentry, ovl_opaque_xattr, &val, 1);
+-	if (res == 1 && val == 'y')
+-		return true;
+-
+-	return false;
++	return (vfs_getxattr(dentry, ovl_opaque_xattr, NULL, 0) > 0);
+ }
+
+ static void ovl_entry_free(struct rcu_head *head)

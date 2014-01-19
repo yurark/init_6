@@ -53,3 +53,6 @@ criu-no-expert.patch
 
 # add Gentoo patches
 2700_ThinkPad-30-brightness-control-fix.patch
+
+kernel-esfq.patch
+kernelvariables.patch

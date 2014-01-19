@@ -7,7 +7,6 @@ linux-006_enable_utf8.patch
 linux-007_die_floppy_die.patch
 linux-009_disable_i8042_check_on_apple_mac.patch
 linux-010-perf_crosscompiling.patch
-linux-011-include_resource.h.patch
 linux-052-aureal_remote_quirk-0.1.patch
 linux-053-spinelplus-remote-0.1.patch
 linux-054-nuvoton_revert_d7b290a1056c5564eec8a1b169c6e84ff3.6.114c13.patch
@@ -30,3 +29,6 @@ linux-215-technisat-usb2-module.patch
 linux-901_broken_bluetooth.patch
 linux-990-xc5000_add_support_for_get_if_frequency.patch
 linux-999-fix-iMon-Knob-event-interpretation-issues.patch
+
+2300_per-pci-device-msi-irq-listing.patch
+2600_Input-ALPS-synaptics-touchpad.patch
