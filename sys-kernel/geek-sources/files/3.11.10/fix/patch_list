@@ -50,3 +50,7 @@ linux-999.02-A-split-for-ds3000-ts2020-code-forgot-to-change-the-.patch
 # allow criu without expert option set
 # patch from fedora
 criu-no-expert.patch
+
+cpufreq-ondemand-Change-the-calculation-of-target-frequency.patch
+kernel-esfq.patch
+kernelvariables.patch

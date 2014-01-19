@@ -258,9 +258,9 @@ geek-patch_ApplyUserPatch() {
 	local EPATCH_SOURCE check
 	[[ ${PORTAGE_CONFIGROOT} == "/" ]] && local base="/etc/portage/patches" || local base="${PORTAGE_CONFIGROOT}/etc/portage/patches";
 	for check in ${CATEGORY}/{${P}-${PR},${P},${PN}}{,:${SLOT}}/${dir}; do
-		EPATCH_SOURCE=$(echo ${base}/${CTARGET}/${check} | replace '//' '') # Remove unnecessary slashes from a given path
-		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=$(echo ${base}/${CHOST}/${check} | replace '//' '')
-		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=$(echo ${base}/${check} | replace '//' '')
+		EPATCH_SOURCE=$(echo ${base}/${CTARGET}/${check} | sed 's_//_/_g') # Remove unnecessary slashes from a given path
+		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=$(echo ${base}/${CHOST}/${check} | sed 's_//_/_g')
+		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=$(echo ${base}/${check} | sed 's_//_/_g')
 		if [[ -d ${EPATCH_SOURCE} ]] ; then
 			if [ -r "${EPATCH_SOURCE}/patch_list" ]; then
 				ApplyPatch "${EPATCH_SOURCE}/patch_list" "${YELLOW}Applying user patches from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."
