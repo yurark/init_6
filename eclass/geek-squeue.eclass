@@ -70,19 +70,19 @@ geek-squeue_src_unpack() {
 	local CSD="${GEEK_STORE_DIR}/squeue"
 	local CWD="${T}/squeue"
 
-	if [ -d ${CSD} ]; then
-		cd ${CSD} || die "${RED}cd ${CSD} failed${NORMAL}"
+	if [ -d "${CSD}" ]; then
+		cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
 		git pull > /dev/null 2>&1
 	else
-		git clone ${SQUEUE_SRC} ${CSD} > /dev/null 2>&1
+		git clone "${SQUEUE_SRC}" "${CSD}" > /dev/null 2>&1
 	fi
 
-	if [ -d ${CSD}/queue-${SQUEUE_VER} ] ; then
+	if [ -d "${CSD}/queue-${SQUEUE_VER}" ] ; then
 		copy "${CSD}/queue-${SQUEUE_VER}" "${CWD}" > /dev/null 2>&1;
-		mv "${CWD}/series" "${CWD}/patch_list" > /dev/null 2>&1;
-	elif [ -d ${CSD}/releases/${PV} ]; then
+		mv ${CWD}/series ${CWD}/patch_list > /dev/null 2>&1;
+	elif [ -d "${CSD}/releases/${PV}" ]; then
 		copy "${CSD}/releases/${PV}" "${CWD}" > /dev/null 2>&1;
-		mv "${CWD}/series" "${CWD}/patch_list" > /dev/null 2>&1 || ewarn "There is no stable-queue patch-set this time"; skip_squeue="yes";
+		mv ${CWD}/series ${CWD}/patch_list > /dev/null 2>&1;
 	else
 		ewarn "There is no stable-queue patch-set this time"
 		skip_squeue="yes";
@@ -94,6 +94,7 @@ geek-squeue_src_unpack() {
 # @DESCRIPTION: Prepare source packages and do any necessary patching or fixes.
 geek-squeue_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
+	debug-print "$FUNCNAME: skip_squeue=$skip_squeue."
 
 	if [ "${skip_squeue}" = "yes" ]; then
 			echo

@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 #
 # Patch to try mounting / before all devices (the mouse)
 # are done probing. This saves several seconds of boot time.
@@ -43,10 +41,10 @@ linux-2.6-usb-uvc-autosuspend.patch
 linux-2.6.33-vfs-tracepoints.patch
 linux-2.6.33-alsa-powertop.patch
 #linux-2.6.33-ahci-alpm-accounting.patch
+linux-2.6-build-nonintconfig.patch
 
->>>>>>> lost
 4000_sierra_wireless_usbid_addition.patch
 4305_sqlzma.patch
-4515_reiser4-grsec.patch
+# 4515_reiser4-grsec.patch
 # acpi-ec-add-delay-before-write.patch
 change-default-console-loglevel.patch

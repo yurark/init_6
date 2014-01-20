@@ -48,3 +48,8 @@ kernelvariables.patch
 mei-check-if-the-hardware-reset-succeeded.patch
 mei-check-whether-hw-start-has-succeeded.patch
 mei-print-correct-device-state-during-unexpected-reset.patch
+
+add-support-driver-for-intel-rapid-start-technology.patch
+add-support-for-controlling-charge-thresholds-for-newer-thinkpads.patch
+change-the-number-of-tty-devices.patch
+enable-thinkpad-hardware-mute-control.patch

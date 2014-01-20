@@ -54,7 +54,6 @@ geek-patch_init_variables() {
 
 	debug-print "${FUNCNAME}: patch_cmd=${patch_cmd}"
 	debug-print "${FUNCNAME}: crap_patch=${crap_patch}"
-
 }
 
 geek-patch_init_variables
@@ -66,13 +65,14 @@ geek-patch_init_variables
 # @DESCRIPTION: Get argument to patch
 get_patch_cmd () {
 	debug-print-function ${FUNCNAME} "$@"
-	debug-print "$FUNCNAME: crap_patch=$crap_patch"
-	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
 
 	case "$crap_patch" in
 	ignore) patch_cmd="patch -p1 -g1 --no-backup-if-mismatch" ;;
 	will_not_pass) patch_cmd="patch -p1 -g1" ;;
 	esac
+
+	debug-print "$FUNCNAME: crap_patch=$crap_patch"
+	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
 }
 
 # iternal function
@@ -82,13 +82,14 @@ get_patch_cmd () {
 # @DESCRIPTION: Get test argument to patch
 get_test_patch_cmd () {
 	debug-print-function ${FUNCNAME} "$@"
-	debug-print "$FUNCNAME: crap_patch=$crap_patch"
-	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
 
 	case "$crap_patch" in # test argument to patch
 	ignore) patch_cmd="patch -p1 -g1 --dry-run --no-backup-if-mismatch" ;;
 	will_not_pass) patch_cmd="patch -p1 -g1 --dry-run" ;;
 	esac
+
+	debug-print "$FUNCNAME: crap_patch=$crap_patch"
+	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
 }
 
 # iternal function
@@ -108,8 +109,6 @@ ExtractApply() {
 	[[ ${#} -ne 1 ]] && die "Invalid number of args to ${FUNCNAME}()";
 
 	local patch=$1
-	debug-print "$FUNCNAME: patch=$patch"
-	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
 
 	shift
 	case "$patch" in
@@ -121,6 +120,9 @@ ExtractApply() {
 	*.Z)        uncompress -c < "$patch" | $patch_cmd ${1+"$@"} ;; # app-arch/gzip
 	*) $patch_cmd ${1+"$@"} < "$patch" ;;
 	esac
+
+	debug-print "$FUNCNAME: patch=$patch"
+	debug-print "$FUNCNAME: patch_cmd=$patch_cmd"
 }
 
 # internal function
@@ -137,11 +139,15 @@ Handler() {
 
 	[[ ${#} -ne 1 ]] && die "Invalid number of args to ${FUNCNAME}()";
 
-	local patch=$1
+	local patch="${1}"
 	local patch_base_name=$(basename "$patch")
+	debug-print "$FUNCNAME: patch=$patch"
+	debug-print "$FUNCNAME: patch_base_name=$patch_base_name"
+
 	shift
 	if [ ! -f "$patch" ]; then
 		ewarn "${BLUE}Patch${NORMAL} ${RED}$patch${NORMAL} ${BLUE}does not exist.${NORMAL}"
+		debug-print "$FUNCNAME: $patch does not exist."
 	fi
 	case "$patch" in
 	*.gz|*.bz|*.bz2|*.lrz|*.xz|*.zip|*.Z)
@@ -152,6 +158,7 @@ Handler() {
 				ExtractApply "$patch" &>/dev/null
 			else
 				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
+				debug-print "$FUNCNAME: $patch_base_name has been skipped."
 				return 1
 			fi
 		else
@@ -164,10 +171,12 @@ Handler() {
 				ExtractApply "$patch" &>/dev/null
 			else
 				ewarn "${BLUE}Skipping patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
+				debug-print "$FUNCNAME: $patch_base_name has been skipped."
 				return 1
 			fi
 		else
 			ewarn "${BLUE}Skipping empty patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
+			debug-print "$FUNCNAME: $patch_base_name contains "$(wc -l $patch | awk '{print $1}')" lines. A should be at least 8 lines."
 		fi ;;
 	esac
 
@@ -178,6 +187,7 @@ Handler() {
 				patch_cmd="patch -p1 -g1 -R"; # reverse argument to patch
 				ExtractApply "$patch" &>/dev/null
 				rm_crap
+				debug-print "$FUNCNAME: Crap patch $patch_base_name has been reversed."
 			eend
 		fi ;;
 	esac
@@ -207,6 +217,8 @@ geek-patch_ApplyPatch() {
 	einfo "${msg}"
 	patch_base_name=$(basename "$patch")
 	patch_dir_name=$(dirname "$patch")
+	debug-print "$FUNCNAME: patch_base_name=$patch_base_name"
+	debug-print "$FUNCNAME: patch_dir_name=$patch_dir_name"
 	case $patch_base_name in
 	patch_list) # list of patches
 		while read -r line; do
@@ -262,10 +274,10 @@ geek-patch_ApplyUserPatch() {
 		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=$(echo ${base}/${CHOST}/${check} | sed 's_//_/_g')
 		[[ -r ${EPATCH_SOURCE} ]] || EPATCH_SOURCE=$(echo ${base}/${check} | sed 's_//_/_g')
 		if [[ -d ${EPATCH_SOURCE} ]] ; then
-			if [ -r "${EPATCH_SOURCE}/patch_list" ]; then
-				ApplyPatch "${EPATCH_SOURCE}/patch_list" "${YELLOW}Applying user patches from ${GREEN}${EPATCH_SOURCE}/patch_list${NORMAL} ..."
+			if [ -r "$(echo ${EPATCH_SOURCE}/patch_list | sed 's_//_/_g')" ]; then
+				ApplyPatch "$(echo ${EPATCH_SOURCE}/patch_list | sed 's_//_/_g')" "${YELLOW}Applying user patches from ${GREEN}$(echo ${EPATCH_SOURCE}/patch_list | sed 's_//_/_g')${NORMAL} ..."
 			else
-				ewarn "${BLUE}File${NORMAL} ${RED}${EPATCH_SOURCE}/patch_list${NORMAL} ${BLUE}not found!${NORMAL}"
+				ewarn "${BLUE}File${NORMAL} ${RED}$(echo ${EPATCH_SOURCE}/patch_list | sed 's_//_/_g')${NORMAL} ${BLUE}not found!${NORMAL}"
 				ewarn "${BLUE}Try to apply the patches if they are there…${NORMAL}"
 				for i in `ls ${EPATCH_SOURCE}/*.{patch,gz,bz,bz2,lrz,xz,zip,Z} 2> /dev/null`; do
 					ApplyPatch "${i}" "${YELLOW}Applying user patches from ${GREEN}${EPATCH_SOURCE}${NORMAL} ..."
