@@ -54,3 +54,7 @@ criu-no-expert.patch
 cpufreq-ondemand-Change-the-calculation-of-target-frequency.patch
 kernel-esfq.patch
 kernelvariables.patch
+
+add-support-for-controlling-charge-thresholds-for-newer-thinkpads.patch
+change-the-number-of-tty-devices.patch
+enable-thinkpad-hardware-mute-control.patch
