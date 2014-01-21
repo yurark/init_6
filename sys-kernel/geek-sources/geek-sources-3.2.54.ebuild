@@ -26,6 +26,6 @@ SUPPORTED_USES="aufs bfq -build ck fedora gentoo grsec hardened ice lqx mageia o
 inherit geek-sources
 
 HOMEPAGE="https://github.com/init6/init_6/wiki/${PN}"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 
 DESCRIPTION="Full sources for the Linux kernel including: fedora, grsecurity, mageia and other patches"

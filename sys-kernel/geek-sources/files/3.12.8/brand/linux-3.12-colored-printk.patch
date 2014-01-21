@@ -1,6 +1,7 @@
-diff -x .git -urN linux-3.12/arch/x86/kernel/early_printk.c zen/arch/x86/kernel/early_printk.c
---- linux-3.12/arch/x86/kernel/early_printk.c	2013-11-04 01:41:51.000000000 +0200
-+++ zen/arch/x86/kernel/early_printk.c	2013-11-04 18:23:07.632954193 +0200
+diff --git a/arch/x86/kernel/early_printk.c b/arch/x86/kernel/early_printk.c
+index d15f575..1cb8d08 100644
+--- a/arch/x86/kernel/early_printk.c
++++ b/arch/x86/kernel/early_printk.c
 @@ -24,7 +24,8 @@
  static int max_ypos = 25, max_xpos = 80;
  static int current_ypos = 25, current_xpos;
@@ -11,7 +12,7 @@ diff -x .git -urN linux-3.12/arch/x86/kernel/early_printk.c zen/arch/x86/kernel/
  {
  	char c;
  	int  i, k, j;
-@@ -102,7 +103,8 @@
+@@ -102,7 +103,8 @@ static int early_serial_putc(unsigned char ch)
  	return timeout ? 0 : -1;
  }
  
@@ -21,10 +22,11 @@ diff -x .git -urN linux-3.12/arch/x86/kernel/early_printk.c zen/arch/x86/kernel/
  {
  	while (*s && n-- > 0) {
  		if (*s == '\n')
-diff -x .git -urN linux-3.12/drivers/accessibility/braille/braille_console.c zen/drivers/accessibility/braille/braille_console.c
---- linux-3.12/drivers/accessibility/braille/braille_console.c	2013-11-04 01:41:51.000000000 +0200
-+++ zen/drivers/accessibility/braille/braille_console.c	2013-11-04 18:23:07.925950530 +0200
-@@ -116,7 +116,7 @@
+diff --git a/drivers/accessibility/braille/braille_console.c b/drivers/accessibility/braille/braille_console.c
+index dc34a5b..020118b 100644
+--- a/drivers/accessibility/braille/braille_console.c
++++ b/drivers/accessibility/braille/braille_console.c
+@@ -116,7 +116,7 @@ static void braille_write(u16 *buf)
  	*c++ = csum;
  	*c++ = ETX;
  
@@ -33,10 +35,11 @@ diff -x .git -urN linux-3.12/drivers/accessibility/braille/braille_console.c zen
  }
  
  /* Follow the VC cursor*/
-diff -x .git -urN linux-3.12/drivers/net/netconsole.c zen/drivers/net/netconsole.c
---- linux-3.12/drivers/net/netconsole.c	2013-11-04 01:41:51.000000000 +0200
-+++ zen/drivers/net/netconsole.c	2013-11-04 18:23:07.942950317 +0200
-@@ -727,7 +727,8 @@
+diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
+index adeee61..86f6dcf 100644
+--- a/drivers/net/netconsole.c
++++ b/drivers/net/netconsole.c
+@@ -727,7 +727,8 @@ static int netconsole_netdev_event(struct notifier_block *this,
  	.notifier_call  = netconsole_netdev_event,
  };
  
@@ -46,10 +49,11 @@ diff -x .git -urN linux-3.12/drivers/net/netconsole.c zen/drivers/net/netconsole
  {
  	int frag, left;
  	unsigned long flags;
-diff -x .git -urN linux-3.12/drivers/tty/Kconfig zen/drivers/tty/Kconfig
---- linux-3.12/drivers/tty/Kconfig	2013-11-04 01:41:51.000000000 +0200
-+++ zen/drivers/tty/Kconfig	2013-11-04 18:23:07.959950105 +0200
-@@ -75,6 +75,111 @@
+diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+index 978db34..63e7160 100644
+--- a/drivers/tty/Kconfig
++++ b/drivers/tty/Kconfig
+@@ -75,6 +75,111 @@ config VT_CONSOLE_SLEEP
  	def_bool y
  	depends on VT_CONSOLE && PM_SLEEP
  
@@ -161,10 +165,11 @@ diff -x .git -urN linux-3.12/drivers/tty/Kconfig zen/drivers/tty/Kconfig
  config HW_CONSOLE
  	bool
  	depends on VT && !UML
-diff -x .git -urN linux-3.12/drivers/tty/serial/8250/8250_core.c zen/drivers/tty/serial/8250/8250_core.c
---- linux-3.12/drivers/tty/serial/8250/8250_core.c	2013-11-04 01:41:51.000000000 +0200
-+++ zen/drivers/tty/serial/8250/8250_core.c	2013-11-04 18:23:07.961950080 +0200
-@@ -2850,7 +2850,8 @@
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index 570df9d..a62aa35 100644
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -2850,7 +2850,8 @@ static void serial8250_console_putchar(struct uart_port *port, int ch)
   *	The console_lock must be held when we get here.
   */
  static void
@@ -174,10 +179,11 @@ diff -x .git -urN linux-3.12/drivers/tty/serial/8250/8250_core.c zen/drivers/tty
  {
  	struct uart_8250_port *up = &serial8250_ports[co->index];
  	struct uart_port *port = &up->port;
-diff -x .git -urN linux-3.12/drivers/tty/serial/8250/8250_early.c zen/drivers/tty/serial/8250/8250_early.c
---- linux-3.12/drivers/tty/serial/8250/8250_early.c	2013-11-04 01:41:51.000000000 +0200
-+++ zen/drivers/tty/serial/8250/8250_early.c	2013-11-04 18:23:07.961950080 +0200
-@@ -98,7 +98,7 @@
+diff --git a/drivers/tty/serial/8250/8250_early.c b/drivers/tty/serial/8250/8250_early.c
+index c100d63..bb28b49 100644
+--- a/drivers/tty/serial/8250/8250_early.c
++++ b/drivers/tty/serial/8250/8250_early.c
+@@ -98,7 +98,7 @@ static void __init serial_putc(struct uart_port *port, int c)
  }
  
  static void __init early_serial8250_write(struct console *console,
@@ -186,9 +192,10 @@ diff -x .git -urN linux-3.12/drivers/tty/serial/8250/8250_early.c zen/drivers/tt
  {
  	struct uart_port *port = &early_device.port;
  	unsigned int ier;
-diff -x .git -urN linux-3.12/drivers/tty/vt/vt.c zen/drivers/tty/vt/vt.c
---- linux-3.12/drivers/tty/vt/vt.c	2013-11-04 01:41:51.000000000 +0200
-+++ zen/drivers/tty/vt/vt.c	2013-11-04 18:23:07.963950055 +0200
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 9a8e8c5..6f30c9b 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
 @@ -71,6 +71,7 @@
   */
  
@@ -197,7 +204,7 @@ diff -x .git -urN linux-3.12/drivers/tty/vt/vt.c zen/drivers/tty/vt/vt.c
  #include <linux/types.h>
  #include <linux/sched.h>
  #include <linux/tty.h>
-@@ -2421,16 +2422,44 @@
+@@ -2421,16 +2422,44 @@ int vt_kmsg_redirect(int new)
  		return kmsg_con;
  }
  
@@ -244,7 +251,7 @@ diff -x .git -urN linux-3.12/drivers/tty/vt/vt.c zen/drivers/tty/vt/vt.c
  	static DEFINE_SPINLOCK(printing_lock);
  	const ushort *start;
  	ushort cnt = 0;
-@@ -2466,11 +2495,20 @@
+@@ -2466,11 +2495,20 @@ static void vt_console_print(struct console *co, const char *b, unsigned count)
  
  	start = (ushort *)vc->vc_pos;
  
@@ -265,7 +272,7 @@ diff -x .git -urN linux-3.12/drivers/tty/vt/vt.c zen/drivers/tty/vt/vt.c
  			if (cnt > 0) {
  				if (CON_IS_VISIBLE(vc))
  					vc->vc_sw->con_putcs(vc, start, cnt, vc->vc_y, vc->vc_x);
-@@ -2483,6 +2521,7 @@
+@@ -2483,6 +2521,7 @@ static void vt_console_print(struct console *co, const char *b, unsigned count)
  				bs(vc);
  				start = (ushort *)vc->vc_pos;
  				myx = vc->vc_x;
@@ -273,7 +280,7 @@ diff -x .git -urN linux-3.12/drivers/tty/vt/vt.c zen/drivers/tty/vt/vt.c
  				continue;
  			}
  			if (c != 13)
-@@ -2490,6 +2529,7 @@
+@@ -2490,6 +2529,7 @@ static void vt_console_print(struct console *co, const char *b, unsigned count)
  			cr(vc);
  			start = (ushort *)vc->vc_pos;
  			myx = vc->vc_x;
@@ -281,7 +288,7 @@ diff -x .git -urN linux-3.12/drivers/tty/vt/vt.c zen/drivers/tty/vt/vt.c
  			if (c == 10 || c == 13)
  				continue;
  		}
-@@ -2512,6 +2552,7 @@
+@@ -2512,6 +2552,7 @@ static void vt_console_print(struct console *co, const char *b, unsigned count)
  			vc->vc_need_wrap = 1;
  		}
  	}
@@ -289,10 +296,11 @@ diff -x .git -urN linux-3.12/drivers/tty/vt/vt.c zen/drivers/tty/vt/vt.c
  	set_cursor(vc);
  	notify_update(vc);
  
-diff -x .git -urN linux-3.12/include/linux/console.h zen/include/linux/console.h
---- linux-3.12/include/linux/console.h	2013-11-04 01:41:51.000000000 +0200
-+++ zen/include/linux/console.h	2013-11-04 18:23:08.021949330 +0200
-@@ -118,7 +118,7 @@
+diff --git a/include/linux/console.h b/include/linux/console.h
+index 7571a16..af01c35 100644
+--- a/include/linux/console.h
++++ b/include/linux/console.h
+@@ -118,7 +118,7 @@ static inline int con_debug_leave(void)
  
  struct console {
  	char	name[16];
@@ -301,10 +309,11 @@ diff -x .git -urN linux-3.12/include/linux/console.h zen/include/linux/console.h
  	int	(*read)(struct console *, char *, unsigned);
  	struct tty_driver *(*device)(struct console *, int *);
  	void	(*unblank)(void);
-diff -x .git -urN linux-3.12/kernel/printk/printk.c zen/kernel/printk/printk.c
---- linux-3.12/kernel/printk/printk.c	2013-11-04 01:41:51.000000000 +0200
-+++ zen/kernel/printk/printk.c	2013-11-04 18:23:08.401944579 +0200
-@@ -1282,7 +1282,7 @@
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index b4e8500..1bbe017 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -1282,7 +1282,7 @@ static void call_console_drivers(int level, const char *text, size_t len)
  		if (!cpu_online(smp_processor_id()) &&
  		    !(con->flags & CON_ANYTIME))
  			continue;
@@ -313,7 +322,7 @@ diff -x .git -urN linux-3.12/kernel/printk/printk.c zen/kernel/printk/printk.c
  	}
  }
  
-@@ -1732,7 +1732,7 @@
+@@ -1732,7 +1732,7 @@ void early_vprintk(const char *fmt, va_list ap)
  		char buf[512];
  		int n = vscnprintf(buf, sizeof(buf), fmt, ap);
  
