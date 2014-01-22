@@ -1,5 +1,5 @@
 sys-fs/cryptsetup static -udev
 sys-fs/lvm2 -lvm1 readline static-libs -udev -thin
 sys-fs/ntfs3g ntfsprogs
-sys-fs/udev hwdb gudev action_modeswitch keymap
+sys-fs/udev hwdb gudev keymap
 sys-fs/zfs kernel-builtin

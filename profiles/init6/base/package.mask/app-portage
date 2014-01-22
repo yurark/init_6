@@ -1,5 +1,0 @@
-# Paul Varner <fuzzyray@gentoo.org> (06 Apr 2009)
-# Dead upstream and has issues with newer portages.
-# Due to popular demand and no suitable replacement, it will stay in the tree
-# in a masked status until it completely breaks or is replaced.
-app-portage/udept

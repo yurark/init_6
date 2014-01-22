@@ -8,7 +8,7 @@ inherit linux-info toolchain-funcs
 
 NUM="22508"
 DESCRIPTION="Intel IA32 microcode update data"
-HOMEPAGE="http://downloadcenter.intel.com/Detail_Desc.aspx?DwnldID=22508"
+HOMEPAGE="http://downloadcenter.intel.com/SearchResult.aspx?lang=eng&keyword=%22microcode%22"
 SRC_URI="http://downloadmirror.intel.com/${NUM}/eng/microcode-${PV}.tgz"
 
 LICENSE="intel-ucode"

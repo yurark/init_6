@@ -4,7 +4,7 @@ dev-libs/DirectFB bmp fbcon mng mpeg2 multicore vdpau
 dev-libs/ecore evas fbcon curl
 dev-libs/e_dbus bluetooth
 dev-libs/elfutils static-libs
-dev-libs/folks eds vala
+dev-libs/folks eds socialweb
 dev-libs/libgcrypt static-libs
 dev-libs/libgpg-error static-libs
 dev-libs/libpcre static-libs

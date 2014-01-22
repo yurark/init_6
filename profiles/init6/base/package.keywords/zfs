@@ -1,2 +1,2 @@
-sys-fs/zfs
-sys-kernel/spl
+sys-fs/zfs ~amd64
+sys-kernel/spl ~amd64
