@@ -11,6 +11,7 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 BFQ_VER="3.12.0-v6r2"
 BLD_VER="3.12.0"
 CK_VER="3.12-ck2"
+FEDORA_VER="f20"
 GRSEC_VER="3.0-3.12.8-201401191015" # 01/19/14 10:28
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 LQX_VER="3.12.8-1"
