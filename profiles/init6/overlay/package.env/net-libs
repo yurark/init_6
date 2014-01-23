@@ -1,3 +1,4 @@
 net-libs/gtk-vnc python_all
 net-libs/libproxy python_all
 net-libs/telepathy-glib python_all
+net-libs/webkit-gtk no-tmpfs
