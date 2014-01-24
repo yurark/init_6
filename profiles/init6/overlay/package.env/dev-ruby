@@ -1,6 +1,6 @@
-dev-ruby/bundler ruby19
-dev-ruby/json ruby19
-dev-ruby/racc ruby19
-dev-ruby/rake ruby19
-dev-ruby/rdoc ruby19
-dev-ruby/rubygems ruby19
+dev-ruby/bundler ruby20
+dev-ruby/json ruby20
+dev-ruby/racc ruby20
+dev-ruby/rake ruby20
+dev-ruby/rdoc ruby20
+dev-ruby/rubygems ruby20
