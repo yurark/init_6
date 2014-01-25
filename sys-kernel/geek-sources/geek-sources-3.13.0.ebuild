@@ -14,13 +14,13 @@ BLD_VER="3.13-rc1"
 # GRSEC_VER="3.0-3.12.8-201401191015" # 01/19/14 10:28
 # GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 # LQX_VER="3.12.8-1"
-MAGEIA_VER="releases/3.12.8/1.mga4"
-PAX_VER="3.13-test1"
+MAGEIA_VER="releases/3.12.8/2.mga4"
+PAX_VER="3.13-test2"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 REISER4_VER="3.12.6"
 # RT_VER="3.12.6-rt9"
 UKSM_VER="0.1.2.2"
-UKSM_NAME="uksm-${UKSM_VER}-for-v3.12"
+UKSM_NAME="uksm-${UKSM_VER}-for-v3.13"
 
 SUPPORTED_USES="aufs bfq bld brand -build -deblob exfat fedora gentoo mageia openwrt optimization pax pf reiser4 suse symlink uksm zen zfs"
 
