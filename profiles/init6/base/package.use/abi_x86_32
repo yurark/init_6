@@ -18,6 +18,7 @@ dev-libs/libusb-compat abi_x86_32
 dev-libs/libusbx abi_x86_32
 dev-libs/libxml2 abi_x86_32
 dev-libs/udis86 abi_x86_32
+dev-libs/wayland abi_x86_32
 media-libs/fontconfig abi_x86_32
 media-libs/freeglut abi_x86_32
 media-libs/freetype abi_x86_32
