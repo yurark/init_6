@@ -7,7 +7,7 @@ DEBLOB_AVAILABLE="1"
 
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 
-BFQ_VER="3.10.8+-v6r2"
+BFQ_VER="3.10.0-v7"
 BLD_VER="3.10.0"
 BLD_SRC="https://bld.googlecode.com/files/bld-${BLD_VER}.patch"
 FEDORA_VER="f20"
