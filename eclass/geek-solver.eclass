@@ -62,18 +62,11 @@ function version_comparator() {
 		[[ "${biggest}" == "${f_striped}" ]] && return "1" || return "2"
 		exit 0
 	elif [[ "${f_test}" != "${s_test}" ]];then
-		f_test="${f_test/alpha/${alpha}}"
-		f_test="${f_test/beta/${beta}}"
-		f_test="${f_test/pre/${pre}}"
-		f_test="${f_test/rc/${rc}}"
-		f_test="${f_test/p/${p}}"
+		for i in alpha beta pre rc p;do
+		f_test="${f_test/${i}/$(eval echo \$${i})}"
+		s_test="${s_test/${i}/$(eval echo \$${i})}"
+		done
 		f_test="${f_test:-${x}}"
-
-		s_test="${s_test/alpha/${alpha}}"
-		s_test="${s_test/beta/${beta}}"
-		s_test="${s_test/pre/${pre}}"
-		s_test="${s_test/rc/${rc}}"
-		s_test="${s_test/p/${p}}"
 		s_test="${s_test:-${x}}"
 		biggest="$(echo -e "${f_test}\n${s_test}" | sort -t '.' -k 1,1 | tail -n1)"
 		[[ "${biggest}" == "${f_test}" ]] && return "1" || return "2"
