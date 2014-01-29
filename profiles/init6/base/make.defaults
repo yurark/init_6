@@ -61,7 +61,7 @@ USE="truetype X new-login xorg xscreensaver xv xcomposite xinerama opengl egl gl
 jpeg gif tiff png apng svg pdf djvu dvi jbig jpeg2k exif \
 alsa mad vidix asf dvd mp4 aac x264 xvid nsplugin mp3 gstreamer cdda vpx a52 dv -ffmpeg pulseaudio dts \
 theora ogg vorbis wavpack flac lame mpeg v4l \
-ipv6 lzma lzo symlink sqlite spell xml extras device-mapper acpi sse3 ssse3 branding xattr g3dvl X509 \
+ipv6 lzma lzo lz4 symlink sqlite spell xml extras device-mapper acpi sse3 ssse3 branding xattr g3dvl X509 \
 fam dbus threads systemd policykit gnutls \
 -samba -java -perl -python -kerberos -ldap -avahi -zeroconf -gnome-keyring -consolekit -zeitgeist -nautilus \
 -cups -openrc -webkit -mms -sdl -xcb \
