@@ -9,7 +9,7 @@ GITHUB_USER="bobthecow"
 GITHUB_TAG="${PV}"
 HOMEPAGE="https://github.com/${GITHUB_USER}/${PN}"
 SRC_URI="https://github.com/${GITHUB_USER}/${PN}/tarball/${GITHUB_TAG} -> ${P}.tar.gz"
-SRC_HASH="b399150"
+SRC_HASH="2b0c1e4"
 
 LICENSE="GPL-3"
 SLOT="0"
