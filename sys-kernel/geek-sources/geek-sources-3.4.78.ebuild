@@ -6,6 +6,7 @@ EAPI="5"
 DEBLOB_AVAILABLE="1"
 
 KMV="$(echo $PV | cut -f 1-2 -d .)"
+KSV="$(echo $PV | cut -f 1-3 -d .)"
 
 BFQ_VER="3.4.0-v7"
 CK_VER="${KMV}-ck3"
@@ -13,11 +14,11 @@ FEDORA_VER="d0633aed96aaed8d8996ecec7213ad2bf1a819df" # Linux v3.4-10115-g829f51
 MAGEIA_VER="releases/3.4.6/1.mga3"
 PAX_VER="3.4.8-test32"
 SUSE_VER="259fc874ec90b84ca02ad1c1ae186989c83bb2fa" # rpm-3.4.11-2.16
-RT_VER="3.4.77-rt95"
+# RT_VER="${KSV}-rt95"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.51"
 
-SUPPORTED_USES="aufs bfq -build ck fedora gentoo ice mageia optimization pax pf rt suse symlink uksm zen"
+SUPPORTED_USES="aufs bfq -build ck fedora gentoo ice mageia optimization pax pf suse symlink uksm zen"
 
 inherit geek-sources
 
