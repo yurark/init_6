@@ -39,3 +39,22 @@ criu-no-expert.patch
 
 # add Gentoo patches
 2700_ThinkPad-30-brightness-control-fix.patch
+
+# fix 15 seocnds nfs delay
+# http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=4b9a445e3eeb8bd9278b1ae51c1b3a651e370cd6
+0001-sunrpc-create-a-new-dummy-pipe-for-gssd-to-hold-open.patch
+# http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=89f842435c630f8426f414e6030bc2ffea0d6f81
+0002-sunrpc-replace-sunrpc_net-gssd_running-flag-with-a-m.patch
+# http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=6aa23d76a7b549521a03b63b6d5b7880ea87eab7
+0003-nfs-check-if-gssd-is-running-before-attempting-to-us.patch
+
+# fix nfs kernel oops
+# http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=3396f92f8be606ea485b0a82d4e7749a448b013b
+0004-rpc_pipe-remove-the-clntXX-dir-if-creating-the-pipe-.patch
+# http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=e2f0c83a9de331d9352185ca3642616c13127539
+0005-sunrpc-add-an-info-file-for-the-dummy-gssd-pipe.patch
+# http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=23e66ba97127ff3b064d4c6c5138aa34eafc492f
+0006-rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-no.patch
+
+# Fix i8042 aliases
+i8042-fix-aliases.patch
