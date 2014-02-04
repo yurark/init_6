@@ -15,8 +15,9 @@ SRC_URI="https://raw.github.com/imirkin/re-vp2/master/extract_firmware.py
 
 LICENSE="MIT NVIDIA-r1"
 SLOT="0"
-KEYWORDS="x86 amd64"
-IUSE=""
+KEYWORDS="x86 amd64 ppc ppc64"
+IUSE="-bindist"
+REQUIRED_USE="!bindist"
 DEPEND="<dev-lang/python-3"
 RESTRICT="bindist mirror strip"
 
