@@ -72,7 +72,7 @@ pkg_postinst() {
 	dodir "${REPO_DIR}" || die
 
 	if [[ ! -d "${KEY_DIR}" ]] ; then
-		mkdir "${KEY_DIR}" || die
+		mkdir -p "${KEY_DIR}" || die
 		chmod 0700 "${KEY_DIR}" || die
 		chown ${GIT_USER}:${GIT_GROUP} "${KEY_DIR}" -R || die
 	fi
@@ -84,7 +84,7 @@ pkg_postinst() {
 	fi
 
 	if [[ ! -d "${REPO_DIR}" ]] ; then
-		mkdir "${REPO_DIR}"
+		mkdir -p "${REPO_DIR}"
 		chmod ug+rwX,o-rwx "${REPO_DIR}" -R || die
 		chmod ug-s,o-rwx "${REPO_DIR}" -R || die
 		chown ${GIT_USER}:${GIT_GROUP} "${REPO_DIR}" -R || die
