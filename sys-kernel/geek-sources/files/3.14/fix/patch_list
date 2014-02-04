@@ -1,0 +1,60 @@
+change-default-console-loglevel.patch
+
+linux-003-no_dev_console.patch
+linux-004_lower_undefined_mode_timeout.patch
+linux-006_enable_utf8.patch
+linux-007_die_floppy_die.patch
+linux-009_disable_i8042_check_on_apple_mac.patch
+linux-052-XBOX_remote_support.patch
+linux-053-spinelplus-remote-0.2.patch
+linux-054-nuvoton_revert_d7b290a1056c5564eec8a1b169c6e84ff3.6.114c13.patch
+linux-055-add_Formosa_eHome_Infrared_Receiver.patch
+linux-056-add_Adaptec_eHome_Infrared_Receiver.patch
+linux-057-add_SMK_Manufacturing_Inc_Infrared_Receiver.patch
+linux-057-Removed-MCE-customer-code-restriction-in-rc6-decode.patch
+linux-058.05-hid_sony-add_autorepeat_for_PS3_remotes.patch
+linux-058.06-hid_sony-add_SMK_link.patch
+linux-059-remove_some_xpad_pids-0.2.patch
+linux-060-add_AUGUST_DVB-T205.patch
+linux-203-stb0899_enable_low_symbol_rate.patch
+linux-210-dvbsky.patch
+linux-212-mantis_stb0899_faster_lock.patch
+linux-221-ngene-octopus.patch
+linux-222-stb0899_signal_quality.patch
+linux-223-Fix-video-artifacts-with-tt-3600-s2-usb.patch
+linux-701-linksys_aes2500_brcmfmac.patch
+linux-703-macmini2012-ethernet.patch
+linux-704-Support-for-Ubiquiti-WifiStation.patch
+linux-705-Support-for-Buffalo-WLI-UC-G300HP-V1.patch
+linux-706-Sitecom-N300.patch
+linux-900-hide_tsc_error.patch
+linux-950-saa716x_PCIe_interface_chipset.patch
+linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
+linux-991.01-ptrace_fix.patch
+linux-995-CX24120-13Z_frontend.patch
+
+# allow criu without expert option set
+# patch from fedora
+criu-no-expert.patch
+
+# add Gentoo patches
+2700_ThinkPad-30-brightness-control-fix.patch
+
+# fix 15 seocnds nfs delay
+# http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=4b9a445e3eeb8bd9278b1ae51c1b3a651e370cd6
+0001-sunrpc-create-a-new-dummy-pipe-for-gssd-to-hold-open.patch
+# http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=89f842435c630f8426f414e6030bc2ffea0d6f81
+0002-sunrpc-replace-sunrpc_net-gssd_running-flag-with-a-m.patch
+# http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=6aa23d76a7b549521a03b63b6d5b7880ea87eab7
+0003-nfs-check-if-gssd-is-running-before-attempting-to-us.patch
+
+# fix nfs kernel oops
+# http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=3396f92f8be606ea485b0a82d4e7749a448b013b
+0004-rpc_pipe-remove-the-clntXX-dir-if-creating-the-pipe-.patch
+# http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=e2f0c83a9de331d9352185ca3642616c13127539
+0005-sunrpc-add-an-info-file-for-the-dummy-gssd-pipe.patch
+# http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=23e66ba97127ff3b064d4c6c5138aa34eafc492f
+0006-rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-no.patch
+
+# Fix i8042 aliases
+i8042-fix-aliases.patch

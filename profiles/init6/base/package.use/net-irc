@@ -1,1 +1,1 @@
-net-irc/irssi perl socks5
+net-irc/irssi perl -socks5

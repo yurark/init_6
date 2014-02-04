@@ -1,33 +1,33 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-optimization.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
-#  Wiki: https://github.com/init6/init_6/wiki/geek-sources
-#
+# @ECLASS: geek-optimization.eclass
+# This file is part of sys-kernel/geek-sources project.
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (19 Aug 2013)
+# @LICENSE: http://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3
+# @BLURB: Eclass for building kernel with optimization patchset.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# kernel with optimization patches easily.
 
-inherit geek-patch geek-utils
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-optimization.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-optimization.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_OPTIMIZATION} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_OPTIMIZATION="recur -_+^+_- spank"
+
+inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 
@@ -40,36 +40,20 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-optimization_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	OLDIFS="$IFS"
-	VER="${PV}"
-	IFS='.'
-	set -- ${VER}
-	IFS="${OLDIFS}"
+	: ${OPTIMIZATION_VER:=${OPTIMIZATION_VER:-""}} # Patchset version
+	: ${OPTIMIZATION_SRC:=${OPTIMIZATION_SRC:-"https://github.com/graysky2/kernel_gcc_patch/raw/master/enable_additional_cpu_optimizations_for_gcc.patch"}} # Patchset sources url
+	: ${OPTIMIZATION_URL:=${OPTIMIZATION_URL:-"https://github.com/graysky2/kernel_gcc_patch"}} # Patchset url
+	: ${OPTIMIZATION_INF:=${OPTIMIZATION_INF:-"${YELLOW}Kernel patch enables gcc optimizations for additional CPUs version ${GREEN}${OPTIMIZATION_VER}${YELLOW} from ${GREEN}${OPTIMIZATION_URL}${NORMAL}"}}
 
-	# the kernel version (e.g 3 for 3.4.2)
-	VERSION="${1}"
-	# the kernel patchlevel (e.g 4 for 3.4.2)
-	PATCHLEVEL="${2}"
-	# the kernel sublevel (e.g 2 for 3.4.2)
-	SUBLEVEL="${3}"
-	# the kernel major version (e.g 3.4 for 3.4.2)
-	KMV="${1}.${2}"
-
-	: ${OPTIMIZATION_VER:=${OPTIMIZATION_VER:-$KMV}}
-
-	: ${OPTIMIZATION_SRC:=${OPTIMIZATION_SRC:-"https://raw.github.com/graysky2/kernel_gcc_patch/master/kernel-${KMV/./}-gcc48-${OPTIMIZATION_VER}.patch"}}
-
-	: ${OPTIMIZATION_URL:=${OPTIMIZATION_URL:-"https://github.com/graysky2/kernel_gcc_patch"}}
-
-	: ${OPTIMIZATION_INF:=${OPTIMIZATION_INF:-"${YELLOW}Kernel patch enables gcc optimizations for additional CPUs - ${OPTIMIZATION_URL}${NORMAL}"}}
+	debug-print "${FUNCNAME}: OPTIMIZATION_VER=${OPTIMIZATION_VER}"
+	debug-print "${FUNCNAME}: OPTIMIZATION_SRC=${OPTIMIZATION_SRC}"
+	debug-print "${FUNCNAME}: OPTIMIZATION_URL=${OPTIMIZATION_URL}"
+	debug-print "${FUNCNAME}: OPTIMIZATION_INF=${OPTIMIZATION_INF}"
 }
 
 geek-optimization_init_variables
 
 HOMEPAGE="${HOMEPAGE} ${OPTIMIZATION_URL}"
-
-#DEPEND="${DEPEND}
-#	optimization?	( >=sys-devel/gcc-4.8 )"
 
 SRC_URI="${SRC_URI}
 	optimization?	( ${OPTIMIZATION_SRC} )"
@@ -84,7 +68,7 @@ geek-optimization_src_unpack() {
 	local CWD="${T}/optimization"
 	shift
 	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
-	dest="${CWD}"/kernel-${KMV/./}-gcc48-${OPTIMIZATION_VER}.patch
+	dest="${CWD}"/enable_additional_cpu_optimizations_for_gcc.patch
 	wget "${OPTIMIZATION_SRC}" -O "${dest}" > /dev/null 2>&1
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
 	ls -1 | grep ".patch" | xargs -I{} xz "{}" | xargs -I{} cp "{}" "${CWD}"
@@ -98,8 +82,9 @@ geek-optimization_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/optimization/patch_list" "${OPTIMIZATION_INF}"
-	mv "${T}/optimization" "${WORKDIR}/linux-${KV_FULL}-patches/optimization" || die "${RED}mv ${T}/optimization ${WORKDIR}/linux-${KV_FULL}-patches/optimization failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/optimization/" "${WORKDIR}/linux-${KV_FULL}-patches/optimization" || die "${RED}rsync -avhW --no-compress --progress ${T}/optimization/ ${WORKDIR}/linux-${KV_FULL}-patches/optimization failed${NORMAL}"
+	move "${T}/optimization" "${WORKDIR}/linux-${KV_FULL}-patches/optimization"
+
+	ApplyUserPatch "optimization"
 }
 
 # @FUNCTION: pkg_postinst
@@ -110,3 +95,5 @@ geek-optimization_pkg_postinst() {
 
 	einfo "${OPTIMIZATION_INF}"
 }
+
+fi

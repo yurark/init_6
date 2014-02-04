@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 2009-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ EAPI=5
 
 inherit eutils multilib
 
-DESCRIPTION="core-functions provide yet another alternative for /etc/init.d/functions.sh so that openrc is not required."
+DESCRIPTION="${PN} provide alternative for /etc/init.d/functions.sh so that openrc is not required"
 HOMEPAGE="https://github.com/init6/core-functions"
 SRC_URI="https://github.com/init6/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 

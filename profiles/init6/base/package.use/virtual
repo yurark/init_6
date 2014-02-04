@@ -1,2 +1,2 @@
 virtual/ffmpeg vdpau vaapi
-virtual/udev gudev hwdb keymap -static-libs
+virtual/udev gudev hwdb

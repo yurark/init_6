@@ -1,0 +1,5 @@
+dev-libs/ecore glib xscreensaver
+media-libs/emotion gstreamer
+media-libs/ethumb emotion
+media-libs/evas xpm
+x11-wm/enlightenment emotion

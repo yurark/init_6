@@ -2,20 +2,28 @@
 # architectures will enjoy.
 
 #*app-arch/lbzip2
+*app-admin/logrotate
+*app-admin/sudo
+*app-admin/sysstat
 *app-arch/sharutils
 *app-arch/xz-utils
 *app-editors/nano
 *app-misc/mc
 *app-misc/screen
 *app-portage/eix
+*app-text/tree
 *dev-lang/python:2.7
+*dev-util/dialog
+*media-gfx/graphviz
 *sys-apps/lm_sensors
 *sys-apps/mlocate
 *sys-apps/pv
 *sys-apps/smartmontools
 *sys-apps/usbutils
-*sys-kernel/module-rebuild
+*sys-boot/grub
+#*sys-kernel/module-rebuild # sys-kernel/module-rebuild -> emerge @module-rebuild
 *sys-libs/gpm
 *sys-process/htop
 *sys-process/time
+*sys-process/vixie-cron
 *www-client/lynx

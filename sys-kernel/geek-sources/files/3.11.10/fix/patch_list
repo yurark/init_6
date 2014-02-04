@@ -17,7 +17,6 @@ linux-058.06-hid_sony-add_SMK_link.patch
 linux-059-remove_some_xpad_pids-0.2.patch
 linux-060-add_AUGUST_DVB-T205.patch
 linux-203-stb0899_enable_low_symbol_rate.patch
-linux-210.01-dvbsky-auto-off.patch
 linux-210-dvbsky.patch
 linux-212-mantis_stb0899_faster_lock.patch
 linux-221-ngene-octopus.patch
@@ -42,3 +41,20 @@ linux-992.02-i915_set_hdmi_audio_clock.patch
 linux-995-CX24120-13Z_frontend.patch
 linux-998.01-cpufreq-revert-9d3ce4af3be0235d4cf41ea9fd774205a32e58a2.patch
 linux-999.02-A-split-for-ds3000-ts2020-code-forgot-to-change-the-.patch
+
+# add intel haswell support to intel_pstate
+# https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/patch/?id=6cdcdb793791f776ea9408581b1242b636d43b37
+# will be in 3.12
+3.11-haswell-intel_pstate.patch
+
+# allow criu without expert option set
+# patch from fedora
+criu-no-expert.patch
+
+cpufreq-ondemand-Change-the-calculation-of-target-frequency.patch
+kernel-esfq.patch
+kernelvariables.patch
+
+add-support-for-controlling-charge-thresholds-for-newer-thinkpads.patch
+change-the-number-of-tty-devices.patch
+enable-thinkpad-hardware-mute-control.patch

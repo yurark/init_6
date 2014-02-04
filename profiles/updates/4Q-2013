@@ -1,0 +1,1 @@
+move x11-drivers/nouveau-firmware sys-firmware/nouveau-firmware

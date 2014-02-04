@@ -1,2 +1,3 @@
 media-plugins/alsa-plugins -ffmpeg libsamplerate
 media-plugins/gst-plugins-meta http taglib
+media-plugins/gst-plugins-v4l2 -udev

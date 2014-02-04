@@ -1,31 +1,33 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-linux.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
+# @ECLASS: geek-linux.eclass
+# This file is part of sys-kernel/geek-sources project.
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (09 Jan 2013)
+# @LICENSE: http://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3
+# @BLURB: Eclass for building linux kernel.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# linux kernel.
 
-inherit geek-build geek-deblob geek-patch geek-utils
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-linux.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-linux.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_LINUX} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_LINUX="recur -_+^+_- spank"
+
+inherit geek-build geek-deblob geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare src_compile src_install pkg_postinst
 
@@ -33,39 +35,6 @@ EXPORT_FUNCTIONS src_unpack src_prepare src_compile src_install pkg_postinst
 RESTRICT="mirror binchecks strip"
 
 LICENSE="GPL-2"
-
-OLDIFS="$IFS"
-VER="${PV}"
-IFS='.'
-set -- ${VER}
-IFS="${OLDIFS}"
-
-# the kernel version (e.g 3 for 3.4.2)
-VERSION="${1}"
-# the kernel patchlevel (e.g 4 for 3.4.2)
-PATCHLEVEL="${2}"
-# the kernel sublevel (e.g 2 for 3.4.2)
-SUBLEVEL="${3}"
-# the kernel major version (e.g 3.4 for 3.4.2)
-KMV="${1}.${2}"
-
-# Color
-BR="\x1b[0;01m"
-#BLUEDARK="\x1b[34;0m"
-BLUE="\x1b[34;01m"
-#CYANDARK="\x1b[36;0m"
-CYAN="\x1b[36;01m"
-#GRAYDARK="\x1b[30;0m"
-#GRAY="\x1b[30;01m"
-#GREENDARK="\x1b[32;0m"
-#GREEN="\x1b[32;01m"
-#LIGHT="\x1b[37;01m"
-#MAGENTADARK="\x1b[35;0m"
-#MAGENTA="\x1b[35;01m"
-NORMAL="\x1b[0;0m"
-#REDDARK="\x1b[31;0m"
-RED="\x1b[31;01m"
-YELLOW="\x1b[33;01m"
 
 # 0 for 3.4.0
 if [ "${SUBLEVEL}" = "0" ] || [ "${PV}" = "${KMV}" ] ; then
@@ -91,15 +60,24 @@ PDEPEND="!build? ( virtual/dev-manager )"
 SLOT=${SLOT:-${KMV}}
 IUSE="${IUSE} symlink"
 
-case "$PR" in
-	r0)	case "$VERSION" in
+case "${PR}" in
+	r0)	case "${VERSION}" in
 		2)	extension="xz"
-			kurl="mirror://kernel/linux/kernel/v${KMV}/longterm/v${KMV}.${SUBLEVEL}"
-			kversion="${KMV}.${SUBLEVEL}"
+			case "${PATCHLEVEL}" in
+			4)	kurl="mirror://kernel/linux/kernel/v${KMV}"
+				kversion="${PV}"
+				SKIP_UPDATE=1
+			;;
+			6)	kurl="mirror://kernel/linux/kernel/v${KMV}/longterm/v${KMV}.${SUBLEVEL}"
+				kversion="${KSV}"
+			;;
+			esac
 			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
-				pversion="${PV}"
-				pname="patch-${pversion}.${extension}"
-				SRC_URI="${SRC_URI} ${kurl}/${pname}"
+				if [ "${PATCHLEVEL}" = 6 ]; then
+					pversion="${PV}"
+					pname="patch-${pversion}.${extension}"
+					SRC_URI="${SRC_URI} ${kurl}/${pname}"
+				fi
 			fi
 		;;
 		3)	extension="xz"
@@ -113,19 +91,36 @@ case "$PR" in
 		;;
 		esac
 	;;
-	*)	extension="xz"
-		kurl="mirror://kernel/linux/kernel/v${VERSION}.0/testing"
-		kversion="${VERSION}.$((${PATCHLEVEL} - 1))"
-		if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
-			pversion="${PVR//r/rc}"
-			pname="patch-${pversion}.${extension}"
-			SRC_URI="${SRC_URI} ${kurl}/${pname}"
-		fi
+	*)	case "${VERSION}" in
+		2)	extension="xz"
+			case "${PATCHLEVEL}" in
+			4)	kurl="mirror://kernel/linux/kernel/v${KMV}"
+				kversion="${PV}"
+				SKIP_UPDATE=1
+			;;
+			6)	kurl="mirror://kernel/linux/kernel/v${KMV}/longterm/v${KMV}.${SUBLEVEL}"
+				kversion="${KSV}"
+			;;
+			esac
+			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
+				if [ "${PATCHLEVEL}" = 6 ]; then
+					pversion="${PV}"
+					pname="patch-${pversion}.${extension}"
+					SRC_URI="${SRC_URI} ${kurl}/${pname}"
+				fi
+			fi
+		;;
+		3)	extension="xz"
+			kurl="mirror://kernel/linux/kernel/v${VERSION}.0/testing"
+			kversion="${VERSION}.$((${PATCHLEVEL} - 1))"
+			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
+				pversion="${PVR//r/rc}"
+				pname="patch-${pversion}.${extension}"
+				SRC_URI="${SRC_URI} ${kurl}/${pname}"
+			fi
+		;;
+		esac
 	;;
-esac
-
-case "$VERSION" in
-	2)	kurl="mirror://kernel/linux/kernel/v${KMV}" ;;
 esac
 
 kname="linux-${kversion}.tar.${extension}"
@@ -140,10 +135,10 @@ SRC_URI="${SRC_URI} ${kurl}/${kname}"
 geek-linux_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${cfg_file:="/etc/portage/kernel.conf"}
-
 	local rm_unneeded_arch_cfg=$(source $cfg_file 2>/dev/null; echo ${rm_unneeded_arch})
 	: ${rm_unneeded_arch:=${rm_unneeded_arch_cfg:-no}} # rm_unneeded-arch=yes/no
+
+	debug-print "${FUNCNAME}: rm_unneeded_arch=${rm_unneeded_arch}"
 }
 
 geek-linux_init_variables
@@ -183,6 +178,10 @@ geek-linux_src_prepare() {
 		sed -i -e "s:^\(EXTRAVERSION =\).*:\1 ${EXTRAVERSION}:" Makefile
 	eend
 
+	if [ ! "${EXTRAVERSION}" = "-geek" ]; then
+		sed -i -e 's/CONFIG_FLAGS=""/CONFIG_FLAGS="GEEK"/;s/CONFIG_FLAGS="SMP"/CONFIG_FLAGS="$CONFIG_FLAGS SMP"/' scripts/mkcompile_h
+	fi
+
 	get_config
 
 	ebegin "Cleanup backups after patching"
@@ -198,7 +197,7 @@ geek-linux_src_prepare() {
 				rm -rf "${WORKDIR}"/linux-"${KV_FULL}"/arch/{avr32,blackfin,c6x,cris,frv,h8300,hexagon,m32r,m68k,m68knommu,microblaze,mn10300,openrisc,score,tile,unicore32,um,v850,xtensa}
 			fi
 		eend ;;
-	no)	einfo "Skipping remove unneeded architectures ..." ;;
+	no)	ewarn "Skipping remove unneeded architectures ..." ;;
 	esac
 
 	ebegin "Compile ${RED}gen_init_cpio${NORMAL}"
@@ -256,17 +255,15 @@ geek-linux_src_install() {
 	dodir /usr/src
 	echo ">>> Copying sources ..."
 
-#	mv ${WORKDIR}/linux* "${D}"/usr/src || die "${RED}mv ${WORKDIR}/linux* ${D}/usr/src failed${NORMAL}"
-#	rsync -avhW --no-compress --progress ${WORKDIR}/linux*/ "${D}"/usr/src || die "${RED}rsync -avhW --no-compress --progress ${WORKDIR}/linux*/ ${D}/usr/src failed${NORMAL}"
-	test -d "${D}/usr/src/linux-${KV_FULL}" >/dev/null 2>&1 || mkdir -p "${D}/usr/src/linux-${KV_FULL}"; (cd "${WORKDIR}/linux-${KV_FULL}"; tar cf - .) | (cd "${D}/usr/src/linux-${KV_FULL}"; tar xpf -)
-	test -d "${D}/usr/src/linux-${KV_FULL}-patches" >/dev/null 2>&1 || mkdir -p "${D}/usr/src/linux-${KV_FULL}-patches"; (cd "${WORKDIR}/linux-${KV_FULL}-patches"; tar cf - .) | (cd "${D}/usr/src/linux-${KV_FULL}-patches"; tar xpf -)
+	move "${WORKDIR}/linux-${KV_FULL}" "${D}/usr/src/linux-${KV_FULL}"
+	move "${WORKDIR}/linux-${KV_FULL}-patches" "${D}/usr/src/linux-${KV_FULL}-patches"
 
 	if use symlink; then
 		if [ -h "/usr/src/linux" ]; then
 			addwrite "/usr/src/linux"
 			unlink "/usr/src/linux" || die "${RED}unlink /usr/src/linux failed${NORMAL}"
 		elif [ -d "/usr/src/linux" ]; then
-			mv "/usr/src/linux" "/usr/src/linux-old" || die "${RED}mv /usr/src/linux /usr/src/linux-old failed${NORMAL}"
+			move "/usr/src/linux" "/usr/src/linux-old"
 		fi
 		dosym linux-${KV_FULL} \
 			"/usr/src/linux" ||
@@ -280,18 +277,19 @@ geek-linux_src_install() {
 geek-linux_pkg_postinst() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	einfo " ${BLUE}If you are upgrading from a previous kernel, you may be interested${NORMAL}"
-	einfo " ${BLUE}in the following document:${NORMAL}"
-	einfo "   ${BLUE}- General upgrade guide:${NORMAL} ${RED}http://www.gentoo.org/doc/en/kernel-upgrade.xml${NORMAL}"
-	einfo " ${RED}${CATEGORY}/${PN}${NORMAL} ${BLUE}is UNSUPPORTED Gentoo Security.${NORMAL}"
-	einfo " ${BLUE}This means that it is likely to be vulnerable to recent security issues.${NORMAL}"
-	einfo " ${BLUE}For specific information on why this kernel is unsupported, please read:${NORMAL}"
-	einfo " ${RED}http://www.gentoo.org/proj/en/security/kernel.xml${NORMAL}"
-	einfo
-	einfo " ${BLUE}Now is the time to configure and build the kernel.${NORMAL}"
-	einfo
+	einfo " ${BLUE}If you are upgrading from a previous kernel, you may be interested${NORMAL}${BR}
+ ${BLUE}in the following document:${NORMAL}${BR}
+ ${BLUE}- General upgrade guide:${NORMAL} ${RED}http://www.gentoo.org/doc/en/kernel-upgrade.xml${NORMAL}${BR}
+ ${RED}${CATEGORY}/${PN}${NORMAL} ${BLUE}is UNSUPPORTED Gentoo Security.${NORMAL}${BR}
+ ${BLUE}This means that it is likely to be vulnerable to recent security issues.${NORMAL}${BR}
+ ${BLUE}For specific information on why this kernel is unsupported, please read:${NORMAL}${BR}
+ ${RED}http://www.gentoo.org/proj/en/security/kernel.xml${NORMAL}${BR}
+ ${BR}
+ ${BLUE}Now is the time to configure and build the kernel.${NORMAL}${BR}"
 
 	if use deblob; then
 		geek-deblob_pkg_postinst
 	fi
 }
+
+fi

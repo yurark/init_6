@@ -1,33 +1,33 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-suse.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
-#  Wiki: https://github.com/init6/init_6/wiki/geek-sources
-#
+# @ECLASS: geek-suse.eclass
+# This file is part of sys-kernel/geek-sources project.
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (12 Aug 2013)
+# @LICENSE: http://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3
+# @BLURB: Eclass for building kernel with suse patchset.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# kernel with suse patches easily.
 
-inherit geek-patch geek-utils
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-suse.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-suse.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_SUSE} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_SUSE="recur -_+^+_- spank"
+
+inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 
@@ -40,31 +40,15 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-suse_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	OLDIFS="$IFS"
-	VER="${PV}"
-	IFS='.'
-	set -- ${VER}
-	IFS="${OLDIFS}"
+	: ${SUSE_VER:=${SUSE_VER:-"stable"}} # Patchset version
+	: ${SUSE_SRC:=${SUSE_SRC:-"git://kernel.opensuse.org/kernel-source.git"}} # Patchset sources url
+	: ${SUSE_URL:=${SUSE_URL:-"http://www.opensuse.org"}} # Patchset url
+	: ${SUSE_INF:=${SUSE_INF:-"${YELLOW}OpenSuSE patches version ${GREEN}${SUSE_VER}${YELLOW} from ${GREEN}${SUSE_URL}${NORMAL}"}}
 
-	# the kernel version (e.g 3 for 3.4.2)
-	VERSION="${1}"
-	# the kernel patchlevel (e.g 4 for 3.4.2)
-	PATCHLEVEL="${2}"
-	# the kernel sublevel (e.g 2 for 3.4.2)
-	SUBLEVEL="${3}"
-	# the kernel major version (e.g 3.4 for 3.4.2)
-	KMV="${1}.${2}"
-
-	: ${GEEK_STORE_DIR:=${GEEK_STORE_DIR:-"${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/geek"}}
-	addwrite "${GEEK_STORE_DIR}" # Disable the sandbox for this dir
-
-	: ${SUSE_VER:=${SUSE_VER:-stable}}
-
-	: ${SUSE_SRC:=${SUSE_SRC:-"git://kernel.opensuse.org/kernel-source.git"}}
-
-	: ${SUSE_URL:=${SUSE_URL:-"http://www.opensuse.org"}}
-
-	: ${SUSE_INF:=${SUSE_INF:-"${YELLOW}OpenSuSE - ${SUSE_URL}${NORMAL}"}}
+	debug-print "${FUNCNAME}: SUSE_VER=${SUSE_VER}"
+	debug-print "${FUNCNAME}: SUSE_SRC=${SUSE_SRC}"
+	debug-print "${FUNCNAME}: SUSE_URL=${SUSE_URL}"
+	debug-print "${FUNCNAME}: SUSE_INF=${SUSE_INF}"
 }
 
 geek-suse_init_variables
@@ -95,18 +79,16 @@ geek-suse_src_unpack() {
 		git clone "${SUSE_SRC}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches
 	fi
 
-#	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${CSD}/" "${CTD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/ ${CTD} failed${NORMAL}"
-	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"; (cd "${CSD}"; tar cf - .) | (cd "${CTD}"; tar xpf -)
+	copy "${CSD}" "${CTD}"
 
 	cd "${CTD}" || die "${RED}cd ${CTD} failed${NORMAL}"
 
 	git_checkout "${SUSE_VER}" > /dev/null 2>&1 git pull > /dev/null 2>&1
 
-	[ -e "patches.kernel.org" ] && rm -rf patches.kernel.org > /dev/null 2>&1
-	[ -e "patches.rpmify" ] && rm -rf patches.rpmify > /dev/null 2>&1
+	[ -d "patches.kernel.org" ] && rm -rf "patches.kernel.org" > /dev/null 2>&1
+	[ -d "patches.rpmify" ] && rm -rf "patches.rpmify" > /dev/null 2>&1
 
-	awk '!/(#|^$)/ && !/^(\+(needs|tren|trenn|hare|xen|jbeulich|jeffm|agruen|still|philips|disabled))|patches\.(kernel|rpmify|xen).*/{gsub(/[ \t]/,"") ; print $1}' series.conf > patch_list
+	awk '!/(#|^$)/ && !/^(\+(needs|tren|trenn|hare|xen|jbeulich|jeffm|agruen|still|philips|disabled|olh))|patches\.(kernel|rpmify|xen).*/{gsub(/[ \t]/,"") ; print $1}' series.conf > patch_list
 	grep patches.xen series.conf > spatch_list
 
 	cp -r patches.*/ "${CWD}" || die "${RED}cp -r patches.*/ ${CWD} failed${NORMAL}"
@@ -123,9 +105,10 @@ geek-suse_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/suse/patch_list" "${SUSE_INF}"
-	SmartApplyPatch "${T}/suse/spatch_list" "${YELLOW}OpenSuSE xen - ${SUSE_URL}${NORMAL}"
-	mv "${T}/suse" "${WORKDIR}/linux-${KV_FULL}-patches/suse" || die "${RED}mv ${T}/suse ${WORKDIR}/linux-${KV_FULL}-patches/suse failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/suse/" "${WORKDIR}/linux-${KV_FULL}-patches/suse" || die "${RED}rsync -avhW --no-compress --progress ${T}/suse/ ${WORKDIR}/linux-${KV_FULL}-patches/suse failed${NORMAL}"
+	ApplyPatch "${T}/suse/spatch_list" "${YELLOW}OpenSuSE xen - ${SUSE_URL}${NORMAL}"
+	move "${T}/suse" "${WORKDIR}/linux-${KV_FULL}-patches/suse"
+
+	ApplyUserPatch "suse"
 }
 
 # @FUNCTION: pkg_postinst
@@ -136,3 +119,5 @@ geek-suse_pkg_postinst() {
 
 	einfo "${SUSE_INF}"
 }
+
+fi

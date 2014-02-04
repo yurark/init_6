@@ -1,0 +1,5 @@
+gentoo:targets/desktop
+gentoo:hardened/linux/arm/armv7a
+../../base
+init6:init6/base
+init6:init6/arch/arm/armv7a

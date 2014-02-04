@@ -1,33 +1,33 @@
-# Copyright 1999-2013 Gentoo Foundation
-# Distributed under the terms of the GNU General Public License v2
+# Copyright 2011-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v3
 # $Header: $
 
-#
-#  Copyright © 2011-2013 Andrey Ovcharov <sudormrfhalt@gmail.com>
-#
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#  The latest version of this software can be obtained here:
-#
-#  https://github.com/init6/init_6/blob/master/eclass/geek-fedora.eclass
-#
-#  Bugs: https://github.com/init6/init_6/issues
-#
-#  Wiki: https://github.com/init6/init_6/wiki/geek-sources
-#
+# @ECLASS: geek-fedora.eclass
+# This file is part of sys-kernel/geek-sources project.
+# @MAINTAINER:
+# Andrey Ovcharov <sudormrfhalt@gmail.com>
+# @AUTHOR:
+# Original author: Andrey Ovcharov <sudormrfhalt@gmail.com> (12 Aug 2013)
+# @LICENSE: http://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3
+# @BLURB: Eclass for building kernel with fedora patchset.
+# @DESCRIPTION:
+# This eclass provides functionality and default ebuild variables for building
+# kernel with fedora patches easily.
 
-inherit geek-patch geek-utils
+# The latest version of this software can be obtained here:
+# https://github.com/init6/init_6/blob/master/eclass/geek-fedora.eclass
+# Bugs: https://github.com/init6/init_6/issues
+# Wiki: https://github.com/init6/init_6/wiki/geek-sources
+
+case ${EAPI} in
+	5)	: ;;
+	*)	die "geek-fedora.eclass: unsupported EAPI=${EAPI:-0}" ;;
+esac
+
+if [[ ${___ECLASS_ONCE_GEEK_FEDORA} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_GEEK_FEDORA="recur -_+^+_- spank"
+
+inherit geek-patch geek-utils geek-vars
 
 EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 
@@ -40,32 +40,15 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-fedora_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${GEEK_STORE_DIR:=${GEEK_STORE_DIR:-"${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/geek"}}
-	# Disable the sandbox for this dir
-	addwrite "${GEEK_STORE_DIR}"
+	: ${FEDORA_VER:=${FEDORA_VER:-"master"}} # Patchset version
+	: ${FEDORA_SRC:=${FEDORA_SRC:-"git://pkgs.fedoraproject.org/kernel.git"}} # Patchset sources url
+	: ${FEDORA_URL:=${FEDORA_URL:-"http://fedoraproject.org"}} # Patchset url
+	: ${FEDORA_INF:=${FEDORA_INF:-"${YELLOW}Fedora version ${GREEN}${FEDORA_VER}${YELLOW} from ${GREEN}${FEDORA_URL}${NORMAL}"}}
 
-	OLDIFS="$IFS"
-	VER="${PV}"
-	IFS='.'
-	set -- ${VER}
-	IFS="${OLDIFS}"
-
-	# the kernel version (e.g 3 for 3.4.2)
-	VERSION="${1}"
-	# the kernel patchlevel (e.g 4 for 3.4.2)
-	PATCHLEVEL="${2}"
-	# the kernel sublevel (e.g 2 for 3.4.2)
-	SUBLEVEL="${3}"
-	# the kernel major version (e.g 3.4 for 3.4.2)
-	KMV="${1}.${2}"
-
-	: ${FEDORA_VER:=${FEDORA_VER:-f19}}
-
-	: ${FEDORA_SRC:=${FEDORA_SRC:-"git://pkgs.fedoraproject.org/kernel.git"}}
-
-	: ${FEDORA_URL:=${FEDORA_URL:-"http://fedoraproject.org"}}
-
-	: ${FEDORA_INF:=${FEDORA_INF:-"${YELLOW}Fedora - ${FEDORA_URL}${NORMAL}"}}
+	debug-print "${FUNCNAME}: FEDORA_VER=${FEDORA_VER}"
+	debug-print "${FUNCNAME}: FEDORA_SRC=${FEDORA_SRC}"
+	debug-print "${FUNCNAME}: FEDORA_URL=${FEDORA_URL}"
+	debug-print "${FUNCNAME}: FEDORA_INF=${FEDORA_INF}"
 }
 
 geek-fedora_init_variables
@@ -95,9 +78,7 @@ geek-fedora_src_unpack() {
 		git clone "${FEDORA_SRC}" "${CSD}" > /dev/null 2>&1; cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"; git_get_all_branches
 	fi
 
-#	cp -r "${CSD}" "${CTD}" || die "${RED}cp -r ${CSD} ${CTD} failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${CSD}/" "${CTD}" || die "${RED}rsync -avhW --no-compress --progress ${CSD}/ ${CTD} failed${NORMAL}"
-	test -d "${CTD}" >/dev/null 2>&1 || mkdir -p "${CTD}"; (cd "${CSD}"; tar cf - .) | (cd "${CTD}"; tar xpf -)
+	copy "${CSD}" "${CTD}"
 	cd "${CTD}" || die "${RED}cd ${CTD} failed${NORMAL}"
 
 	git_checkout "${FEDORA_VER}" > /dev/null 2>&1 git pull > /dev/null 2>&1
@@ -116,8 +97,9 @@ geek-fedora_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${T}/fedora/patch_list" "${FEDORA_INF}"
-	mv "${T}/fedora" "${WORKDIR}/linux-${KV_FULL}-patches/fedora" || die "${RED}mv ${T}/fedora ${WORKDIR}/linux-${KV_FULL}-patches/fedora failed${NORMAL}"
-#	rsync -avhW --no-compress --progress "${T}/fedora/" "${WORKDIR}/linux-${KV_FULL}-patches/fedora" || die "${RED}rsync -avhW --no-compress --progress ${T}/fedora/ ${WORKDIR}/linux-${KV_FULL}-patches/fedora failed${NORMAL}"
+	move "${T}/fedora" "${WORKDIR}/linux-${KV_FULL}-patches/fedora"
+
+	ApplyUserPatch "fedora"
 }
 
 # @FUNCTION: pkg_postinst
@@ -128,3 +110,5 @@ geek-fedora_pkg_postinst() {
 
 	einfo "${FEDORA_INF}"
 }
+
+fi
