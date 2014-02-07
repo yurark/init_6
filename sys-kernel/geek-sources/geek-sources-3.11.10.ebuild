@@ -8,7 +8,7 @@ DEBLOB_AVAILABLE="1"
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
-BFQ_VER="3.11.0-v7"
+BFQ_VER="3.11.0-v7r1"
 BLD_VER="3.11.0"
 FEDORA_VER="f20"
 MAGEIA_VER="releases/3.11.4/1.mga4"
