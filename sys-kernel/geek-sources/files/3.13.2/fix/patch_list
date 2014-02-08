@@ -80,8 +80,6 @@ kernel-2.6.30-wmi_fix.patch
 kernel-3.2.1-rtl8139too.patch
 kernel-2.6.33-lzo_decompressor_fix.patch
 kernel-2.6.37-005-squashfs_revert_to_2.6.35.patch
-kernel-2.6.35-006-squashfs_add_lzma.patch
-kernel-2.6.35-007-squashfs_make_lzma_available.patch
 kernel-2.6.33.5-squashfs-fixes.patch
 kernel-2.6.33.7-make-3.82.patch
 kernel-2.6.33-dns_resolve_include.patch
