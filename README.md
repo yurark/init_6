@@ -63,7 +63,7 @@ In this overlay you will find
      * **mageia** - [Use Mageia patches](http://svnweb.mageia.org/packages/cauldron/kernel)
      * **openvz** - [RHEL6 kernel with OpenVZ patchset](http://openvz.org)
      * **openwrt** - [OpenWrt kernel patches](https://openwrt.org)
-     * **optimization** - [Kernel patch enables gcc optimizations for additional CPUs](https://github.com/graysky2/kernel_gcc_patch)
+     * **optimize** - [Kernel patch enables gcc optimizations for additional CPUs](https://github.com/graysky2/kernel_gcc_patch)
      * **pax** - [Use PAX patches](http://pax.grsecurity.net)
      * **pf** - [Use pf-kernel patches](http://pf.natalenko.name)
      * **reiser4** - [Use Reiser4 FS patches](http://sourceforge.net/projects/reiser4)

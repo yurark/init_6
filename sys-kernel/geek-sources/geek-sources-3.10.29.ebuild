@@ -15,7 +15,7 @@ FEDORA_VER="f20"
 # HARDENED_VER="3.10.11"
 LQX_VER="3.10.22-1"
 MAGEIA_VER="releases/3.10.10/3.mga4"
-OPTIMIZATION_VER="2"
+OPTIMIZE_VER="2"
 PAX_VER="3.10.12-test26"
 REISER4_VER="3.10"
 # RT_VER="${KSV}-rt25"
@@ -24,7 +24,7 @@ RSBAC_NAME="patch-linux-3.10.7-rsbac-${RSBAC_VER}.diff.xz"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}"
 
-SUPPORTED_USES="aufs bfq bld brand -build cjktty ck fedora gentoo ice lqx mageia openwrt optimization pax pf reiser4 rsbac suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build cjktty ck fedora gentoo ice lqx mageia openwrt optimize pax pf reiser4 rsbac suse symlink uksm zen zfs"
 
 inherit geek-sources
 

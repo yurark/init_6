@@ -18,7 +18,7 @@ SUSE_VER="259fc874ec90b84ca02ad1c1ae186989c83bb2fa" # rpm-3.4.11-2.16
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.51"
 
-SUPPORTED_USES="aufs bfq -build ck fedora gentoo ice mageia optimization pax pf suse symlink uksm zen"
+SUPPORTED_USES="aufs bfq -build ck fedora gentoo ice mageia optimize pax pf suse symlink uksm zen"
 
 inherit geek-sources
 

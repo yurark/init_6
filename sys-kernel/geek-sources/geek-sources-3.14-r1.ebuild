@@ -23,7 +23,7 @@ AUFS_VER="3.x-rcN"
 # UKSM_VER="0.1.2.2"
 # UKSM_NAME="uksm-${UKSM_VER}-for-v3.13"
 
-SUPPORTED_USES="aufs brand -build -deblob gentoo optimization symlink zfs"
+SUPPORTED_USES="aufs brand -build -deblob gentoo optimize symlink zfs"
 
 inherit geek-sources
 

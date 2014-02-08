@@ -164,8 +164,6 @@ Handler() {
 		else
 			ewarn "${BLUE}Skipping missing or empty patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
 		fi ;;
-#	*)	if [[ $(wc -l "$patch" | awk '{print $1}') -gt 8 ]]; then # 8 lines
-#	*)	if [[ $(wc -l "$patch" | cut -d' ' -f1) -gt 8 ]]; then # 8 lines
 	*)	if [[ $(grep -c ^ "$patch") -gt 8 ]]; then # 8 lines
 			get_test_patch_cmd
 			if ExtractApply "$patch" &>/dev/null; then

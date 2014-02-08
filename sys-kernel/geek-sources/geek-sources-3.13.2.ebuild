@@ -23,7 +23,7 @@ REISER4_VER="3.13.1"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v3.13"
 
-SUPPORTED_USES="aufs bfq bld brand -build -deblob exfat fedora gentoo grsec mageia ice openwrt optimization pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build -deblob exfat fedora gentoo grsec mageia ice openwrt optimize pax pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 

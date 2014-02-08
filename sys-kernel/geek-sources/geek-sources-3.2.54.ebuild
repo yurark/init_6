@@ -22,7 +22,7 @@ SUSE_VER="2206a5c5b9aa64bd9a741830257f184818a0f6ee" # rpm-3.2.0-2
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.48"
 
-SUPPORTED_USES="aufs bfq -build ck fedora gentoo grsec hardened ice lqx mageia optimization pax pf rsbac rt suse symlink uksm"
+SUPPORTED_USES="aufs bfq -build ck fedora gentoo grsec hardened ice lqx mageia optimize pax pf rsbac rt suse symlink uksm"
 
 inherit geek-sources
 

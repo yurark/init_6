@@ -25,7 +25,7 @@
     <flag name='mageia'>Use Mageia patches.</flag>
     <flag name='openvz'>RHEL6 kernel with OpenVZ patchset.</flag>
     <flag name='openwrt'>OpenWrt kernel patches.</flag>
-    <flag name='optimization'>Kernel patch enables gcc optimizations for additional CPUs.</flag>
+    <flag name='optimize'>Kernel patch enables gcc optimizations for additional CPUs.</flag>
     <flag name='pax'>Use PAX patches.</flag>
     <flag name='pf'>Use pf-kernel patches.</flag>
     <flag name='reiser4'>Use Reiser4 FS patches.</flag>
