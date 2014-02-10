@@ -89,8 +89,7 @@ geek-ice_src_unpack() {
 #	wget "${ICE_SRC}" -O "${dest}" > /dev/null 2>&1
 	git diff "vanilla-${ICE_VER}" "tuxonice-${ICE_VER}" > "$dest";
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
-	ls -1 | grep ".patch" | xargs -I{} xz "{}" | xargs -I{} cp "{}" "${CWD}"
-	ls -1 "${CWD}" | grep ".patch.xz" > "${CWD}"/patch_list
+	ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list
 }
 
 # @FUNCTION: src_prepare

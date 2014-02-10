@@ -151,7 +151,7 @@ Handler() {
 	fi
 	case "$patch" in
 	*.gz|*.bz|*.bz2|*.lrz|*.xz|*.zip|*.Z)
-		if [ -s "$patch" ]; then # !=0
+		if [[ -s "$patch" ]]; then # !=0
 			get_test_patch_cmd
 			if ExtractApply "$patch" &>/dev/null; then
 				get_patch_cmd
@@ -162,9 +162,9 @@ Handler() {
 				return 1
 			fi
 		else
-			ewarn "${BLUE}Skipping empty patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
+			ewarn "${BLUE}Skipping missing or empty patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
 		fi ;;
-	*)	if [[ "$(wc -l "$patch" | awk '{print $1}')" -gt 8 ]]; then # 8 lines
+	*)	if [[ $(grep -c ^ "$patch") -gt 8 ]]; then # 8 lines
 			get_test_patch_cmd
 			if ExtractApply "$patch" &>/dev/null; then
 				get_patch_cmd
@@ -176,7 +176,7 @@ Handler() {
 			fi
 		else
 			ewarn "${BLUE}Skipping empty patch -->${NORMAL} ${RED}$patch_base_name${NORMAL}"
-			debug-print "$FUNCNAME: $patch_base_name contains "$(wc -l $patch | awk '{print $1}')" lines. A should be at least 8 lines."
+			debug-print "$FUNCNAME: $patch_base_name contains "$(grep -c ^ $patch)" lines. A should be at least 8 lines."
 		fi ;;
 	esac
 

@@ -8,7 +8,7 @@ DEBLOB_AVAILABLE="1"
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
-BFQ_VER="3.11.0-v7"
+BFQ_VER="3.11.0-v7r1"
 BLD_VER="3.11.0"
 FEDORA_VER="f20"
 MAGEIA_VER="releases/3.11.4/1.mga4"
@@ -17,7 +17,7 @@ REISER4_VER="3.11.1"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v3.10"
 
-SUPPORTED_USES="aufs bfq bld brand -build cjktty ck exfat fedora gentoo ice mageia optimization pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build cjktty ck exfat fedora gentoo ice mageia optimize pax pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 

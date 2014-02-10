@@ -52,6 +52,9 @@ geek-brand_init_variables
 
 HOMEPAGE="${HOMEPAGE} ${BRAND_URL}"
 
+DEPEND="${DEPEND}
+	brand?	( >=media-fonts/iso_latin_1-0.0.5 )"
+
 # @FUNCTION: src_prepare
 # @USAGE:
 # @DESCRIPTION: Prepare source packages and do any necessary patching or fixes.

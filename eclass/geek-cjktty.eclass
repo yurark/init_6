@@ -68,8 +68,7 @@ geek-cjktty_src_unpack() {
 	dest="${CWD}"/cjktty-"${PV}"-`date +"%Y%m%d"`.patch
 	wget "${CJKTTY_SRC}" -O "${dest}" > /dev/null 2>&1
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
-	ls -1 | grep ".patch" | xargs -I{} xz "{}" | xargs -I{} cp "{}" "${CWD}"
-	ls -1 "${CWD}" | grep ".patch.xz" > "${CWD}"/patch_list
+	ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list
 }
 
 # @FUNCTION: src_prepare

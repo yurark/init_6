@@ -4,6 +4,7 @@ app-emulation/emul-linux-x86-baselibs abi_x86_32
 app-emulation/emul-linux-x86-opengl abi_x86_32
 app-emulation/emul-linux-x86-xlibs abi_x86_32
 app-text/libpaper abi_x86_32
+dev-db/sqlite abi_x86_32
 dev-libs/dbus-glib abi_x86_32
 dev-libs/elfutils abi_x86_32
 dev-libs/expat abi_x86_32
@@ -12,6 +13,7 @@ dev-libs/gmp abi_x86_32
 dev-libs/icu abi_x86_32
 dev-libs/json-c abi_x86_32
 dev-libs/libffi abi_x86_32
+dev-libs/libgpg-error abi_x86_32
 dev-libs/libpcre abi_x86_32
 dev-libs/libpthread-stubs abi_x86_32
 dev-libs/libusb-compat abi_x86_32
@@ -60,6 +62,7 @@ virtual/glu abi_x86_32
 virtual/jpeg abi_x86_32
 virtual/libffi abi_x86_32
 virtual/libiconv abi_x86_32
+virtual/libintl abi_x86_32
 virtual/libusb abi_x86_32
 virtual/opengl abi_x86_32
 virtual/udev abi_x86_32
