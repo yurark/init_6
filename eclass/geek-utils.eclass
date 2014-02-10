@@ -27,7 +27,7 @@ esac
 if [[ ${___ECLASS_ONCE_GEEK_UTILS} != "recur -_+^+_- spank" ]]; then
 ___ECLASS_ONCE_GEEK_UTILS="recur -_+^+_- spank"
 
-EXPORT_FUNCTIONS use_if_iuse get_from_url git_get_all_branches git_checkout find_crap rm_crap get_config copy move
+EXPORT_FUNCTIONS use_if_iuse get_from_url git_get_all_branches git_checkout find_crap rm_crap get_config copy move rand_element
 
 # @FUNCTION: in_iuse
 # @USAGE: <flag>
@@ -181,6 +181,26 @@ geek-utils_move() {
 	local dst=${2}
 
 	(copy ${src} ${dst} >/dev/null 2>&1 && rm -rf "${src}") || die "${RED}mv ${src} ${dst} failed${NORMAL}"
+}
+
+# @FUNCTION: rand
+# @USAGE:
+# @DESCRIPTION:
+# Return random number.
+#
+# Note that this function should not be used in the global scope.
+geek-utils_rand() {
+	printf $(($1*RANDOM/32767))
+}
+
+# @FUNCTION: rand_element
+# @USAGE:
+# @DESCRIPTION:
+# Print fortune like random msg.
+geek-utils_rand_element () {
+	local -a th=("$@")
+	unset th[0]
+	printf $'%s\n' "${th[$(($(geek-utils_rand "${#th[*]}")+1))]}"
 }
 
 fi
