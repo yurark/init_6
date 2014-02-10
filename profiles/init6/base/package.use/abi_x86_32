@@ -4,6 +4,7 @@ app-emulation/emul-linux-x86-baselibs abi_x86_32
 app-emulation/emul-linux-x86-opengl abi_x86_32
 app-emulation/emul-linux-x86-xlibs abi_x86_32
 app-text/libpaper abi_x86_32
+dev-db/sqlite abi_x86_32
 dev-libs/dbus-glib abi_x86_32
 dev-libs/elfutils abi_x86_32
 dev-libs/expat abi_x86_32
