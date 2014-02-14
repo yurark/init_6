@@ -10,7 +10,6 @@ KSV="$(echo $PV | cut -f 1-3 -d .)"
 
 BFQ_VER="3.11.0-v7r1"
 BLD_VER="3.11.0"
-FEDORA_VER="f20"
 MAGEIA_VER="releases/3.11.4/1.mga4"
 PAX_VER="3.11.9-test14"
 REISER4_VER="3.11.1"

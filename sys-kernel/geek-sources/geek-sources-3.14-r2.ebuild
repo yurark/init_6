@@ -12,6 +12,7 @@ AUFS_VER="3.x-rcN"
 # BFQ_VER="${KSV}-v7"
 # BLD_VER="3.13-rc1"
 # CK_VER="3.12-ck2"
+FEDORA_VER="master"
 # GRSEC_VER="3.0-${KSV}-201401281848" # 01/28/14 18:49
 # GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 # LQX_VER="3.12.8-1"
@@ -20,10 +21,11 @@ AUFS_VER="3.x-rcN"
 # PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 # REISER4_VER="3.12.6"
 # RT_VER="3.12.6-rt9"
+SUSE_VER="linux-next"
 # UKSM_VER="0.1.2.2"
 # UKSM_NAME="uksm-${UKSM_VER}-for-v3.13"
 
-SUPPORTED_USES="aufs brand -build -deblob gentoo optimize symlink zfs"
+SUPPORTED_USES="aufs brand -build -deblob fedora gentoo optimize suse symlink zfs"
 
 inherit geek-sources
 
