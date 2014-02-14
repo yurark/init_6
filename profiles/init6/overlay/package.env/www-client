@@ -1,1 +1,2 @@
 www-client/chromium no-tmpfs
+www-client/uzbl disable-sandbox
