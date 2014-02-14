@@ -16,4 +16,5 @@ sys-kernel
 sys-libs
 virtual
 www-apps
+www-client
 x11-themes
