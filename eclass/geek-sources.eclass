@@ -98,6 +98,11 @@ EXPORT_FUNCTIONS src_unpack src_prepare src_compile src_install pkg_postinst
 geek-sources_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
+	# Remove duplicates patches
+	local rm_duplicates_cfg=$(source $cfg_file 2>/dev/null; echo ${rm_duplicates})
+	: ${rm_duplicates:=${rm_duplicates_cfg:-yes}} # rm_duplicates=yes/no
+	einfo "${BLUE}Remove duplicates patches -->${NORMAL} ${RED}$rm_duplicates${NORMAL}"
+
 	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx openvz pf rh zen"}
 	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimize pax lqx pf zen bfq ck cjktty gentoo grsec hardened rsbac ice rh openvz openwrt reiser4 exfat rt bld uksm aufs mageia fedora suse brand fix upatch squeue"}
 
@@ -128,11 +133,7 @@ ${BLUE}Otherwise i will use the default value of GEEKSOURCES_PATCHING_ORDER!${NO
 ${BLUE}And may the Force be with you…${NORMAL}"
 	fi
 
-	# Remove duplicates patches
-	local rm_duplicates_cfg=$(source $cfg_file 2>/dev/null; echo ${rm_duplicates})
-	: ${rm_duplicates:=${rm_duplicates_cfg:-yes}} # rm_duplicates=yes/no
-	einfo "${BLUE}Remove duplicates patches -->${NORMAL} ${RED}$rm_duplicates${NORMAL}"
-
+	debug-print "${FUNCNAME}: rm_duplicates=$rm_duplicates"
 	debug-print "${FUNCNAME}: SKIP_KERNEL_PATCH_UPDATE=${SKIP_KERNEL_PATCH_UPDATE}"
 	debug-print "${FUNCNAME}: DEFAULT_GEEKSOURCES_PATCHING_ORDER=${DEFAULT_GEEKSOURCES_PATCHING_ORDER}"
 }
@@ -191,12 +192,16 @@ geek-sources_src_unpack() {
 	done
 
 	# Now find and remove all duplicates patches
-	if [ "${rm_duplicates}" = "yes" ]; then
-		einfo "${YELLOW}Find and remove all duplicates patches ...${NORMAL}"
-		find "${T}" -not -empty -type f -printf "%s\n" | sort -rn | uniq -d |  xargs -I{} -n1 find -type f -size {}c -print0 | xargs -0 md5sum | sort | uniq -w32 --all-repeated=separate | cut -f3-100 -d ' ' | tr '\n.' '\t.' | sed 's/\t\t/\n/g' | cut -f2-100 | tr '\t' '\n' | perl -i -pe 's/([ (){}-])/\\$1/g' | perl -i -pe 's/'\''/\\'\''/g' | xargs -r rm -v >/dev/null 2>&1
-	elif [ "${rm_duplicates}" = "no" ]; then
-		find "${T}" -not -empty -type f -printf "%s\n" | sort -rn | uniq -d | xargs -I{} -n1 find -type f -size {}c -print0 | xargs -0 md5sum | sort | uniq -w32 --all-repeated=separate >/dev/null 2>&1
-	fi
+	einfo "${YELLOW}Find and remove all duplicates patches ...${NORMAL}"
+	for dubl_file in $(find ${T} -not -empty -type f -printf "%s\n" | sort -rn | uniq -d | xargs -I{} -n1 find -type f -size {}c -print0 | xargs -0 md5sum | sort | uniq -w32 --all-repeated=separate | cut -f3-100 -d ' ' | tr '\n.' '\t.' | sed 's/\t\t/\n/g' | cut -f2-100 | tr '\t' '\n' | perl -i -pe 's/([ (){}-])/\\$1/g' | perl -i -pe 's/'\''/\\'\''/g' | tr '\n' ' '); do
+		if [ "${rm_duplicates}" = "yes" ]; then
+			einfo "Remove - $dubl_file"
+			rm -v "$dubl_file" >/dev/null 2>&1
+			debug-print "${FUNCNAME}: $dubl_file"
+		elif [ "${rm_duplicates}" = "no" ]; then
+			debug-print "${FUNCNAME}: $dubl_file"
+		fi
+	done
 }
 
 # @FUNCTION: src_prepare

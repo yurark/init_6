@@ -16,7 +16,7 @@ FEDORA_VER="f19"
 GRSEC_VER="3.0-3.12.8-201401191015" # 01/19/14 10:28
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 LQX_VER="3.12.10-1" # LQX_VER="${KSV}-1"
-# MAGEIA_VER="releases/3.12.9/1.mga4"
+MAGEIA_VER="releases/3.12.9/1.mga4"
 PAX_VER="3.12.8-test15"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 REISER4_VER="3.12.6"
