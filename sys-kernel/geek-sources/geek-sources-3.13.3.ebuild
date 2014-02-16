@@ -9,13 +9,13 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
 # AUFS_VER="3.x-rcN"
-BFQ_VER="3.13.0-v7r1"
+BFQ_VER="3.13.0-v7r2"
 BLD_VER="3.13-rc1"
 # CK_VER="3.12-ck2"
 FEDORA_VER="f20"
-GRSEC_VER="3.0-${KSV}-201402132113" # 02/13/14 21:13
+GRSEC_VER="3.0-${KSV}-201402152204" # 02/15/14 22:04
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
-# LQX_VER="3.12.8-1"
+# LQX_VER="${KSV}-1"
 MAGEIA_VER="releases/3.12.9/1.mga4"
 PAX_VER="${KSV}-test9"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"

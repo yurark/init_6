@@ -58,8 +58,15 @@ criu-no-expert.patch
 # http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=23e66ba97127ff3b064d4c6c5138aa34eafc492f
 0006-rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-no.patch
 
+# Fix symbols: Revert http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=83460ec8dcac14142e7860a01fa59c267ac4657c
+# patch -Rp1 -i 0001-syscalls.h-use-gcc-alias-instead-of-assembler-aliase.patch # TODO
+
 # Fix i8042 aliases
 i8042-fix-aliases.patch
+
+# Fix compile issues
+# http://git.kernel.org/cgit/linux/kernel/git/tip/tip.git/patch/?id=a9f180345f5378ac87d80ed0bea55ba421d83859
+0001-quirk-asm_volatile_goto.patch
 
 kernel-2.6.35-430-scsi_header_fix.patch
 kernel-2.6.28.10-MSG_PEEK_race_msg.patch

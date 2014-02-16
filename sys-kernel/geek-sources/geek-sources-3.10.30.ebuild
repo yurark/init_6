@@ -8,7 +8,7 @@ DEBLOB_AVAILABLE="1"
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
-BFQ_VER="3.10.0-v7r1"
+BFQ_VER="3.10.0-v7r2"
 BLD_VER="3.10.0"
 BLD_SRC="https://bld.googlecode.com/files/bld-${BLD_VER}.patch"
 # HARDENED_VER="3.10.11"
