@@ -20,11 +20,11 @@ MAGEIA_VER="releases/3.12.9/1.mga4"
 PAX_VER="3.12.8-test15"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 REISER4_VER="3.12.6"
-# RT_VER="3.12.10-rt15"
+RT_VER="${KSV}-rt17"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v3.12"
 
-SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo grsec ice lqx mageia openwrt optimize pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo grsec ice lqx mageia openwrt optimize pax pf reiser4 rt suse symlink uksm zen zfs"
 
 inherit geek-sources
 
