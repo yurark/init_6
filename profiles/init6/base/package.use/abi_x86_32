@@ -16,9 +16,11 @@ dev-libs/libffi abi_x86_32
 dev-libs/libgpg-error abi_x86_32
 dev-libs/libpcre abi_x86_32
 dev-libs/libpthread-stubs abi_x86_32
+dev-libs/libtasn1 abi_x86_32
 dev-libs/libusb-compat abi_x86_32
 dev-libs/libusbx abi_x86_32
 dev-libs/libxml2 abi_x86_32
+dev-libs/nettle abi_x86_32
 dev-libs/udis86 abi_x86_32
 dev-libs/wayland abi_x86_32
 media-libs/fontconfig abi_x86_32
