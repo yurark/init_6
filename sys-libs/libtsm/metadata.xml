@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<herd>x11</herd>
+	<use>
+		<flag name='debug'>Enables building with debug symbols</flag>
+		<flag name='optimizations'>Enable optimizations</flag>
+		<flag name='static-libs'>Install static libraries</flag>
+		<flag name='test'>Run test</flag>
+	</use>
+</pkgmetadata>
