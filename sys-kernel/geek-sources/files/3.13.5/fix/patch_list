@@ -58,8 +58,9 @@ criu-no-expert.patch
 # http://git.linux-nfs.org/?p=trondmy/linux-nfs.git;a=commitdiff;h=23e66ba97127ff3b064d4c6c5138aa34eafc492f
 0006-rpc_pipe-fix-cleanup-of-dummy-gssd-directory-when-no.patch
 
-# Fix symbols: Revert http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=83460ec8dcac14142e7860a01fa59c267ac4657c
-# patch -Rp1 -i 0001-syscalls.h-use-gcc-alias-instead-of-assembler-aliase.patch # TODO
+# Fix FS#38921
+# http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9eb2ddb48ce3a7bd745c14a933112994647fa3cd
+0001-SUNRPC-Ensure-that-gss_auth-isn-t-freed-before-its-u.patch
 
 # Fix i8042 aliases
 i8042-fix-aliases.patch
