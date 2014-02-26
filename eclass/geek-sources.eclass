@@ -160,7 +160,11 @@ geek-sources_src_unpack() {
 		fi
 	done
 
-	geek-linux_src_unpack
+	if use_if_iuse "rh"; then
+		[[ ${KMV} = "3.10" ]] && geek-rh_src_unpack
+	else
+		geek-linux_src_unpack
+	fi
 
 	test -d "${WORKDIR}/linux-${KV_FULL}-patches" >/dev/null 2>&1 || mkdir -p "${WORKDIR}/linux-${KV_FULL}-patches"
 	for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
@@ -180,7 +184,7 @@ geek-sources_src_unpack() {
 				openwrt		)	geek-openwrt_src_unpack ;;
 				optimize	)	geek-optimize_src_unpack ;;
 				pf		)	geek-pf_src_unpack ;;
-				rh		)	geek-rh_src_unpack ;;
+				rh		)	[[ ${KMV} = "2.6" ]] && geek-rh_src_unpack ;;
 				squeue		)	geek-squeue_src_unpack ;;
 				suse		)	geek-suse_src_unpack ;;
 				uksm		)	geek-uksm_src_unpack ;;
@@ -249,7 +253,11 @@ geek-sources_src_prepare() {
 		fi
 	done
 
-	geek-linux_src_prepare
+	if use_if_iuse "rh"; then
+		[[ ${KMV} = "3.10" ]] && geek-rh_src_prepare
+	else
+		geek-linux_src_prepare
+	fi
 }
 
 # @FUNCTION: src_compile

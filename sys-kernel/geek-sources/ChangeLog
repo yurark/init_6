@@ -2,6 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+*geek-rh.eclass (26 Feb 2014)
+
+  26 Feb 2014; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
+  Fix geek-rh.eclass and geek-sources.eclass
+  From now sys-kernel/geek-sources can be built based on vanilla-sources or Red-Hat Enterprise Linux kernel sources
 
 *geek-openvz.eclass (07 Dec 2013)
 
