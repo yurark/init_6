@@ -19,7 +19,7 @@ RH_SRC="http://people.redhat.com/arozansk/el6/19.el6/src/${RH_NAME}.src.rpm"
 OPENVZ_VER="042stab084.26"
 SUSE_VER="3811b6910313cc9564c3e893d6ba75645ee38a6b" # rpm-2.6.32.45-0.3
 
-SUPPORTED_USES="bfq brand -build hardened openvz reiser4 rh suse symlink"
+SUPPORTED_USES="bfq brand -build hardened openvz reiser4 rh suse symlink uek"
 
 inherit geek-sources
 

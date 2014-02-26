@@ -40,21 +40,21 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 geek-rh_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-if [[ ${KMV} = "2.6" ]]; then
-	: ${RH_VER:=${RH_VER:-"19"}} # Patchset version based on kernel-2.6.32-19.el6.src.rpm
-	: ${RH_NAME:=${RH_NAME:-kernel-${VERSION}.${PATCHLEVEL}.${SUBLEVEL}-${RH_VER/KMV/$KMV}.el6}}
-	SRC_URI_PREFIX="http://ftp.redhat.com/pub/redhat/linux/enterprise"
-	: ${RH_SRC:=${RH_SRC:-"${SRC_URI_PREFIX}/6Client/en/os/SRPMS/${RH_NAME}.src.rpm
-	${SRC_URI_PREFIX}/6ComputeNode/en/os/SRPMS/${RH_NAME}.src.rpm
-	${SRC_URI_PREFIX}/6Server/en/os/SRPMS/${RH_NAME}.src.rpm
-	${SRC_URI_PREFIX}/6Workstation/en/os/SRPMS/${RH_NAME}.src.rpm"}} # Patchset sources url
-elif [[ ${KMV} = "3.10" ]]; then
-	: ${RH_VER:=${RH_VER:-"54.0.1"}} # Patchset version based on kernel-3.10.0-54.0.1.el7.src.rpm
-	: ${RH_NAME:=${RH_NAME:-kernel-3.10.0-${RH_VER/KMV/$KMV}.el7}}
-	SRC_URI_PREFIX="http://ftp.redhat.com/redhat/rhel/beta"
-	: ${RH_SRC:=${RH_SRC:-"${SRC_URI_PREFIX}/7/source/SRPMS/${RH_NAME}.src.rpm"}} # Patchset sources url
-	SKIP_UPDATE="1"
-fi
+	if [[ ${KMV} = "2.6" ]]; then
+		: ${RH_VER:=${RH_VER:-"19"}} # Patchset version based on kernel-2.6.32-19.el6.src.rpm
+		: ${RH_NAME:=${RH_NAME:-kernel-${VERSION}.${PATCHLEVEL}.${SUBLEVEL}-${RH_VER/KMV/$KMV}.el6}}
+		SRC_URI_PREFIX="http://ftp.redhat.com/pub/redhat/linux/enterprise"
+		: ${RH_SRC:=${RH_SRC:-"${SRC_URI_PREFIX}/6Client/en/os/SRPMS/${RH_NAME}.src.rpm
+		${SRC_URI_PREFIX}/6ComputeNode/en/os/SRPMS/${RH_NAME}.src.rpm
+		${SRC_URI_PREFIX}/6Server/en/os/SRPMS/${RH_NAME}.src.rpm
+		${SRC_URI_PREFIX}/6Workstation/en/os/SRPMS/${RH_NAME}.src.rpm"}} # Patchset sources url
+	elif [[ ${KMV} = "3.10" ]]; then
+		: ${RH_VER:=${RH_VER:-"54.0.1"}} # Patchset version based on kernel-3.10.0-54.0.1.el7.src.rpm
+		: ${RH_NAME:=${RH_NAME:-kernel-3.10.0-${RH_VER/KMV/$KMV}.el7}}
+		SRC_URI_PREFIX="http://ftp.redhat.com/redhat/rhel/beta"
+		: ${RH_SRC:=${RH_SRC:-"${SRC_URI_PREFIX}/7/source/SRPMS/${RH_NAME}.src.rpm"}} # Patchset sources url
+		SKIP_UPDATE="1"
+	fi
 	: ${RH_URL:=${RH_URL:-"http://www.redhat.com"}} # Patchset url
 	: ${RH_INF:="${YELLOW}Red Hat Enterprise Linux kernel patches version ${GREEN}${RH_VER}${YELLOW} from ${GREEN}${RH_URL}${NORMAL}"}
 

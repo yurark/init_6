@@ -29,7 +29,7 @@ ___ECLASS_ONCE_GEEK_SOURCES="recur -_+^+_- spank"
 
 inherit geek-linux geek-utils geek-fix geek-upatch geek-squeue geek-vars
 
-KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec hardened ice lqx mageia openvz openwrt optimize pax pf reiser4 rh rt rsbac suse symlink uksm zen zfs"
+KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec hardened ice lqx mageia openvz openwrt optimize pax pf reiser4 rh rt rsbac suse symlink uek uksm zen zfs"
 
 # internal function
 #
@@ -81,6 +81,7 @@ for use_flag in ${IUSE}; do
 		rsbac		)	inherit geek-rsbac ;;
 		rt		)	inherit geek-rt ;;
 		suse		)	inherit geek-suse ;;
+		uek		)	inherit geek-uek ;;
 		uksm		)	inherit geek-uksm ;;
 		zen		)	inherit geek-zen ;;
 		zfs		)	inherit geek-spl geek-zfs ;;
@@ -103,8 +104,8 @@ geek-sources_init_variables() {
 	: ${rm_duplicates:=${rm_duplicates_cfg:-yes}} # rm_duplicates=yes/no
 	einfo "${BLUE}Remove duplicates patches -->${NORMAL} ${RED}$rm_duplicates${NORMAL}"
 
-	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx openvz pf rh zen"}
-	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimize pax lqx pf zen bfq ck cjktty gentoo grsec hardened rsbac ice rh openvz openwrt reiser4 exfat rt bld uksm aufs mageia fedora suse brand fix upatch squeue"}
+	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx openvz pf rh uek zen"}
+	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimize pax lqx pf zen bfq ck cjktty gentoo grsec hardened rsbac ice rh uek openvz openwrt reiser4 exfat rt bld uksm aufs mageia fedora suse brand fix upatch squeue"}
 
 	local xUserOrder=""
 	local xDefOder=""
@@ -162,6 +163,8 @@ geek-sources_src_unpack() {
 
 	if use_if_iuse "rh"; then
 		[[ ${KMV} = "3.10" ]] && geek-rh_src_unpack
+	elif use_if_iuse "uek"; then
+		geek-uek_src_unpack
 	else
 		geek-linux_src_unpack
 	fi
@@ -255,6 +258,8 @@ geek-sources_src_prepare() {
 
 	if use_if_iuse "rh"; then
 		[[ ${KMV} = "3.10" ]] && geek-rh_src_prepare
+	elif use_if_iuse "uek"; then
+		geek-uek_src_prepare
 	else
 		geek-linux_src_prepare
 	fi
