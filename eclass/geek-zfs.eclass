@@ -104,8 +104,8 @@ geek-zfs_src_prepare() {
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
 	[ -e autogen.sh ] && ./autogen.sh > /dev/null 2>&1
 	./configure \
-		--prefix=$(PREFIX)/ \
-		--libdir=$(PREFIX)/lib \
+		--prefix=${PREFIX}/ \
+		--libdir=${PREFIX}/lib \
 		--includedir=/usr/include \
 		--datarootdir=/usr/share \
 		--enable-linux-builtin=yes \
