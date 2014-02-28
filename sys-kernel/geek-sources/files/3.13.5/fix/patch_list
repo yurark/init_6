@@ -27,8 +27,6 @@ linux-703-macmini2012-ethernet.patch
 linux-704-Support-for-Ubiquiti-WifiStation.patch
 linux-705-Support-for-Buffalo-WLI-UC-G300HP-V1.patch
 linux-706-Sitecom-N300.patch
-linux-801-fix-radeon-si-performance-issue.patch
-linux-802-fix-radeon-7xxx-performance-issue.patch
 linux-900-hide_tsc_error.patch
 linux-950-saa716x_PCIe_interface_chipset.patch
 linux-990.06-hda-Avoid-outputting-HDMI-audio-before-prepare-.patch
