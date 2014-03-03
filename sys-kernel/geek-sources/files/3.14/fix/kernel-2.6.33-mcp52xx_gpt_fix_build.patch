@@ -1,0 +1,13 @@
+diff --git a/arch/powerpc/platforms/52xx/mpc52xx_gpt.c b/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
+index 6f8ebe1..88231d8 100644
+--- a/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
++++ b/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
+@@ -711,7 +711,7 @@ static int __devinit mpc52xx_gpt_wdt_init(void)
+ 	return 0;
+ }
+ 
+-#define mpc52xx_gpt_wdt_setup(x, y)		(0)
++#define mpc52xx_gpt_wdt_setup(x, y)		do { } while (0)
+ 
+ #endif	/*  CONFIG_MPC5200_WDT	*/
+ 
