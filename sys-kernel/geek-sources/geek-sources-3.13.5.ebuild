@@ -11,7 +11,7 @@ KSV="$(echo $PV | cut -f 1-3 -d .)"
 # AUFS_VER="3.x-rcN"
 BFQ_VER="3.13.0-v7r2"
 BLD_VER="3.13-rc1"
-# CK_VER="3.12-ck2"
+CK_VER="3.13-ck1"
 FEDORA_VER="f20"
 GRSEC_VER="3.0-${KSV}-201402241943" # 02/24/14 19:44
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
@@ -24,7 +24,7 @@ REISER4_VER="3.13.1"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v3.13"
 
-SUPPORTED_USES="aufs bfq bld brand -build -deblob exfat fedora gentoo grsec hardened ice lqx mageia openwrt optimize pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo grsec hardened ice lqx mageia openwrt optimize pax pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 
