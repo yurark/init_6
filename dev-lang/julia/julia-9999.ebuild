@@ -22,7 +22,7 @@ fi
 
 LICENSE="MIT"
 SLOT="0"
-IUSE="doc emacs"
+IUSE="doc emacs notebook"
 
 RDEPEND="
 	dev-libs/double-conversion
@@ -41,7 +41,9 @@ RDEPEND="
 	sys-libs/zlib
 	virtual/blas
 	virtual/lapack
-	emacs? ( !app-emacs/ess )"
+	emacs? ( !app-emacs/ess )
+	notebook? ( www-servers/lighttpd )"
+
 DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
@@ -67,6 +69,7 @@ src_prepare() {
 		-e 's|\(USE_SYSTEM_.*\)=.*|\1=1|g' \
 		-e 's|\(USE_SYSTEM_LIBUV\)=.*|\1=0|g' \
 		-e 's|\(USE_SYSTEM_LIBM\)=.*|\1=0|g' \
+		-e 's|\(USE_BLAS64\)=.*|\1=0|g' \
 		-e "s|-lblas|$($(tc-getPKG_CONFIG) --libs blas)|" \
 		-e "s|-llapack|$($(tc-getPKG_CONFIG) --libs lapack)|" \
 		-e "s|liblapack|${lapackname}|" \
@@ -81,6 +84,9 @@ src_prepare() {
 		-e "s|\$(JL_LIBDIR),lib|\$(JL_LIBDIR),$(get_libdir)|" \
 		-e "s|\$(JL_PRIVATE_LIBDIR),lib|\$(JL_PRIVATE_LIBDIR),$(get_libdir)|" \
 		Makefile || die
+
+	# do not set the RPATH
+	sed -e "/RPATH = /d" -e "/RPATH_ORIGIN = /d" -i Make.inc
 }
 
 src_compile() {
@@ -93,21 +99,27 @@ src_compile() {
 	pax-mark m usr/bin/julia-readline
 	pax-mark m usr/bin/julia-basic
 	emake
-	use doc && emake -C doc html
+	use doc && make -C doc html
+	if use notebook; then
+		make -j2 -C ui/webserver
+		sed -e "s|etc|/share/julia/etc|" \
+		-i usr/bin/launch-julia-webserver ||die
+	fi
 	use emacs && elisp-compile contrib/julia-mode.el
 }
 
-src_test() {
-	emake test
-}
-
 src_install() {
-	emake install prefix="${D}/usr"
+	emake -j2 install prefix="${D}/usr"
+
 	cat > 99julia <<-EOF
 		LDPATH=${EROOT%/}/usr/$(get_libdir)/julia
 	EOF
 	doenvd 99julia
-
+	if use notebook; then
+		cp -R ui/website "${D}/usr/share/julia"
+		insinto /usr/share/julia/etc
+		doins deps/lighttpd.conf
+	fi
 	if use emacs; then
 		elisp-install "${PN}" contrib/julia-mode.el
 		elisp-site-file-install "${FILESDIR}"/63julia-gentoo.el
@@ -122,4 +134,8 @@ pkg_postinst() {
 
 pkg_postrm() {
 	use emacs && elisp-site-regen
+}
+
+src_test() {
+	emake test || die "Running tests failed"
 }
