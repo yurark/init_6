@@ -57,23 +57,19 @@ src_prepare() {
 		-e "s|-O3|${CFLAGS}|g" \
 		deps/Makefile || die
 
-	# mangle Make.inc for system libraries
-	# do not set the RPATH
-	local blasname=$($(tc-getPKG_CONFIG) --libs blas | \
-		sed -e "s/-l\([a-z0-9]*\).*/lib\1/")
-	local lapackname=$($(tc-getPKG_CONFIG) --libs lapack | \
-		sed -e "s/-l\([a-z0-9]*\).*/lib\1/")
+	# Detect what BLAS and LAPACK implementations are being used
+	local blasname="$($(tc-getPKG_CONFIG) --libs-only-l blas | sed 's/ .*$//')"
+	local lapackname="$($(tc-getPKG_CONFIG) --libs-only-l lapack | sed 's/ .*$//')"
 
 	sed -i \
 		-e 's|\(USE_QUIET\s*\)=.*|\1=0|g' \
 		-e 's|\(USE_SYSTEM_.*\)=.*|\1=1|g' \
 		-e 's|\(USE_SYSTEM_LIBUV\)=.*|\1=0|g' \
 		-e 's|\(USE_SYSTEM_LIBM\)=.*|\1=0|g' \
-		-e 's|\(USE_BLAS64\)=.*|\1=0|g' \
-		-e "s|-lblas|$($(tc-getPKG_CONFIG) --libs blas)|" \
-		-e "s|-llapack|$($(tc-getPKG_CONFIG) --libs lapack)|" \
-		-e "s|liblapack|${lapackname}|" \
-		-e "s|libblas|${blasname}|" \
+		-e "s|-lblas|${blasname}|" \
+		-e "s|libblas|${blasname/-l/lib}.so|" \
+		-e "s|-llapack|${lapackname}|" \
+		-e "s|liblapack|${lapackname/-l/lib}.so|" \
 		-e 's|\(JULIA_EXECUTABLE = \)\($(JULIAHOME)/julia\)|\1 LD_LIBRARY_PATH=$(BUILD)/$(get_libdir) \2|' \
 		-e "s|-O3|${CFLAGS}|g" \
 		-e "s|LIBDIR = lib|LIBDIR = $(get_libdir)|" \
