@@ -4,13 +4,12 @@
 
 EAPI=5
 
-inherit eutils
+inherit git-r3 elisp-common eutils multilib pax-utils
 
 DESCRIPTION="High-level, high-performance dynamic programming language for technical computing"
 
 HOMEPAGE="http://julialang.org/"
 
-# uses gfortran in some places, dependencies don't reflect that yet
 if [[ ${PV/9999} != ${PV} ]] ; then
 	SRC_URI=""
 	EGIT_REPO_URI="https://github.com/JuliaLang/julia.git"
@@ -23,43 +22,104 @@ fi
 
 LICENSE="MIT"
 SLOT="0"
+IUSE="doc emacs"
 
-IUSE=""
-
-S="${WORKDIR}"
-
-# Avoid fragile duplication - see compile and install phases
-JULIAMAKEARGS="QUIET_MAKE= USE_SYSTEM_LLVM=1 USE_SYSTEM_READLINE=1 USE_SYSTEM_PCRE=1 USE_SYSTEM_LIBM=1 \
-		USE_SYSTEM_GMP=1 USE_SYSTEM_LIBUNWIND=1 USE_SYSTEM_PATCHELF=1 USE_SYSTEM_FFTW=1 USE_SYSTEM_ZLIB=1 \
-		USE_SYSTEM_MPFR=1 USE_SYSTEM_SUITESPARSE=1  USE_SYSTEM_ARPACK=1 USE_SYSTEM_BLAS=1 USE_SYSTEM_LAPACK=1 \
-		LLVM_CONFIG=/usr/bin/llvm-config"
-
-# scons is a dep of double-conversion
-DEPEND=">=sys-devel/llvm-3.3
-	dev-lang/perl
-	sys-libs/readline
-	dev-libs/libpcre
-	dev-util/scons
+RDEPEND="
+	dev-libs/double-conversion
 	dev-libs/gmp
-	sys-libs/libunwind
+	dev-libs/libpcre
+	dev-libs/utf8proc
 	dev-util/patchelf
-	sci-libs/fftw
-	sys-libs/zlib
-	dev-libs/mpfr
-	sci-libs/suitesparse
 	sci-libs/arpack
+	sci-libs/fftw
+	sci-libs/openlibm
+	>=sci-libs/suitesparse-4.0
+	sci-mathematics/glpk
+	>=sys-devel/llvm-3.0
+	>=sys-libs/libunwind-1.1
+	sys-libs/readline
+	sys-libs/zlib
+	virtual/blas
 	virtual/lapack
-	virtual/blas"
+	emacs? ( !app-emacs/ess )"
+DEPEND="${RDEPEND}
+	virtual/pkgconfig"
 
-RDEPEND="sys-libs/readline"
+src_prepare() {
+	# /usr/include/suitesparse is for debian only
+	# respect prefix, flags
+	sed -i \
+		-e 's|^\(SUITESPARSE_INC\s*=\).*||g' \
+		-e 's|/usr/bin/||g' \
+		-e "s|/usr/include|${EROOT%/}/usr/include|g" \
+		-e "s|-O3|${CFLAGS}|g" \
+		deps/Makefile || die
+
+	# mangle Make.inc for system libraries
+	# do not set the RPATH
+	local blasname=$($(tc-getPKG_CONFIG) --libs blas | \
+		sed -e "s/-l\([a-z0-9]*\).*/lib\1/")
+	local lapackname=$($(tc-getPKG_CONFIG) --libs lapack | \
+		sed -e "s/-l\([a-z0-9]*\).*/lib\1/")
+
+	sed -i \
+		-e 's|\(USE_QUIET\s*\)=.*|\1=0|g' \
+		-e 's|\(USE_SYSTEM_.*\)=.*|\1=1|g' \
+		-e 's|\(USE_SYSTEM_LIBUV\)=.*|\1=0|g' \
+		-e 's|\(USE_SYSTEM_LIBM\)=.*|\1=0|g' \
+		-e "s|-lblas|$($(tc-getPKG_CONFIG) --libs blas)|" \
+		-e "s|-llapack|$($(tc-getPKG_CONFIG) --libs lapack)|" \
+		-e "s|liblapack|${lapackname}|" \
+		-e "s|libblas|${blasname}|" \
+		-e 's|\(JULIA_EXECUTABLE = \)\($(JULIAHOME)/julia\)|\1 LD_LIBRARY_PATH=$(BUILD)/$(get_libdir) \2|' \
+		-e "s|-O3|${CFLAGS}|g" \
+		-e "s|LIBDIR = lib|LIBDIR = $(get_libdir)|" \
+		Make.inc || die
+
+	sed -i \
+		-e "s|\$(BUILD)/lib|\$(BUILD)/$(get_libdir)|" \
+		-e "s|\$(JL_LIBDIR),lib|\$(JL_LIBDIR),$(get_libdir)|" \
+		-e "s|\$(JL_PRIVATE_LIBDIR),lib|\$(JL_PRIVATE_LIBDIR),$(get_libdir)|" \
+		Makefile || die
+}
 
 src_compile() {
-	emake $JULIAMAKEARGS || die
-	# makefile weirdness - avoid compile in src_install
-	emake $JULIAMAKEARGS debug || die
+	emake cleanall
+	mkdir -p usr/$(get_libdir) || die
+	pushd usr || die
+	ln -s $(get_libdir) lib || die
+	popd
+	emake julia-release
+	pax-mark m usr/bin/julia-readline
+	pax-mark m usr/bin/julia-basic
+	emake
+	use doc && emake -C doc html
+	use emacs && elisp-compile contrib/julia-mode.el
+}
+
+src_test() {
+	emake test
 }
 
 src_install() {
-	# config goes to /usr/etc/ - should be fixed
-	emake $JULIAMAKEARGS PREFIX="${D}/usr" install || die
+	emake install prefix="${D}/usr"
+	cat > 99julia <<-EOF
+		LDPATH=${EROOT%/}/usr/$(get_libdir)/julia
+	EOF
+	doenvd 99julia
+
+	if use emacs; then
+		elisp-install "${PN}" contrib/julia-mode.el
+		elisp-site-file-install "${FILESDIR}"/63julia-gentoo.el
+	fi
+	use doc && dohtml -r doc/_build/html/*
+	dodoc README.md
+}
+
+pkg_postinst() {
+	use emacs && elisp-site-regen
+}
+
+pkg_postrm() {
+	use emacs && elisp-site-regen
 }
