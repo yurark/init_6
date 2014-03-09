@@ -13,18 +13,18 @@ BFQ_VER="3.13.0-v7r2"
 BLD_VER="3.13-rc1"
 CK_VER="3.13-ck1"
 FEDORA_VER="f20"
-GRSEC_VER="3.0-${KSV}-201403041938" # 03/04/14 19:39
+GRSEC_VER="3.0-${KSV}-201403072241" # 03/07/14 22:42
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
-LQX_VER="${KSV}-1"
-MAGEIA_VER="releases/3.12.13/2.mga5"
-PAX_VER="${KSV}-test11"
-PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
+LQX_VER="3.13.5-1" # LQX_VER="${KSV}-1"
+# MAGEIA_VER="releases/3.12.13/2.mga5"
+# PAX_VER="${KSV}-test11"
+# PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 REISER4_VER="3.13.1"
 # RT_VER="3.12.6-rt9"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v3.13"
 
-SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo grsec hardened ice lqx mageia openwrt optimize pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo grsec hardened ice lqx mageia openwrt optimize pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 
