@@ -42,7 +42,8 @@ geek-ice_init_variables() {
 
 	: ${ICE_VER:=${ICE_VER:-"${KMV}"}} # Patchset version
 #	: ${ICE_SRC:=${ICE_SRC:-"https://github.com/NigelCunningham/tuxonice-kernel/compare/vanilla-${ICE_VER/KMV/$KMV}...tuxonice-${ICE_VER/KMV/$KMV}.diff"}} # Patchset sources url
-	: ${ICE_SRC:=${ICE_SRC:-"git://github.com/NigelCunningham/tuxonice-kernel.git"}} # Patchset sources url
+#	: ${ICE_SRC:=${ICE_SRC:-"git://github.com/NigelCunningham/tuxonice-kernel.git"}} # Patchset sources url
+	: ${ICE_SRC:=${ICE_SRC:-"http://tuxonice.net/downloads/all/tuxonice-${ICE_VER/KMV/$KMV}.patch.bz2"}} # Patchset sources url
 	: ${ICE_URL:=${ICE_URL:-"http://tuxonice.net"}} # Patchset url
 	: ${ICE_INF:=${ICE_INF:-"${YELLOW}TuxOnIce version ${GREEN}${ICE_VER}${YELLOW} from ${GREEN}${ICE_URL}${NORMAL}"}}
 
@@ -55,6 +56,9 @@ geek-ice_init_variables() {
 geek-ice_init_variables
 
 HOMEPAGE="${HOMEPAGE} ${ICE_URL}"
+
+SRC_URI="${SRC_URI}
+	ice?	( ${ICE_SRC} )"
 
 DEPEND="${DEPEND}
 	ice?	( >=sys-apps/tuxonice-userui-1.0
@@ -71,24 +75,26 @@ geek-ice_src_unpack() {
 #	local CTD="${T}/ice"$$
 	shift
 	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
-	if [ -d "${CSD}" ]; then
-		cd "${CSD}"
-		if [ -e ".git" ]; then # git
-			git fetch --all && git pull --all
-		fi
-	else
-		git clone "${ICE_SRC}" "${CSD}"
-		cd "${CSD}"
-		git_get_all_branches
-	fi
+#	if [ -d "${CSD}" ]; then
+#		cd "${CSD}"
+#		if [ -e ".git" ]; then # git
+#			git fetch --all && git pull --all
+#		fi
+#	else
+#		git clone "${ICE_SRC}" "${CSD}"
+#		cd "${CSD}"
+#		git_get_all_branches
+#	fi
 
-	git_checkout "vanilla-${ICE_VER}" > /dev/null 2>&1 git pull > /dev/null 2>&1
-	git_checkout "tuxonice-${ICE_VER}" > /dev/null 2>&1 git pull > /dev/null 2>&1
+#	git_checkout "vanilla-${ICE_VER}" > /dev/null 2>&1 git pull > /dev/null 2>&1
+#	git_checkout "tuxonice-${ICE_VER}" > /dev/null 2>&1 git pull > /dev/null 2>&1
 
-	dest="${CWD}"/tuxonice-kernel-"${PV}"-`date +"%Y%m%d"`.patch
-#	wget "${ICE_SRC}" -O "${dest}" > /dev/null 2>&1
-	git diff "vanilla-${ICE_VER}" "tuxonice-${ICE_VER}" > "$dest";
+#	dest="${CWD}"/tuxonice-kernel-"${PV}"-`date +"%Y%m%d"`.patch
+	dest="${CWD}"/tuxonice-kernel-"${PV}"-`date +"%Y%m%d"`.patch.bz2
+	wget "${ICE_SRC}" -O "${dest}" > /dev/null 2>&1
+#	git diff "vanilla-${ICE_VER}" "tuxonice-${ICE_VER}" > "$dest";
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
+	bunzip2 -dc tuxonice-kernel-"${PV}"-`date +"%Y%m%d"`.patch.bz2 >> tuxonice-kernel-"${PV}"-`date +"%Y%m%d"`.patch && rm -rf tuxonice-kernel-"${PV}"-`date +"%Y%m%d"`.patch.bz2
 	ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list
 }
 

@@ -11,6 +11,7 @@ KSV="$(echo $PV | cut -f 1-3 -d .)"
 BFQ_VER="3.4.0-v7r2"
 CK_VER="${KMV}-ck3"
 FEDORA_VER="d0633aed96aaed8d8996ecec7213ad2bf1a819df" # Linux v3.4-10115-g829f51d
+ICE_VER="for-linux-3.4.82-2014-02-23"
 MAGEIA_VER="releases/3.4.6/1.mga3"
 PAX_VER="3.4.8-test32"
 SUSE_VER="259fc874ec90b84ca02ad1c1ae186989c83bb2fa" # rpm-3.4.11-2.16
