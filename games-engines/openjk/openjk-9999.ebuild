@@ -48,8 +48,7 @@ src_compile() {
 }
 
 src_install() {
-	dodir "${dir}" "${GAMES_BINDIR}"
-	make DESTDIR="${dir}" install
+	make install
 
 	exeinto "${dir}"
 
@@ -83,7 +82,7 @@ pkg_postinst() {
 
 #	if ! use cdinstall; then
 		elog "You need to copy GameData/base/*.{pk3,cfg} from either your installation media or your hard drive to"
-		elog "${dir}/base before running the game,"
+		elog "~/.local/share/openjk/base before running the game,"
 		elog "or 'emerge games-fps/${PN}-data' to install from CD." # <- TODO make it
 		echo
 #	fi
