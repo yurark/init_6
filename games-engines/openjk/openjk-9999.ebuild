@@ -36,7 +36,7 @@ dir=${GAMES_PREFIX_OPT}/${PN}
 
 src_configure() {
 	cmake -DCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_INSTALL_PREFIX=${dir} #\
+	-DCMAKE_INSTALL_PREFIX=${dir} \
 #	-DCMAKE_CXX_FLAGS=-m32 \
 #	-DCMAKE_C_FLAGS=-m32 \
 #	-DCMAKE_SHARED_LINKER_FLAGS=-m32 \
@@ -49,6 +49,8 @@ src_compile() {
 
 src_install() {
 	dodir "${dir}" "${GAMES_BINDIR}"
+	make DESTDIR="${dir}" install
+
 	exeinto "${dir}"
 
 	if use x86; then
@@ -80,7 +82,7 @@ pkg_postinst() {
 	games_pkg_postinst
 
 #	if ! use cdinstall; then
-		elog "You need to copy base/* from either your installation media or your hard drive to"
+		elog "You need to copy GameData/base/*.{pk3,cfg} from either your installation media or your hard drive to"
 		elog "${dir}/base before running the game,"
 		elog "or 'emerge games-fps/${PN}-data' to install from CD." # <- TODO make it
 		echo
@@ -88,6 +90,10 @@ pkg_postinst() {
 
 	echo
 	elog "To play the game, run:"
-	elog " ${PN} or ${PN}_sp or ${PN}ded"
+	elog " ${PN} or ${PN}_sp"
+	echo
+	echo
+	elog "To start the game server, run:"
+	elog " ${PN}ded"
 	echo
 }
