@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=5
-inherit toolchain-funcs eutils games
+inherit eutils games
 
 DESCRIPTION="Open Source Jedi Academy and Jedi Outcast games engine"
 HOMEPAGE="https://github.com/JACoders/OpenJK"

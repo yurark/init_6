@@ -14,7 +14,7 @@ LICENSE="id-Software-SDK-license"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~sparc"
 
-DEPEND="games-fps/yamagi-quake2"
+# DEPEND="games-fps/yamagi-quake2"
 RDEPEND="${DEPEND}
 	games-fps/quake2-reckoning-data"
 
