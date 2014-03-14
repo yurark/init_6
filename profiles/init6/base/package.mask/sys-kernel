@@ -3,5 +3,5 @@
 =sys-kernel/vanilla-sources-9999
 
 # Andrey Ovcharov <sudormrfhalt@gmail.com>
-# Kernel mainline 2014-03-03
-=sys-kernel/geek-sources-3.14-r5
+# Kernel mainline 2014-03-10
+=sys-kernel/geek-sources-3.14-r6
