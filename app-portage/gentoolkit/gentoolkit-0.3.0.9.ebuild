@@ -17,7 +17,7 @@ LICENSE="GPL-2"
 SLOT="0"
 IUSE=""
 
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~ppc-aix ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~hppa-hpux ~ia64-hpux ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~m68k-mint ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~ppc-aix ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~hppa-hpux ~ia64-hpux ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~m68k-mint ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 
 DEPEND="sys-apps/portage"
 RDEPEND="${DEPEND}
@@ -25,17 +25,16 @@ RDEPEND="${DEPEND}
 	|| ( >=sys-apps/coreutils-8.15 app-misc/realpath sys-freebsd/freebsd-bin )
 	sys-apps/gawk
 	sys-apps/grep
-	virtual/python-argparse[${PYTHON_USEDEP}]"
+	virtual/python-argparse[${PYTHON_USEDEP}]
+	sys-libs/core-functions"
 
-PATCHES=(
-	"${FILESDIR}"/${PV}-revdep-rebuild-484340.patch
-	"${FILESDIR}"/${PV}-revdep-rebuild-476740.patch
-)
+PATCHES=()
 
 python_prepare_all() {
 	python_export_best
 	echo VERSION="${PVR}" "${PYTHON}" setup.py set_version
 	VERSION="${PVR}" "${PYTHON}" setup.py set_version
+	mv ./bin/revdep-rebuild{,.py} || die
 	distutils-r1_python_prepare_all
 }
 
@@ -46,13 +45,12 @@ python_install_all() {
 	# to switch to the python version yet. Link /usr/bin/revdep-rebuild to
 	# revdep-rebuild.sh. Leaving the python version available for potential
 	# testing by a wider audience.
-	mv "${ED}"/usr/bin/revdep-rebuild "${ED}"/usr/bin/revdep-rebuild.py
 	dosym revdep-rebuild.sh /usr/bin/revdep-rebuild
 
+	# TODO: Fix this as it is now a QA violation
 	# Create cache directory for revdep-rebuild
-	dodir /var/cache/revdep-rebuild
 	keepdir /var/cache/revdep-rebuild
-	use prefix || fowners root:root /var/cache/revdep-rebuild
+	use prefix || fowners root:0 /var/cache/revdep-rebuild
 	fperms 0700 /var/cache/revdep-rebuild
 
 	# remove on Gentoo Prefix platforms where it's broken anyway
@@ -64,10 +62,6 @@ python_install_all() {
 		rm -rf "${ED}"/etc/revdep-rebuild
 		rm -rf "${ED}"/var
 	fi
-
-	# Can distutils handle this?
-	dosym eclean /usr/bin/eclean-dist
-	dosym eclean /usr/bin/eclean-pkg
 
 	sed -i -e \
 	"s:/etc/init.d/functions.sh:/usr/$(get_libdir)/misc/core-functions.sh:g" \
