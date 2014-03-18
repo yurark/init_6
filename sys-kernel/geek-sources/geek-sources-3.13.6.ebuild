@@ -13,7 +13,7 @@ BFQ_VER="3.13.0-v7r2"
 BLD_VER="3.13-rc1"
 CK_VER="3.13-ck1"
 FEDORA_VER="f20"
-GRSEC_VER="3.0-${KSV}-201403072241" # 03/07/14 22:42
+GRSEC_VER="3.0-${KSV}-201403172032" # 17/03/14 20:32
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 ICE_VER="for-linux-3.13.5-2014-03-05"
 LQX_VER="3.13.5-1" # LQX_VER="${KSV}-1"
