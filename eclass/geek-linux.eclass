@@ -58,7 +58,7 @@ RDEPEND="!build? ( >=sys-libs/ncurses-5.2
 PDEPEND="!build? ( virtual/dev-manager )"
 
 SLOT=${SLOT:-${KMV}}
-IUSE="${IUSE} symlink gen-init-cpio gen-oldconfig"
+IUSE="${IUSE} symlink gen_init_cpio oldconfig"
 
 case "${PR}" in
 	r0)	case "${VERSION}" in
@@ -182,9 +182,9 @@ geek-linux_src_prepare() {
 		sed -i -e 's/CONFIG_FLAGS=""/CONFIG_FLAGS="GEEK"/;s/CONFIG_FLAGS="SMP"/CONFIG_FLAGS="$CONFIG_FLAGS SMP"/' scripts/mkcompile_h
 	fi
 
-    if use gen-init-cpio || use gen-oldconfig; then
-        get_config
-    fi
+	if use gen_init_cpio || use oldconfig; then
+		get_config
+	fi
 
 	ebegin "Cleanup backups after patching"
 		rm_crap
@@ -202,25 +202,25 @@ geek-linux_src_prepare() {
 	no)	ewarn "Skipping remove unneeded architectures ..." ;;
 	esac
 
-    if use gen-init-cpio; then
-        ebegin "Compile ${RED}gen_init_cpio${NORMAL}"
-            make -C "${WORKDIR}"/linux-"${KV_FULL}"/usr/ gen_init_cpio > /dev/null 2>&1
-            chmod +x "${WORKDIR}"/linux-"${KV_FULL}"/usr/gen_init_cpio "${WORKDIR}"/linux-"${KV_FULL}"/scripts/gen_initramfs_list.sh > /dev/null 2>&1
-        eend
-    fi
+	if use gen_init_cpio; then
+		ebegin "Compile ${RED}gen_init_cpio${NORMAL}"
+			make -C "${WORKDIR}"/linux-"${KV_FULL}"/usr/ gen_init_cpio > /dev/null 2>&1
+			chmod +x "${WORKDIR}"/linux-"${KV_FULL}"/usr/gen_init_cpio "${WORKDIR}"/linux-"${KV_FULL}"/scripts/gen_initramfs_list.sh > /dev/null 2>&1
+		eend
+	fi
 
 	cd "${WORKDIR}"/linux-"${KV_FULL}" || die "${RED}cd ${WORKDIR}/linux-${KV_FULL} failed${NORMAL}"
 	local GENTOOARCH="${ARCH}"
 	unset ARCH
 
-    if use gen-oldconfig; then
-        ebegin "Running ${RED}make oldconfig${NORMAL}"
-            make oldconfig </dev/null &>/dev/null
-        eend $? "Failed oldconfig"
-        ebegin "Running ${RED}modules_prepare${NORMAL}"
-            make modules_prepare &>/dev/null
-        eend $? "Failed ${RED}modules prepare${NORMAL}"
-    fi
+	if use oldconfig; then
+		ebegin "Running ${RED}make oldconfig${NORMAL}"
+			make oldconfig </dev/null &>/dev/null
+		eend $? "Failed oldconfig"
+		ebegin "Running ${RED}modules_prepare${NORMAL}"
+			make modules_prepare &>/dev/null
+		eend $? "Failed ${RED}modules prepare${NORMAL}"
+	fi
 
 	ARCH="${GENTOOARCH}"
 
