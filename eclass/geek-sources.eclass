@@ -148,6 +148,8 @@ geek-sources_src_unpack() {
 	einfo "${BLUE}Crap patch -->${NORMAL} ${RED}$crap_patch${NORMAL}"
 	einfo "${BLUE}Disable fixes -->${NORMAL} ${RED}$disable_fixes${NORMAL}"
 	einfo "${BLUE}Remove unneeded architectures -->${NORMAL} ${RED}$rm_unneeded_arch${NORMAL}"
+	einfo "${BLUE}Compile ${RED}gen_init_cpio${NORMAL} ${BLUE}-->${NORMAL} ${RED}$gen_init_cpio${NORMAL}"
+	einfo "${BLUE}Running ${RED}make oldconfig${NORMAL} ${BLUE}-->${NORMAL} ${RED}$oldconfig${NORMAL}"
 	einfo "${BLUE}Skip stable-queue -->${NORMAL} ${RED}$skip_squeue${NORMAL}"
 
 	geek-sources_init_variables

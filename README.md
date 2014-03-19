@@ -56,13 +56,11 @@ In this overlay you will find
      * **deblob** - [Remove binary blobs from kernel sources to provide libre license compliance](http://linux-libre.fsfla.org/pub/linux-libre)
      * **exfat** - [Samsung’s exFAT fs Linux driver](http://opensource.samsung.com/reception/receptionSub.do?method=search&searchValue=exfat)
      * **fedora** - [Use Fedora kernel patches](http://pkgs.fedoraproject.org/cgit/kernel.git)
-     * **gen_init_cpio** - run **make gen_init_cpio**
      * **gentoo** - [Use Gentoo kernel patches](http://dev.gentoo.org/~mpagano/genpatches)
      * **grsec** - [Use hardened-patchset](http://git.overlays.gentoo.org/gitweb/?p=proj/hardened-patchset.git;a=summary) which includes a [grsecurity patches](http://grsecurity.net)
      * **ice** - [Use TuxOnIce patches](https://github.com/NigelCunningham/tuxonice-kernel)
      * **lqx** - [Use liquorix patches](http://liquorix.net)
      * **mageia** - [Use Mageia patches](http://svnweb.mageia.org/packages/cauldron/kernel)
-     * **oldconfig** - get old kernel config
      * **openvz** - [RHEL6 kernel with OpenVZ patchset](http://openvz.org)
      * **openwrt** - [OpenWrt kernel patches](https://openwrt.org)
      * **optimize** - [Kernel patch enables gcc optimizations for additional CPUs](https://github.com/graysky2/kernel_gcc_patch)

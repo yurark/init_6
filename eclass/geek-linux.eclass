@@ -58,7 +58,7 @@ RDEPEND="!build? ( >=sys-libs/ncurses-5.2
 PDEPEND="!build? ( virtual/dev-manager )"
 
 SLOT=${SLOT:-${KMV}}
-IUSE="${IUSE} symlink gen_init_cpio oldconfig"
+IUSE="${IUSE} symlink"
 
 case "${PR}" in
 	r0)	case "${VERSION}" in
@@ -138,7 +138,15 @@ geek-linux_init_variables() {
 	local rm_unneeded_arch_cfg=$(source $cfg_file 2>/dev/null; echo ${rm_unneeded_arch})
 	: ${rm_unneeded_arch:=${rm_unneeded_arch_cfg:-no}} # rm_unneeded-arch=yes/no
 
+	local gen_init_cpio_cfg=$(source $cfg_file 2>/dev/null; echo ${gen_init_cpio})
+	: ${gen_init_cpio:=${gen_init_cpio_cfg:-yes}} # gen_init_cpio=yes/no
+
+	local oldconfig_cfg=$(source $cfg_file 2>/dev/null; echo ${oldconfig})
+	: ${oldconfig:=${oldconfig_cfg:-yes}} # gen_init_cpio=yes/no
+
 	debug-print "${FUNCNAME}: rm_unneeded_arch=${rm_unneeded_arch}"
+	debug-print "${FUNCNAME}: gen_init_cpio=${gen_init_cpio}"
+	debug-print "${FUNCNAME}: oldconfig=${oldconfig}"
 }
 
 geek-linux_init_variables
@@ -182,7 +190,7 @@ geek-linux_src_prepare() {
 		sed -i -e 's/CONFIG_FLAGS=""/CONFIG_FLAGS="GEEK"/;s/CONFIG_FLAGS="SMP"/CONFIG_FLAGS="$CONFIG_FLAGS SMP"/' scripts/mkcompile_h
 	fi
 
-	if use gen_init_cpio || use oldconfig; then
+	if [ "${gen_init_cpio}" = "yes" ] || [ "${oldconfig}" = "yes" ]; then
 		get_config
 	fi
 
@@ -202,25 +210,27 @@ geek-linux_src_prepare() {
 	no)	ewarn "Skipping remove unneeded architectures ..." ;;
 	esac
 
-	if use gen_init_cpio; then
-		ebegin "Compile ${RED}gen_init_cpio${NORMAL}"
+	case "$gen_init_cpio" in
+	yes)	ebegin "Compile ${RED}gen_init_cpio${NORMAL}"
 			make -C "${WORKDIR}"/linux-"${KV_FULL}"/usr/ gen_init_cpio > /dev/null 2>&1
 			chmod +x "${WORKDIR}"/linux-"${KV_FULL}"/usr/gen_init_cpio "${WORKDIR}"/linux-"${KV_FULL}"/scripts/gen_initramfs_list.sh > /dev/null 2>&1
-		eend
-	fi
+		eend ;;
+	no)	ewarn "Skipping compile ${RED}gen_init_cpio${NORMAL} ..." ;;
+	esac
 
 	cd "${WORKDIR}"/linux-"${KV_FULL}" || die "${RED}cd ${WORKDIR}/linux-${KV_FULL} failed${NORMAL}"
 	local GENTOOARCH="${ARCH}"
 	unset ARCH
 
-	if use oldconfig; then
-		ebegin "Running ${RED}make oldconfig${NORMAL}"
+	case "$oldconfig" in
+	yes)	ebegin "Running ${RED}make oldconfig${NORMAL}"
 			make oldconfig </dev/null &>/dev/null
 		eend $? "Failed oldconfig"
 		ebegin "Running ${RED}modules_prepare${NORMAL}"
 			make modules_prepare &>/dev/null
-		eend $? "Failed ${RED}modules prepare${NORMAL}"
-	fi
+		eend $? "Failed ${RED}modules prepare${NORMAL}" ;;
+	no)	ewarn "Skipping ${RED}make oldconfig${NORMAL} ..." ;;
+	esac
 
 	ARCH="${GENTOOARCH}"
 
