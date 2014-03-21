@@ -19,16 +19,19 @@ IUSE=""
 
 KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~ppc-aix ~amd64-fbsd ~x86-fbsd ~x64-freebsd ~hppa-hpux ~ia64-hpux ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~m68k-mint ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 
-DEPEND="sys-apps/portage"
+DEPEND="sys-apps/portage[${PYTHON_USEDEP}]"
 RDEPEND="${DEPEND}
 	!<=app-portage/gentoolkit-dev-0.2.7
 	|| ( >=sys-apps/coreutils-8.15 app-misc/realpath sys-freebsd/freebsd-bin )
 	sys-apps/gawk
+	!prefix? ( sys-libs/core-functions )
 	sys-apps/grep
-	virtual/python-argparse[${PYTHON_USEDEP}]
-	sys-libs/core-functions"
+	virtual/python-argparse[${PYTHON_USEDEP}]"
 
-PATCHES=()
+PATCHES=(
+	"${FILESDIR}"/${PV}-revdep-rebuild-py-504654-1.patch
+	"${FILESDIR}"/${PV}-revdep-rebuild-py-504654-2.patch
+)
 
 python_prepare_all() {
 	python_export_best
