@@ -1,3 +1,4 @@
 virtual/ffmpeg vdpau vaapi
+virtual/libudev -static-libs
 virtual/libusb -udev
 virtual/udev gudev hwdb
