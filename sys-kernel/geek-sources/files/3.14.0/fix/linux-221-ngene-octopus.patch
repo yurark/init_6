@@ -1,6 +1,6 @@
-From a6ff662a6e838d8f21c0ccb1261bd6a894435b96 Mon Sep 17 00:00:00 2001
+From e10cc6deb3dc141f1ec0345a8b7fe0a63d53ec06 Mon Sep 17 00:00:00 2001
 From: Stefan Saraev <stefan@saraev.ca>
-Date: Thu, 2 Jan 2014 00:40:06 +0200
+Date: Sat, 8 Feb 2014 14:46:28 +0200
 Subject: [PATCH] dvb: ngene/octopus
 
 source: http://linuxtv.org/hg/~endriss/media_build_experimental/
@@ -15,7 +15,7 @@ note: SYS_DVBC2 not added. ci extensions (en50221) not added.
  drivers/media/dvb-frontends/Makefile         |    3 +
  drivers/media/dvb-frontends/cxd2843.c        | 1646 ++++++++++++
  drivers/media/dvb-frontends/cxd2843.h        |   14 +
- drivers/media/dvb-frontends/drxk_hard.c      | 3616 ++++++++++++--------------
+ drivers/media/dvb-frontends/drxk_hard.c      | 3602 ++++++++++++--------------
  drivers/media/dvb-frontends/drxk_hard.h      |  298 +--
  drivers/media/dvb-frontends/drxk_map.h       |    3 -
  drivers/media/dvb-frontends/stv0367dd.c      | 2331 +++++++++++++++++
@@ -34,20 +34,20 @@ note: SYS_DVBC2 not added. ci extensions (en50221) not added.
  drivers/media/pci/ddbridge/ddbridge-ns.c     |  465 ++++
  drivers/media/pci/ddbridge/ddbridge-regs.h   |  310 ++-
  drivers/media/pci/ddbridge/ddbridge.c        |  432 +++
- drivers/media/pci/ddbridge/ddbridge.h        |  388 ++-
+ drivers/media/pci/ddbridge/ddbridge.h        |  388 +++-
  drivers/media/pci/ddbridge/octonet.c         |  176 ++
  drivers/media/pci/ngene/Kconfig              |    3 +
  drivers/media/pci/ngene/Makefile             |    3 +-
  drivers/media/pci/ngene/ngene-av.c           |  348 +++
  drivers/media/pci/ngene/ngene-cards.c        |  778 ++++--
- drivers/media/pci/ngene/ngene-core.c         |  382 ++-
+ drivers/media/pci/ngene/ngene-core.c         |  382 +++-
  drivers/media/pci/ngene/ngene-dvb.c          |  372 +++
  drivers/media/pci/ngene/ngene-eeprom.c       |  284 ++
  drivers/media/pci/ngene/ngene-i2c.c          |  113 +
  drivers/media/pci/ngene/ngene.h              |   40 +
  include/uapi/linux/dvb/mod.h                 |   23 +
  include/uapi/linux/dvb/ns.h                  |   68 +
- 40 files changed, 18328 insertions(+), 3479 deletions(-)
+ 40 files changed, 18327 insertions(+), 3466 deletions(-)
  create mode 100644 drivers/media/dvb-core/dvb_netstream.c
  create mode 100644 drivers/media/dvb-core/dvb_netstream.h
  create mode 100644 drivers/media/dvb-frontends/cxd2843.c
@@ -457,10 +457,10 @@ index 93a9470..e534ef1 100644
  #define DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr) \
  	static short adapter_nr[] = \
 diff --git a/drivers/media/dvb-frontends/Kconfig b/drivers/media/dvb-frontends/Kconfig
-index bddbab4..e0cf4c8 100644
+index 127f948..49db718 100644
 --- a/drivers/media/dvb-frontends/Kconfig
 +++ b/drivers/media/dvb-frontends/Kconfig
-@@ -56,6 +56,33 @@ config DVB_TDA18271C2DD
+@@ -70,6 +70,33 @@ config DVB_TDA18271C2DD
  
  	  Say Y when you want to support this tuner.
  
@@ -495,10 +495,10 @@ index bddbab4..e0cf4c8 100644
  	depends on DVB_CORE
  
 diff --git a/drivers/media/dvb-frontends/Makefile b/drivers/media/dvb-frontends/Makefile
-index f9cb43d..90cad36 100644
+index 376431f..9b21488 100644
 --- a/drivers/media/dvb-frontends/Makefile
 +++ b/drivers/media/dvb-frontends/Makefile
-@@ -97,6 +97,9 @@ obj-$(CONFIG_DVB_STV0367) += stv0367.o
+@@ -102,6 +102,9 @@ obj-$(CONFIG_DVB_STV0367) += stv0367.o
  obj-$(CONFIG_DVB_CXD2820R) += cxd2820r.o
  obj-$(CONFIG_DVB_DRXK) += drxk.o
  obj-$(CONFIG_DVB_TDA18271C2DD) += tda18271c2dd.o
@@ -2181,7 +2181,7 @@ index 0000000..d3a3f92
 +
 +#endif
 diff --git a/drivers/media/dvb-frontends/drxk_hard.c b/drivers/media/dvb-frontends/drxk_hard.c
-index bf29a3f..91a7f9f 100644
+index cce94a7..91a7f9f 100644
 --- a/drivers/media/dvb-frontends/drxk_hard.c
 +++ b/drivers/media/dvb-frontends/drxk_hard.c
 @@ -21,8 +21,6 @@
@@ -4896,9 +4896,11 @@ index bf29a3f..91a7f9f 100644
  	if (status < 0)
 -		pr_err("Error %d on %s\n", status, __func__);
 +		printk(KERN_ERR "drxk: Error %d on %s\n", status, __func__);
-+	return status;
-+}
-+
+ 	return status;
+ }
+ 
+-static int get_qam_signal_to_noise(struct drxk_state *state,
+-			       s32 *p_signal_to_noise)
 +static int ReadIFAgc(struct drxk_state *state, u32 *pValue)
 +{
 +	u16 agcDacLvl;
@@ -4922,11 +4924,9 @@ index bf29a3f..91a7f9f 100644
 +	else
 +		*pValue = 0;
 +
- 	return status;
- }
- 
--static int get_qam_signal_to_noise(struct drxk_state *state,
--			       s32 *p_signal_to_noise)
++	return status;
++}
++
 +static int GetQAMSignalToNoise(struct drxk_state *state,
 +			       s32 *pSignalToNoise)
  {
@@ -8557,17 +8557,24 @@ index bf29a3f..91a7f9f 100644
  
  	mutex_init(&state->mutex);
  
-@@ -6827,57 +6426,28 @@ struct dvb_frontend *drxk_attach(const struct drxk_config *config,
+@@ -6827,45 +6426,28 @@ struct dvb_frontend *drxk_attach(const struct drxk_config *config,
  	state->frontend.demodulator_priv = state;
  
  	init_state(state);
-+	if (init_drxk(state) < 0)
-+		goto error;
- 
+-
 -	/* Load firmware and initialize DRX-K */
 -	if (state->microcode_name) {
--		if (config->load_firmware_sync) {
--			const struct firmware *fw = NULL;
+-		const struct firmware *fw = NULL;
+-
+-		status = request_firmware(&fw, state->microcode_name,
+-					  state->i2c->dev.parent);
+-		if (status < 0)
+-			fw = NULL;
+-		load_firmware_cb(fw, state);
+-	} else if (init_drxk(state) < 0)
++	if (init_drxk(state) < 0)
+ 		goto error;
+ 
 +	/* Initialize the supported delivery systems */
 +	n = 0;
 +	if (state->m_hasDVBC) {
@@ -8582,26 +8589,6 @@ index bf29a3f..91a7f9f 100644
 +			sizeof(state->frontend.ops.info.name));
 +	}
  
--			status = request_firmware(&fw, state->microcode_name,
--						  state->i2c->dev.parent);
--			if (status < 0)
--				fw = NULL;
--			load_firmware_cb(fw, state);
--		} else {
--			status = request_firmware_nowait(THIS_MODULE, 1,
--					      state->microcode_name,
--					      state->i2c->dev.parent,
--					      GFP_KERNEL,
--					      state, load_firmware_cb);
--			if (status < 0) {
--				pr_err("failed to request a firmware\n");
--				return NULL;
--			}
--		}
--	} else if (init_drxk(state) < 0)
--		goto error;
--
--
 -	/* Initialize stats */
 -	p = &state->frontend.dtv_property_cache;
 -	p->strength.len = 1;
@@ -26365,5 +26352,5 @@ index 0000000..691c65d
 +
 +#endif /*_UAPI_DVBNS_H_*/
 -- 
-1.8.3.2
+1.7.2.5
 

@@ -6,15 +6,15 @@ index fb77062..f6f1afa 100644
  	help
  	  A Dual DVB-S/S2 tuner module. Say Y when you want to support this frontend.
  
-+config DVB_M88DS3103
-+	tristate "Montage M88DS3103 based"
++config DVB_DVBSKY_M88DS3103
++	tristate "Montage M88DS3103 based (dvbsky)"
 +	depends on DVB_CORE && I2C
 +	default m if !MEDIA_SUBDRV_AUTOSELECT
 +	help
 +	  A DVB-S/S2 tuner module. Say Y when you want to support this frontend.
 +
-+config DVB_M88DC2800
-+	tristate "Montage M88DC2800 based"
++config DVB_DVBSKY_M88DC2800
++	tristate "Montage M88DC2800 based (dvbsky)"
 +	depends on DVB_CORE && I2C
 +	default m if !MEDIA_SUBDRV_AUTOSELECT
 +	help
@@ -32,13 +32,13 @@ index c08b7f0..e8de9b6 100644
  obj-$(CONFIG_DVB_M88RS2000) += m88rs2000.o
  obj-$(CONFIG_DVB_AF9033) += af9033.o
 -
-+obj-$(CONFIG_DVB_M88DS3103) += m88ds3103.o
-+obj-$(CONFIG_DVB_M88DC2800) += m88dc2800.o
-diff --git a/drivers/media/dvb-frontends/m88dc2800.c b/drivers/media/dvb-frontends/m88dc2800.c
++obj-$(CONFIG_DVB_DVBSKY_M88DS3103) += dvbsky_m88ds3103.o
++obj-$(CONFIG_DVB_DVBSKY_M88DC2800) += dvbsky_m88dc2800.o
+diff --git a/drivers/media/dvb-frontends/dvbsky_m88dc2800.c b/drivers/media/dvb-frontends/dvbsky_m88dc2800.c
 new file mode 100644
 index 0000000..f876a11
 --- /dev/null
-+++ b/drivers/media/dvb-frontends/m88dc2800.c
++++ b/drivers/media/dvb-frontends/dvbsky_m88dc2800.c
 @@ -0,0 +1,2124 @@
 +/*
 +    M88DC2800/M88TC2800  - DVB-C demodulator and tuner from Montage
@@ -70,11 +70,11 @@ index 0000000..f876a11
 +#include <linux/slab.h>
 +#include <asm/div64.h>
 +#include "dvb_frontend.h"
-+#include "m88dc2800.h"
++#include "dvbsky_m88dc2800.h"
 +
-+struct m88dc2800_state {
++struct dvbsky_m88dc2800_state {
 +	struct i2c_adapter *i2c;
-+	const struct m88dc2800_config *config;
++	const struct dvbsky_m88dc2800_config *config;
 +	struct dvb_frontend frontend;
 +	u32 freq;
 +	u32 ber;
@@ -109,7 +109,7 @@ index 0000000..f876a11
 +	} while (0)
 +
 +
-+static int m88dc2800_i2c_write(struct m88dc2800_state *state, u8 addr,
++static int dvbsky_m88dc2800_i2c_write(struct dvbsky_m88dc2800_state *state, u8 addr,
 +			       u8 * p_data, u8 len)
 +{
 +	struct i2c_msg msg = { .flags = 0 };
@@ -121,7 +121,7 @@ index 0000000..f876a11
 +	return i2c_transfer(state->i2c, &msg, 1);
 +}
 +
-+static int m88dc2800_i2c_read(struct m88dc2800_state *state, u8 addr,
++static int dvbsky_m88dc2800_i2c_read(struct dvbsky_m88dc2800_state *state, u8 addr,
 +			      u8 * p_data, u8 len)
 +{
 +	struct i2c_msg msg = { .flags = I2C_M_RD };
@@ -134,7 +134,7 @@ index 0000000..f876a11
 +}
 +
 +/*demod register operations.*/
-+static int WriteReg(struct m88dc2800_state *state, u8 reg, u8 data)
++static int WriteReg(struct dvbsky_m88dc2800_state *state, u8 reg, u8 data)
 +{
 +	u8 buf[] = { reg, data };
 +	u8 addr = state->config->demod_address;
@@ -142,7 +142,7 @@ index 0000000..f876a11
 +
 +	dprintk("%s: write reg 0x%02x, value 0x%02x\n", __func__, reg, data);
 +
-+	err = m88dc2800_i2c_write(state, addr, buf, 2);
++	err = dvbsky_m88dc2800_i2c_write(state, addr, buf, 2);
 +
 +	if (err != 1) {
 +		printk(KERN_ERR
@@ -153,14 +153,14 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int ReadReg(struct m88dc2800_state *state, u8 reg)
++static int ReadReg(struct dvbsky_m88dc2800_state *state, u8 reg)
 +{
 +	int ret;
 +	u8 b0[] = { reg };
 +	u8 b1[] = { 0 };
 +	u8 addr = state->config->demod_address;
 +
-+	ret = m88dc2800_i2c_write(state, addr, b0, 1);
++	ret = dvbsky_m88dc2800_i2c_write(state, addr, b0, 1);
 +
 +	if (ret != 1) {
 +		printk(KERN_ERR "%s: reg=0x%x (error=%d)\n",
@@ -168,13 +168,13 @@ index 0000000..f876a11
 +		return -EIO;
 +	}
 +
-+	ret = m88dc2800_i2c_read(state, addr, b1, 1);
++	ret = dvbsky_m88dc2800_i2c_read(state, addr, b1, 1);
 +
 +	dprintk("%s: read reg 0x%02x, value 0x%02x\n", __func__, reg, b1[0]);
 +	return b1[0];
 +}
 +
-+static int _mt_fe_tn_set_reg(struct m88dc2800_state *state, u8 reg,
++static int _mt_fe_tn_set_reg(struct dvbsky_m88dc2800_state *state, u8 reg,
 +			     u8 data)
 +{
 +	int ret;
@@ -188,13 +188,13 @@ index 0000000..f876a11
 +	buf[0] = reg;
 +	buf[1] = data;
 +
-+	ret = m88dc2800_i2c_write(state, addr, buf, 2);
++	ret = dvbsky_m88dc2800_i2c_write(state, addr, buf, 2);
 +	if (ret != 1)
 +		return -EIO;
 +	return 0;
 +}
 +
-+static int _mt_fe_tn_get_reg(struct m88dc2800_state *state, u8 reg,
++static int _mt_fe_tn_get_reg(struct dvbsky_m88dc2800_state *state, u8 reg,
 +			     u8 * p_data)
 +{
 +	int ret;
@@ -206,7 +206,7 @@ index 0000000..f876a11
 +	ret = WriteReg(state, 0x86, buf[1]);
 +
 +	buf[0] = reg;
-+	ret = m88dc2800_i2c_write(state, addr, buf, 1);
++	ret = dvbsky_m88dc2800_i2c_write(state, addr, buf, 1);
 +
 +	msleep(1);
 +
@@ -214,11 +214,11 @@ index 0000000..f876a11
 +	buf[1] |= 0x80;
 +	ret = WriteReg(state, 0x86, buf[1]);
 +
-+	return m88dc2800_i2c_read(state, addr, p_data, 1);
++	return dvbsky_m88dc2800_i2c_read(state, addr, p_data, 1);
 +}
 +
 +/* Tuner operation functions.*/
-+static int _mt_fe_tn_set_RF_front_tc2800(struct m88dc2800_state *state)
++static int _mt_fe_tn_set_RF_front_tc2800(struct dvbsky_m88dc2800_state *state)
 +{
 +	u32 freq_KHz = state->tuner_freq;
 +	u8 a, b, c;
@@ -381,7 +381,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int _mt_fe_tn_cali_PLL_tc2800(struct m88dc2800_state *state,
++static int _mt_fe_tn_cali_PLL_tc2800(struct dvbsky_m88dc2800_state *state,
 +				     u32 freq_KHz,
 +				     u32 cali_freq_thres_div2,
 +				     u32 cali_freq_thres_div3r,
@@ -609,7 +609,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int _mt_fe_tn_set_PLL_freq_tc2800(struct m88dc2800_state *state)
++static int _mt_fe_tn_set_PLL_freq_tc2800(struct dvbsky_m88dc2800_state *state)
 +{
 +	u8 buf, buf1;
 +	u32 freq_thres_div2_KHz, freq_thres_div3r_KHz,
@@ -742,12 +742,12 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int _mt_fe_tn_set_BB_tc2800(struct m88dc2800_state *state)
++static int _mt_fe_tn_set_BB_tc2800(struct dvbsky_m88dc2800_state *state)
 +{
 +	return 0;
 +}
 +
-+ static int _mt_fe_tn_set_appendix_tc2800(struct m88dc2800_state *state)
++ static int _mt_fe_tn_set_appendix_tc2800(struct dvbsky_m88dc2800_state *state)
 +
 +{
 +	u8 buf;
@@ -785,7 +785,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+ static int _mt_fe_tn_set_DAC_tc2800(struct m88dc2800_state *state)
++ static int _mt_fe_tn_set_DAC_tc2800(struct dvbsky_m88dc2800_state *state)
 +{
 +	u8 buf, tempnumber;
 +	s32 N;
@@ -919,7 +919,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int _mt_fe_tn_preset_tc2800(struct m88dc2800_state *state)
++static int _mt_fe_tn_preset_tc2800(struct dvbsky_m88dc2800_state *state)
 +{
 +	if (state->tuner_mtt == 0xD1) {
 +		_mt_fe_tn_set_reg(state, 0x19, 0x4a);
@@ -994,21 +994,21 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int mt_fe_tn_wakeup_tc2800(struct m88dc2800_state *state)
++static int mt_fe_tn_wakeup_tc2800(struct dvbsky_m88dc2800_state *state)
 +{
 +	_mt_fe_tn_set_reg(state, 0x16, 0xb1);
 +	_mt_fe_tn_set_reg(state, 0x09, 0x7d);
 +	return 0;
 +}
 +
-+  static int mt_fe_tn_sleep_tc2800(struct m88dc2800_state *state)
++  static int mt_fe_tn_sleep_tc2800(struct dvbsky_m88dc2800_state *state)
 +{
 +	_mt_fe_tn_set_reg(state, 0x16, 0xb0);
 +	_mt_fe_tn_set_reg(state, 0x09, 0x6d);
 +	return 0;
 +}
 +
-+ static int mt_fe_tn_init_tc2800(struct m88dc2800_state *state)
++ static int mt_fe_tn_init_tc2800(struct dvbsky_m88dc2800_state *state)
 +{
 +	if (state->tuner_init_OK != 1) {
 +		state->tuner_dev_addr = 0x61;	/* TUNER_I2C_ADDR_TC2800 */
@@ -1044,7 +1044,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+ static int mt_fe_tn_set_freq_tc2800(struct m88dc2800_state *state,
++ static int mt_fe_tn_set_freq_tc2800(struct dvbsky_m88dc2800_state *state,
 +				       u32 freq_KHz)
 +{
 +	u8 buf;
@@ -1182,7 +1182,7 @@ index 0000000..f876a11
 +
 +
 +/*
-+static int mt_fe_tn_set_BB_filter_band_tc2800(struct m88dc2800_state *state,
++static int mt_fe_tn_set_BB_filter_band_tc2800(struct dvbsky_m88dc2800_state *state,
 +					      u8 bandwidth)
 +{
 +	u8 buf, tmp;
@@ -1206,7 +1206,7 @@ index 0000000..f876a11
 +}
 +*/
 +
-+static s32 mt_fe_tn_get_signal_strength_tc2800(struct m88dc2800_state
++static s32 mt_fe_tn_get_signal_strength_tc2800(struct dvbsky_m88dc2800_state
 +					       *state)
 +{
 +	s32 level = -107;
@@ -1346,7 +1346,7 @@ index 0000000..f876a11
 +
 +
 +/* m88dc2800 operation functions */
-+u8 M88DC2000GetLock(struct m88dc2800_state * state)
++u8 M88DC2000GetLock(struct dvbsky_m88dc2800_state * state)
 +{
 +	u8 u8ret = 0;
 +	if (ReadReg(state, 0x80) < 0x06) {
@@ -1366,7 +1366,7 @@ index 0000000..f876a11
 +	return u8ret;
 +}
 +
-+static int M88DC2000SetTsType(struct m88dc2800_state *state, u8 type)
++static int M88DC2000SetTsType(struct dvbsky_m88dc2800_state *state, u8 type)
 +{
 +	u8 regC2H;
 +
@@ -1399,7 +1399,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int M88DC2000RegInitial_TC2800(struct m88dc2800_state *state)
++static int M88DC2000RegInitial_TC2800(struct dvbsky_m88dc2800_state *state)
 +{
 +	u8 RegE3H, RegE4H;
 +
@@ -1544,7 +1544,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int M88DC2000AutoTSClock_P(struct m88dc2800_state *state, u32 sym,
++static int M88DC2000AutoTSClock_P(struct dvbsky_m88dc2800_state *state, u32 sym,
 +				  u16 qam)
 +{
 +	u32 dataRate;
@@ -1591,7 +1591,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int M88DC2000AutoTSClock_C(struct m88dc2800_state *state, u32 sym,
++static int M88DC2000AutoTSClock_C(struct dvbsky_m88dc2800_state *state, u32 sym,
 +				  u16 qam)
 +{
 +	u32 dataRate;
@@ -1638,7 +1638,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int M88DC2000SetTxMode(struct m88dc2800_state *state, u8 inverted,
++static int M88DC2000SetTxMode(struct dvbsky_m88dc2800_state *state, u8 inverted,
 +			      u8 j83)
 +{
 +	u8 value = 0;
@@ -1650,7 +1650,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int M88DC2000SoftReset(struct m88dc2800_state *state)
++static int M88DC2000SoftReset(struct dvbsky_m88dc2800_state *state)
 +{
 +	WriteReg(state, 0x80, 0x01);
 +	WriteReg(state, 0x82, 0x00);
@@ -1659,7 +1659,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int M88DC2000SetSym(struct m88dc2800_state *state, u32 sym, u32 xtal)
++static int M88DC2000SetSym(struct dvbsky_m88dc2800_state *state, u32 sym, u32 xtal)
 +{
 +	u8 value;
 +	u8 reg6FH, reg12H;
@@ -1734,7 +1734,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int M88DC2000SetQAM(struct m88dc2800_state *state, u16 qam)
++static int M88DC2000SetQAM(struct dvbsky_m88dc2800_state *state, u16 qam)
 +{
 +	u8 reg00H, reg4AH, regC2H, reg44H, reg4CH, reg4DH, reg74H, value;
 +	u8 reg8BH, reg8EH;
@@ -1858,26 +1858,26 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int M88DC2000WriteTuner_TC2800(struct m88dc2800_state *state,
++static int M88DC2000WriteTuner_TC2800(struct dvbsky_m88dc2800_state *state,
 +				      u32 freq_KHz)
 +{
 +	printk(KERN_INFO "%s, freq=%d KHz\n", __func__, freq_KHz);
 +	return mt_fe_tn_set_freq_tc2800(state, freq_KHz);
 +}
 +
-+static int m88dc2800_init(struct dvb_frontend *fe)
++static int dvbsky_m88dc2800_init(struct dvb_frontend *fe)
 +{
 +	dprintk("%s()\n", __func__);
 +	return 0;
 +}
 +
-+static int m88dc2800_set_parameters(struct dvb_frontend *fe)
++static int dvbsky_m88dc2800_set_parameters(struct dvb_frontend *fe)
 +{
 +	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
 +	u8 is_annex_c, is_update;
 +	u16 temp_qam;
 +	s32 waiting_time;
-+	struct m88dc2800_state *state = fe->demodulator_priv;
++	struct dvbsky_m88dc2800_state *state = fe->demodulator_priv;
 +
 +	is_annex_c = c->delivery_system == SYS_DVBC_ANNEX_C ? 1 : 0;
 +
@@ -1966,10 +1966,10 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int m88dc2800_read_status(struct dvb_frontend *fe,
++static int dvbsky_m88dc2800_read_status(struct dvb_frontend *fe,
 +				 fe_status_t * status)
 +{
-+	struct m88dc2800_state *state = fe->demodulator_priv;
++	struct dvbsky_m88dc2800_state *state = fe->demodulator_priv;
 +	*status = 0;
 +
 +	if (M88DC2000GetLock(state)) {
@@ -1979,9 +1979,9 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int m88dc2800_read_ber(struct dvb_frontend *fe, u32 * ber)
++static int dvbsky_m88dc2800_read_ber(struct dvb_frontend *fe, u32 * ber)
 +{
-+	struct m88dc2800_state *state = fe->demodulator_priv;
++	struct dvbsky_m88dc2800_state *state = fe->demodulator_priv;
 +	u16 tmp;
 +
 +	if (M88DC2000GetLock(state) == 0) {
@@ -1997,10 +1997,10 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int m88dc2800_read_signal_strength(struct dvb_frontend *fe,
++static int dvbsky_m88dc2800_read_signal_strength(struct dvb_frontend *fe,
 +					  u16 * strength)
 +{
-+	struct m88dc2800_state *state = fe->demodulator_priv;
++	struct dvbsky_m88dc2800_state *state = fe->demodulator_priv;
 +	s16 tuner_strength;
 +
 +	tuner_strength = mt_fe_tn_get_signal_strength_tc2800(state);
@@ -2009,7 +2009,7 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int m88dc2800_read_snr(struct dvb_frontend *fe, u16 * snr)
++static int dvbsky_m88dc2800_read_snr(struct dvb_frontend *fe, u16 * snr)
 +{
 +	static const u32 mes_log[] = {
 +		0, 3010, 4771, 6021, 6990, 7781, 8451, 9031, 9542, 10000,
@@ -2022,7 +2022,7 @@ index 0000000..f876a11
 +		18129, 18195, 18261, 18325, 18388, 18451, 18513, 18573, 18633,
 +		18692, 18751, 18808, 18865, 18921, 18976, 19031
 +	};
-+	struct m88dc2800_state *state = fe->demodulator_priv;
++	struct dvbsky_m88dc2800_state *state = fe->demodulator_priv;
 +	u8 i;
 +	u32 _snr, mse;
 +
@@ -2065,9 +2065,9 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int m88dc2800_read_ucblocks(struct dvb_frontend *fe, u32 * ucblocks)
++static int dvbsky_m88dc2800_read_ucblocks(struct dvb_frontend *fe, u32 * ucblocks)
 +{
-+	struct m88dc2800_state *state = fe->demodulator_priv;
++	struct dvbsky_m88dc2800_state *state = fe->demodulator_priv;
 +	u8 u8Value;
 +
 +	u8Value = ReadReg(state, 0xdf);
@@ -2086,9 +2086,9 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static int m88dc2800_sleep(struct dvb_frontend *fe)
++static int dvbsky_m88dc2800_sleep(struct dvb_frontend *fe)
 +{
-+	struct m88dc2800_state *state = fe->demodulator_priv;
++	struct dvbsky_m88dc2800_state *state = fe->demodulator_priv;
 +
 +	mt_fe_tn_sleep_tc2800(state);
 +	state->freq = 0;
@@ -2096,21 +2096,21 @@ index 0000000..f876a11
 +	return 0;
 +}
 +
-+static void m88dc2800_release(struct dvb_frontend *fe)
++static void dvbsky_m88dc2800_release(struct dvb_frontend *fe)
 +{
-+	struct m88dc2800_state *state = fe->demodulator_priv;
++	struct dvbsky_m88dc2800_state *state = fe->demodulator_priv;
 +	kfree(state);
 +}
 +
-+static struct dvb_frontend_ops m88dc2800_ops;
++static struct dvb_frontend_ops dvbsky_m88dc2800_ops;
 +
-+struct dvb_frontend *m88dc2800_attach(const struct m88dc2800_config
++struct dvb_frontend *dvbsky_m88dc2800_attach(const struct dvbsky_m88dc2800_config
 +				      *config, struct i2c_adapter *i2c)
 +{
-+	struct m88dc2800_state *state = NULL;
++	struct dvbsky_m88dc2800_state *state = NULL;
 +
 +	/* allocate memory for the internal state */
-+	state = kzalloc(sizeof(struct m88dc2800_state), GFP_KERNEL);
++	state = kzalloc(sizeof(struct dvbsky_m88dc2800_state), GFP_KERNEL);
 +	if (state == NULL)
 +		goto error;
 +
@@ -2125,7 +2125,7 @@ index 0000000..f876a11
 +	mt_fe_tn_init_tc2800(state);
 +
 +	/* create dvb_frontend */
-+	memcpy(&state->frontend.ops, &m88dc2800_ops,
++	memcpy(&state->frontend.ops, &dvbsky_m88dc2800_ops,
 +	       sizeof(struct dvb_frontend_ops));
 +	state->frontend.demodulator_priv = state;
 +	return &state->frontend;
@@ -2135,9 +2135,9 @@ index 0000000..f876a11
 +	return NULL;
 +}
 +
-+EXPORT_SYMBOL(m88dc2800_attach);
++EXPORT_SYMBOL(dvbsky_m88dc2800_attach);
 +
-+static struct dvb_frontend_ops m88dc2800_ops = {
++static struct dvb_frontend_ops dvbsky_m88dc2800_ops = {
 +	.delsys = {SYS_DVBC_ANNEX_A, SYS_DVBC_ANNEX_C},
 +	.info = {
 +		 .name = "Montage M88DC2800 DVB-C",
@@ -2149,26 +2149,26 @@ index 0000000..f876a11
 +		 .caps = FE_CAN_QAM_16 | FE_CAN_QAM_32 | FE_CAN_QAM_64 |
 +			 FE_CAN_QAM_128 | FE_CAN_QAM_256 | FE_CAN_FEC_AUTO
 +	},
-+	.release = m88dc2800_release,
-+	.init = m88dc2800_init,
-+	.sleep = m88dc2800_sleep,
-+	.set_frontend = m88dc2800_set_parameters,
-+	.read_status = m88dc2800_read_status,
-+	.read_ber = m88dc2800_read_ber,
-+	.read_signal_strength = m88dc2800_read_signal_strength,
-+	.read_snr = m88dc2800_read_snr,
-+	.read_ucblocks = m88dc2800_read_ucblocks,
++	.release = dvbsky_m88dc2800_release,
++	.init = dvbsky_m88dc2800_init,
++	.sleep = dvbsky_m88dc2800_sleep,
++	.set_frontend = dvbsky_m88dc2800_set_parameters,
++	.read_status = dvbsky_m88dc2800_read_status,
++	.read_ber = dvbsky_m88dc2800_read_ber,
++	.read_signal_strength = dvbsky_m88dc2800_read_signal_strength,
++	.read_snr = dvbsky_m88dc2800_read_snr,
++	.read_ucblocks = dvbsky_m88dc2800_read_ucblocks,
 +};
 +
 +MODULE_DESCRIPTION("Montage DVB-C demodulator driver");
 +MODULE_AUTHOR("Max Nibble <nibble.max@gmail.com>");
 +MODULE_LICENSE("GPL");
 +MODULE_VERSION("1.00");
-diff --git a/drivers/media/dvb-frontends/m88dc2800.h b/drivers/media/dvb-frontends/m88dc2800.h
+diff --git a/drivers/media/dvb-frontends/dvbsky_m88dc2800.h b/drivers/media/dvb-frontends/dvbsky_m88dc2800.h
 new file mode 100644
 index 0000000..2184322
 --- /dev/null
-+++ b/drivers/media/dvb-frontends/m88dc2800.h
++++ b/drivers/media/dvb-frontends/dvbsky_m88dc2800.h
 @@ -0,0 +1,44 @@
 +/*
 +    M88DC2800/M88TC2800  - DVB-C demodulator and tuner from Montage
@@ -2191,34 +2191,34 @@ index 0000000..2184322
 +    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 +*/
 +
-+#ifndef M88DC2800_H
-+#define M88DC2800_H
++#ifndef dvbsky_m88dc2800_H
++#define dvbsky_m88dc2800_H
 +
 +#include <linux/kconfig.h>
 +#include <linux/dvb/frontend.h>
 +
-+struct m88dc2800_config {
++struct dvbsky_m88dc2800_config {
 +	u8 demod_address;
 +	u8 ts_mode;
 +};
 +
-+#if IS_ENABLED(CONFIG_DVB_M88DC2800)
-+extern struct dvb_frontend* m88dc2800_attach(const struct m88dc2800_config* config,
++#if IS_ENABLED(CONFIG_DVB_DVBSKY_M88DC2800)
++extern struct dvb_frontend* dvbsky_m88dc2800_attach(const struct dvbsky_m88dc2800_config* config,
 +					    struct i2c_adapter* i2c);
 +#else
-+static inline struct dvb_frontend* m88dc2800_attach(const struct m88dc2800_config* config,
++static inline struct dvb_frontend* dvbsky_m88dc2800_attach(const struct dvbsky_m88dc2800_config* config,
 +					    struct i2c_adapter* i2c)
 +{
 +	printk(KERN_WARNING "%s: driver disabled by Kconfig\n", __func__);
 +	return NULL;
 +}
-+#endif /* CONFIG_DVB_M88DC2800 */
-+#endif /* M88DC2800_H */
-diff --git a/drivers/media/dvb-frontends/m88ds3103.c b/drivers/media/dvb-frontends/m88ds3103.c
++#endif /* CONFIG_DVB_DVBSKY_M88DC2800 */
++#endif /* dvbsky_m88dc2800_H */
+diff --git a/drivers/media/dvb-frontends/dvbsky_m88ds3103.c b/drivers/media/dvb-frontends/dvbsky_m88ds3103.c
 new file mode 100644
 index 0000000..9d525da
 --- /dev/null
-+++ b/drivers/media/dvb-frontends/m88ds3103.c
++++ b/drivers/media/dvb-frontends/dvbsky_m88ds3103.c
 @@ -0,0 +1,1707 @@
 +/*
 +    Montage Technology M88DS3103/M88TS2022 - DVBS/S2 Satellite demod/tuner driver
@@ -2250,8 +2250,8 @@ index 0000000..9d525da
 +#include <linux/firmware.h>
 +
 +#include "dvb_frontend.h"
-+#include "m88ds3103.h"
-+#include "m88ds3103_priv.h"
++#include "dvbsky_m88ds3103.h"
++#include "dvbsky_m88ds3103_priv.h"
 +
 +static int debug;
 +module_param(debug, int, 0644);
@@ -2264,7 +2264,7 @@ index 0000000..9d525da
 +	} while (0)
 +
 +/*demod register operations.*/
-+static int m88ds3103_writereg(struct m88ds3103_state *state, int reg, int data)
++static int dvbsky_m88ds3103_writereg(struct dvbsky_m88ds3103_state *state, int reg, int data)
 +{
 +	u8 buf[] = { reg, data };
 +	struct i2c_msg msg = { .addr = state->config->demod_address,
@@ -2284,7 +2284,7 @@ index 0000000..9d525da
 +	return 0;
 +}
 +
-+static int m88ds3103_readreg(struct m88ds3103_state *state, u8 reg)
++static int dvbsky_m88ds3103_readreg(struct dvbsky_m88ds3103_state *state, u8 reg)
 +{
 +	int ret;
 +	u8 b0[] = { reg };
@@ -2311,14 +2311,14 @@ index 0000000..9d525da
 +}
 +
 +/*tuner register operations.*/
-+static int m88ds3103_tuner_writereg(struct m88ds3103_state *state, int reg, int data)
++static int dvbsky_m88ds3103_tuner_writereg(struct dvbsky_m88ds3103_state *state, int reg, int data)
 +{
 +	u8 buf[] = { reg, data };
 +	struct i2c_msg msg = { .addr = 0x60,
 +		.flags = 0, .buf = buf, .len = 2 };
 +	int err;
 +
-+	m88ds3103_writereg(state, 0x03, 0x11);
++	dvbsky_m88ds3103_writereg(state, 0x03, 0x11);
 +	err = i2c_transfer(state->i2c, &msg, 1);
 +	
 +	if (err != 1) {
@@ -2330,7 +2330,7 @@ index 0000000..9d525da
 +	return 0;
 +}
 +
-+static int m88ds3103_tuner_readreg(struct m88ds3103_state *state, u8 reg)
++static int dvbsky_m88ds3103_tuner_readreg(struct dvbsky_m88ds3103_state *state, u8 reg)
 +{
 +	int ret;
 +	u8 b0[] = { reg };
@@ -2342,7 +2342,7 @@ index 0000000..9d525da
 +			.buf = b1, .len = 1 }
 +	};
 +
-+	m88ds3103_writereg(state, 0x03, 0x11);	
++	dvbsky_m88ds3103_writereg(state, 0x03, 0x11);	
 +	ret = i2c_transfer(state->i2c, msg, 2);
 +
 +	if (ret != 2) {
@@ -2354,7 +2354,7 @@ index 0000000..9d525da
 +}
 +
 +/* Bulk demod I2C write, for firmware download. */
-+static int m88ds3103_writeregN(struct m88ds3103_state *state, int reg,
++static int dvbsky_m88ds3103_writeregN(struct dvbsky_m88ds3103_state *state, int reg,
 +				const u8 *data, u16 len)
 +{
 +	int ret = -EREMOTEIO;
@@ -2393,9 +2393,9 @@ index 0000000..9d525da
 +	return ret;
 +}
 +
-+static int m88ds3103_load_firmware(struct dvb_frontend *fe)
++static int dvbsky_m88ds3103_load_firmware(struct dvb_frontend *fe)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	const struct firmware *fw;
 +	int i, ret = 0;
 +
@@ -2435,15 +2435,15 @@ index 0000000..9d525da
 +			fw->data[fw->size - 1]);
 +			
 +	/* stop internal mcu. */
-+	m88ds3103_writereg(state, 0xb2, 0x01);
++	dvbsky_m88ds3103_writereg(state, 0xb2, 0x01);
 +	/* split firmware to download.*/
 +	for(i = 0; i < FW_DOWN_LOOP; i++){
-+		ret = m88ds3103_writeregN(state, 0xb0, &(fw->data[FW_DOWN_SIZE*i]), FW_DOWN_SIZE);
++		ret = dvbsky_m88ds3103_writeregN(state, 0xb0, &(fw->data[FW_DOWN_SIZE*i]), FW_DOWN_SIZE);
 +		if(ret != 1) break;		
 +	}
 +	/* start internal mcu. */
 +	if(ret == 1)
-+		m88ds3103_writereg(state, 0xb2, 0x00);
++		dvbsky_m88ds3103_writereg(state, 0xb2, 0x00);
 +		
 +	release_firmware(fw);
 +
@@ -2459,9 +2459,9 @@ index 0000000..9d525da
 +}
 +
 +
-+static int m88ds3103_set_voltage(struct dvb_frontend *fe, fe_sec_voltage_t voltage)
++static int dvbsky_m88ds3103_set_voltage(struct dvb_frontend *fe, fe_sec_voltage_t voltage)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	u8 data;
 +
 +	dprintk("%s(%d)\n", __func__, voltage);
@@ -2471,7 +2471,7 @@ index 0000000..9d525da
 +	if(state->config->set_voltage)
 +		state->config->set_voltage(fe, voltage);
 +	
-+	data = m88ds3103_readreg(state, 0xa2);
++	data = dvbsky_m88ds3103_readreg(state, 0xa2);
 +	
 +        if(state->config->pin_ctrl & 0x80){ /*If control pin is assigned.*/
 +	        data &= ~0x03; /* bit0 V/H, bit1 off/on */
@@ -2496,32 +2496,32 @@ index 0000000..9d525da
 +	         }
 +        }
 +
-+	m88ds3103_writereg(state, 0xa2, data);
++	dvbsky_m88ds3103_writereg(state, 0xa2, data);
 +
 +	return 0;
 +}
 +
-+static int m88ds3103_read_status(struct dvb_frontend *fe, fe_status_t* status)
++static int dvbsky_m88ds3103_read_status(struct dvb_frontend *fe, fe_status_t* status)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	int lock = 0;
 +	
 +	*status = 0;
 +	
 +	switch (state->delivery_system){
 +	case SYS_DVBS:
-+		lock = m88ds3103_readreg(state, 0xd1);
++		lock = dvbsky_m88ds3103_readreg(state, 0xd1);
 +		dprintk("%s: SYS_DVBS status=%x.\n", __func__, lock);
 +		
 +		if ((lock & 0x07) == 0x07){
-+			/*if((m88ds3103_readreg(state, 0x0d) & 0x07) == 0x07)*/
++			/*if((dvbsky_m88ds3103_readreg(state, 0x0d) & 0x07) == 0x07)*/
 +				*status = FE_HAS_SIGNAL | FE_HAS_CARRIER 
 +					| FE_HAS_VITERBI | FE_HAS_SYNC | FE_HAS_LOCK;
 +			
 +		}
 +		break;
 +	case SYS_DVBS2:
-+		lock = m88ds3103_readreg(state, 0x0d);
++		lock = dvbsky_m88ds3103_readreg(state, 0x0d);
 +		dprintk("%s: SYS_DVBS2 status=%x.\n", __func__, lock);
 +
 +		if ((lock & 0x8f) == 0x8f)
@@ -2536,9 +2536,9 @@ index 0000000..9d525da
 +	return 0;
 +}
 +
-+static int m88ds3103_read_ber(struct dvb_frontend *fe, u32* ber)
++static int dvbsky_m88ds3103_read_ber(struct dvb_frontend *fe, u32* ber)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	u8 tmp1, tmp2, tmp3;
 +	u32 ldpc_frame_cnt, pre_err_packags, code_rate_fac = 0;
 +
@@ -2546,18 +2546,18 @@ index 0000000..9d525da
 +
 +	switch (state->delivery_system) {
 +	case SYS_DVBS:
-+		m88ds3103_writereg(state, 0xf9, 0x04);
-+		tmp3 = m88ds3103_readreg(state, 0xf8);
++		dvbsky_m88ds3103_writereg(state, 0xf9, 0x04);
++		tmp3 = dvbsky_m88ds3103_readreg(state, 0xf8);
 +		if ((tmp3&0x10) == 0){
-+			tmp1 = m88ds3103_readreg(state, 0xf7);
-+			tmp2 = m88ds3103_readreg(state, 0xf6);
++			tmp1 = dvbsky_m88ds3103_readreg(state, 0xf7);
++			tmp2 = dvbsky_m88ds3103_readreg(state, 0xf6);
 +			tmp3 |= 0x10;
-+			m88ds3103_writereg(state, 0xf8, tmp3);
++			dvbsky_m88ds3103_writereg(state, 0xf8, tmp3);
 +			state->preBer = (tmp1<<8) | tmp2;
 +		}
 +		break;
 +	case SYS_DVBS2:
-+		tmp1 = m88ds3103_readreg(state, 0x7e) & 0x0f;
++		tmp1 = dvbsky_m88ds3103_readreg(state, 0x7e) & 0x0f;
 +		switch(tmp1){
 +		case 0:	code_rate_fac = 16008 - 80; break;
 +		case 1:	code_rate_fac = 21408 - 80; break;
@@ -2572,20 +2572,20 @@ index 0000000..9d525da
 +		case 10: code_rate_fac = 58192 - 80; break;
 +		}
 +		
-+		tmp1 = m88ds3103_readreg(state, 0xd7) & 0xff;
-+		tmp2 = m88ds3103_readreg(state, 0xd6) & 0xff;
-+		tmp3 = m88ds3103_readreg(state, 0xd5) & 0xff;		
++		tmp1 = dvbsky_m88ds3103_readreg(state, 0xd7) & 0xff;
++		tmp2 = dvbsky_m88ds3103_readreg(state, 0xd6) & 0xff;
++		tmp3 = dvbsky_m88ds3103_readreg(state, 0xd5) & 0xff;		
 +		ldpc_frame_cnt = (tmp1 << 16) | (tmp2 << 8) | tmp3;
 +
-+		tmp1 = m88ds3103_readreg(state, 0xf8) & 0xff;
-+		tmp2 = m88ds3103_readreg(state, 0xf7) & 0xff;
++		tmp1 = dvbsky_m88ds3103_readreg(state, 0xf8) & 0xff;
++		tmp2 = dvbsky_m88ds3103_readreg(state, 0xf7) & 0xff;
 +		pre_err_packags = tmp1<<8 | tmp2;
 +		
 +		if (ldpc_frame_cnt > 1000){
-+			m88ds3103_writereg(state, 0xd1, 0x01);
-+			m88ds3103_writereg(state, 0xf9, 0x01);
-+			m88ds3103_writereg(state, 0xf9, 0x00);
-+			m88ds3103_writereg(state, 0xd1, 0x00);
++			dvbsky_m88ds3103_writereg(state, 0xd1, 0x01);
++			dvbsky_m88ds3103_writereg(state, 0xf9, 0x01);
++			dvbsky_m88ds3103_writereg(state, 0xf9, 0x00);
++			dvbsky_m88ds3103_writereg(state, 0xd1, 0x00);
 +			state->preBer = pre_err_packags;
 +		} 				
 +		break;
@@ -2597,24 +2597,24 @@ index 0000000..9d525da
 +	return 0;
 +}
 +
-+static int m88ds3103_read_signal_strength(struct dvb_frontend *fe,
++static int dvbsky_m88ds3103_read_signal_strength(struct dvb_frontend *fe,
 +						u16 *signal_strength)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	u16 gain;
 +	u8 gain1, gain2, gain3 = 0;
 +
 +	dprintk("%s()\n", __func__);
 +
-+	gain1 = m88ds3103_tuner_readreg(state, 0x3d) & 0x1f;
++	gain1 = dvbsky_m88ds3103_tuner_readreg(state, 0x3d) & 0x1f;
 +	dprintk("%s: gain1 = 0x%02x \n", __func__, gain1);
 +	
 +	if (gain1 > 15) gain1 = 15;
-+	gain2 = m88ds3103_tuner_readreg(state, 0x21) & 0x1f;
++	gain2 = dvbsky_m88ds3103_tuner_readreg(state, 0x21) & 0x1f;
 +	dprintk("%s: gain2 = 0x%02x \n", __func__, gain2);
 +	
 +	if(state->tuner_id == TS2022_ID){
-+		gain3 = (m88ds3103_tuner_readreg(state, 0x66)>>3) & 0x07;
++		gain3 = (dvbsky_m88ds3103_tuner_readreg(state, 0x66)>>3) & 0x07;
 +		dprintk("%s: gain3 = 0x%02x \n", __func__, gain3);
 +		
 +		if (gain2 > 16) gain2 = 16;
@@ -2632,9 +2632,9 @@ index 0000000..9d525da
 +}
 +
 +
-+static int m88ds3103_read_snr(struct dvb_frontend *fe, u16 *p_snr)
++static int dvbsky_m88ds3103_read_snr(struct dvb_frontend *fe, u16 *p_snr)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	u8 val, npow1, npow2, spow1, cnt;
 +	u16 tmp, snr;
 +	u32 npow, spow, snr_total;	
@@ -2663,7 +2663,7 @@ index 0000000..9d525da
 +	case SYS_DVBS:
 +		cnt = 10; snr_total = 0;
 +		while(cnt > 0){
-+			val = m88ds3103_readreg(state, 0xff);
++			val = dvbsky_m88ds3103_readreg(state, 0xff);
 +			snr_total += val;
 +			cnt--;
 +		}
@@ -2678,11 +2678,11 @@ index 0000000..9d525da
 +	case SYS_DVBS2:
 +		cnt  = 10; npow = 0; spow = 0;
 +		while(cnt >0){
-+			npow1 = m88ds3103_readreg(state, 0x8c) & 0xff;
-+			npow2 = m88ds3103_readreg(state, 0x8d) & 0xff;
++			npow1 = dvbsky_m88ds3103_readreg(state, 0x8c) & 0xff;
++			npow2 = dvbsky_m88ds3103_readreg(state, 0x8d) & 0xff;
 +			npow += (((npow1 & 0x3f) + (u16)(npow2 << 6)) >> 2);
 +
-+			spow1 = m88ds3103_readreg(state, 0x8e) & 0xff;
++			spow1 = dvbsky_m88ds3103_readreg(state, 0x8e) & 0xff;
 +			spow += ((spow1 * spow1) >> 1);
 +			cnt--;
 +		}
@@ -2712,38 +2712,38 @@ index 0000000..9d525da
 +}
 +
 +
-+static int m88ds3103_read_ucblocks(struct dvb_frontend *fe, u32 *ucblocks)
++static int dvbsky_m88ds3103_read_ucblocks(struct dvb_frontend *fe, u32 *ucblocks)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	u8 tmp1, tmp2, tmp3, data;
 +
 +	dprintk("%s()\n", __func__);
 +
 +	switch (state->delivery_system) {
 +	case SYS_DVBS:
-+		data = m88ds3103_readreg(state, 0xf8);
++		data = dvbsky_m88ds3103_readreg(state, 0xf8);
 +		data |= 0x40;
-+		m88ds3103_writereg(state, 0xf8, data);		
-+		tmp1 = m88ds3103_readreg(state, 0xf5);
-+		tmp2 = m88ds3103_readreg(state, 0xf4);
++		dvbsky_m88ds3103_writereg(state, 0xf8, data);		
++		tmp1 = dvbsky_m88ds3103_readreg(state, 0xf5);
++		tmp2 = dvbsky_m88ds3103_readreg(state, 0xf4);
 +		*ucblocks = (tmp1 <<8) | tmp2;		
 +		data &= ~0x20;
-+		m88ds3103_writereg(state, 0xf8, data);
++		dvbsky_m88ds3103_writereg(state, 0xf8, data);
 +		data |= 0x20;
-+		m88ds3103_writereg(state, 0xf8, data);
++		dvbsky_m88ds3103_writereg(state, 0xf8, data);
 +		data &= ~0x40;
-+		m88ds3103_writereg(state, 0xf8, data);
++		dvbsky_m88ds3103_writereg(state, 0xf8, data);
 +		break;
 +	case SYS_DVBS2:
-+		tmp1 = m88ds3103_readreg(state, 0xda);
-+		tmp2 = m88ds3103_readreg(state, 0xd9);
-+		tmp3 = m88ds3103_readreg(state, 0xd8);
++		tmp1 = dvbsky_m88ds3103_readreg(state, 0xda);
++		tmp2 = dvbsky_m88ds3103_readreg(state, 0xd9);
++		tmp3 = dvbsky_m88ds3103_readreg(state, 0xd8);
 +		*ucblocks = (tmp1 <<16)|(tmp2 <<8)|tmp3;
-+		data = m88ds3103_readreg(state, 0xd1);
++		data = dvbsky_m88ds3103_readreg(state, 0xd1);
 +		data |= 0x01;
-+		m88ds3103_writereg(state, 0xd1, data);
++		dvbsky_m88ds3103_writereg(state, 0xd1, data);
 +		data &= ~0x01;
-+		m88ds3103_writereg(state, 0xd1, data);
++		dvbsky_m88ds3103_writereg(state, 0xd1, data);
 +		break;
 +	default:
 +		break;
@@ -2751,9 +2751,9 @@ index 0000000..9d525da
 +	return 0;
 +}
 +
-+static int m88ds3103_set_tone(struct dvb_frontend *fe, fe_sec_tone_mode_t tone)
++static int dvbsky_m88ds3103_set_tone(struct dvb_frontend *fe, fe_sec_tone_mode_t tone)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	u8 data_a1, data_a2;
 +
 +	dprintk("%s(%d)\n", __func__, tone);
@@ -2762,8 +2762,8 @@ index 0000000..9d525da
 +		return -EINVAL;
 +	}
 +
-+	data_a1 = m88ds3103_readreg(state, 0xa1);
-+	data_a2 = m88ds3103_readreg(state, 0xa2);
++	data_a1 = dvbsky_m88ds3103_readreg(state, 0xa1);
++	data_a2 = dvbsky_m88ds3103_readreg(state, 0xa2);
 +	if(state->demod_id == DS3103_ID)
 +		data_a2 &= 0xdf; /* Normal mode */
 +	switch (tone) {
@@ -2780,15 +2780,15 @@ index 0000000..9d525da
 +		data_a2 |= 0x80;
 +		break;
 +	}
-+	m88ds3103_writereg(state, 0xa2, data_a2);
-+	m88ds3103_writereg(state, 0xa1, data_a1);
++	dvbsky_m88ds3103_writereg(state, 0xa2, data_a2);
++	dvbsky_m88ds3103_writereg(state, 0xa1, data_a1);
 +	return 0;
 +}
 +
-+static int m88ds3103_send_diseqc_msg(struct dvb_frontend *fe,
++static int dvbsky_m88ds3103_send_diseqc_msg(struct dvb_frontend *fe,
 +				struct dvb_diseqc_master_cmd *d)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	int i, ret = 0;
 +	u8 tmp, time_out;
 +
@@ -2802,97 +2802,97 @@ index 0000000..9d525da
 +		}
 +	}
 +
-+	tmp = m88ds3103_readreg(state, 0xa2);
++	tmp = dvbsky_m88ds3103_readreg(state, 0xa2);
 +	tmp &= ~0xc0;
 +	if(state->demod_id == DS3103_ID)
 +		tmp &= ~0x20;
-+	m88ds3103_writereg(state, 0xa2, tmp);
++	dvbsky_m88ds3103_writereg(state, 0xa2, tmp);
 +	
 +	for (i = 0; i < d->msg_len; i ++)
-+		m88ds3103_writereg(state, (0xa3+i), d->msg[i]);
++		dvbsky_m88ds3103_writereg(state, (0xa3+i), d->msg[i]);
 +
-+	tmp = m88ds3103_readreg(state, 0xa1);	
++	tmp = dvbsky_m88ds3103_readreg(state, 0xa1);	
 +	tmp &= ~0x38;
 +	tmp &= ~0x40;
 +	tmp |= ((d->msg_len-1) << 3) | 0x07;
 +	tmp &= ~0x80;
-+	m88ds3103_writereg(state, 0xa1, tmp);
++	dvbsky_m88ds3103_writereg(state, 0xa1, tmp);
 +	/*	1.5 * 9 * 8	= 108ms	*/
 +	time_out = 150;
 +	while (time_out > 0){
 +		msleep(10);
 +		time_out -= 10;
-+		tmp = m88ds3103_readreg(state, 0xa1);		
++		tmp = dvbsky_m88ds3103_readreg(state, 0xa1);		
 +		if ((tmp & 0x40) == 0)
 +			break;
 +	}
 +	if (time_out == 0){
-+		tmp = m88ds3103_readreg(state, 0xa1);
++		tmp = dvbsky_m88ds3103_readreg(state, 0xa1);
 +		tmp &= ~0x80;
 +		tmp |= 0x40;
-+		m88ds3103_writereg(state, 0xa1, tmp);
++		dvbsky_m88ds3103_writereg(state, 0xa1, tmp);
 +		ret = 1;
 +	}
-+	tmp = m88ds3103_readreg(state, 0xa2);
++	tmp = dvbsky_m88ds3103_readreg(state, 0xa2);
 +	tmp &= ~0xc0;
 +	tmp |= 0x80;
-+	m88ds3103_writereg(state, 0xa2, tmp);	
++	dvbsky_m88ds3103_writereg(state, 0xa2, tmp);	
 +	return ret;
 +}
 +
 +
-+static int m88ds3103_diseqc_send_burst(struct dvb_frontend *fe,
++static int dvbsky_m88ds3103_diseqc_send_burst(struct dvb_frontend *fe,
 +					fe_sec_mini_cmd_t burst)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	u8	val, time_out;
 +	
 +	dprintk("%s()\n", __func__);
 +
-+	val = m88ds3103_readreg(state, 0xa2);
++	val = dvbsky_m88ds3103_readreg(state, 0xa2);
 +	val &= ~0xc0;
 +	if(state->demod_id == DS3103_ID)
 +		val &= 0xdf; /* Normal mode */
-+	m88ds3103_writereg(state, 0xa2, val);
++	dvbsky_m88ds3103_writereg(state, 0xa2, val);
 +	/* DiSEqC burst */
 +	if (burst == SEC_MINI_B)
-+		m88ds3103_writereg(state, 0xa1, 0x01);
++		dvbsky_m88ds3103_writereg(state, 0xa1, 0x01);
 +	else
-+		m88ds3103_writereg(state, 0xa1, 0x02);
++		dvbsky_m88ds3103_writereg(state, 0xa1, 0x02);
 +
 +	msleep(13);
 +
 +	time_out = 5;
 +	do{
-+		val = m88ds3103_readreg(state, 0xa1);
++		val = dvbsky_m88ds3103_readreg(state, 0xa1);
 +		if ((val & 0x40) == 0)
 +			break;
 +		msleep(1);
 +		time_out --;
 +	} while (time_out > 0);
 +
-+	val = m88ds3103_readreg(state, 0xa2);
++	val = dvbsky_m88ds3103_readreg(state, 0xa2);
 +	val &= ~0xc0;
 +	val |= 0x80;
-+	m88ds3103_writereg(state, 0xa2, val);
++	dvbsky_m88ds3103_writereg(state, 0xa2, val);
 +	
 +	return 0;
 +}
 +
-+static void m88ds3103_release(struct dvb_frontend *fe)
++static void dvbsky_m88ds3103_release(struct dvb_frontend *fe)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +
 +	dprintk("%s\n", __func__);
 +	kfree(state);
 +}
 +
-+static int m88ds3103_check_id(struct m88ds3103_state *state)
++static int dvbsky_m88ds3103_check_id(struct dvbsky_m88ds3103_state *state)
 +{
 +	int val_00, val_01;
 +	
 +	/*check demod id*/
-+	val_01 = m88ds3103_readreg(state, 0x01);
++	val_01 = dvbsky_m88ds3103_readreg(state, 0x01);
 +	printk(KERN_INFO "DS3000 chip version: %x attached.\n", val_01);
 +			
 +	if(val_01 == 0xD0)
@@ -2903,18 +2903,18 @@ index 0000000..9d525da
 +		state->demod_id = UNKNOW_ID;
 +		
 +	/*check tuner id*/
-+	val_00 = m88ds3103_tuner_readreg(state, 0x00);
++	val_00 = dvbsky_m88ds3103_tuner_readreg(state, 0x00);
 +	printk(KERN_INFO "TS202x chip version[1]: %x attached.\n", val_00);
 +	val_00 &= 0x03;
 +	if(val_00 == 0)
 +	{
-+		m88ds3103_tuner_writereg(state, 0x00, 0x01);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x00, 0x01);
 +		msleep(3);		
 +	}
-+	m88ds3103_tuner_writereg(state, 0x00, 0x03);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x00, 0x03);
 +	msleep(5);
 +	
-+	val_00 = m88ds3103_tuner_readreg(state, 0x00);
++	val_00 = dvbsky_m88ds3103_tuner_readreg(state, 0x00);
 +	printk(KERN_INFO "TS202x chip version[2]: %x attached.\n", val_00);
 +	val_00 &= 0xff;
 +	if((val_00 == 0x01) || (val_00 == 0x41) || (val_00 == 0x81))
@@ -2927,18 +2927,18 @@ index 0000000..9d525da
 +	return state->demod_id;	
 +}
 +
-+static struct dvb_frontend_ops m88ds3103_ops;
-+static int m88ds3103_initilaze(struct dvb_frontend *fe);
++static struct dvb_frontend_ops dvbsky_m88ds3103_ops;
++static int dvbsky_m88ds3103_initilaze(struct dvb_frontend *fe);
 +
-+struct dvb_frontend *m88ds3103_attach(const struct m88ds3103_config *config,
++struct dvb_frontend *dvbsky_m88ds3103_attach(const struct dvbsky_m88ds3103_config *config,
 +				    struct i2c_adapter *i2c)
 +{
-+	struct m88ds3103_state *state = NULL;
++	struct dvbsky_m88ds3103_state *state = NULL;
 +
 +	dprintk("%s\n", __func__);
 +
 +	/* allocate memory for the internal state */
-+	state = kzalloc(sizeof(struct m88ds3103_state), GFP_KERNEL);
++	state = kzalloc(sizeof(struct dvbsky_m88ds3103_state), GFP_KERNEL);
 +	if (state == NULL) {
 +		printk(KERN_ERR "Unable to kmalloc\n");
 +		goto error2;
@@ -2950,16 +2950,16 @@ index 0000000..9d525da
 +	state->delivery_system = SYS_DVBS; /*Default to DVB-S.*/
 +	
 +	/* check demod id */
-+	if(m88ds3103_check_id(state) == UNKNOW_ID){
++	if(dvbsky_m88ds3103_check_id(state) == UNKNOW_ID){
 +		printk(KERN_ERR "Unable to find Montage chip\n");
 +		goto error3;
 +	}
 +
-+	memcpy(&state->frontend.ops, &m88ds3103_ops,
++	memcpy(&state->frontend.ops, &dvbsky_m88ds3103_ops,
 +			sizeof(struct dvb_frontend_ops));
 +	state->frontend.demodulator_priv = state;
 +	
-+	m88ds3103_initilaze(&state->frontend);
++	dvbsky_m88ds3103_initilaze(&state->frontend);
 +	
 +	return &state->frontend;
 +
@@ -2968,12 +2968,12 @@ index 0000000..9d525da
 +error2:
 +	return NULL;
 +}
-+EXPORT_SYMBOL(m88ds3103_attach);
++EXPORT_SYMBOL(dvbsky_m88ds3103_attach);
 +
-+static int m88ds3103_set_carrier_offset(struct dvb_frontend *fe,
++static int dvbsky_m88ds3103_set_carrier_offset(struct dvb_frontend *fe,
 +					s32 carrier_offset_khz)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	s32 tmp;
 +
 +	tmp = carrier_offset_khz;
@@ -2984,59 +2984,59 @@ index 0000000..9d525da
 +	if (tmp < 0)
 +		tmp += 65536;
 +
-+	m88ds3103_writereg(state, 0x5f, tmp >> 8);
-+	m88ds3103_writereg(state, 0x5e, tmp & 0xff);
++	dvbsky_m88ds3103_writereg(state, 0x5f, tmp >> 8);
++	dvbsky_m88ds3103_writereg(state, 0x5e, tmp & 0xff);
 +
 +	return 0;
 +}
 +
-+static int m88ds3103_set_symrate(struct dvb_frontend *fe)
++static int dvbsky_m88ds3103_set_symrate(struct dvb_frontend *fe)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
 +	u16 value;
 +	
 +	value = (((c->symbol_rate / 1000) << 15) + (MT_FE_MCLK_KHZ / 4)) / (MT_FE_MCLK_KHZ / 2);
-+	m88ds3103_writereg(state, 0x61, value & 0x00ff);
-+	m88ds3103_writereg(state, 0x62, (value & 0xff00) >> 8);
++	dvbsky_m88ds3103_writereg(state, 0x61, value & 0x00ff);
++	dvbsky_m88ds3103_writereg(state, 0x62, (value & 0xff00) >> 8);
 +
 +	return 0;
 +}
 +
-+static int m88ds3103_set_CCI(struct dvb_frontend *fe)
++static int dvbsky_m88ds3103_set_CCI(struct dvb_frontend *fe)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	u8 tmp;
 +
-+	tmp = m88ds3103_readreg(state, 0x56);
++	tmp = dvbsky_m88ds3103_readreg(state, 0x56);
 +	tmp &= ~0x01;
-+	m88ds3103_writereg(state, 0x56, tmp);
++	dvbsky_m88ds3103_writereg(state, 0x56, tmp);
 +
-+	tmp = m88ds3103_readreg(state, 0x76);
++	tmp = dvbsky_m88ds3103_readreg(state, 0x76);
 +	tmp &= ~0x80;
-+	m88ds3103_writereg(state, 0x76, tmp);
++	dvbsky_m88ds3103_writereg(state, 0x76, tmp);
 +
 +	return 0;
 +}
 +
-+static int m88ds3103_init_reg(struct m88ds3103_state *state, const u8 *p_reg_tab, u32 size)
++static int dvbsky_m88ds3103_init_reg(struct dvbsky_m88ds3103_state *state, const u8 *p_reg_tab, u32 size)
 +{
 +	u32 i;
 +	
 +	for(i = 0; i < size; i+=2)
-+		m88ds3103_writereg(state, p_reg_tab[i], p_reg_tab[i+1]);
++		dvbsky_m88ds3103_writereg(state, p_reg_tab[i], p_reg_tab[i+1]);
 +		
 +	return 0;
 +}
 +
-+static int m88ds3103_get_locked_sym_rate(struct m88ds3103_state *state, u32 *sym_rate_KSs)
++static int dvbsky_m88ds3103_get_locked_sym_rate(struct dvbsky_m88ds3103_state *state, u32 *sym_rate_KSs)
 +{
 +	u16	tmp;
 +	u32	sym_rate_tmp;
 +	u8	val_0x6d, val_0x6e;
 +
-+	val_0x6d = m88ds3103_readreg(state, 0x6d);
-+	val_0x6e = m88ds3103_readreg(state, 0x6e);
++	val_0x6d = dvbsky_m88ds3103_readreg(state, 0x6d);
++	val_0x6e = dvbsky_m88ds3103_readreg(state, 0x6e);
 +
 +	tmp = (u16)((val_0x6e<<8) | val_0x6d);
 +
@@ -3047,19 +3047,19 @@ index 0000000..9d525da
 +	return 0;
 +}
 +
-+static int m88ds3103_get_channel_info(struct m88ds3103_state *state, u8 *p_mode, u8 *p_coderate)
++static int dvbsky_m88ds3103_get_channel_info(struct dvbsky_m88ds3103_state *state, u8 *p_mode, u8 *p_coderate)
 +{
 +	u8	tmp, val_0x7E;
 +
 +	if(state->delivery_system == SYS_DVBS2){
-+		val_0x7E = m88ds3103_readreg(state, 0x7e);
++		val_0x7E = dvbsky_m88ds3103_readreg(state, 0x7e);
 +		tmp = (u8)((val_0x7E&0xC0) >> 6);
 +		*p_mode = tmp;
 +		tmp = (u8)(val_0x7E & 0x0f);
 +		*p_coderate = tmp;
 +	} else {
 +		*p_mode = 0;
-+		tmp = m88ds3103_readreg(state, 0xe6);		
++		tmp = dvbsky_m88ds3103_readreg(state, 0xe6);		
 +		tmp = (u8)(tmp >> 5);
 +		*p_coderate = tmp;
 +	}
@@ -3067,7 +3067,7 @@ index 0000000..9d525da
 +	return 0;
 +}
 +
-+static int m88ds3103_set_clock_ratio(struct m88ds3103_state *state)
++static int dvbsky_m88ds3103_set_clock_ratio(struct dvbsky_m88ds3103_state *state)
 +{
 +	u8	val, mod_fac, tmp1, tmp2;
 +	u32	input_datarate, locked_sym_rate_KSs;
@@ -3075,11 +3075,11 @@ index 0000000..9d525da
 +	u8 mod_mode, code_rate, divid_ratio = 0;
 +
 +	locked_sym_rate_KSs = 0;
-+	m88ds3103_get_locked_sym_rate(state, &locked_sym_rate_KSs);
++	dvbsky_m88ds3103_get_locked_sym_rate(state, &locked_sym_rate_KSs);
 +	if(locked_sym_rate_KSs == 0)
 +		return 0;
 +
-+	m88ds3103_get_channel_info(state, &mod_mode, &code_rate);
++	dvbsky_m88ds3103_get_channel_info(state, &mod_mode, &code_rate);
 +
 +	if (state->delivery_system == SYS_DVBS2)
 +	{
@@ -3132,10 +3132,10 @@ index 0000000..9d525da
 +
 +		if(state->demod_id == DS3000_ID) {
 +			val = (u8)((tmp1<<4) + tmp2);
-+			m88ds3103_writereg(state, 0xfe, val);
++			dvbsky_m88ds3103_writereg(state, 0xfe, val);
 +		} else {
-+			tmp1 = m88ds3103_readreg(state, 0x22);
-+			tmp2 = m88ds3103_readreg(state, 0x24);
++			tmp1 = dvbsky_m88ds3103_readreg(state, 0x22);
++			tmp2 = dvbsky_m88ds3103_readreg(state, 0x24);
 +
 +			tmp1 >>= 6;
 +			tmp1 &= 0x03;
@@ -3181,14 +3181,14 @@ index 0000000..9d525da
 +			tmp1 &= 0x3f;
 +			tmp2 &= 0x3f;
 +
-+			val = m88ds3103_readreg(state, 0xfe);
++			val = dvbsky_m88ds3103_readreg(state, 0xfe);
 +			val &= 0xF0;
 +			val |= (tmp2 >> 2) & 0x0f;
-+			m88ds3103_writereg(state, 0xfe, val);
++			dvbsky_m88ds3103_writereg(state, 0xfe, val);
 +
 +			val = (u8)((tmp2 & 0x03) << 6);	
 +			val |= tmp1;
-+			m88ds3103_writereg(state, 0xea, val);
++			dvbsky_m88ds3103_writereg(state, 0xea, val);
 +		}
 +	} else {
 +		mod_fac = 2;
@@ -3218,10 +3218,10 @@ index 0000000..9d525da
 +		else 							{tmp1 = 2;tmp2 = 2;} //24MHz     	TS clock
 +
 +		if(state->demod_id == DS3000_ID) {
-+			val = m88ds3103_readreg(state, 0xfe);
++			val = dvbsky_m88ds3103_readreg(state, 0xfe);
 +			val &= 0xc0;
 +			val |= ((u8)((tmp1<<3) + tmp2));
-+			m88ds3103_writereg(state, 0xfe, val);
++			dvbsky_m88ds3103_writereg(state, 0xfe, val);
 +		} else {
 +			if(input_datarate < 5200) /*Max. 2011-12-23 11:55*/
 +				input_datarate = 5200;
@@ -3249,22 +3249,22 @@ index 0000000..9d525da
 +			tmp1 &= 0x3f;
 +			tmp2 &= 0x3f;
 +
-+			val = m88ds3103_readreg(state, 0xfe);
++			val = dvbsky_m88ds3103_readreg(state, 0xfe);
 +			val &= 0xF0;
 +			val |= (tmp2 >> 2) & 0x0f;
-+			m88ds3103_writereg(state, 0xfe, val);
++			dvbsky_m88ds3103_writereg(state, 0xfe, val);
 +			
 +			val = (u8)((tmp2 & 0x03) << 6);
 +			val |= tmp1;
-+			m88ds3103_writereg(state, 0xea, val);
++			dvbsky_m88ds3103_writereg(state, 0xea, val);
 +		}
 +	}
 +	return 0;
 +}
 +
-+static int m88ds3103_demod_connect(struct dvb_frontend *fe, s32 carrier_offset_khz) 
++static int dvbsky_m88ds3103_demod_connect(struct dvb_frontend *fe, s32 carrier_offset_khz) 
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
 +	u16 value;
 +	u8 val1,val2,data;
@@ -3272,23 +3272,23 @@ index 0000000..9d525da
 +	dprintk("connect delivery system = %d\n", state->delivery_system);
 +	
 +	/* ds3000 global reset */
-+	m88ds3103_writereg(state, 0x07, 0x80);
-+	m88ds3103_writereg(state, 0x07, 0x00);
++	dvbsky_m88ds3103_writereg(state, 0x07, 0x80);
++	dvbsky_m88ds3103_writereg(state, 0x07, 0x00);
 +	/* ds3000 build-in uC reset */
-+	m88ds3103_writereg(state, 0xb2, 0x01);
++	dvbsky_m88ds3103_writereg(state, 0xb2, 0x01);
 +	/* ds3000 software reset */
-+	m88ds3103_writereg(state, 0x00, 0x01);
++	dvbsky_m88ds3103_writereg(state, 0x00, 0x01);
 +
 +	switch (state->delivery_system) {
 +	case SYS_DVBS:
 +		/* initialise the demod in DVB-S mode */
 +		if(state->demod_id == DS3000_ID){
-+			m88ds3103_init_reg(state, ds3000_dvbs_init_tab, sizeof(ds3000_dvbs_init_tab));
++			dvbsky_m88ds3103_init_reg(state, ds3000_dvbs_init_tab, sizeof(ds3000_dvbs_init_tab));
 +			
-+			value = m88ds3103_readreg(state, 0xfe);
++			value = dvbsky_m88ds3103_readreg(state, 0xfe);
 +			value &= 0xc0;
 +			value |= 0x1b;
-+			m88ds3103_writereg(state, 0xfe, value);
++			dvbsky_m88ds3103_writereg(state, 0xfe, value);
 +			
 +			if(state->config->ci_mode)
 +				val1 = 0x80;
@@ -3296,10 +3296,10 @@ index 0000000..9d525da
 +				val1 = 0x60;
 +			else
 +				val1 = 0x20;
-+			m88ds3103_writereg(state, 0xfd, val1);
++			dvbsky_m88ds3103_writereg(state, 0xfd, val1);
 +			
 +		}else if(state->demod_id == DS3103_ID){
-+			m88ds3103_init_reg(state, ds3103_dvbs_init_tab, sizeof(ds3103_dvbs_init_tab));
++			dvbsky_m88ds3103_init_reg(state, ds3103_dvbs_init_tab, sizeof(ds3103_dvbs_init_tab));
 +			
 +			/* set ts clock */
 +			if(state->config->ci_mode == 2){
@@ -3311,28 +3311,28 @@ index 0000000..9d525da
 +			}
 +			val1 -= 1; val2 -= 1;
 +			val1 &= 0x3f; val2 &= 0x3f;
-+			data = m88ds3103_readreg(state, 0xfe);
++			data = dvbsky_m88ds3103_readreg(state, 0xfe);
 +			data &= 0xf0;
 +			data |= (val2 >> 2) & 0x0f;
-+			m88ds3103_writereg(state, 0xfe, data);
++			dvbsky_m88ds3103_writereg(state, 0xfe, data);
 +			data = (val2 & 0x03) << 6;
 +			data |= val1;
-+			m88ds3103_writereg(state, 0xea, data);
++			dvbsky_m88ds3103_writereg(state, 0xea, data);
 +			
-+			m88ds3103_writereg(state, 0x4d, 0xfd & m88ds3103_readreg(state, 0x4d));
-+			m88ds3103_writereg(state, 0x30, 0xef & m88ds3103_readreg(state, 0x30));
++			dvbsky_m88ds3103_writereg(state, 0x4d, 0xfd & dvbsky_m88ds3103_readreg(state, 0x4d));
++			dvbsky_m88ds3103_writereg(state, 0x30, 0xef & dvbsky_m88ds3103_readreg(state, 0x30));
 +			
 +			/* set master clock */
-+			val1 = m88ds3103_readreg(state, 0x22);
-+			val2 = m88ds3103_readreg(state, 0x24);
++			val1 = dvbsky_m88ds3103_readreg(state, 0x22);
++			val2 = dvbsky_m88ds3103_readreg(state, 0x24);
 +			
 +			val1 &= 0x3f;
 +			val2 &= 0x3f;
 +			val1 |= 0x80;
 +			val2 |= 0x40;
 +
-+			m88ds3103_writereg(state, 0x22, val1);
-+			m88ds3103_writereg(state, 0x24, val2);	
++			dvbsky_m88ds3103_writereg(state, 0x22, val1);
++			dvbsky_m88ds3103_writereg(state, 0x24, val2);	
 +			
 +			if(state->config->ci_mode){
 +				if(state->config->ci_mode == 2)
@@ -3344,21 +3344,21 @@ index 0000000..9d525da
 +				val1 = 0x06;
 +			else
 +				val1 = 0x42;
-+			m88ds3103_writereg(state, 0xfd, val1);		
++			dvbsky_m88ds3103_writereg(state, 0xfd, val1);		
 +		}
 +		break;
 +	case SYS_DVBS2:
 +		/* initialise the demod in DVB-S2 mode */
 +		if(state->demod_id == DS3000_ID){
-+			m88ds3103_init_reg(state, ds3000_dvbs2_init_tab, sizeof(ds3000_dvbs2_init_tab));
++			dvbsky_m88ds3103_init_reg(state, ds3000_dvbs2_init_tab, sizeof(ds3000_dvbs2_init_tab));
 +		
 +			if (c->symbol_rate >= 30000000)
-+				m88ds3103_writereg(state, 0xfe, 0x54);
++				dvbsky_m88ds3103_writereg(state, 0xfe, 0x54);
 +			else
-+				m88ds3103_writereg(state, 0xfe, 0x98);
++				dvbsky_m88ds3103_writereg(state, 0xfe, 0x98);
 +								
 +		}else if(state->demod_id == DS3103_ID){
-+			m88ds3103_init_reg(state, ds3103_dvbs2_init_tab, sizeof(ds3103_dvbs2_init_tab));
++			dvbsky_m88ds3103_init_reg(state, ds3103_dvbs2_init_tab, sizeof(ds3103_dvbs2_init_tab));
 +
 +			/* set ts clock */
 +			if(state->config->ci_mode == 2){
@@ -3370,20 +3370,20 @@ index 0000000..9d525da
 +			}
 +			val1 -= 1; val2 -= 1;
 +			val1 &= 0x3f; val2 &= 0x3f;
-+			data = m88ds3103_readreg(state, 0xfe);
++			data = dvbsky_m88ds3103_readreg(state, 0xfe);
 +			data &= 0xf0;
 +			data |= (val2 >> 2) & 0x0f;
-+			m88ds3103_writereg(state, 0xfe, data);
++			dvbsky_m88ds3103_writereg(state, 0xfe, data);
 +			data = (val2 & 0x03) << 6;
 +			data |= val1;
-+			m88ds3103_writereg(state, 0xea, data);
++			dvbsky_m88ds3103_writereg(state, 0xea, data);
 +			
-+			m88ds3103_writereg(state, 0x4d, 0xfd & m88ds3103_readreg(state, 0x4d));
-+			m88ds3103_writereg(state, 0x30, 0xef & m88ds3103_readreg(state, 0x30));
++			dvbsky_m88ds3103_writereg(state, 0x4d, 0xfd & dvbsky_m88ds3103_readreg(state, 0x4d));
++			dvbsky_m88ds3103_writereg(state, 0x30, 0xef & dvbsky_m88ds3103_readreg(state, 0x30));
 +			
 +			/* set master clock */
-+			val1 = m88ds3103_readreg(state, 0x22);
-+			val2 = m88ds3103_readreg(state, 0x24);
++			val1 = dvbsky_m88ds3103_readreg(state, 0x22);
++			val2 = dvbsky_m88ds3103_readreg(state, 0x24);
 +			
 +			val1 &= 0x3f;
 +			val2 &= 0x3f;
@@ -3400,8 +3400,8 @@ index 0000000..9d525da
 +					val2 |= 0x40;
 +				}				
 +			}
-+			m88ds3103_writereg(state, 0x22, val1);
-+			m88ds3103_writereg(state, 0x24, val2);					
++			dvbsky_m88ds3103_writereg(state, 0x22, val1);
++			dvbsky_m88ds3103_writereg(state, 0x24, val2);					
 +		}
 +		
 +		if(state->config->ci_mode){
@@ -3414,51 +3414,51 @@ index 0000000..9d525da
 +			val1 = 0x06;
 +		else
 +			val1 = 0x42;
-+		m88ds3103_writereg(state, 0xfd, val1);
++		dvbsky_m88ds3103_writereg(state, 0xfd, val1);
 +		
 +		break;
 +	default:
 +		return 1;
 +	}
 +	/* disable 27MHz clock output */
-+	m88ds3103_writereg(state, 0x29, 0x80);
++	dvbsky_m88ds3103_writereg(state, 0x29, 0x80);
 +	/* enable ac coupling */
-+	m88ds3103_writereg(state, 0x25, 0x8a);
++	dvbsky_m88ds3103_writereg(state, 0x25, 0x8a);
 +
 +	if ((c->symbol_rate / 1000) <= 3000){
-+		m88ds3103_writereg(state, 0xc3, 0x08); /* 8 * 32 * 100 / 64 = 400*/
-+		m88ds3103_writereg(state, 0xc8, 0x20);
-+		m88ds3103_writereg(state, 0xc4, 0x08); /* 8 * 0 * 100 / 128 = 0*/
-+		m88ds3103_writereg(state, 0xc7, 0x00);
++		dvbsky_m88ds3103_writereg(state, 0xc3, 0x08); /* 8 * 32 * 100 / 64 = 400*/
++		dvbsky_m88ds3103_writereg(state, 0xc8, 0x20);
++		dvbsky_m88ds3103_writereg(state, 0xc4, 0x08); /* 8 * 0 * 100 / 128 = 0*/
++		dvbsky_m88ds3103_writereg(state, 0xc7, 0x00);
 +	}else if((c->symbol_rate / 1000) <= 10000){
-+		m88ds3103_writereg(state, 0xc3, 0x08); /* 8 * 16 * 100 / 64 = 200*/
-+		m88ds3103_writereg(state, 0xc8, 0x10);
-+		m88ds3103_writereg(state, 0xc4, 0x08); /* 8 * 0 * 100 / 128 = 0*/
-+		m88ds3103_writereg(state, 0xc7, 0x00);
++		dvbsky_m88ds3103_writereg(state, 0xc3, 0x08); /* 8 * 16 * 100 / 64 = 200*/
++		dvbsky_m88ds3103_writereg(state, 0xc8, 0x10);
++		dvbsky_m88ds3103_writereg(state, 0xc4, 0x08); /* 8 * 0 * 100 / 128 = 0*/
++		dvbsky_m88ds3103_writereg(state, 0xc7, 0x00);
 +	}else{
-+		m88ds3103_writereg(state, 0xc3, 0x08); /* 8 * 6 * 100 / 64 = 75*/
-+		m88ds3103_writereg(state, 0xc8, 0x06);
-+		m88ds3103_writereg(state, 0xc4, 0x08); /* 8 * 0 * 100 / 128 = 0*/
-+		m88ds3103_writereg(state, 0xc7, 0x00);
++		dvbsky_m88ds3103_writereg(state, 0xc3, 0x08); /* 8 * 6 * 100 / 64 = 75*/
++		dvbsky_m88ds3103_writereg(state, 0xc8, 0x06);
++		dvbsky_m88ds3103_writereg(state, 0xc4, 0x08); /* 8 * 0 * 100 / 128 = 0*/
++		dvbsky_m88ds3103_writereg(state, 0xc7, 0x00);
 +	}
 +
-+	m88ds3103_set_symrate(fe);
++	dvbsky_m88ds3103_set_symrate(fe);
 +	
-+	m88ds3103_set_CCI(fe);
++	dvbsky_m88ds3103_set_CCI(fe);
 +
-+	m88ds3103_set_carrier_offset(fe, carrier_offset_khz);
++	dvbsky_m88ds3103_set_carrier_offset(fe, carrier_offset_khz);
 +		
 +	/* ds3000 out of software reset */
-+	m88ds3103_writereg(state, 0x00, 0x00);
++	dvbsky_m88ds3103_writereg(state, 0x00, 0x00);
 +	/* start ds3000 build-in uC */
-+	m88ds3103_writereg(state, 0xb2, 0x00);	
++	dvbsky_m88ds3103_writereg(state, 0xb2, 0x00);	
 +	
 +	return 0;
 +}
 +
-+static int m88ds3103_set_frontend(struct dvb_frontend *fe)
++static int dvbsky_m88ds3103_set_frontend(struct dvb_frontend *fe)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
 +
 +	int i;
@@ -3489,10 +3489,10 @@ index 0000000..9d525da
 +	div4 = 0;
 +	RFgain = 0;
 +	if(state->tuner_id == TS2022_ID){
-+		m88ds3103_tuner_writereg(state, 0x10, 0x0a);
-+		m88ds3103_tuner_writereg(state, 0x11, 0x40);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x10, 0x0a);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x11, 0x40);
 +		if (realFreq < 1103000) {
-+			m88ds3103_tuner_writereg(state, 0x10, 0x1b);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x10, 0x1b);
 +			div4 = 1;
 +			ndiv = (realFreq * (6 + 8) * 4)/MT_FE_CRYSTAL_KHZ;				
 +		}else {
@@ -3506,86 +3506,86 @@ index 0000000..9d525da
 +		else
 +			ndiv = ndiv + 3072;	
 +		
-+		m88ds3103_tuner_writereg(state, 0x01, (ndiv & 0x3f00) >> 8);											
++		dvbsky_m88ds3103_tuner_writereg(state, 0x01, (ndiv & 0x3f00) >> 8);											
 +	}else{
-+		m88ds3103_tuner_writereg(state, 0x10, 0x00);			
++		dvbsky_m88ds3103_tuner_writereg(state, 0x10, 0x00);			
 +		if (realFreq < 1146000){
-+			m88ds3103_tuner_writereg(state, 0x10, 0x11);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x10, 0x11);
 +			div4 = 1;
 +			ndiv = (realFreq * (6 + 8) * 4) / MT_FE_CRYSTAL_KHZ;
 +		}else{
-+			m88ds3103_tuner_writereg(state, 0x10, 0x01);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x10, 0x01);
 +			ndiv = (realFreq * (6 + 8) * 2) / MT_FE_CRYSTAL_KHZ;
 +		}
 +		ndiv = ndiv + ndiv%2;
 +		ndiv = ndiv - 1024;
-+		m88ds3103_tuner_writereg(state, 0x01, (ndiv>>8)&0x0f);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x01, (ndiv>>8)&0x0f);
 +	}
 +	/* set pll */
-+	m88ds3103_tuner_writereg(state, 0x02, ndiv & 0x00ff);
-+	m88ds3103_tuner_writereg(state, 0x03, 0x06);
-+	m88ds3103_tuner_writereg(state, 0x51, 0x0f);
-+	m88ds3103_tuner_writereg(state, 0x51, 0x1f);
-+	m88ds3103_tuner_writereg(state, 0x50, 0x10);
-+	m88ds3103_tuner_writereg(state, 0x50, 0x00);	
++	dvbsky_m88ds3103_tuner_writereg(state, 0x02, ndiv & 0x00ff);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x03, 0x06);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x0f);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1f);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x10);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x00);	
 +
 +	if(state->tuner_id == TS2022_ID){
 +		if(( realFreq >= 1650000 ) && (realFreq <= 1850000)){
 +			msleep(5);
-+			value = m88ds3103_tuner_readreg(state, 0x14);
++			value = dvbsky_m88ds3103_tuner_readreg(state, 0x14);
 +			value &= 0x7f;
 +			if(value < 64){
-+				m88ds3103_tuner_writereg(state, 0x10, 0x82);
-+				m88ds3103_tuner_writereg(state, 0x11, 0x6f);
++				dvbsky_m88ds3103_tuner_writereg(state, 0x10, 0x82);
++				dvbsky_m88ds3103_tuner_writereg(state, 0x11, 0x6f);
 +
-+				m88ds3103_tuner_writereg(state, 0x51, 0x0f);
-+				m88ds3103_tuner_writereg(state, 0x51, 0x1f);
-+				m88ds3103_tuner_writereg(state, 0x50, 0x10);
-+				m88ds3103_tuner_writereg(state, 0x50, 0x00);
++				dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x0f);
++				dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1f);
++				dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x10);
++				dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x00);
 +			}
 +		}
 +		msleep(5);
-+		value = m88ds3103_tuner_readreg(state, 0x14);
++		value = dvbsky_m88ds3103_tuner_readreg(state, 0x14);
 +		value &= 0x1f;
 +
 +		if(value > 19){
-+			value = m88ds3103_tuner_readreg(state, 0x10);
++			value = dvbsky_m88ds3103_tuner_readreg(state, 0x10);
 +			value &= 0x1d;
-+			m88ds3103_tuner_writereg(state, 0x10, value);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x10, value);
 +		}				
 +	}else{
 +		msleep(5);
-+		value = m88ds3103_tuner_readreg(state, 0x66);
++		value = dvbsky_m88ds3103_tuner_readreg(state, 0x66);
 +		changePLL = (((value & 0x80) >> 7) != div4);
 +
 +		if(changePLL){
-+			m88ds3103_tuner_writereg(state, 0x10, 0x11);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x10, 0x11);
 +			div4 = 1;
 +			ndiv = (realFreq * (6 + 8) * 4)/MT_FE_CRYSTAL_KHZ;
 +			ndiv = ndiv + ndiv%2;
 +			ndiv = ndiv - 1024;
 +					
-+			m88ds3103_tuner_writereg(state, 0x01, (ndiv>>8) & 0x0f);
-+			m88ds3103_tuner_writereg(state, 0x02, ndiv & 0xff);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x01, (ndiv>>8) & 0x0f);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x02, ndiv & 0xff);
 +			
-+			m88ds3103_tuner_writereg(state, 0x51, 0x0f);
-+			m88ds3103_tuner_writereg(state, 0x51, 0x1f);
-+			m88ds3103_tuner_writereg(state, 0x50, 0x10);
-+			m88ds3103_tuner_writereg(state, 0x50, 0x00);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x0f);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1f);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x10);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x00);
 +		}		
 +	}
 +	/*set the RF gain*/
 +	if(state->tuner_id == TS2020_ID)
-+		m88ds3103_tuner_writereg(state, 0x60, 0x79);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x60, 0x79);
 +			
-+	m88ds3103_tuner_writereg(state, 0x51, 0x17);
-+	m88ds3103_tuner_writereg(state, 0x51, 0x1f);
-+	m88ds3103_tuner_writereg(state, 0x50, 0x08);
-+	m88ds3103_tuner_writereg(state, 0x50, 0x00);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x17);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1f);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x08);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x00);
 +	msleep(5);
 +
 +	if(state->tuner_id == TS2020_ID){
-+		RFgain = m88ds3103_tuner_readreg(state, 0x3d);
++		RFgain = dvbsky_m88ds3103_tuner_readreg(state, 0x3d);
 +		RFgain &= 0x0f;
 +		if(RFgain < 15){
 +			if(RFgain < 4) 
@@ -3593,20 +3593,20 @@ index 0000000..9d525da
 +			else
 +				RFgain = RFgain -3;
 +			value = ((RFgain << 3) | 0x01) & 0x79;
-+			m88ds3103_tuner_writereg(state, 0x60, value);
-+			m88ds3103_tuner_writereg(state, 0x51, 0x17);
-+			m88ds3103_tuner_writereg(state, 0x51, 0x1f);
-+			m88ds3103_tuner_writereg(state, 0x50, 0x08);
-+			m88ds3103_tuner_writereg(state, 0x50, 0x00);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x60, value);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x17);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1f);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x08);
++			dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x00);
 +		}
 +	}
 +	
 +	/* set the LPF */
 +	if(state->tuner_id == TS2022_ID){
-+		m88ds3103_tuner_writereg(state, 0x25, 0x00);
-+		m88ds3103_tuner_writereg(state, 0x27, 0x70);
-+		m88ds3103_tuner_writereg(state, 0x41, 0x09);
-+		m88ds3103_tuner_writereg(state, 0x08, 0x0b);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x25, 0x00);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x27, 0x70);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x41, 0x09);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x08, 0x0b);
 +	}
 +
 +	f3db = ((c->symbol_rate / 1000) *135) / 200 + 2000;
@@ -3617,26 +3617,26 @@ index 0000000..9d525da
 +		f3db = 40000;
 +			
 +	gdiv28 = (MT_FE_CRYSTAL_KHZ / 1000 * 1694 + 500) / 1000;
-+	m88ds3103_tuner_writereg(state, 0x04, gdiv28 & 0xff);
-+	m88ds3103_tuner_writereg(state, 0x51, 0x1b);
-+	m88ds3103_tuner_writereg(state, 0x51, 0x1f);
-+	m88ds3103_tuner_writereg(state, 0x50, 0x04);
-+	m88ds3103_tuner_writereg(state, 0x50, 0x00);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x04, gdiv28 & 0xff);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1b);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1f);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x04);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x00);
 +	msleep(5);
 +
-+	value = m88ds3103_tuner_readreg(state, 0x26);
++	value = dvbsky_m88ds3103_tuner_readreg(state, 0x26);
 +	capCode = value & 0x3f;
 +	if(state->tuner_id == TS2022_ID){
-+		m88ds3103_tuner_writereg(state, 0x41, 0x0d);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x41, 0x0d);
 +
-+		m88ds3103_tuner_writereg(state, 0x51, 0x1b);
-+		m88ds3103_tuner_writereg(state, 0x51, 0x1f);
-+		m88ds3103_tuner_writereg(state, 0x50, 0x04);
-+		m88ds3103_tuner_writereg(state, 0x50, 0x00);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1b);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1f);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x04);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x00);
 +
 +		msleep(2);
 +
-+		value = m88ds3103_tuner_readreg(state, 0x26);
++		value = dvbsky_m88ds3103_tuner_readreg(state, 0x26);
 +		value &= 0x3f;
 +		value = (capCode + value) / 2;		
 +	}
@@ -3668,54 +3668,54 @@ index 0000000..9d525da
 +	if (lpf_mxdiv > mlpf_max)
 +		lpf_mxdiv = mlpf_max;
 +
-+	m88ds3103_tuner_writereg(state, 0x04, lpf_mxdiv);
-+	m88ds3103_tuner_writereg(state, 0x06, nlpf);
-+	m88ds3103_tuner_writereg(state, 0x51, 0x1b);
-+	m88ds3103_tuner_writereg(state, 0x51, 0x1f);
-+	m88ds3103_tuner_writereg(state, 0x50, 0x04);
-+	m88ds3103_tuner_writereg(state, 0x50, 0x00);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x04, lpf_mxdiv);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x06, nlpf);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1b);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1f);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x04);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x00);
 +	msleep(5);
 +	
 +	if(state->tuner_id == TS2022_ID){
 +		msleep(2);
-+		value = m88ds3103_tuner_readreg(state, 0x26);
++		value = dvbsky_m88ds3103_tuner_readreg(state, 0x26);
 +		capCode = value & 0x3f;
 +
-+		m88ds3103_tuner_writereg(state, 0x41, 0x09);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x41, 0x09);
 +
-+		m88ds3103_tuner_writereg(state, 0x51, 0x1b);
-+		m88ds3103_tuner_writereg(state, 0x51, 0x1f);
-+		m88ds3103_tuner_writereg(state, 0x50, 0x04);
-+		m88ds3103_tuner_writereg(state, 0x50, 0x00);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1b);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1f);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x04);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x00);
 +
 +		msleep(2);
-+		value = m88ds3103_tuner_readreg(state, 0x26);
++		value = dvbsky_m88ds3103_tuner_readreg(state, 0x26);
 +		value &= 0x3f;
 +		value = (capCode + value) / 2;
 +
 +		value = value | 0x80;
-+		m88ds3103_tuner_writereg(state, 0x25, value);
-+		m88ds3103_tuner_writereg(state, 0x27, 0x30);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x25, value);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x27, 0x30);
 +
-+		m88ds3103_tuner_writereg(state, 0x08, 0x09);		
++		dvbsky_m88ds3103_tuner_writereg(state, 0x08, 0x09);		
 +	}
 +
 +	/* Set the BB gain */
-+	m88ds3103_tuner_writereg(state, 0x51, 0x1e);
-+	m88ds3103_tuner_writereg(state, 0x51, 0x1f);
-+	m88ds3103_tuner_writereg(state, 0x50, 0x01);
-+	m88ds3103_tuner_writereg(state, 0x50, 0x00);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1e);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1f);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x01);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x00);
 +	if(state->tuner_id == TS2020_ID){
 +		if(RFgain == 15){
 +			msleep(40);
-+			value = m88ds3103_tuner_readreg(state, 0x21);
++			value = dvbsky_m88ds3103_tuner_readreg(state, 0x21);
 +			value &= 0x0f;
 +			if(value < 3){
-+				m88ds3103_tuner_writereg(state, 0x60, 0x61);
-+				m88ds3103_tuner_writereg(state, 0x51, 0x17);
-+				m88ds3103_tuner_writereg(state, 0x51, 0x1f);
-+				m88ds3103_tuner_writereg(state, 0x50, 0x08);
-+				m88ds3103_tuner_writereg(state, 0x50, 0x00);
++				dvbsky_m88ds3103_tuner_writereg(state, 0x60, 0x61);
++				dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x17);
++				dvbsky_m88ds3103_tuner_writereg(state, 0x51, 0x1f);
++				dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x08);
++				dvbsky_m88ds3103_tuner_writereg(state, 0x50, 0x00);
 +			}			
 +		}
 +	}
@@ -3724,10 +3724,10 @@ index 0000000..9d525da
 +	offset_khz = (ndiv - ndiv % 2 + 1024) * MT_FE_CRYSTAL_KHZ
 +		/ (6 + 8) / (div4 + 1) / 2 - realFreq;
 +
-+	m88ds3103_demod_connect(fe, offset_khz+lpf_offset_KHz);
++	dvbsky_m88ds3103_demod_connect(fe, offset_khz+lpf_offset_KHz);
 +
 +	for (i = 0; i < 30 ; i++) {
-+		m88ds3103_read_status(fe, &status);
++		dvbsky_m88ds3103_read_status(fe, &status);
 +		if (status & FE_HAS_LOCK){
 +			break;
 +                }
@@ -3736,7 +3736,7 @@ index 0000000..9d525da
 +	
 +	if (status & FE_HAS_LOCK){
 +		if(state->config->ci_mode == 2)
-+			m88ds3103_set_clock_ratio(state);
++			dvbsky_m88ds3103_set_clock_ratio(state);
 +		if(state->config->start_ctrl){
 +			if(state->first_lock == 0){
 +				state->config->start_ctrl(fe);
@@ -3748,7 +3748,7 @@ index 0000000..9d525da
 +	return 0;
 +}
 +
-+static int m88ds3103_tune(struct dvb_frontend *fe,
++static int dvbsky_m88ds3103_tune(struct dvb_frontend *fe,
 +			bool re_tune,
 +			unsigned int mode_flags,
 +			unsigned int *delay,
@@ -3760,15 +3760,15 @@ index 0000000..9d525da
 +	dprintk("re_tune = %d\n", re_tune);
 +	
 +	if (re_tune) {
-+		int ret = m88ds3103_set_frontend(fe);
++		int ret = dvbsky_m88ds3103_set_frontend(fe);
 +		if (ret)
 +			return ret;
 +	}
 +	
-+	return m88ds3103_read_status(fe, status);
++	return dvbsky_m88ds3103_read_status(fe, status);
 +}
 +
-+static enum dvbfe_algo m88ds3103_get_algo(struct dvb_frontend *fe)
++static enum dvbfe_algo dvbsky_m88ds3103_get_algo(struct dvb_frontend *fe)
 +{
 +	return DVBFE_ALGO_HW;
 +}
@@ -3776,66 +3776,66 @@ index 0000000..9d525da
 + /*
 + * Power config will reset and load initial firmware if required
 + */
-+static int m88ds3103_initilaze(struct dvb_frontend *fe)
++static int dvbsky_m88ds3103_initilaze(struct dvb_frontend *fe)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	int ret;
 +
 +	dprintk("%s()\n", __func__);
 +	/* hard reset */
-+	m88ds3103_writereg(state, 0x07, 0x80);
-+	m88ds3103_writereg(state, 0x07, 0x00);
++	dvbsky_m88ds3103_writereg(state, 0x07, 0x80);
++	dvbsky_m88ds3103_writereg(state, 0x07, 0x00);
 +	msleep(1);
 +	
-+	m88ds3103_writereg(state, 0x08, 0x01 | m88ds3103_readreg(state, 0x08));
++	dvbsky_m88ds3103_writereg(state, 0x08, 0x01 | dvbsky_m88ds3103_readreg(state, 0x08));
 +	msleep(1);
 +
 +	if(state->tuner_id == TS2020_ID){
 +		/* TS2020 init */
-+		m88ds3103_tuner_writereg(state, 0x42, 0x73);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x42, 0x73);
 +		msleep(2);
-+		m88ds3103_tuner_writereg(state, 0x05, 0x01);
-+		m88ds3103_tuner_writereg(state, 0x62, 0xb5);
-+		m88ds3103_tuner_writereg(state, 0x07, 0x02);
-+		m88ds3103_tuner_writereg(state, 0x08, 0x01);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x05, 0x01);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x62, 0xb5);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x07, 0x02);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x08, 0x01);
 +	}
 +	else if(state->tuner_id == TS2022_ID){
 +		/* TS2022 init */
-+		m88ds3103_tuner_writereg(state, 0x62, 0x6c);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x62, 0x6c);
 +		msleep(2);
-+		m88ds3103_tuner_writereg(state, 0x42, 0x6c);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x42, 0x6c);
 +		msleep(2);
-+		m88ds3103_tuner_writereg(state, 0x7d, 0x9d);
-+		m88ds3103_tuner_writereg(state, 0x7c, 0x9a);
-+		m88ds3103_tuner_writereg(state, 0x7a, 0x76);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x7d, 0x9d);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x7c, 0x9a);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x7a, 0x76);
 +
-+		m88ds3103_tuner_writereg(state, 0x3b, 0x01);
-+		m88ds3103_tuner_writereg(state, 0x63, 0x88);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x3b, 0x01);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x63, 0x88);
 +
-+		m88ds3103_tuner_writereg(state, 0x61, 0x85);
-+		m88ds3103_tuner_writereg(state, 0x22, 0x30);
-+		m88ds3103_tuner_writereg(state, 0x30, 0x40);
-+		m88ds3103_tuner_writereg(state, 0x20, 0x23);
-+		m88ds3103_tuner_writereg(state, 0x24, 0x02);
-+		m88ds3103_tuner_writereg(state, 0x12, 0xa0);	
++		dvbsky_m88ds3103_tuner_writereg(state, 0x61, 0x85);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x22, 0x30);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x30, 0x40);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x20, 0x23);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x24, 0x02);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x12, 0xa0);	
 +	}
 +		
 +	if(state->demod_id == DS3103_ID){
-+		m88ds3103_writereg(state, 0x07, 0xe0);
-+		m88ds3103_writereg(state, 0x07, 0x00);
++		dvbsky_m88ds3103_writereg(state, 0x07, 0xe0);
++		dvbsky_m88ds3103_writereg(state, 0x07, 0x00);
 +		msleep(1);		
 +	}
-+	m88ds3103_writereg(state, 0xb2, 0x01);
++	dvbsky_m88ds3103_writereg(state, 0xb2, 0x01);
 +	
 +	/* Load the firmware if required */
-+	ret = m88ds3103_load_firmware(fe);
++	ret = dvbsky_m88ds3103_load_firmware(fe);
 +	if (ret != 0){
 +		printk(KERN_ERR "%s: Unable initialize firmware\n", __func__);
 +		return ret;
 +	}
 +	if(state->demod_id == DS3103_ID){
-+		m88ds3103_writereg(state, 0x4d, 0xfd & m88ds3103_readreg(state, 0x4d));
-+		m88ds3103_writereg(state, 0x30, 0xef & m88ds3103_readreg(state, 0x30));		
++		dvbsky_m88ds3103_writereg(state, 0x4d, 0xfd & dvbsky_m88ds3103_readreg(state, 0x4d));
++		dvbsky_m88ds3103_writereg(state, 0x30, 0xef & dvbsky_m88ds3103_readreg(state, 0x30));		
 +	}
 +
 +	return 0;
@@ -3844,50 +3844,50 @@ index 0000000..9d525da
 +/*
 + * Initialise or wake up device
 + */
-+static int m88ds3103_initfe(struct dvb_frontend *fe)
++static int dvbsky_m88ds3103_initfe(struct dvb_frontend *fe)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +	u8 val;
 +
 +	dprintk("%s()\n", __func__);
 +
 +	/* 1st step to wake up demod */
-+	m88ds3103_writereg(state, 0x08, 0x01 | m88ds3103_readreg(state, 0x08));
-+	m88ds3103_writereg(state, 0x04, 0xfe & m88ds3103_readreg(state, 0x04));
-+	m88ds3103_writereg(state, 0x23, 0xef & m88ds3103_readreg(state, 0x23));
++	dvbsky_m88ds3103_writereg(state, 0x08, 0x01 | dvbsky_m88ds3103_readreg(state, 0x08));
++	dvbsky_m88ds3103_writereg(state, 0x04, 0xfe & dvbsky_m88ds3103_readreg(state, 0x04));
++	dvbsky_m88ds3103_writereg(state, 0x23, 0xef & dvbsky_m88ds3103_readreg(state, 0x23));
 +	
 +	/* 2nd step to wake up tuner */
-+	val = m88ds3103_tuner_readreg(state, 0x00) & 0xff;
++	val = dvbsky_m88ds3103_tuner_readreg(state, 0x00) & 0xff;
 +	if((val & 0x01) == 0){
-+		m88ds3103_tuner_writereg(state, 0x00, 0x01);
++		dvbsky_m88ds3103_tuner_writereg(state, 0x00, 0x01);
 +		msleep(50);
 +	}
-+	m88ds3103_tuner_writereg(state, 0x00, 0x03);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x00, 0x03);
 +	msleep(50);
 +	
 +	return 0;	
 +}
 +
 +/* Put device to sleep */
-+static int m88ds3103_sleep(struct dvb_frontend *fe)
++static int dvbsky_m88ds3103_sleep(struct dvb_frontend *fe)
 +{
-+	struct m88ds3103_state *state = fe->demodulator_priv;
++	struct dvbsky_m88ds3103_state *state = fe->demodulator_priv;
 +
 +	dprintk("%s()\n", __func__);
 +	
 +	/* 1st step to sleep tuner */
-+	m88ds3103_tuner_writereg(state, 0x00, 0x00);
++	dvbsky_m88ds3103_tuner_writereg(state, 0x00, 0x00);
 +	
 +	/* 2nd step to sleep demod */
-+	m88ds3103_writereg(state, 0x08, 0xfe & m88ds3103_readreg(state, 0x08));
-+	m88ds3103_writereg(state, 0x04, 0x01 | m88ds3103_readreg(state, 0x04));
-+	m88ds3103_writereg(state, 0x23, 0x10 | m88ds3103_readreg(state, 0x23));
++	dvbsky_m88ds3103_writereg(state, 0x08, 0xfe & dvbsky_m88ds3103_readreg(state, 0x08));
++	dvbsky_m88ds3103_writereg(state, 0x04, 0x01 | dvbsky_m88ds3103_readreg(state, 0x04));
++	dvbsky_m88ds3103_writereg(state, 0x23, 0x10 | dvbsky_m88ds3103_readreg(state, 0x23));
 +	
 +
 +	return 0;
 +}
 +
-+static struct dvb_frontend_ops m88ds3103_ops = {
++static struct dvb_frontend_ops dvbsky_m88ds3103_ops = {
 +	.delsys = { SYS_DVBS, SYS_DVBS2},
 +	.info = {
 +		.name = "Montage DS3103/TS2022",
@@ -3906,32 +3906,32 @@ index 0000000..9d525da
 +			FE_CAN_QPSK | FE_CAN_RECOVER
 +	},
 +
-+	.release = m88ds3103_release,
++	.release = dvbsky_m88ds3103_release,
 +
-+	.init = m88ds3103_initfe,
-+	.sleep = m88ds3103_sleep,
-+	.read_status = m88ds3103_read_status,
-+	.read_ber = m88ds3103_read_ber,
-+	.read_signal_strength = m88ds3103_read_signal_strength,
-+	.read_snr = m88ds3103_read_snr,
-+	.read_ucblocks = m88ds3103_read_ucblocks,
-+	.set_tone = m88ds3103_set_tone,
-+	.set_voltage = m88ds3103_set_voltage,
-+	.diseqc_send_master_cmd = m88ds3103_send_diseqc_msg,
-+	.diseqc_send_burst = m88ds3103_diseqc_send_burst,
-+	.get_frontend_algo = m88ds3103_get_algo,
-+	.tune = m88ds3103_tune,
-+	.set_frontend = m88ds3103_set_frontend,
++	.init = dvbsky_m88ds3103_initfe,
++	.sleep = dvbsky_m88ds3103_sleep,
++	.read_status = dvbsky_m88ds3103_read_status,
++	.read_ber = dvbsky_m88ds3103_read_ber,
++	.read_signal_strength = dvbsky_m88ds3103_read_signal_strength,
++	.read_snr = dvbsky_m88ds3103_read_snr,
++	.read_ucblocks = dvbsky_m88ds3103_read_ucblocks,
++	.set_tone = dvbsky_m88ds3103_set_tone,
++	.set_voltage = dvbsky_m88ds3103_set_voltage,
++	.diseqc_send_master_cmd = dvbsky_m88ds3103_send_diseqc_msg,
++	.diseqc_send_burst = dvbsky_m88ds3103_diseqc_send_burst,
++	.get_frontend_algo = dvbsky_m88ds3103_get_algo,
++	.tune = dvbsky_m88ds3103_tune,
++	.set_frontend = dvbsky_m88ds3103_set_frontend,
 +};
 +
 +MODULE_DESCRIPTION("DVB Frontend module for Montage DS3103/TS2022 hardware");
 +MODULE_AUTHOR("Max nibble");
 +MODULE_LICENSE("GPL");
-diff --git a/drivers/media/dvb-frontends/m88ds3103.h b/drivers/media/dvb-frontends/m88ds3103.h
+diff --git a/drivers/media/dvb-frontends/dvbsky_m88ds3103.h b/drivers/media/dvb-frontends/dvbsky_m88ds3103.h
 new file mode 100644
 index 0000000..e3b96b2
 --- /dev/null
-+++ b/drivers/media/dvb-frontends/m88ds3103.h
++++ b/drivers/media/dvb-frontends/dvbsky_m88ds3103.h
 @@ -0,0 +1,53 @@
 +/*
 +    Montage Technology M88DS3103/M88TS2022 - DVBS/S2 Satellite demod/tuner driver
@@ -3951,13 +3951,13 @@ index 0000000..e3b96b2
 +    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 + */
 +
-+#ifndef M88DS3103_H
-+#define M88DS3103_H
++#ifndef dvbsky_m88ds3103_H
++#define dvbsky_m88ds3103_H
 +
 +#include <linux/kconfig.h>
 +#include <linux/dvb/frontend.h>
 +
-+struct m88ds3103_config {
++struct dvbsky_m88ds3103_config {
 +	/* the demodulator's i2c address */
 +	u8 demod_address;
 +	u8 ci_mode;
@@ -3972,25 +3972,25 @@ index 0000000..e3b96b2
 +    int (*set_voltage)(struct dvb_frontend* fe, fe_sec_voltage_t voltage);
 +};
 +
-+#if IS_ENABLED(CONFIG_DVB_M88DS3103)
-+extern struct dvb_frontend *m88ds3103_attach(
-+       const struct m88ds3103_config *config,
++#if IS_ENABLED(CONFIG_DVB_DVBSKY_M88DS3103)
++extern struct dvb_frontend *dvbsky_m88ds3103_attach(
++       const struct dvbsky_m88ds3103_config *config,
 +       struct i2c_adapter *i2c);
 +#else
-+static inline struct dvb_frontend *m88ds3103_attach(
-+       const struct m88ds3103_config *config,
++static inline struct dvb_frontend *dvbsky_m88ds3103_attach(
++       const struct dvbsky_m88ds3103_config *config,
 +       struct i2c_adapter *i2c)
 +{
 +	printk(KERN_WARNING "%s: driver disabled by Kconfig\n", __func__);
 +	return NULL;
 +}
-+#endif /* CONFIG_DVB_M88DS3103 */
-+#endif /* M88DS3103_H */
-diff --git a/drivers/media/dvb-frontends/m88ds3103_priv.h b/drivers/media/dvb-frontends/m88ds3103_priv.h
++#endif /* CONFIG_DVB_DVBSKY_M88DS3103 */
++#endif /* dvbsky_m88ds3103_H */
+diff --git a/drivers/media/dvb-frontends/dvbsky_m88ds3103_priv.h b/drivers/media/dvb-frontends/dvbsky_m88ds3103_priv.h
 new file mode 100644
 index 0000000..2838514
 --- /dev/null
-+++ b/drivers/media/dvb-frontends/m88ds3103_priv.h
++++ b/drivers/media/dvb-frontends/dvbsky_m88ds3103_priv.h
 @@ -0,0 +1,403 @@
 +/*
 +    Montage Technology M88DS3103/M88TS2022 - DVBS/S2 Satellite demod/tuner driver
@@ -4010,8 +4010,8 @@ index 0000000..2838514
 +    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 + */
 +
-+#ifndef M88DS3103_PRIV_H
-+#define M88DS3103_PRIV_H
++#ifndef dvbsky_m88ds3103_PRIV_H
++#define dvbsky_m88ds3103_PRIV_H
 +
 +#define FW_DOWN_SIZE 32
 +#define FW_DOWN_LOOP (8192/FW_DOWN_SIZE)
@@ -4026,9 +4026,9 @@ index 0000000..2838514
 +#define TS2022_ID	0x2022
 +#define UNKNOW_ID	0x0000
 +
-+struct m88ds3103_state {
++struct dvbsky_m88ds3103_state {
 +	struct i2c_adapter *i2c;
-+	const struct m88ds3103_config *config;
++	const struct dvbsky_m88ds3103_config *config;
 +	
 +	struct dvb_frontend frontend;
 +	
@@ -4394,7 +4394,7 @@ index 0000000..2838514
 +	0xb8, 0x00,
 +};
 +
-+#endif /* M88DS3103_PRIV_H */
++#endif /* dvbsky_m88ds3103_PRIV_H */
 diff --git a/drivers/media/pci/cx23885/Kconfig b/drivers/media/pci/cx23885/Kconfig
 index d1dcb1d..478f3dc 100644
 --- a/drivers/media/pci/cx23885/Kconfig
@@ -4403,8 +4403,8 @@ index d1dcb1d..478f3dc 100644
  	select DVB_STB6100 if MEDIA_SUBDRV_AUTOSELECT
  	select DVB_STV6110 if MEDIA_SUBDRV_AUTOSELECT
  	select DVB_CX24116 if MEDIA_SUBDRV_AUTOSELECT
-+	select DVB_M88DS3103 if MEDIA_SUBDRV_AUTOSELECT
-+	select DVB_M88DC2800 if MEDIA_SUBDRV_AUTOSELECT
++	select DVB_DVBSKY_M88DS3103 if MEDIA_SUBDRV_AUTOSELECT
++	select DVB_DVBSKY_M88DC2800 if MEDIA_SUBDRV_AUTOSELECT
  	select DVB_CX24117 if MEDIA_SUBDRV_AUTOSELECT
  	select DVB_STV0900 if MEDIA_SUBDRV_AUTOSELECT
  	select DVB_DS3000 if MEDIA_SUBDRV_AUTOSELECT
@@ -4752,8 +4752,8 @@ index 0549205..86c0cf2 100644
  #include "lnbh24.h"
  #include "cx24116.h"
  #include "cx24117.h"
-+#include "m88ds3103.h"
-+#include "m88dc2800.h"
++#include "dvbsky_m88ds3103.h"
++#include "dvbsky_m88dc2800.h"
  #include "cimax2.h"
  #include "lgs8gxx.h"
  #include "netup-eeprom.h"
@@ -4813,7 +4813,7 @@ index 0549205..86c0cf2 100644
 +}
 +
 +/* bestunar single dvb-s2 */
-+static struct m88ds3103_config bst_ds3103_config = {
++static struct dvbsky_m88ds3103_config bst_ds3103_config = {
 +	.demod_address = 0x68,
 +	.ci_mode = 0,
 +	.pin_ctrl = 0x82,
@@ -4821,14 +4821,14 @@ index 0549205..86c0cf2 100644
 +	.set_voltage = bst_set_voltage,
 +};
 +/* DVBSKY dual dvb-s2 */
-+static struct m88ds3103_config dvbsky_ds3103_config_pri = {
++static struct dvbsky_m88ds3103_config dvbsky_ds3103_config_pri = {
 +	.demod_address = 0x68,
 +	.ci_mode = 0,
 +	.pin_ctrl = 0x82,
 +	.ts_mode = 0,
 +	.set_voltage = bst_set_voltage,	
 +};
-+static struct m88ds3103_config dvbsky_ds3103_config_sec = {
++static struct dvbsky_m88ds3103_config dvbsky_ds3103_config_sec = {
 +	.demod_address = 0x68,
 +	.ci_mode = 0,
 +	.pin_ctrl = 0x82,
@@ -4836,14 +4836,14 @@ index 0549205..86c0cf2 100644
 +	.set_voltage = dvbsky_set_voltage_sec,	
 +};
 +
-+static struct m88ds3103_config dvbsky_ds3103_ci_config = {
++static struct dvbsky_m88ds3103_config dvbsky_ds3103_ci_config = {
 +	.demod_address = 0x68,
 +	.ci_mode = 2,
 +	.pin_ctrl = 0x82,
 +	.ts_mode = 0,
 +};
 +
-+static struct m88dc2800_config dvbsky_dc2800_config = {
++static struct dvbsky_m88dc2800_config dvbsky_dc2800_config = {
 +	.demod_address = 0x1c,
 +	.ts_mode = 3,	
 +};
@@ -4858,7 +4858,7 @@ index 0549205..86c0cf2 100644
 +	case CX23885_BOARD_BST_PS8512:
 +	case CX23885_BOARD_DVBSKY_S950:
 +		i2c_bus = &dev->i2c_bus[1];	
-+		fe0->dvb.frontend = dvb_attach(m88ds3103_attach,
++		fe0->dvb.frontend = dvb_attach(dvbsky_m88ds3103_attach,
 +					&bst_ds3103_config,
 +					&i2c_bus->i2c_adap);
 +		break;				
@@ -4867,14 +4867,14 @@ index 0549205..86c0cf2 100644
 +		/* port B */
 +		case 1:
 +			i2c_bus = &dev->i2c_bus[1];
-+			fe0->dvb.frontend = dvb_attach(m88ds3103_attach,
++			fe0->dvb.frontend = dvb_attach(dvbsky_m88ds3103_attach,
 +						&dvbsky_ds3103_config_pri,
 +						&i2c_bus->i2c_adap);
 +			break;
 +		/* port C */
 +		case 2:
 +			i2c_bus = &dev->i2c_bus[0];
-+			fe0->dvb.frontend = dvb_attach(m88ds3103_attach,
++			fe0->dvb.frontend = dvb_attach(dvbsky_m88ds3103_attach,
 +						&dvbsky_ds3103_config_sec,
 +						&i2c_bus->i2c_adap);	
 +			break;
@@ -4882,13 +4882,13 @@ index 0549205..86c0cf2 100644
 +		break;
 +	case CX23885_BOARD_DVBSKY_S950_CI:
 +		i2c_bus = &dev->i2c_bus[1];	
-+		fe0->dvb.frontend = dvb_attach(m88ds3103_attach,
++		fe0->dvb.frontend = dvb_attach(dvbsky_m88ds3103_attach,
 +					&dvbsky_ds3103_ci_config,
 +					&i2c_bus->i2c_adap);
 +		break;				
 +	case CX23885_BOARD_DVBSKY_C2800E_CI:
 +		i2c_bus = &dev->i2c_bus[1];	
-+		fe0->dvb.frontend = dvb_attach(m88dc2800_attach,
++		fe0->dvb.frontend = dvb_attach(dvbsky_m88dc2800_attach,
 +					&dvbsky_dc2800_config,
 +					&i2c_bus->i2c_adap);
 +		break;
@@ -4897,7 +4897,7 @@ index 0549205..86c0cf2 100644
 +		/* port B */
 +		case 1:
 +			i2c_bus = &dev->i2c_bus[1];
-+			fe0->dvb.frontend = dvb_attach(m88ds3103_attach,
++			fe0->dvb.frontend = dvb_attach(dvbsky_m88ds3103_attach,
 +						&dvbsky_ds3103_config_pri,
 +						&i2c_bus->i2c_adap);
 +			break;
@@ -5054,7 +5054,7 @@ index a63a9ad..ccf0e6a 100644
  	select DVB_ISL6421 if MEDIA_SUBDRV_AUTOSELECT
  	select DVB_S5H1411 if MEDIA_SUBDRV_AUTOSELECT
  	select DVB_CX24116 if MEDIA_SUBDRV_AUTOSELECT
-+	select DVB_M88DS3103 if MEDIA_SUBDRV_AUTOSELECT
++	select DVB_DVBSKY_M88DS3103 if MEDIA_SUBDRV_AUTOSELECT
  	select DVB_STV0299 if MEDIA_SUBDRV_AUTOSELECT
  	select DVB_STV0288 if MEDIA_SUBDRV_AUTOSELECT
  	select DVB_STB6000 if MEDIA_SUBDRV_AUTOSELECT
@@ -5113,7 +5113,7 @@ index 053ed1b..b4269a8 100644
  #include "stv0288.h"
  #include "stb6000.h"
  #include "cx24116.h"
-+#include "m88ds3103.h"
++#include "dvbsky_m88ds3103.h"
  #include "stv0900.h"
  #include "stb6100.h"
  #include "stb6100_proc.h"
@@ -5178,7 +5178,7 @@ index 053ed1b..b4269a8 100644
  	.clk_out_div = 1,
  };
  
-+static struct m88ds3103_config dvbsky_ds3103_config = {
++static struct dvbsky_m88ds3103_config dvbsky_ds3103_config = {
 +	.demod_address = 0x68,
 +	.set_ts_params = ds3000_set_ts_param,
 +};
@@ -5191,7 +5191,7 @@ index 053ed1b..b4269a8 100644
  		}
  		break;
 +	case CX88_BOARD_BST_PS8312:
-+		fe0->dvb.frontend = dvb_attach(m88ds3103_attach,
++		fe0->dvb.frontend = dvb_attach(dvbsky_m88ds3103_attach,
 +						&dvbsky_ds3103_config,
 +						&core->i2c_adap);
 +		if (fe0->dvb.frontend != NULL){
@@ -5356,7 +5356,7 @@ index 2059d0c..1dc0600 100644
 +config DVB_USB_DVBSKY
 +	tristate "DVBSky USB2.0 support"
 +	depends on DVB_USB_V2
-+	select DVB_M88DS3103 if MEDIA_SUBDRV_AUTOSELECT
++	select DVB_DVBSKY_M88DS3103 if MEDIA_SUBDRV_AUTOSELECT
 +	help
 +	  Say Y here to support the USB receivers from DVBSky.
 diff --git a/drivers/media/usb/dvb-usb-v2/Makefile b/drivers/media/usb/dvb-usb-v2/Makefile
@@ -5407,7 +5407,7 @@ index 0000000..45bedfc
 +
 +#include "dvb_ca_en50221.h"
 +#include "dvb_usb.h"
-+#include "m88ds3103.h"
++#include "dvbsky_m88ds3103.h"
 +
 +static int dvbsky_debug;
 +module_param(dvbsky_debug, int, 0644);
@@ -5932,7 +5932,7 @@ index 0000000..45bedfc
 +	return 0;
 +}
 +
-+static struct m88ds3103_config dvbsky_usb_ds3103_config = {
++static struct dvbsky_m88ds3103_config dvbsky_usb_ds3103_config = {
 +	.demod_address = 0x68,
 +	.ci_mode = 1,
 +	.pin_ctrl = 0x83,
@@ -5956,7 +5956,7 @@ index 0000000..45bedfc
 +	dvbsky_gpio_ctrl(d, 0x83, 1);
 +	msleep(20);
 +	
-+	adap->fe[0] = dvb_attach(m88ds3103_attach,
++	adap->fe[0] = dvb_attach(dvbsky_m88ds3103_attach,
 +				&dvbsky_usb_ds3103_config,
 +				&d->i2c_adap);
 +	if (!adap->fe[0]) {
@@ -5969,7 +5969,7 @@ index 0000000..45bedfc
 +	return ret;
 +}
 +
-+static struct m88ds3103_config dvbsky_usb_ds3103_ci_config = {
++static struct dvbsky_m88ds3103_config dvbsky_usb_ds3103_ci_config = {
 +	.demod_address = 0x68,
 +	.ci_mode = 2,
 +	.pin_ctrl = 0x82,
@@ -5993,7 +5993,7 @@ index 0000000..45bedfc
 +	dvbsky_gpio_ctrl(d, 0x83, 1);
 +	msleep(20);
 +	
-+	adap->fe[0] = dvb_attach(m88ds3103_attach,
++	adap->fe[0] = dvb_attach(dvbsky_m88ds3103_attach,
 +				&dvbsky_usb_ds3103_ci_config,
 +				&d->i2c_adap);
 +	if (!adap->fe[0]) {
