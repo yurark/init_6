@@ -17,7 +17,7 @@ GRSEC_VER="3.0-${KSV}-201404011912" # 04/01/14 19:13
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 ICE_VER="for-linux-3.13.6-2014-03-17"
 LQX_VER="3.13.7-1" # LQX_VER="${KSV}-1"
-MAGEIA_VER="releases/3.13.6/1.mga5" # MAGEIA_VER="releases/${KSV}/1.mga5"
+MAGEIA_VER="releases/${KSV}/1.mga5"
 PAX_VER="3.13.7-test18" # "${KSV}-test18"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 REISER4_VER="3.13.6"

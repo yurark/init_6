@@ -6,7 +6,7 @@ EAPI=5
 
 inherit linux-info toolchain-funcs
 
-NUM="22508"
+NUM="23574"
 DESCRIPTION="Intel IA32 microcode update data"
 HOMEPAGE="http://downloadcenter.intel.com/SearchResult.aspx?lang=eng&keyword=%22microcode%22"
 SRC_URI="http://downloadmirror.intel.com/${NUM}/eng/microcode-${PV}.tgz"

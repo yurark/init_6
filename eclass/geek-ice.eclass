@@ -43,8 +43,8 @@ geek-ice_init_variables() {
 	: ${ICE_VER:=${ICE_VER:-"${KMV}"}} # Patchset version
 #	: ${ICE_SRC:=${ICE_SRC:-"https://github.com/NigelCunningham/tuxonice-kernel/compare/vanilla-${ICE_VER/KMV/$KMV}...tuxonice-${ICE_VER/KMV/$KMV}.diff"}} # Patchset sources url
 #	: ${ICE_SRC:=${ICE_SRC:-"git://github.com/NigelCunningham/tuxonice-kernel.git"}} # Patchset sources url
-	: ${ICE_SRC:=${ICE_SRC:-"http://tuxonice.net/downloads/all/tuxonice-${ICE_VER/KMV/$KMV}.patch.bz2"}} # Patchset sources url
-	: ${ICE_URL:=${ICE_URL:-"http://tuxonice.net"}} # Patchset url
+	: ${ICE_SRC:=${ICE_SRC:-"http://tuxonice.nigelcunningham.com.au/downloads/all/tuxonice-${ICE_VER/KMV/$KMV}.patch.bz2"}} # Patchset sources url
+	: ${ICE_URL:=${ICE_URL:-"http://tuxonice.nigelcunningham.com.au"}} # Patchset url
 	: ${ICE_INF:=${ICE_INF:-"${YELLOW}TuxOnIce version ${GREEN}${ICE_VER}${YELLOW} from ${GREEN}${ICE_URL}${NORMAL}"}}
 
 	debug-print "${FUNCNAME}: ICE_VER=${ICE_VER}"
