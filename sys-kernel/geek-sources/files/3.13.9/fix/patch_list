@@ -84,10 +84,6 @@ kernel-2.6.26-atl1_disable_TSO.patch
 kernel-2.6.30-fglrx_flush_tlb_page.patch
 kernel-2.6.30-wmi_fix.patch
 kernel-3.2.1-rtl8139too.patch
-# SquashFS with LZMA patches from
-# https://dev.openwrt.org/browser/trunk/target/linux/generic-2.6/patches-2.6.35?rev=21696
-kernel-2.6.37-005-squashfs_revert_to_2.6.35.patch
-kernel-2.6.33.5-squashfs-fixes.patch
 #kernel-2.6.33-arm-copypage-gcc4.patch
 # fix mpc52xx_gpt.c build (powerpc)
 #kernel-2.6.33-mcp52xx_gpt_fix_build.patch
