@@ -9,7 +9,7 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
 AUFS_VER="3.x-rcN"
-# BFQ_VER="${KSV}-v7r2"
+BFQ_VER="${KSV}-v7r2"
 # BLD_VER="3.13-rc1"
 # CK_VER="3.12-ck2"
 FEDORA_VER="master"
@@ -17,15 +17,15 @@ FEDORA_VER="master"
 # GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 # LQX_VER="${KSV}-1"
 # MAGEIA_VER="releases/${KSV}/1.mga5"
-# PAX_VER="${KSV}-test10"
-# PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
+PAX_VER="${KMV}-test3" #"${KSV}-test3"
+PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 # REISER4_VER="3.12.6"
 # RT_VER="${KSV}-rt17"
 SUSE_VER="linux-next"
 # UKSM_VER="0.1.2.2"
 # UKSM_NAME="uksm-${UKSM_VER}-for-v3.13"
 
-SUPPORTED_USES="aufs brand -build -deblob fedora gentoo optimize suse symlink zfs"
+SUPPORTED_USES="aufs bfq brand -build -deblob fedora gentoo optimize pax suse symlink zfs"
 
 inherit geek-sources
 

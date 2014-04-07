@@ -113,6 +113,4 @@ kernel-3.2.16-ipw2200_fix.patch
 kernel-3.2-option_add_Huawey-E352.patch
 kernel-3.7.1-libata_restore_acpi_disable_functionality.patch
 kernel-3.4.24-ACPI_do_not_use_Lid_and_Sleep_button_for_S5_wakeup.patch
-kernel-3.8.3-arm-exynosdrm-buildfix.patch
-kernel-3.8.3-arm-imx-drm-buildfix.patch
 kernel-3.10.2-arm-mtd_omap2_allow_building_as_a_module.patch
