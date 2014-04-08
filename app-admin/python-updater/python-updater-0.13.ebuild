@@ -10,6 +10,7 @@ if [[ "${PV}" == "9999" ]]; then
 	inherit git-r3
 fi
 
+
 DESCRIPTION="Script used to reinstall Python packages after changing of active Python versions"
 HOMEPAGE="http://www.gentoo.org/proj/en/Python/"
 if [[ "${PV}" == "9999" ]]; then
@@ -35,10 +36,8 @@ RDEPEND="
 "
 
 src_compile() {
-	if [[ "${PV}" == "9999" ]]; then
-		emake python-updater
-		emake ${PN}.1 || die "Generation of man page failed"
-	fi
+	[[ ${PV} == 9999 ]] && emake python-updater
+	default
 }
 
 src_install() {
