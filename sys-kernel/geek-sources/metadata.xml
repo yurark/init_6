@@ -23,6 +23,7 @@
     <flag name='ice'>Use TuxOnIce patches.</flag>
     <flag name='lqx'>Use Liquorix patches.</flag>
     <flag name='mageia'>Use Mageia patches.</flag>
+    <flag name='openelec'>Use OpenELEC patches.</flag>
     <flag name='openvz'>RHEL6 kernel with OpenVZ patchset.</flag>
     <flag name='openwrt'>OpenWrt kernel patches.</flag>
     <flag name='optimize'>Kernel patch enables gcc optimizations for additional CPUs.</flag>

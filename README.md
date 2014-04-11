@@ -61,6 +61,7 @@ In this overlay you will find
      * **ice** - [Use TuxOnIce patches](https://github.com/NigelCunningham/tuxonice-kernel)
      * **lqx** - [Use liquorix patches](http://liquorix.net)
      * **mageia** - [Use Mageia patches](http://svnweb.mageia.org/packages/cauldron/kernel)
+     * **openelec** - [Use OpenELEC patches](http://openelec.tv)
      * **openvz** - [RHEL6 kernel with OpenVZ patchset](http://openvz.org)
      * **openwrt** - [OpenWrt kernel patches](https://openwrt.org)
      * **optimize** - [Kernel patch enables gcc optimizations for additional CPUs](https://github.com/graysky2/kernel_gcc_patch)

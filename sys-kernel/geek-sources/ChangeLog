@@ -2,6 +2,14 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+*Rename geek-<some name>.eclass --> <some name>.eclass (11 Apr 2014)
+
+  11 Apr 2014; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
+  Rename geek-<some name>.eclass --> <some name>.eclass
+  Split openelec from fixes to openelec.eclass and USE="openelec"
+  Fork and fix versionator.eclass from gentoo. Add eclass/tests/versionator:version_compare.sh
+  Add scripts/eclass-dep.sh
+
 *geek-rh.eclass (26 Feb 2014)
 
   26 Feb 2014; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
