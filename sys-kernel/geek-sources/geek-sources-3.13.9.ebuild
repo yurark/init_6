@@ -24,7 +24,7 @@ PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 REISER4_VER="3.13.6"
 # RT_VER="3.12.6-rt9"
 UKSM_VER="0.1.2.2"
-UKSM_NAME="uksm-${UKSM_VER}-for-v3.13"
+UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.9"
 
 SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo grsec hardened ice lqx mageia openelec openwrt optimize pax pf reiser4 suse symlink uksm zen zfs"
 
