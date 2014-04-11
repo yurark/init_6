@@ -17,6 +17,7 @@ FEDORA_VER="master"
 # GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 # LQX_VER="${KSV}-1"
 # MAGEIA_VER="releases/${KSV}/1.mga5"
+OPENELEC_VER="${KMV}"
 PAX_VER="${KMV}-test3" #"${KSV}-test3"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 # REISER4_VER="3.12.6"
@@ -25,7 +26,7 @@ SUSE_VER="linux-next"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}"
 
-SUPPORTED_USES="aufs bfq brand -build -deblob fedora gentoo optimize pax suse symlink uksm zfs"
+SUPPORTED_USES="aufs bfq brand -build -deblob fedora gentoo openelec optimize pax suse symlink uksm zfs"
 
 inherit geek-sources
 
