@@ -34,7 +34,7 @@ linux-991.01-ptrace_fix.patch
 linux-995-CX24120-13Z_frontend.patch
 linux-996-drm-radeon-rework-finding-display-PLL-numbers.patch
 linux-997-drm-radeon-rework-finding-display-PLL-numbers-fix-range.patch
-linux-999.01-0001-ALSA-hda-Do-not-assign-streams-in-reverse-order.patch
+linux-999.01-revert-alsa-hda-increment-default-stream-numbers-for-amd-hdmi-controllers.patch
 linux-999.02-0001-pm-disable-async-suspend-resume-by-default.patch
 
 # allow criu without expert option set
