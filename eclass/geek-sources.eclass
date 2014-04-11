@@ -27,9 +27,9 @@ esac
 if [[ ${___ECLASS_ONCE_GEEK_SOURCES} != "recur -_+^+_- spank" ]]; then
 ___ECLASS_ONCE_GEEK_SOURCES="recur -_+^+_- spank"
 
-inherit geek-linux geek-utils geek-fix geek-upatch geek-squeue geek-vars
+inherit src-vanilla utils fix upatch squeue vars
 
-KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec hardened ice lqx mageia openvz openwrt optimize pax pf reiser4 rh rt rsbac suse symlink uek uksm zen zfs"
+KNOWN_USES="aufs bfq bld brand build cjktty ck deblob exfat fedora gentoo grsec hardened ice lqx mageia openelec openvz openwrt optimize pax pf reiser4 rh rt rsbac suse symlink uek uksm zen zfs"
 
 # internal function
 #
@@ -55,36 +55,41 @@ done
 
 for use_flag in ${IUSE}; do
 	case ${use_flag} in
-		aufs		)	inherit geek-aufs ;;
-		bfq		)	inherit geek-bfq ;;
-		bld		)	inherit geek-bld ;;
-		brand		)	inherit geek-brand ;;
-		build		)	inherit geek-build ;;
-		cjktty		)	inherit geek-cjktty ;;
-		ck		)	inherit geek-ck ;;
-		deblob		)	inherit geek-deblob ;;
-		exfat		)	inherit geek-exfat ;;
-		fedora		)	inherit geek-fedora ;;
-		gentoo		)	inherit geek-gentoo ;;
-		grsec		)	inherit geek-grsec ;;
-		hardened	)	inherit geek-hardened ;;
-		ice		)	inherit geek-ice ;;
-		lqx		)	inherit geek-lqx ;;
-		mageia		)	inherit geek-mageia ;;
-		openvz		)	inherit geek-openvz ;;
-		openwrt		)	inherit geek-openwrt ;;
-		optimize	)	inherit geek-optimize ;;
-		pax		)	inherit geek-pax ;;
-		pf		)	inherit geek-pf ;;
-		reiser4		)	inherit geek-reiser4 ;;
-		rh		)	inherit geek-rh ;;
-		rsbac		)	inherit geek-rsbac ;;
-		rt		)	inherit geek-rt ;;
-		suse		)	inherit geek-suse ;;
-		uek		)	inherit geek-uek ;;
-		uksm		)	inherit geek-uksm ;;
-		zen		)	inherit geek-zen ;;
-		zfs		)	inherit geek-spl geek-zfs ;;
+		aufs		)	inherit aufs ;;
+		bfq		)	inherit bfq ;;
+		bld		)	inherit bld ;;
+		brand		)	inherit brand ;;
+		build		)	inherit build ;;
+		cjktty		)	inherit cjktty ;;
+		ck		)	inherit ck ;;
+		deblob		)	inherit deblob ;;
+		exfat		)	inherit exfat ;;
+		fedora		)	inherit fedora ;;
+		gentoo		)	inherit gentoo ;;
+		grsec		)	inherit grsec ;;
+		hardened	)	inherit hardened ;;
+		ice		)	inherit ice ;;
+		lqx		)	inherit lqx ;;
+		mageia		)	inherit mageia ;;
+		openelec	)	inherit openelec ;;
+		openvz		)	inherit openvz ;;
+		openwrt		)	inherit openwrt ;;
+		optimize	)	inherit optimize ;;
+		pax		)	inherit pax ;;
+		pf		)	inherit pf ;;
+		reiser4		)	inherit reiser4 ;;
+		rh		)	if [[ ${KMV} = "2.6" ]]; then
+						inherit rh
+					elif [[ ${KMV} = "3.10" ]]; then
+						inherit src-rh
+					fi ;;
+		rsbac		)	inherit rsbac ;;
+		rt		)	inherit rt ;;
+		suse		)	inherit suse ;;
+		uek		)	inherit src-uek ;;
+		uksm		)	inherit uksm ;;
+		zen		)	inherit zen ;;
+		zfs		)	inherit spl zfs ;;
 	esac
 done
 
@@ -100,12 +105,12 @@ geek-sources_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	# Remove duplicates patches
-	local rm_duplicates_cfg=$(source $cfg_file 2>/dev/null; echo ${rm_duplicates})
-	: ${rm_duplicates:=${rm_duplicates_cfg:-yes}} # rm_duplicates=yes/no
-	einfo "${BLUE}Remove duplicates patches -->${NORMAL} ${RED}$rm_duplicates${NORMAL}"
+#	local rm_duplicates_cfg=$(source $cfg_file 2>/dev/null; echo ${rm_duplicates})
+#	: ${rm_duplicates:=${rm_duplicates_cfg:-yes}} # rm_duplicates=yes/no
+#	einfo "${BLUE}Remove duplicates patches -->${NORMAL} ${RED}$rm_duplicates${NORMAL}"
 
 	: ${SKIP_KERNEL_PATCH_UPDATE:="lqx openvz pf rh uek zen"}
-	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimize pax lqx pf zen bfq ck cjktty gentoo grsec hardened rsbac ice rh uek openvz openwrt reiser4 exfat rt bld uksm aufs mageia fedora suse brand fix upatch squeue"}
+	: ${DEFAULT_GEEKSOURCES_PATCHING_ORDER:="zfs optimize pax lqx pf zen bfq ck cjktty gentoo grsec hardened rsbac ice rh uek openvz openwrt reiser4 exfat rt bld uksm aufs mageia fedora suse openelec brand fix upatch squeue"}
 
 	local xUserOrder=""
 	local xDefOder=""
@@ -138,7 +143,7 @@ ${BLUE}Otherwise i will use the default value of GEEKSOURCES_PATCHING_ORDER!${NO
 ${BLUE}And may the Force be with you…${NORMAL}"
 	fi
 
-	debug-print "${FUNCNAME}: rm_duplicates=$rm_duplicates"
+#	debug-print "${FUNCNAME}: rm_duplicates=$rm_duplicates"
 	debug-print "${FUNCNAME}: SKIP_KERNEL_PATCH_UPDATE=${SKIP_KERNEL_PATCH_UPDATE}"
 	debug-print "${FUNCNAME}: DEFAULT_GEEKSOURCES_PATCHING_ORDER=${DEFAULT_GEEKSOURCES_PATCHING_ORDER}"
 }
@@ -168,11 +173,11 @@ geek-sources_src_unpack() {
 	done
 
 	if use_if_iuse "rh"; then
-		[[ ${KMV} = "3.10" ]] && geek-rh_src_unpack
+		[[ ${KMV} = "3.10" ]] && src-rh_src_unpack
 	elif use_if_iuse "uek"; then
-		geek-uek_src_unpack
+		src-uek_src_unpack
 	else
-		geek-linux_src_unpack
+		src-vanilla_src_unpack
 	fi
 
 	test -d "${WORKDIR}/linux-${KV_FULL}-patches" >/dev/null 2>&1 || mkdir -p "${WORKDIR}/linux-${KV_FULL}-patches"
@@ -180,41 +185,42 @@ geek-sources_src_unpack() {
 		if use_if_iuse "${Current_Patch}" || [ "${Current_Patch}" = "fix" ] || [ "${Current_Patch}" = "upatch" ] || [ "${Current_Patch}" = "squeue" ]; then
 			einfo "Unpack - ${Current_Patch}"
 			case "${Current_Patch}" in
-				aufs		)	geek-aufs_src_unpack ;;
-				bfq		)	geek-bfq_src_unpack ;;
-				bld		)	geek-bld_src_unpack ;;
-				cjktty		)	geek-cjktty_src_unpack ;;
-				exfat		)	geek-exfat_src_unpack ;;
-				fedora		)	geek-fedora_src_unpack ;;
-				gentoo		)	geek-gentoo_src_unpack ;;
-				hardened	)	geek-hardened_src_unpack ;;
-				ice		)	geek-ice_src_unpack ;;
-				mageia		)	geek-mageia_src_unpack ;;
-				openwrt		)	geek-openwrt_src_unpack ;;
-				optimize	)	geek-optimize_src_unpack ;;
-				pf		)	geek-pf_src_unpack ;;
-				rh		)	[[ ${KMV} = "2.6" ]] && geek-rh_src_unpack ;;
-				squeue		)	geek-squeue_src_unpack ;;
-				suse		)	geek-suse_src_unpack ;;
-				uksm		)	geek-uksm_src_unpack ;;
-				zen		)	geek-zen_src_unpack ;;
-				zfs		)	geek-spl_src_unpack; geek-zfs_src_unpack ;;
+				aufs		)	aufs_src_unpack ;;
+				bfq		)	bfq_src_unpack ;;
+				bld		)	bld_src_unpack ;;
+				cjktty		)	cjktty_src_unpack ;;
+				exfat		)	exfat_src_unpack ;;
+				fedora		)	fedora_src_unpack ;;
+				gentoo		)	gentoo_src_unpack ;;
+				hardened	)	hardened_src_unpack ;;
+				ice		)	ice_src_unpack ;;
+				mageia		)	mageia_src_unpack ;;
+				openelec	)	openelec_src_unpack ;;
+				openwrt		)	openwrt_src_unpack ;;
+				optimize	)	optimize_src_unpack ;;
+				pf		)	pf_src_unpack ;;
+				rh		)	[[ ${KMV} = "2.6" ]] && rh_src_unpack ;;
+				squeue		)	squeue_src_unpack ;;
+				suse		)	suse_src_unpack ;;
+				uksm		)	uksm_src_unpack ;;
+				zen		)	zen_src_unpack ;;
+				zfs		)	spl_src_unpack; zfs_src_unpack ;;
 			esac
 		else continue
 		fi
 	done
 
 	# Now find and remove all duplicates patches
-	einfo "${YELLOW}Find and remove all duplicates patches ...${NORMAL}"
-	for dubl_file in $(find ${T} -not -empty -type f -printf "%s\n" | sort -rn | uniq -d | xargs -I{} -n1 find -type f -size {}c -print0 | xargs -0 md5sum | sort | uniq -w32 --all-repeated=separate | cut -f3-100 -d ' ' | tr '\n.' '\t.' | sed 's/\t\t/\n/g' | cut -f2-100 | tr '\t' '\n' | perl -i -pe 's/([ (){}-])/\\$1/g' | perl -i -pe 's/'\''/\\'\''/g' | tr '\n' ' '); do
-		if [ "${rm_duplicates}" = "yes" ]; then
-			einfo "Remove - $dubl_file"
-			rm -v "$dubl_file" >/dev/null 2>&1
-			debug-print "${FUNCNAME}: $dubl_file"
-		elif [ "${rm_duplicates}" = "no" ]; then
-			debug-print "${FUNCNAME}: $dubl_file"
-		fi
-	done
+#	einfo "${YELLOW}Find and remove all duplicates patches ...${NORMAL}"
+#	for dubl_file in $(find ${T} -not -empty -type f -printf "%s\n" | sort -rn | uniq -d | xargs -I{} -n1 find -type f -size {}c -print0 | xargs -0 md5sum | sort | uniq -w32 --all-repeated=separate | cut -f3-100 -d ' ' | tr '\n.' '\t.' | sed 's/\t\t/\n/g' | cut -f2-100 | tr '\t' '\n' | perl -i -pe 's/([ (){}-])/\\$1/g' | perl -i -pe 's/'\''/\\'\''/g' | tr '\n' ' '); do
+#		if [ "${rm_duplicates}" = "yes" ]; then
+#			einfo "Remove - $dubl_file"
+#			rm -v "$dubl_file" >/dev/null 2>&1
+#			debug-print "${FUNCNAME}: $dubl_file"
+#		elif [ "${rm_duplicates}" = "no" ]; then
+#			debug-print "${FUNCNAME}: $dubl_file"
+#		fi
+#	done
 }
 
 # @FUNCTION: src_prepare
@@ -227,47 +233,48 @@ geek-sources_src_prepare() {
 		if use_if_iuse "${Current_Patch}" || [ "${Current_Patch}" = "fix" ] || [ "${Current_Patch}" = "upatch" ] || [ "${Current_Patch}" = "squeue" ]; then
 #			einfo "Prepare - ${Current_Patch}"
 			case "${Current_Patch}" in
-				aufs		)	geek-aufs_src_prepare ;;
-				bfq		)	geek-bfq_src_prepare ;;
-				bld		)	geek-bld_src_prepare ;;
-				brand		)	geek-brand_src_prepare ;;
-				cjktty		)	geek-cjktty_src_prepare ;;
-				ck		)	geek-ck_src_prepare ;;
-				exfat		)	geek-exfat_src_prepare ;;
-				fedora		)	geek-fedora_src_prepare ;;
-				fix		)	geek-fix_src_prepare ;;
-				gentoo		)	geek-gentoo_src_prepare ;;
-				grsec		)	geek-grsec_src_prepare ;;
-				hardened	)	geek-hardened_src_prepare ;;
-				ice		)	geek-ice_src_prepare ;;
-				lqx		)	geek-lqx_src_prepare ;;
-				mageia		)	geek-mageia_src_prepare ;;
-				openvz		)	geek-openvz_src_prepare ;;
-				openwrt		)	geek-openwrt_src_prepare ;;
-				optimize	)	geek-optimize_src_prepare ;;
-				pax		)	geek-pax_src_prepare ;;
-				pf		)	geek-pf_src_prepare ;;
-				reiser4		)	geek-reiser4_src_prepare ;;
-				rh		)	geek-rh_src_prepare ;;
-				rsbac		)	geek-rsbac_src_prepare ;;
-				rt		)	geek-rt_src_prepare ;;
-				squeue		)	geek-squeue_src_prepare ;;
-				suse		)	geek-suse_src_prepare ;;
-				uksm		)	geek-uksm_src_prepare ;;
-				upatch		)	geek-upatch_src_prepare ;;
-				zen		)	geek-zen_src_prepare ;;
-				zfs		)	geek-spl_src_prepare; geek-zfs_src_prepare ;;
+				aufs		)	aufs_src_prepare ;;
+				bfq		)	bfq_src_prepare ;;
+				bld		)	bld_src_prepare ;;
+				brand		)	brand_src_prepare ;;
+				cjktty		)	cjktty_src_prepare ;;
+				ck		)	ck_src_prepare ;;
+				exfat		)	exfat_src_prepare ;;
+				fedora		)	fedora_src_prepare ;;
+				fix		)	fix_src_prepare ;;
+				gentoo		)	gentoo_src_prepare ;;
+				grsec		)	grsec_src_prepare ;;
+				hardened	)	hardened_src_prepare ;;
+				ice		)	ice_src_prepare ;;
+				lqx		)	lqx_src_prepare ;;
+				mageia		)	mageia_src_prepare ;;
+				openelec	)	openelec_src_prepare ;;
+				openvz		)	openvz_src_prepare ;;
+				openwrt		)	openwrt_src_prepare ;;
+				optimize	)	optimize_src_prepare ;;
+				pax		)	pax_src_prepare ;;
+				pf		)	pf_src_prepare ;;
+				reiser4		)	reiser4_src_prepare ;;
+				rh		)	rh_src_prepare ;;
+				rsbac		)	rsbac_src_prepare ;;
+				rt		)	rt_src_prepare ;;
+				squeue		)	squeue_src_prepare ;;
+				suse		)	suse_src_prepare ;;
+				uksm		)	uksm_src_prepare ;;
+				upatch		)	upatch_src_prepare ;;
+				zen		)	zen_src_prepare ;;
+				zfs		)	spl_src_prepare; zfs_src_prepare ;;
 			esac
 		else continue
 		fi
 	done
 
 	if use_if_iuse "rh"; then
-		[[ ${KMV} = "3.10" ]] && geek-rh_src_prepare
+		[[ ${KMV} = "3.10" ]] && src-rh_src_prepare
 	elif use_if_iuse "uek"; then
-		geek-uek_src_prepare
+		src-uek_src_prepare
 	else
-		geek-linux_src_prepare
+		src-vanilla_src_prepare
 	fi
 }
 
@@ -277,7 +284,7 @@ geek-sources_src_prepare() {
 geek-sources_src_compile() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	geek-linux_src_compile
+	src-vanilla_src_compile
 }
 
 # @FUNCTION: src_install
@@ -286,7 +293,7 @@ geek-sources_src_compile() {
 geek-sources_src_install() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	geek-linux_src_install
+	src-vanilla_src_install
 }
 
 # @FUNCTION: pkg_postinst
@@ -295,7 +302,8 @@ geek-sources_src_install() {
 geek-sources_pkg_postinst() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	geek-linux_pkg_postinst
+	src-vanilla_pkg_postinst
+
 	einfo "${BR}${BLUE}Wiki:${NORMAL} ${RED}https://github.com/init6/init_6/wiki/geek-sources${NORMAL}${BR}
 ${BLUE}Bugs:${NORMAL} ${RED}https://github.com/init6/init_6/issues${NORMAL}${BR}
 ${BLUE}Donate:${NORMAL} ${RED}https://github.com/init6/init_6/wiki/donate${NORMAL}${BR}
@@ -303,35 +311,36 @@ ${BLUE}For more info about patchset’s, and how to report problems, see:${NORMA
 	for Current_Patch in $GEEKSOURCES_PATCHING_ORDER; do
 		if use_if_iuse "${Current_Patch}" || [[ "${Current_Patch}" == "fix" ]] || [[ "${Current_Patch}" == "upatch" ]]; then
 			case "${Current_Patch}" in
-				aufs		) geek-aufs_pkg_postinst ;;
-				bfq		) geek-bfq_pkg_postinst ;;
-				bld		) geek-bld_pkg_postinst ;;
-				brand		) geek-brand_pkg_postinst ;;
-				cjktty		) geek-cjktty_pkg_postinst ;;
-				ck		) geek-ck_pkg_postinst ;;
-				deblob		) geek-deblob_pkg_postinst ;;
-				exfat		) geek-exfat_pkg_postinst ;;
-				fedora		) geek-fedora_pkg_postinst ;;
-				gentoo		) geek-gentoo_pkg_postinst ;;
-				grsec		) geek-grsec_pkg_postinst ;;
-				hardened	) geek-hardened_pkg_postinst ;;
-				ice		) geek-ice_pkg_postinst ;;
-				lqx		) geek-lqx_pkg_postinst ;;
-				mageia		) geek-mageia_pkg_postinst ;;
-				openvz		) geek-openvz_pkg_postinst ;;
-				openwrt		) geek-openwrt_pkg_postinst ;;
-				optimize 	) geek-optimize_pkg_postinst ;;
-				pax		) geek-pax_pkg_postinst ;;
-				pf		) geek-pf_pkg_postinst ;;
-				reiser4		) geek-reiser4_pkg_postinst ;;
-				rh		) geek-rh_pkg_postinst ;;
-				rsbac		) geek-rsbac_pkg_postinst ;;
-				rt		) geek-rt_pkg_postinst ;;
-				squeue		) geek-squeue_pkg_postinst ;;
-				suse		) geek-suse_pkg_postinst ;;
-				uksm		) geek-uksm_pkg_postinst ;;
-				zen		) geek-zen_pkg_postinst ;;
-				zfs		) geek-spl_pkg_postinst; geek-zfs_pkg_postinst ;;
+				aufs		) aufs_pkg_postinst ;;
+				bfq		) bfq_pkg_postinst ;;
+				bld		) bld_pkg_postinst ;;
+				brand		) brand_pkg_postinst ;;
+				cjktty		) cjktty_pkg_postinst ;;
+				ck		) ck_pkg_postinst ;;
+				deblob		) deblob_pkg_postinst ;;
+				exfat		) exfat_pkg_postinst ;;
+				fedora		) fedora_pkg_postinst ;;
+				gentoo		) gentoo_pkg_postinst ;;
+				grsec		) grsec_pkg_postinst ;;
+				hardened	) hardened_pkg_postinst ;;
+				ice		) ice_pkg_postinst ;;
+				lqx		) lqx_pkg_postinst ;;
+				mageia		) mageia_pkg_postinst ;;
+				openelec	) openelec_pkg_postinst ;;
+				openvz		) openvz_pkg_postinst ;;
+				openwrt		) openwrt_pkg_postinst ;;
+				optimize 	) optimize_pkg_postinst ;;
+				pax		) pax_pkg_postinst ;;
+				pf		) pf_pkg_postinst ;;
+				reiser4		) reiser4_pkg_postinst ;;
+				rh		) rh_pkg_postinst ;;
+				rsbac		) rsbac_pkg_postinst ;;
+				rt		) rt_pkg_postinst ;;
+				squeue		) squeue_pkg_postinst ;;
+				suse		) suse_pkg_postinst ;;
+				uksm		) uksm_pkg_postinst ;;
+				zen		) zen_pkg_postinst ;;
+				zfs		) spl_pkg_postinst; zfs_pkg_postinst ;;
 			esac
 			else continue
 		fi

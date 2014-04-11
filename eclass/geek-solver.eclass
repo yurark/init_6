@@ -19,7 +19,7 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
-#inherit geek-patch geek-utils geek-vars
+#inherit patch utils vars
 
 #EXPORT_FUNCTIONS mlsr_sort vercmp
 

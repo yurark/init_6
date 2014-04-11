@@ -18,6 +18,7 @@ GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 ICE_VER="for-linux-3.13.6-2014-03-17"
 LQX_VER="${KSV}-1"
 MAGEIA_VER="releases/${KSV}/1.mga5"
+OPENELEC_VER="3.13.7"
 PAX_VER="${KSV}-test19"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 REISER4_VER="3.13.6"
@@ -25,7 +26,7 @@ REISER4_VER="3.13.6"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v3.13"
 
-SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo grsec hardened ice lqx mageia openwrt optimize pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo grsec hardened ice lqx mageia openelec openwrt optimize pax pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 
