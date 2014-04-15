@@ -8,7 +8,7 @@ DEBLOB_AVAILABLE="0"
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
-AUFS_VER="3.x-rcN"
+# AUFS_VER="3.x-rcN"
 BFQ_VER="${KSV}-v7r2"
 # BLD_VER="3.13-rc1"
 # CK_VER="3.12-ck2"
