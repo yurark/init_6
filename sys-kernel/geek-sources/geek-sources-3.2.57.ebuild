@@ -10,7 +10,7 @@ KSV="$(echo $PV | cut -f 1-3 -d .)"
 
 BFQ_VER="3.2.0-v7r2"
 FEDORA_VER="8959a0e95fa1ab409603d38059342e7a99668418" # 3.2
-GRSEC_VER="3.0-${KSV}-201404131252" # 04/13/14 12:53
+GRSEC_VER="3.0-${KSV}-201404182109" # 04/18/14 21:10
 ICE_VER="for-linux-3.2.55-2014-02-19"
 LQX_VER="3.2.28-1"
 LQX_SRC="http://liquorix.net/sources/legacy/${LQX_VER}.patch.gz"
