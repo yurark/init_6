@@ -13,6 +13,7 @@ dev-libs/gmp abi_x86_32
 dev-libs/icu abi_x86_32
 dev-libs/json-c abi_x86_32
 dev-libs/libffi abi_x86_32
+dev-libs/libgcrypt abi_x86_32
 dev-libs/libgpg-error abi_x86_32
 dev-libs/libpcre abi_x86_32
 dev-libs/libpthread-stubs abi_x86_32
@@ -20,6 +21,8 @@ dev-libs/libtasn1 abi_x86_32
 dev-libs/libusb-compat abi_x86_32
 dev-libs/libusbx abi_x86_32
 dev-libs/libxml2 abi_x86_32
+dev-libs/libxslt abi_x86_32
+dev-libs/lzo abi_x86_32
 dev-libs/nettle abi_x86_32
 dev-libs/udis86 abi_x86_32
 dev-libs/wayland abi_x86_32
@@ -48,6 +51,7 @@ media-sound/cdparanoia abi_x86_32
 media-sound/wavpack abi_x86_32
 sys-apps/attr abi_x86_32
 sys-apps/dbus abi_x86_32
+sys-apps/file abi_x86_32
 sys-apps/systemd abi_x86_32
 sys-apps/tcp-wrappers abi_x86_32
 sys-devel/gettext abi_x86_32
