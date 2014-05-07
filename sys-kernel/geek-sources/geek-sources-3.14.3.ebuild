@@ -26,7 +26,7 @@ SUSE_VER="linux-next"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}"
 
-SUPPORTED_USES="aufs bfq brand -build -deblob fedora gentoo openelec optimize pax reiser4 suse symlink uksm zfs"
+SUPPORTED_USES="aufs bfq brand -build ck -deblob fedora gentoo openelec optimize pax reiser4 suse symlink uksm zfs"
 
 inherit geek-sources
 
