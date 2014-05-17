@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI="5"
-DEBLOB_AVAILABLE="1"
+DEBLOB_AVAILABLE="0"
 
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
@@ -15,10 +15,9 @@ CK_VER="3.14-ck1"
 FEDORA_VER="master"
 # GRSEC_VER="3.0-${KSV}-201401281848" # 01/28/14 18:49
 # GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
-ICE_VER="for-linux-3.14.2-2014-04-28"
 # LQX_VER="${KSV}-1"
 # MAGEIA_VER="releases/${KSV}/1.mga5"
-OPENELEC_VER="${KSV}"
+OPENELEC_VER="${KMV}"
 PAX_VER="${KMV}-test3" # PAX_VER="${KSV}-test3"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 REISER4_VER="3.14.1"
@@ -27,7 +26,7 @@ SUSE_VER="linux-next"
 UKSM_VER="0.1.2.2"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}"
 
-SUPPORTED_USES="aufs bfq brand -build ck -deblob exfat fedora gentoo ice openelec optimize pax reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq brand -build ck -deblob fedora gentoo openelec optimize pax reiser4 suse symlink uksm zfs"
 
 inherit geek-sources
 
