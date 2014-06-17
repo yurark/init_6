@@ -44,11 +44,11 @@ src_configure() {
 }
 
 src_compile() {
-	make VERBOSE=1 all
+	emake VERBOSE=1 all
 }
 
 src_install() {
-	make install
+	emake DESTDIR="${D}" install
 
 	exeinto "${dir}"
 
