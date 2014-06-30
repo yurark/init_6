@@ -145,7 +145,7 @@ Contributions are welcome. Fork (preferably to a branch) and create a pull reque
 
 Contributors
 --------------------------
-Right to access directly to the overlay at the moment have: [CarelessChaser](https://github.com/CarelessChaser), [deterok](https://github.com/deterok), [grondinm](https://github.com/grondinm), [init_6](https://github.com/init6), [Pinkbyte](https://github.com/Pinkbyte), [tazhate](https://github.com/tazhate), [Yamakuzure](https://github.com/Yamakuzure).
+Right to access directly to the overlay at the moment have: [CarelessChaser](https://github.com/CarelessChaser), [deterok](https://github.com/deterok), [grondinm](https://github.com/grondinm), [init_6](https://github.com/init6), [nilekurt](https://github.com/nilekurt), [Pinkbyte](https://github.com/Pinkbyte), [tazhate](https://github.com/tazhate), [Yamakuzure](https://github.com/Yamakuzure).
 
 Release security & signing
 --------------------------
