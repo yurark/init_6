@@ -5,27 +5,36 @@
 EAPI="5"
 DEBLOB_AVAILABLE="0"
 
-KMV="$(echo $PV | cut -f 1-2 -d .)"
-KSV="$(echo $PV | cut -f 1-3 -d .)"
+# Kernel major revision
+MAJREV="$(echo $PV | cut -f 2 -d .)"
+# Kernel minor revision
+MINREV="$(echo $PV | cut -f 3 -d .)"
+
+# Kernel Version (Short)
+KVS="$(echo $PV | cut -f 1-2 -d .)"
+# Kernel version (Long)
+KVL="$(echo $PV | cut -f 1-3 -d .)"
 
 AUFS_VER="3.x-rcN"
-BFQ_VER="3.15.0-v7r5"
+BFQ_VER="${KVS}.0-v7r5"
 # BLD_VER="3.13-rc1"
-# CK_VER="3.12-ck2"
+CK_VER="${KVS}-ck1"
 FEDORA_VER="master"
-# GRSEC_VER="3.0-${KSV}-201401281848" # 01/28/14 18:49
+# GRSEC_VER="3.0-${KVL}-201401281848" # 01/28/14 18:49
 # GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
-# LQX_VER="${KSV}-1"
-# MAGEIA_VER="releases/${KSV}/1.mga5"
-# PAX_VER="${KSV}-test10"
-# PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
+ICE_VER="for-linux-${KVS}.2-2014-06-27"
+# LQX_VER="${KVL}-1"
+# MAGEIA_VER="releases/${KVL}/1.mga5"
+OPENELEC_VER="${KVL}"
+PAX_VER="${KVL}-test2"
+PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 # REISER4_VER="3.12.6"
-# RT_VER="${KSV}-rt17"
+# RT_VER="${KVL}-rt17"
 SUSE_VER="linux-next"
-# UKSM_VER="0.1.2.2"
-# UKSM_NAME="uksm-${UKSM_VER}-for-v3.13"
+UKSM_VER="0.1.2.3"
+UKSM_NAME="uksm-${UKSM_VER}-for-v${KVS}.ge.${MINREV}"
 
-SUPPORTED_USES="aufs bfq brand -build -deblob fedora gentoo optimize suse symlink zfs"
+SUPPORTED_USES="aufs bfq brand -build ck -deblob fedora gentoo ice openelec optimize pax suse symlink uksm zfs"
 
 inherit geek-sources
 
