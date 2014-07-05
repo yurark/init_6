@@ -15,19 +15,25 @@ KVS="$(echo $PV | cut -f 1-2 -d .)"
 # Kernel version (Long)
 KVL="$(echo $PV | cut -f 1-3 -d .)"
 
+# AUFS_VER="3.x-rcN"
 BFQ_VER="${KVS}.0-v7r5"
-CK_VER="${KVS}-ck3"
-CK_SRC="http://ck.kolivas.org/patches/3.0/3.4/3.4-ck3/patches/3.4-sched-bfs-424.patch"
-FEDORA_VER="d0633aed96aaed8d8996ecec7213ad2bf1a819df" # Linux v3.4-10115-g829f51d
-ICE_VER="for-linux-${KVS}.95-2014-06-27"
-MAGEIA_VER="releases/3.4.6/1.mga3"
-PAX_VER="${KVS}.8-test32"
-SUSE_VER="259fc874ec90b84ca02ad1c1ae186989c83bb2fa" # rpm-3.4.11-2.16
-# RT_VER="${KSV}-rt95"
+BLD_VER="${KVS}-rc1"
+CK_VER="${KVS}-ck1"
+FEDORA_VER="f20"
+#GRSEC_VER="3.0-${KVL}-201404141717" # 04/14/14 17:18
+#GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
+ICE_VER="for-linux-${KVL}-2014-04-24"
+LQX_VER="${KVS}.9-1"
+MAGEIA_VER="releases/${KSV}/1.mga5"
+OPENELEC_VER="${KVS}.7"
+PAX_VER="${KVL}-test21"
+PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
+REISER4_VER="${KVS}.6"
+# RT_VER="3.12.6-rt9"
 UKSM_VER="0.1.2.3"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KVS}.ge.${MINREV}"
 
-SUPPORTED_USES="aufs bfq brand -build ck fedora gentoo ice mageia optimize pax pf suse symlink uksm zen"
+SUPPORTED_USES="aufs bfq bld brand -build ck -deblob exfat fedora gentoo hardened ice lqx mageia openwrt optimize pax pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 

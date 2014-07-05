@@ -16,7 +16,7 @@ KVS="$(echo $PV | cut -f 1-2 -d .)"
 KVL="$(echo $PV | cut -f 1-3 -d .)"
 
 BFQ_VER="${KVS}.0-v7r5"
-CK_VER="416"
+CK_VER="${KVS}-ck1"
 FEDORA_VER="8959a0e95fa1ab409603d38059342e7a99668418" # 3.2
 GRSEC_VER="3.0-${KVL}-201407012149" # 07/01/14 21:51
 ICE_VER="for-linux-${KVS}.59-2014-06-02"
