@@ -34,6 +34,8 @@ SUSE_VER="linux-next"
 UKSM_VER="0.1.2.3"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KVS}.ge.${MINREV}"
 
+OPTIMIZATION_SRC="https://raw.githubusercontent.com/graysky2/kernel_gcc_patch/master/enable_additional_cpu_optimizations_for_gcc_v4.9+_kernel_v${KVS}+.patch"
+
 SUPPORTED_USES="aufs bfq brand -build ck -deblob fedora gentoo ice openelec optimize pax suse symlink uksm zfs"
 
 inherit geek-sources
