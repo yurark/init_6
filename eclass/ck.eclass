@@ -44,7 +44,7 @@ ck_init_variables() {
 	if [ -n "${BFS_VER}" ]; then
 	: ${BFS_SRC:=${BFS_SRC:-"http://ck.kolivas.org/patches/bfs/3.0/${KMV}/bfs${BFS_VER}.patch"}} # BFS incremental update source url
 	fi
-	: ${BFS_INF:=${BFS_INF:-"${YELLOW}Con Kolivas' BFS scheduler version ${GREEN}${BFS_VER}${YELLOW} from ${GREEN}${CK_URL}${NORMAL}"}}
+	: ${BFS_INF:=${BFS_INF:-"${YELLOW}Con Kolivas' BFS scheduler incremental patch ${GREEN}${BFS_VER}${YELLOW}"}}
 	
 	: ${CK_VER:=${CK_VER:-"${KMV}-ck1"}} # Patchset version
 	: ${CK_SRC:=${CK_SRC:-"http://ck.kolivas.org/patches/3.0/${KMV}/${CK_VER}/patch-${CK_VER}.lrz"}} # Patchset sources url
