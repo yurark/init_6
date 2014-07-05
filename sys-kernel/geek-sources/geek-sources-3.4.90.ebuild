@@ -9,7 +9,8 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
 BFQ_VER="3.4.0-v7r2"
-CK_VER="${KMV}-ck3"
+CK_VER="424"
+CK_SRC="http://ck.kolivas.org/patches/3.0/3.4/3.4-ck3/patches/3.4-sched-bfs-424.patch"
 FEDORA_VER="d0633aed96aaed8d8996ecec7213ad2bf1a819df" # Linux v3.4-10115-g829f51d
 ICE_VER="for-linux-3.4.82-2014-02-23"
 MAGEIA_VER="releases/3.4.6/1.mga3"

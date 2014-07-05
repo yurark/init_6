@@ -41,7 +41,7 @@ ck_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${CK_VER:=${CK_VER:-"${KMV}-ck1"}} # Patchset version
-	: ${CK_SRC:=${CK_SRC:-"http://ck.kolivas.org/patches/3.0/${KMV}/${CK_VER}/patch-${CK_VER}.lrz"}} # Patchset sources url
+	: ${CK_SRC:=${CK_SRC:-"http://ck.kolivas.org/patches/bfs/3.0/${KMV}/${KMV}-sched-bfs-${CK_VER}.patch"}} # Patchset sources url
 	: ${CK_URL:=${CK_URL:-"http://users.on.net/~ckolivas/kernel"}} # Patchset url
 	: ${CK_INF:=${CK_INF:-"${YELLOW}Con Kolivas high performance patchset version ${GREEN}${CK_VER}${YELLOW} from ${GREEN}${CK_URL}${NORMAL}"}}
 
@@ -64,7 +64,7 @@ SRC_URI="${SRC_URI}
 ck_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/patch-${CK_VER}.lrz" "${CK_INF}"
+	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/${KMV}-sched-bfs-${CK_VER}.patch" "${CK_INF}"
 
 	ApplyUserPatch "ck"
 

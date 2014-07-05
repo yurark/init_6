@@ -9,6 +9,7 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
 BFQ_VER="3.2.0-v7r2"
+CK_VER="416"
 FEDORA_VER="8959a0e95fa1ab409603d38059342e7a99668418" # 3.2
 GRSEC_VER="3.0-${KSV}-201405112002" # 05/11/14 12:53
 ICE_VER="for-linux-3.2.55-2014-02-19"
