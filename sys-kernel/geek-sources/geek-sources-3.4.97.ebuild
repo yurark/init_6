@@ -25,7 +25,7 @@ PAX_VER="${KVS}.8-test32"
 SUSE_VER="259fc874ec90b84ca02ad1c1ae186989c83bb2fa" # rpm-3.4.11-2.16
 # RT_VER="${KSV}-rt95"
 UKSM_VER="0.1.2.3"
-UKSM_NAME="uksm-${UKSM_VER}-for-v${KVS}.ge.${MINREV}"
+UKSM_NAME="uksm-${UKSM_VER}-for-v${KVS}.ge.96" #.${MINREV}"
 
 SUPPORTED_USES="aufs bfq brand -build ck fedora gentoo ice mageia optimize pax pf suse symlink uksm zen"
 

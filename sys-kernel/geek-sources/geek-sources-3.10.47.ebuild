@@ -30,7 +30,7 @@ REISER4_VER="${KVS}"
 RSBAC_VER="1.4.7"
 RSBAC_NAME="patch-linux-${KVS}.7-rsbac-${RSBAC_VER}.diff.xz"
 UKSM_VER="0.1.2.3"
-UKSM_NAME="uksm-${UKSM_VER}-for-v${KVS}.ge.${MINREV}"
+UKSM_NAME="uksm-${UKSM_VER}-for-v${KVS}.ge.46" #.${MINREV}"
 
 SUPPORTED_USES="aufs bfq bld brand -build cjktty ck fedora gentoo ice lqx mageia openwrt optimize pax pf reiser4 rh rsbac suse symlink uksm zen zfs"
 
