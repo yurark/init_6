@@ -24,6 +24,7 @@ RDEPEND=">=dev-libs/glib-2.8:2
 	kernel_linux? ( sys-fs/e2fsprogs )
 	samba? ( net-fs/samba )
 	sftp? ( net-libs/libssh2 )
+	adb? ( dev-util/android-tools )
 	slang? ( >=sys-libs/slang-2 )
 	!slang? ( sys-libs/ncurses )
 	spell? ( app-text/aspell )
@@ -36,16 +37,15 @@ DEPEND="${RDEPEND}
 	app-arch/xz-utils
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )
-	test? ( dev-libs/check )
-	"
+	test? ( dev-libs/check )"
 
 [[ -n ${LIVE_EBUILD} ]] && DEPEND="${DEPEND} dev-vcs/cvs" # needed only for SCM source tree (autopoint uses cvs)
 
 src_prepare() {
-# mc adb patches by https://www.linux.org.ru/people/seyko2/profile see https://www.linux.org.ru/forum/midnight/10615997?cid=10627967
-	epatch "${FILESDIR}"/${P}-adb-move-dir-dir.patch
-	epatch "${FILESDIR}"/${P}-adb-extfs-partial-list.patch
-	epatch "${FILESDIR}"/${P}-adb-extfs-adb-plugin.patch
+	# mc adb patches by https://www.linux.org.ru/people/seyko2/profile see https://www.linux.org.ru/forum/midnight/10615997?cid=10627967
+	use adb && epatch "${FILESDIR}"/${P}-adb-move-dir-dir.patch
+	use adb && epatch "${FILESDIR}"/${P}-adb-extfs-partial-list.patch
+	use adb && epatch "${FILESDIR}"/${P}-adb-extfs-adb-plugin.patch
 
 	[[ -n ${LIVE_EBUILD} ]] && ./autogen.sh
 }
