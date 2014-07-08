@@ -12,11 +12,9 @@ SRC_URI="http://dist.schmorp.de/rxvt-unicode/Attic/${P}.tar.bz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris"
-IUSE="
-	256-color alt-font-width blink buffer-on-clear +focused-urgency
+IUSE="256-color alt-font-width blink buffer-on-clear +focused-urgency
 	fading-colors +font-styles iso14755 +mousewheel +perl pixbuf secondary-wheel
-	startup-notification xft unicode3 +vanilla wcwidth
-"
+	startup-notification xft unicode3 +vanilla wcwidth"
 
 RDEPEND="
 	>=sys-libs/ncurses-5.7-r6
@@ -27,15 +25,14 @@ RDEPEND="
 	startup-notification? ( x11-libs/startup-notification )
 	x11-libs/libX11
 	x11-libs/libXrender
-	xft? ( x11-libs/libXft )
-"
+	xft? ( x11-libs/libXft )"
+
 DEPEND="
 	${RDEPEND}
 	virtual/pkgconfig
-	x11-proto/xproto
-"
+	x11-proto/xproto"
 
-RESTRICT="test"
+RESTRICT="mirror test"
 REQUIRED_USE="vanilla? ( !alt-font-width !buffer-on-clear focused-urgency !secondary-wheel !wcwidth )"
 
 src_prepare() {

@@ -1,0 +1,180 @@
+diff -urN mc-4.8.12.old/src/filemanager/file.c mc-4.8.12/src/filemanager/file.c
+--- mc-4.8.12.old/src/filemanager/file.c	2014-06-30 13:41:05.000000000 +0400
++++ mc-4.8.12/src/filemanager/file.c	2014-06-30 13:44:18.000000000 +0400
+@@ -2248,6 +2248,74 @@
+ /* --------------------------------------------------------------------------------------------- */
+ /* {{{ Move routines */
+ 
++/* try to rename directory */
++/* return FILE_RETRY if job is not done (there is a need to copy directory) */
++
++FileProgressStatus move_dir_dir_in_place (FileOpTotalContext * tctx, file_op_context_t * ctx,
++                                 const char *s, const char *d)
++{
++    struct stat sbuf, dbuf;
++    FileProgressStatus return_status;
++    gboolean dstat_ok;
++    vfs_path_t *src_vpath, *dst_vpath;
++
++    src_vpath = vfs_path_from_str (s);
++    dst_vpath = vfs_path_from_str (d);
++
++    mc_stat (src_vpath, &sbuf);
++
++    dstat_ok = (mc_stat (dst_vpath, &dbuf) == 0);
++    if (dstat_ok && sbuf.st_dev == dbuf.st_dev && sbuf.st_ino == dbuf.st_ino)
++    {
++        return_status = warn_same_file (_("\"%s\"\nand\n\"%s\"\nare the same directory"), s, d);
++        goto ret_fast;
++    }
++    
++    if (dstat_ok && ctx->dive_into_subdirs)
++    {
++        vfs_path_t *tmp;
++
++        tmp = dst_vpath;
++        dst_vpath = vfs_path_append_new (dst_vpath, x_basename (s), NULL);
++        vfs_path_free (tmp);
++    }
++
++    if (mc_stat (dst_vpath, &dbuf) == 0)
++    {
++	return_status = FILE_RETRY;
++	goto ret_fast;
++    }
++
++  retry_rename:
++    if (mc_rename (src_vpath, dst_vpath) == 0)
++    {
++        return_status = FILE_CONT;
++        goto ret;
++    }
++
++    if (errno == EXDEV)
++    {
++	return_status = FILE_RETRY;
++	goto ret_fast;
++    }
++
++    if (!ctx->skip_all)
++    {
++	return_status = files_error (_("Cannot move directory \"%s\" to \"%s\"\n%s"), s, d);
++        if (return_status == FILE_RETRY)
++            goto retry_rename;
++        if (return_status == FILE_SKIPALL)
++            ctx->skip_all = TRUE;
++    }
++
++  ret:
++    erase_list = free_linklist (erase_list);
++  ret_fast:
++    vfs_path_free (src_vpath);
++    vfs_path_free (dst_vpath);
++    return return_status;
++}
++
+ FileProgressStatus
+ move_dir_dir (FileOpTotalContext * tctx, file_op_context_t * ctx, const char *s, const char *d)
+ {
+@@ -2595,6 +2663,9 @@
+ 
+     gboolean do_bg = FALSE;     /* do background operation? */
+ 
++    gboolean totals_inited = TRUE;
++    FileProgressStatus res;
++
+     static gboolean i18n_flag = FALSE;
+     if (!i18n_flag)
+     {
+@@ -2815,8 +2886,17 @@
+         else
+             source_with_vpath = vfs_path_append_new (panel->cwd_vpath, source, (char *) NULL);
+ #endif /* WITH_FULL_PATHS */
+-        if (panel_operate_init_totals (panel, vfs_path_as_str (source_with_vpath), ctx, dialog_type)
+-            == FILE_CONT)
++
++        if (operation == OP_MOVE && S_ISDIR (src_stat.st_mode)) {
++    	    /* rename/move a directory */
++    	    /* init_totals will be called if dir can not be renamed in place */
++	    res = FILE_CONT;
++	    totals_inited = FALSE;
++	}
++        else
++    	    res = panel_operate_init_totals (panel, vfs_path_as_str (source_with_vpath), ctx, dialog_type);
++
++	if (res == FILE_CONT)
+         {
+             if (operation == OP_DELETE)
+             {
+@@ -2867,9 +2947,18 @@
+                         break;
+ 
+                     case OP_MOVE:
+-                        if (S_ISDIR (src_stat.st_mode))
+-                            value =
+-                                move_dir_dir (tctx, ctx, vfs_path_as_str (source_with_vpath), dest);
++                        if (S_ISDIR (src_stat.st_mode)) {
++                            value = move_dir_dir_in_place (tctx, ctx, vfs_path_as_str (source_with_vpath), dest);
++                    	    if (value == FILE_RETRY) {
++                        	res = FILE_CONT;
++                        	if (totals_inited == FALSE) {
++				    totals_inited = TRUE;
++				    res = panel_operate_init_totals (panel, vfs_path_as_str (source_with_vpath), ctx, dialog_type);
++				}
++				if (res == FILE_CONT)
++                            	    value = move_dir_dir (tctx, ctx, vfs_path_as_str (source_with_vpath), dest);
++                            }
++                        }
+                         else
+                             value =
+                                 move_file_file (tctx, ctx, vfs_path_as_str (source_with_vpath),
+@@ -2907,7 +2996,15 @@
+                 goto clean_up;
+         }
+ 
+-        if (panel_operate_init_totals (panel, NULL, ctx, dialog_type) == FILE_CONT)
++        if (operation == OP_MOVE) {
++    	    /* rename/move a directories */
++    	    /* init_totals will be called if dirs can not be renamed in place */
++	    res = FILE_CONT;
++	}
++        else
++    	    res = panel_operate_init_totals (panel, NULL, ctx, dialog_type);
++
++	if (res == FILE_CONT)
+         {
+             /* Loop for every file, perform the actual copy operation */
+             for (i = 0; i < panel->dir.len; i++)
+@@ -2981,8 +3078,18 @@
+                             break;
+ 
+                         case OP_MOVE:
+-                            if (S_ISDIR (src_stat.st_mode))
+-                                value = move_dir_dir (tctx, ctx, source_with_path_str, temp);
++                            if (S_ISDIR (src_stat.st_mode)) {
++                                value = move_dir_dir_in_place (tctx, ctx, source_with_path_str, temp);
++                        	if (value == FILE_RETRY) {
++                        	    res = FILE_CONT;
++                        	    if (totals_inited == FALSE) {
++					totals_inited = TRUE;
++					res = panel_operate_init_totals (panel, NULL, ctx, dialog_type);
++                        	    }
++				    if (res == FILE_CONT)
++                            		value = move_dir_dir (tctx, ctx, source_with_path_str, temp);
++                            	}
++                            }
+                             else
+                                 value = move_file_file (tctx, ctx, source_with_path_str, temp);
+                             break;
+diff -urN mc-4.8.12.old/src/filemanager/file.h mc-4.8.12/src/filemanager/file.h
+--- mc-4.8.12.old/src/filemanager/file.h	2014-06-30 13:41:05.000000000 +0400
++++ mc-4.8.12/src/filemanager/file.h	2014-06-30 13:40:33.000000000 +0400
+@@ -36,6 +36,8 @@
+ 
+ FileProgressStatus copy_file_file (FileOpTotalContext * tctx, file_op_context_t * ctx,
+                                    const char *src_path, const char *dst_path);
++FileProgressStatus move_dir_dir_in_place (FileOpTotalContext * tctx, file_op_context_t * ctx,
++                                 const char *s, const char *d);
+ FileProgressStatus move_dir_dir (FileOpTotalContext * tctx, file_op_context_t * ctx,
+                                  const char *s, const char *d);
+ FileProgressStatus copy_dir_dir (FileOpTotalContext * tctx, file_op_context_t * ctx,

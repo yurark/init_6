@@ -16,6 +16,8 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE="static-libs"
 
+RESTRICT="mirror"
+
 DEPEND=""
 RDEPEND="${DEPEND}"
 

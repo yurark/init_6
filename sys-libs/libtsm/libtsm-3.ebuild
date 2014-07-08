@@ -24,6 +24,7 @@ HOMEPAGE="http://www.freedesktop.org/wiki/Software/kmscon"
 LICENSE="MIT LGPL-2.1 BSD-2"
 SLOT="0"
 IUSE="debug +optimizations static-libs test"
+RESTRICT="mirror"
 
 COMMON_DEPEND="
 	dev-libs/glib:2

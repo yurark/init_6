@@ -8,11 +8,12 @@ if [[ $PV = *9999* ]]; then
 	scm_eclass=git-2
 	EGIT_REPO_URI="
 				git://people.freedesktop.org/~dvdhrm/${PN}
+				git://github.com/dvdhrm/${PN}.git
 				git://github.com/dvdhrm/${PN}.git"
 	SRC_URI=""
 	KEYWORDS=""
 else
-	SRC_URI="http://www.freedesktop.org/software/${PN}/releases/${P}.tar.xz"
+	SRC_URI="http://www.freedesktop.org/software/${PN}/releases/${P}.tar.bz2"
 	KEYWORDS="~amd64 ~x86"
 fi
 
@@ -23,21 +24,22 @@ HOMEPAGE="http://www.freedesktop.org/wiki/Software/kmscon"
 
 LICENSE="MIT LGPL-2.1 BSD-2"
 SLOT="0"
-IUSE="dbus debug doc +drm +fbdev +gles2 multiseat +optimizations +pango pixman
-static-libs systemd udev +unicode wayland"
+IUSE="cairo dbus debug doc +drm +fbdev +gles2 multiseat +optimizations +pango pixman
+static-libs systemd truetype udev +unicode wayland"
 
 COMMON_DEPEND="
 	dev-libs/glib:2
 	>=virtual/udev-172
 	x11-libs/libxkbcommon
-	>=sys-libs/libtsm-3
 	dbus? ( sys-apps/dbus )
 	drm? ( x11-libs/libdrm
 		>=media-libs/mesa-8.0.3[egl,gbm] )
+	truetype? ( media-libs/freetype:2 )
 	gles2? ( >=media-libs/mesa-8.0.3[gles2] )
 	pango? ( x11-libs/pango )
 	systemd? ( sys-apps/systemd )
 	udev? ( virtual/udev )
+	cairo? ( x11-libs/cairo )
 	pixman? ( x11-libs/pixman )
 	wayland? ( dev-libs/wayland )"
 RDEPEND="${COMMON_DEPEND}
@@ -105,10 +107,14 @@ src_configure() {
 		video_enable drm3d
 	fi
 
-	# Font rendering backends
+	# Font rendering backends 
 
 	if use unicode; then
 		fonts_enable unifont
+	fi
+
+	if use truetype; then
+		fonts_enable freetype2
 	fi
 
 	if use pango; then
@@ -121,6 +127,10 @@ src_configure() {
 
 	if use gles2; then
 		renderers_enable gltex
+	fi
+
+	if use cairo; then
+		renderers_enable cairo
 	fi
 
 	if use pixman; then

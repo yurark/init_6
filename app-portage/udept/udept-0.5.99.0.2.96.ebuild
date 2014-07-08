@@ -19,6 +19,8 @@ DEPEND="app-shells/bash
 	sys-apps/portage"
 RDEPEND="${DEPEND}"
 
+RESTRICT="mirror"
+
 BASH_COMPLETION_NAME="dep"
 
 src_configure() {

@@ -17,6 +17,8 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="+completion"
 
+RESTRICT="mirror"
+
 RDEPEND="completion? ( dev-vcs/git-flow-completion )
 	>=dev-libs/shflags-1.0.3"
 

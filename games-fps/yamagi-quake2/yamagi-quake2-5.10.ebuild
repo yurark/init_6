@@ -16,6 +16,8 @@ KEYWORDS="~amd64 ~x86 ~sparc"
 IUSE="cdinstall ctf demo +jpeg +openal rogue +vorbis xatrix x11gamma +zlib"
 REQUIRED_USE="cdinstall? ( !demo )"
 
+RESTRICT="mirror"
+
 DEPEND="media-libs/libsdl
 	virtual/opengl
 	jpeg? ( virtual/jpeg )
