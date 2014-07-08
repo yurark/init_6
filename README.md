@@ -141,7 +141,11 @@ Developer sets:
 Contribute to this overlay
 --------------------------
 
-If you want to suggest changes, like new dependencies or new stuff, please send a github pull request with explanation/proof why this is necessary, so we can discuss it. Determine correct behavior and dependencies can be tricky, therefore we'd like to discuss and wait for confirmation of others before adding modifications or new ebuilds.
+Contributions are welcome. Fork (preferably to a branch) and create a pull request. If you find Bug open new [issue](https://github.com/init6/init_6/issues)
+
+Contributors
+--------------------------
+Right to access directly to the overlay at the moment have: [CarelessChaser](https://github.com/CarelessChaser), [deterok](https://github.com/deterok), [grondinm](https://github.com/grondinm), [init_6](https://github.com/init6), [nilekurt](https://github.com/nilekurt), [Pinkbyte](https://github.com/Pinkbyte), [tazhate](https://github.com/tazhate), [Yamakuzure](https://github.com/Yamakuzure).
 
 Release security & signing
 --------------------------
