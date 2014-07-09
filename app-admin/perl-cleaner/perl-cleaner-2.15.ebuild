@@ -24,7 +24,8 @@ IUSE=""
 
 RDEPEND="app-shells/bash
 	|| ( >=sys-apps/coreutils-8.15 app-misc/realpath sys-freebsd/freebsd-bin )
-	dev-lang/perl"
+	dev-lang/perl
+	sys-libs/core-functions"
 
 src_install() {
 	dosbin perl-cleaner
