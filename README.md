@@ -154,6 +154,6 @@ All release media will have its Manifest file signed by one of the keys listed o
 | Key ID | Key Type | Key Fingerprint | Key Description | Created | Expires | Revoked | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | B9489F0C | 2048-bit DSA/ElGamal | E10F 898F F87E 82A6 928E EC6E 4DFA 96F5 B948 9F0C | Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com> | 2013-08-13 | 2014-02-09 | | Revoked for changeover |
-| 42E8AE40 | 2048-bit DSA/ElGamal | 3810 BDF2 9D0A 13E4 C8A1 805F 0DBF 6EF3 42E8 AE40 | Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com> | 2014-02-09 | 2015-02-09 | | |
+| 42E8AE40 | 2048-bit DSA/ElGamal | 3810 BDF2 9D0A 13E4 C8A1 805F 0DBF 6EF3 42E8 AE40 | Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com> | 2014-02-09 | 2015-02-09 | | Key is lost |
 
 You will find more in the [GnuPG Gentoo User Guide](http://www.gentoo.org/doc/en/gnupg-user.xml)
