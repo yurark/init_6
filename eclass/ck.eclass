@@ -56,8 +56,7 @@ ck_init_variables
 HOMEPAGE="${HOMEPAGE} ${CK_URL}"
 
 SRC_URI="${SRC_URI}
-	ck?	( ${CK_SRC}
-		  ${BFS_SRC} )"
+	ck?	( ${CK_SRC} )"
 
 # @FUNCTION: src_prepare
 # @USAGE:
@@ -66,12 +65,6 @@ ck_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/patch-${CK_VER}.lrz" "${CK_INF}"
-	
-	# Patch with incremental BFS patch if specified
-	if [ -n "${BFS_VER}" ]; then
-		ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/bfs${BFS_VER}.patch" "${BFS_INF}"
-	fi
-
 	ApplyUserPatch "ck"
 
 	# Comment out EXTRAVERSION added by CK patch:
