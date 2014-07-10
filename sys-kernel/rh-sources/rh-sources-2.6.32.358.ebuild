@@ -31,7 +31,7 @@ SRC_URI="${SRC_URI_PREFIX}/6Client/en/os/SRPMS/kernel-2.6.32-358.18.1.el6.src.rp
 
 IUSE=""
 
-RESTRICT="nomirror"
+RESTRICT="mirror"
 
 S="${WORKDIR}/linux-${KV_FULL}"
 

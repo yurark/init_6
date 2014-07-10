@@ -5,34 +5,26 @@
 EAPI="5"
 DEBLOB_AVAILABLE="1"
 
-# Kernel major revision
-MAJREV="$(echo $PV | cut -f 2 -d .)"
-# Kernel minor revision
-MINREV="$(echo $PV | cut -f 3 -d .)"
+KMV="$(echo $PV | cut -f 1-2 -d .)"
+KSV="$(echo $PV | cut -f 1-3 -d .)"
 
-# Kernel Version (Short)
-KVS="$(echo $PV | cut -f 1-2 -d .)"
-# Kernel version (Long)
-KVL="$(echo $PV | cut -f 1-3 -d .)"
-
-BFQ_VER="${KVS}.8+-v7r5"
-BLD_VER="${KVS}.0"
+BFQ_VER="3.10.8+-v7r5"
+BLD_VER="3.10.0"
 BLD_SRC="https://bld.googlecode.com/files/bld-${BLD_VER}.patch"
-CK_VER="${KVS}-ck1"
+CK_VER="3.10-ck1"
 # HARDENED_VER="3.10.11"
-ICE_VER="for-linux-${KVS}.45-2014-06-27"
-LQX_VER="${KVS}.22-1"
-MAGEIA_VER="releases/${KVS}.10/3.mga4"
-OPTIMIZE_VER="2"
-PAX_VER="${KVS}.12-test26"
-REISER4_VER="${KVS}"
-# RT_VER="${KSV}-rt25"
+ICE_VER="for-linux-3.10.45-2014-06-27"
+# LQX_VER="3.10.22-1"
+MAGEIA_VER="releases/3.10.10/3.mga4"
+PAX_VER="3.10.12-test26"
+REISER4_VER="3.10"
+# RT_VER="3.10.44-rt46-rc1"
 RSBAC_VER="1.4.7"
-RSBAC_NAME="patch-linux-${KVS}.7-rsbac-${RSBAC_VER}.diff.xz"
+RSBAC_NAME="patch-linux-3.10.7-rsbac-${RSBAC_VER}.diff.xz"
 UKSM_VER="0.1.2.3"
-UKSM_NAME="uksm-${UKSM_VER}-for-v${KVS}.ge.46" #.${MINREV}"
+UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.46"
 
-SUPPORTED_USES="aufs bfq bld brand -build cjktty ck fedora gentoo ice lqx mageia openwrt optimize pax pf reiser4 rh rsbac suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bld brand -build cjktty ck deblob fedora gentoo ice mageia openwrt pax pf reiser4 rsbac suse symlink uksm zen zfs"
 
 inherit geek-sources
 

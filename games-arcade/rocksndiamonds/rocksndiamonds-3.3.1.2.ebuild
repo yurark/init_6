@@ -24,6 +24,8 @@ SLOT="0"
 KEYWORDS="amd64 ppc x86"
 IUSE="X sdl"
 
+RESTRICT="mirror"
+
 RDEPEND="X? ( x11-libs/libX11 )
 	!sdl? ( x11-libs/libX11 )
 	sdl? (

@@ -21,7 +21,7 @@ FONTDIR="/usr/share/consolefonts"
 S="${WORKDIR}/iso-latin-1-${PV}"
 
 # Only installs fonts.
-RESTRICT="strip binchecks"
+RESTRICT="mirror strip binchecks"
 
 src_compile() {
 	emake || die "Build failed!"

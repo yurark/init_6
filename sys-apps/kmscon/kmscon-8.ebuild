@@ -8,6 +8,7 @@ if [[ $PV = *9999* ]]; then
 	scm_eclass=git-2
 	EGIT_REPO_URI="
 				git://people.freedesktop.org/~dvdhrm/${PN}
+				git://github.com/dvdhrm/${PN}.git
 				git://github.com/dvdhrm/${PN}.git"
 	SRC_URI=""
 	KEYWORDS=""
@@ -24,16 +25,16 @@ HOMEPAGE="http://www.freedesktop.org/wiki/Software/kmscon"
 LICENSE="MIT LGPL-2.1 BSD-2"
 SLOT="0"
 IUSE="dbus debug doc +drm +fbdev +gles2 multiseat +optimizations +pango pixman
-static-libs systemd udev +unicode wayland"
+static-libs systemd truetype udev +unicode wayland"
 
 COMMON_DEPEND="
 	dev-libs/glib:2
 	>=virtual/udev-172
 	x11-libs/libxkbcommon
-	>=sys-libs/libtsm-3
 	dbus? ( sys-apps/dbus )
 	drm? ( x11-libs/libdrm
 		>=media-libs/mesa-8.0.3[egl,gbm] )
+	truetype? ( media-libs/freetype:2 )
 	gles2? ( >=media-libs/mesa-8.0.3[gles2] )
 	pango? ( x11-libs/pango )
 	systemd? ( sys-apps/systemd )
@@ -105,10 +106,14 @@ src_configure() {
 		video_enable drm3d
 	fi
 
-	# Font rendering backends
+	# Font rendering backends 
 
 	if use unicode; then
 		fonts_enable unifont
+	fi
+
+	if use truetype; then
+		fonts_enable freetype2
 	fi
 
 	if use pango; then

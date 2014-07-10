@@ -14,6 +14,8 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86 ~sparc"
 
+RESTRICT="mirror"
+
 DEPEND="games-fps/yamagi-quake2"
 RDEPEND="${DEPEND}"
 
