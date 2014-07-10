@@ -56,8 +56,7 @@ ck_init_variables
 HOMEPAGE="${HOMEPAGE} ${CK_URL}"
 
 SRC_URI="${SRC_URI}
-	ck?	( ${CK_SRC}
-		  ${BFS_SRC} )"
+	ck?	( ${CK_SRC} )"
 
 # @FUNCTION: src_prepare
 # @USAGE:
