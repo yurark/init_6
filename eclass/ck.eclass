@@ -40,20 +40,11 @@ EXPORT_FUNCTIONS src_prepare pkg_postinst
 ck_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	#: ${BFS_VER:=${BFS_VER:-""}} # BFS incremental update versions
-	if [ -n "${BFS_VER}" ]; then
-	: ${BFS_SRC:=${BFS_SRC:-"http://ck.kolivas.org/patches/bfs/3.0/${KMV}/bfs${BFS_VER}.patch"}} # BFS incremental update source url
-	fi
-	: ${BFS_INF:=${BFS_INF:-"${YELLOW}Con Kolivas' BFS scheduler incremental patch ${GREEN}${BFS_VER}${YELLOW}"}}
-	
 	: ${CK_VER:=${CK_VER:-"${KMV}-ck1"}} # Patchset version
 	: ${CK_SRC:=${CK_SRC:-"http://ck.kolivas.org/patches/3.0/${KMV}/${CK_VER}/patch-${CK_VER}.lrz"}} # Patchset sources url
 	: ${CK_URL:=${CK_URL:-"http://users.on.net/~ckolivas/kernel"}} # Patchset url
 	: ${CK_INF:=${CK_INF:-"${YELLOW}Con Kolivas' high performance patchset version ${GREEN}${CK_VER}${YELLOW} from ${GREEN}${CK_URL}${NORMAL}"}}
 
-	debug-print "${FUNCNAME}: BFS_VER=${BFS_VER}"
-	debug-print "${FUNCNAME}: BFS_SRC=${BFS_SRC}"
-	debug-print "${FUNCNAME}: BFS_INFO=${BFS_INFO}"
 	debug-print "${FUNCNAME}: CK_VER=${CK_VER}"
 	debug-print "${FUNCNAME}: CK_SRC=${CK_SRC}"
 	debug-print "${FUNCNAME}: CK_URL=${CK_URL}"
@@ -75,12 +66,6 @@ ck_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/patch-${CK_VER}.lrz" "${CK_INF}"
-	
-	# Patch with incremental BFS patch if specified
-	if [ -n "${BFS_VER}" ]; then
-		ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/bfs${BFS_VER}.patch" "${BFS_INF}"
-	fi
-
 	ApplyUserPatch "ck"
 
 	# Comment out EXTRAVERSION added by CK patch:
