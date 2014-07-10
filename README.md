@@ -27,6 +27,7 @@ In this overlay you will find
  * [app-admin/perl-cleaner](https://github.com/init6/init_6/tree/master/app-admin/perl-cleaner) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
  * [app-admin/python-updater](https://github.com/init6/init_6/tree/master/app-admin/python-updater) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
  * [app-portage/gentoolkit](https://github.com/init6/init_6/tree/master/app-portage/gentoolkit) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [app-portage/ibashrc](https://github.com/init6/ibashrc) Portage's intelligent bashrc.
  * [app-portage/udept](https://github.com/init6/init_6/tree/master/app-portage/udept) is a collection of Portage scripts, maintenance tools and analysis tools, written in bash and powered by the dep engine
  * [dev-libs/shflags](https://github.com/init6/init_6/tree/master/dev-libs/shflags) Simplified handling of command-line flags in Bourne based shells
  * [dev-vcs/git-flow-completion](https://github.com/init6/init_6/tree/master/dev-vcs/git-flow-completion) git flow completion for bash and zsh
