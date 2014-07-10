@@ -1,0 +1,33 @@
+# Copyright 2009-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+EAPI=5
+
+inherit git-2
+
+DESCRIPTION="Portage's intelligent bashrc."
+HOMEPAGE="https://github.com/init6/ibashrc"
+
+EGIT_REPO_URI="https://github.com/init6/ibashrc.git"
+KEYWORDS="~amd64 ~x86"
+LICENSE="GPL-3"
+SLOT="0"
+IUSE=""
+
+DEPEND=""
+RDEPEND="${DEPEND}"
+
+src_install() {
+	test -d "${D}/etc/portage" >/dev/null 2>&1 && cd "${D}/etc/portage" || mkdir -p "${D}/etc/portage"; cd "${D}/etc/portage"
+	cp "${S}/bashrc" "${D}/etc/portage/ibashrc" || die
+}
+
+pkg_postinst() {
+	echo
+	einfo
+	einfo "In order to enable ibashrc go to /etc/portage and do:"
+	einfo "ln -s ibashrc bashrc"
+	einfo
+	echo
+}
