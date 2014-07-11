@@ -27,7 +27,7 @@ In this overlay you will find
  * [app-admin/perl-cleaner](https://github.com/init6/init_6/tree/master/app-admin/perl-cleaner) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
  * [app-admin/python-updater](https://github.com/init6/init_6/tree/master/app-admin/python-updater) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
  * [app-portage/gentoolkit](https://github.com/init6/init_6/tree/master/app-portage/gentoolkit) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
- * [app-portage/ibashrc](https://github.com/init6/ibashrc) Portage's intelligent bashrc.
+ * [app-portage/ibashrc](https://github.com/init6/init_6/tree/master/app-portage/ibashrc) [Portage's intelligent bashrc](https://github.com/init6/ibashrc).
  * [app-portage/udept](https://github.com/init6/init_6/tree/master/app-portage/udept) is a collection of Portage scripts, maintenance tools and analysis tools, written in bash and powered by the dep engine
  * [dev-libs/shflags](https://github.com/init6/init_6/tree/master/dev-libs/shflags) Simplified handling of command-line flags in Bourne based shells
  * [dev-vcs/git-flow-completion](https://github.com/init6/init_6/tree/master/dev-vcs/git-flow-completion) git flow completion for bash and zsh
@@ -113,23 +113,23 @@ Static sets:
 	@toolchain	= Only toolchain
 	@wireless	= wireless stuff set
 	@X		= X stuff set
-	@kde-4.12	= Custom Kde set
+	@kde-4.13	= Custom Kde set
 
 	Kde sub sets:
 	----------
 
-	@kdeadmin-4.12
-	@kdeartwork-4.12
-	@kdebase-4.12
-	@kde-baseapps-4.12
-	@kdebase-runtime-4.12
-	@kdebase-workspace-4.12
-	@kdegraphics-4.12
-	@kdelibs-4.12
-	@kdemultimedia-4.12
-	@kdenetwork-4.12
-	@kdepim-4.12
-	@kdeutils-4.12
+	@kdeadmin-4.13
+	@kdeartwork-4.13
+	@kdebase-4.13
+	@kde-baseapps-4.13
+	@kdebase-runtime-4.13
+	@kdebase-workspace-4.13
+	@kdegraphics-4.13
+	@kdelibs-4.13
+	@kdemultimedia-4.13
+	@kdenetwork-4.13
+	@kdepim-4.13
+	@kdeutils-4.13
 
 Developer sets:
 ---------------
