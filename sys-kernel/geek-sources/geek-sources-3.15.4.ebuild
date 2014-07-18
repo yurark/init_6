@@ -22,13 +22,13 @@ OPENELEC_VER="${KSV}"
 OPTIMIZATION_SRC="https://raw.githubusercontent.com/graysky2/kernel_gcc_patch/master/enable_additional_cpu_optimizations_for_gcc_v4.9+_kernel_v${KMV}+.patch"
 PAX_VER="3.15.4-test2"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
-# REISER4_VER="3.14.1"
+REISER4_VER="3.14.1"
 # RT_VER="${KSV}-rt17"
 SUSE_VER="stable"
 UKSM_VER="0.1.2.3"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.3"
 
-SUPPORTED_USES="aufs bfq brand -build ck deblob exfat fedora gentoo grsec ice lqx mageia openwrt openelec optimize pax pf suse symlink uksm zfs"
+SUPPORTED_USES="aufs bfq brand -build ck deblob exfat fedora gentoo grsec ice lqx mageia openwrt openelec optimize pax pf reiser suse symlink uksm zfs"
 
 inherit geek-sources
 
