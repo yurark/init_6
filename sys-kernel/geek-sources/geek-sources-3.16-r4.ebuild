@@ -25,7 +25,7 @@ SUSE_VER="linux-next"
 # UKSM_VER="0.1.2.3"
 # UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.3"
 
-SUPPORTED_USES="aufs brand -build -deblob fedora gentoo suse symlink zfs"
+SUPPORTED_USES="aufs brand -build -deblob fedora suse symlink zfs"
 
 inherit geek-sources
 
