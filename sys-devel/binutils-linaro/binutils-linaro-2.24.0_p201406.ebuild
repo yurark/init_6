@@ -21,4 +21,4 @@ SRC_URI="http://releases.linaro.org/${DATE_YEAR_L}.${DATE_MONTH}/components/tool
 
 RESTRICT="mirror"
 
-S=${WORKDIR}/binutils-linaro-${LINARO_VER}
+S=${WORKDIR}/${PN}-${LINARO_VER}
