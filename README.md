@@ -44,7 +44,10 @@ In this overlay you will find
  * [net-wireless/broadcom-sta](https://github.com/init6/init_6/tree/master/net-wireless/broadcom-sta) fix for [bug #484676](https://bugs.gentoo.org/show_bug.cgi?id=484676)
  * [sys-apps/squashed-portage](https://github.com/init6/init_6/tree/master/sys-apps/squashed-portage) [squashed-portage](https://github.com/init6/squashed-portage) by the old wiki [squashed portage tree](http://web.archive.org/web/20130412155603/http://en.gentoo-wiki.com/wiki/Squashed_Portage_Tree) or [mirror](https://github.com/init6/init_6/wiki/squashed-portage-tree). [project wiki](https://github.com/init6/init_6/wiki/squashed-portage-tree)
  * [sys-devel/binutils-config](https://github.com/init6/init_6/tree/master/sys-devel/binutils-config) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [sys-devel/binutils-linaro](https://github.com/init6/init_6/tree/master/sys-devel/binutils-linaro) [Tools necessary to build programs](https://www.gnu.org/software/binutils) with [Linaro](http://www.linaro.org) patches
  * [sys-devel/gcc-config](https://github.com/init6/init_6/tree/master/sys-devel/gcc-config) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [sys-devel/gcc-linaro](https://github.com/init6/init_6/tree/master/sys-devel/gcc-linaro) [The GNU Compiler Collection](https://gcc.gnu.org) with [Linaro](http://www.linaro.org) patches
+ * [sys-devel/gdb-linaro](https://github.com/init6/init_6/tree/master/sys-devel/gdb-linaro) [GNU debugger](https://www.gnu.org/software/gdb) with [Linaro](http://www.linaro.org) patches
  * [sys-firmware/intel-ucode](https://github.com/init6/init_6/tree/master/sys-firmware/intel-ucode) intel IA32 microcode update data
  * [sys-firmware/nouveau-firmware](https://github.com/init6/init_6/tree/master/sys-firmware/nouveau-firmware) fix for [bug #480832](https://bugs.gentoo.org/show_bug.cgi?id=480832)
  * [sys-kernel/geek-sources](https://github.com/init6/init_6/tree/master/sys-kernel/geek-sources) [Full geek`s kernel linux sources including](https://github.com/init6/init_6/wiki/geek-sources):
