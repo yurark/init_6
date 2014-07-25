@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="5"
+EAPI="4"
 
 #PATCH_VER="1.0"
 #UCLIBC_VER="1.0"
@@ -26,12 +26,13 @@ GCC_RELEASE_VER=${PV}
 GCC_VER="${PV/_p*/}"
 DATE_VERSION="${PV/*_p}"
 DATE_YEAR="${DATE_VERSION:0:4}"
-DATE_MONTH="${DATE_VERSION:4:6}-1"
+DATE_YEAR_L="${DATE_VERSION:2:2}"
+DATE_MONTH="${DATE_VERSION:4:6}"
 LINARO_VER="${GCC_VER}-${DATE_YEAR}.${DATE_MONTH}"
 
 DESCRIPTION="The GNU Compiler Collection with Linaro patches"
 HOMEPAGE="http://www.linaro.org"
-SRC_URI="http://releases.linaro.org/${DATE_MONTH}/components/toolchain/gcc-linaro/${GCC_VER}/gcc-linaro-${LINARO_VER}.tar.xz"
+SRC_URI="http://releases.linaro.org/${DATE_YEAR_L}.${DATE_MONTH}/components/toolchain/gcc-linaro/${GCC_VER}/gcc-linaro-${LINARO_VER}-1.tar.xz"
 RESTRICT="mirror"
 LICENSE="GPL-3+ LGPL-3+ || ( GPL-3+ libgcc libstdc++ gcc-runtime-library-exception-3.1 ) FDL-1.3+"
 
