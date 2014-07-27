@@ -55,16 +55,19 @@ case ${PV} in
 	;;
 esac
 
-PATCH_VER="1"
 case ${PV} in
 *.*.*_p*)
 	DESCRIPTION="GNU debugger with Linaro patches"
 	HOMEPAGE="http://www.linaro.org"
+	S=${WORKDIR}/${PN}-${LINARO_VER}-1
+	PATCH_VER=""
 	;;
 *)
 	DESCRIPTION="GNU debugger"
 	HOMEPAGE="http://sourceware.org/gdb/"
-	SRC_URI="${SRC_URI} ${PATCH_VER:+mirror://gentoo/${P}-patches-${PATCH_VER}.tar.xz}"
+	[[ -n ${PATCH_VER} ]] && SRC_URI="${SRC_URI} ${PATCH_VER:+mirror://gentoo/${P}-patches-${PATCH_VER}.tar.xz}"
+	S=${WORKDIR}/${PN}-${MY_PV}
+	PATCH_VER="1"
 	;;
 esac
 
@@ -88,8 +91,6 @@ DEPEND="${RDEPEND}
 	virtual/yacc
 	test? ( dev-util/dejagnu )
 	nls? ( sys-devel/gettext )"
-
-S=${WORKDIR}/${PN}-${MY_PV}
 
 pkg_setup() {
 	use python && python-single-r1_pkg_setup

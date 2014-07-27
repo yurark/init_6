@@ -4,7 +4,7 @@
 
 EAPI="5"
 
-PATCHVER="1.0"
+#PATCHVER="1.0"
 ELF2FLT_VER=""
 inherit toolchain-binutils
 
@@ -20,3 +20,5 @@ DESCRIPTION="Tools necessary to build programs with Linaro patches"
 SRC_URI="http://releases.linaro.org/${DATE_YEAR_L}.${DATE_MONTH}/components/toolchain/binutils-linaro/binutils-linaro-${LINARO_VER}.tar.bz2"
 
 RESTRICT="mirror"
+
+S=${WORKDIR}/${PN}-${LINARO_VER}
