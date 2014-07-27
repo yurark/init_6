@@ -34,10 +34,10 @@
 # Bugs: https://github.com/init6/init_6/issues
 # Wiki: https://github.com/init6/init_6/wiki/geek-sources
 
-case ${EAPI} in
-	5)	: ;;
-	*)	die "geek-suse.eclass: unsupported EAPI=${EAPI:-0}" ;;
-esac
+#case ${EAPI} in
+#	5)	: ;;
+#	*)	die "versionator.eclass: unsupported EAPI=${EAPI:-0}" ;;
+#esac
 
 if [[ ${___ECLASS_ONCE_VERSIONATOR} != "recur -_+^+_- spank" ]] ; then
 ___ECLASS_ONCE_VERSIONATOR="recur -_+^+_- spank"

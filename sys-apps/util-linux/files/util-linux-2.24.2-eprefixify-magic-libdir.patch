@@ -1,0 +1,12 @@
+diff -urpN util-linux-2.24.1.orig/configure.ac util-linux-2.24.1/configure.ac
+--- util-linux-2.24.1.orig/configure.ac	2014-01-20 04:34:28.968579449 -0800
++++ util-linux-2.24.1/configure.ac	2014-05-24 16:45:30.409538755 -0700
+@@ -73,7 +73,7 @@ usrsbin_execdir='${exec_prefix}/sbin'
+ AC_SUBST([usrsbin_execdir])
+ 
+ AS_CASE([$libdir],
+- ['${exec_prefix}/'* | '${prefix}/'* | /usr/*],
++ ['${exec_prefix}/'* | '${prefix}/'* | '@GENTOO_PORTAGE_EPREFIX@'/usr/*],
+    [usrlib_execdir=$libdir],
+  [usrlib_execdir='${exec_prefix}'$libdir]
+ )
