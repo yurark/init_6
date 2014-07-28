@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=5
-inherit eutils rpm toolchain-funcs
+inherit eutils rpm toolchain-funcs systemd
 
 KEYWORDS="~amd64 ~x86 ~arm-linux ~x86-linux"
 DESCRIPTION="Android platform tools (adb and fastboot)"
@@ -48,4 +48,9 @@ src_install() {
 	doexe adb/adb
 	doexe fastboot/fastboot
 	dodoc adb/{OVERVIEW,SERVICES}.TXT
+	# udev rules
+	insinto /lib/udev/rules.d/
+	doins ../51-android.rules
+	# systemd unit file
+	systemd_dounit ../adb.service
 }
