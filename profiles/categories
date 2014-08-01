@@ -18,3 +18,6 @@ virtual
 www-apps
 www-client
 x11-themes
+cross-mipsel-rtn16-linux-gnu
+cross-mipsel-pc-linux-gnu
+cross-mips-unknown-linux-gnu
