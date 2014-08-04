@@ -14,7 +14,7 @@ For add overlay
 
 Install layman
 
-    emerge -av layman
+    emerge -av layman; layman -L
 
 and run
 

@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI="5"
-DEBLOB_AVAILABLE="0"
+DEBLOB_AVAILABLE="1"
 
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
@@ -13,7 +13,7 @@ BFQ_VER="3.15.0-v7r5"
 # BLD_VER="3.13-rc1"
 CK_VER="3.15-ck1"
 FEDORA_VER="f20"
-GRSEC_VER="3.0-${KSV}-201407072046" # 07/07/14 20:47
+GRSEC_VER="3.0-${KSV}-201408010648" # 07/07/14 20:47
 GRSEC_SRC="https://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 ICE_VER="for-linux-3.15.2-2014-06-27"
 LQX_VER="3.15.3-1"
