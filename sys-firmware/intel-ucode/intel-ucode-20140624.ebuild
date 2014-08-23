@@ -6,17 +6,21 @@ EAPI=5
 
 inherit linux-info toolchain-funcs
 
-NUM="23574"
+# Find updates by searching and clicking the first link (hopefully it's the one):
+# http://www.intel.com/content/www/us/en/search.html?keyword=Processor+Microcode+Data+File
+
+NUM="23984"
 DESCRIPTION="Intel IA32 microcode update data"
-HOMEPAGE="http://downloadcenter.intel.com/SearchResult.aspx?lang=eng&keyword=%22microcode%22"
+HOMEPAGE="http://inertiawar.com/microcode/ https://downloadcenter.intel.com/Detail_Desc.aspx?DwnldID=${NUM}"
 SRC_URI="http://downloadmirror.intel.com/${NUM}/eng/microcode-${PV}.tgz"
 
 LICENSE="intel-ucode"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="-* ~amd64 ~x86"
 IUSE=""
 
-RDEPEND="!sys-apps/microcode-data"
+RDEPEND="!sys-apps/microcode-data
+	!<sys-apps/microcode-ctl-1.17-r2" #268586
 
 S="${WORKDIR}"
 
@@ -24,7 +28,7 @@ CONFIG_CHECK="~MICROCODE_INTEL"
 ERROR_MICROCODE_INTEL="Your kernel needs to support Intel microcode loading. You're suggested to build it as a module as it doesn't require a reboot to reload the microcode, that way."
 
 src_unpack() {
-	unpack ${A}
+	default
 	cp "${FILESDIR}"/intel-microcode2ucode.c ./ || die
 }
 
@@ -35,7 +39,7 @@ src_compile() {
 
 src_install() {
 	insinto /lib/firmware
-	doins -r intel-ucode
+	doins -r microcode.dat intel-ucode
 }
 
 pkg_postinst() {
