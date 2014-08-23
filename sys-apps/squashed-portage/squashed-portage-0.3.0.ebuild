@@ -4,11 +4,18 @@
 
 EAPI=5
 
+if [[ ${PV} == "9999" ]] ; then
+	inherit git-2
+	EGIT_REPO_URI="https://github.com/init6/${PN}.git"
+	SRC_URI=""
+else
+	SRC_URI="https://github.com/init6/${PN}/archive/${PV}.tar.gz -> ${PN}-${PV}.tar.gz"
+fi
+
 inherit eutils
 
 DESCRIPTION="Squashed portage tree"
 HOMEPAGE="https://github.com/init6/squashed-portage"
-SRC_URI="https://github.com/init6/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
