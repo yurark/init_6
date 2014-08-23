@@ -24,32 +24,44 @@ If you've never worked with a overlay, please read [Gentoo Overlays: Users' Guid
 
 In this overlay you will find
 -----------------------------
- * [app-admin/perl-cleaner](https://github.com/init6/init_6/tree/master/app-admin/perl-cleaner) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
- * [app-admin/python-updater](https://github.com/init6/init_6/tree/master/app-admin/python-updater) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
- * [app-portage/gentoolkit](https://github.com/init6/init_6/tree/master/app-portage/gentoolkit) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
- * [app-portage/ibashrc](https://github.com/init6/init_6/tree/master/app-portage/ibashrc) [Portage's intelligent bashrc](https://github.com/init6/ibashrc).
- * [app-portage/udept](https://github.com/init6/init_6/tree/master/app-portage/udept) is a collection of Portage scripts, maintenance tools and analysis tools, written in bash and powered by the dep engine
- * [dev-libs/shflags](https://github.com/init6/init_6/tree/master/dev-libs/shflags) Simplified handling of command-line flags in Bourne based shells
- * [dev-vcs/git-flow-completion](https://github.com/init6/init_6/tree/master/dev-vcs/git-flow-completion) git flow completion for bash and zsh
- * [dev-vcs/gitflow](https://github.com/init6/init_6/tree/master/dev-vcs/gitflow) fix for [bug #419943](https://bugs.gentoo.org/show_bug.cgi?id=419943)
- * [dev-vcs/gitlab-shell](https://github.com/init6/init_6/tree/master/dev-vcs/gitlab-shell) GitLab Shell is a free SSH access and repository management application
- * [games-arcade/rocksndiamonds](https://github.com/init6/init_6/tree/master/games-arcade/rocksndiamonds) A Boulderdash clone
- * [games-fps/quake2-groundzero-data](https://github.com/init6/init_6/tree/master/games-fps/quake2-groundzero-data) Quake 2: Ground Zero data files
- * [games-fps/quake2-reckoning-data](https://github.com/init6/init_6/tree/master/games-fps/quake2-reckoning-data) Quake 2: The Reckoning data files
- * [games-fps/yamagi-quake2](https://github.com/init6/init_6/tree/master/games-fps/yamagi-quake2) An enhanced client for id Software's Quake II with full 64-bit support
- * [games-fps/yamagi-quake2-ctf](https://github.com/init6/init_6/tree/master/games-fps/yamagi-quake2-ctf) Three Wave Caputure The Flag
- * [games-fps/yamagi-quake2-rogue](https://github.com/init6/init_6/tree/master/games-fps/yamagi-quake2-rogue) Quake II Mission Pack 2 - Ground Zero
- * [games-fps/yamagi-quake2-xatrix](https://github.com/init6/init_6/tree/master/games-fps/yamagi-quake2-xatrix) Quake II Mission Pack 1 - The Reckoning
- * [media-fonts/iso_latin_1](https://github.com/init6/init_6/tree/master/media-fonts/iso_latin_1) iso-latin-1 based linux console font
- * [net-wireless/broadcom-sta](https://github.com/init6/init_6/tree/master/net-wireless/broadcom-sta) fix for [bug #484676](https://bugs.gentoo.org/show_bug.cgi?id=484676)
+ * [app-admin/perl-cleaner](https://github.com/init6/init_6/tree/master/app-admin/perl-cleaner) [User land tool for cleaning up old perl installs](http://www.gentoo.org/proj/en/perl/) with my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [app-admin/python-updater](https://github.com/init6/init_6/tree/master/app-admin/python-updater) [Script used to reinstall Python packages after changing of active Python versions](http://www.gentoo.org/proj/en/Python/) with my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [app-misc/mc](https://github.com/init6/init_6/tree/master/app-misc/mc) [GNU Midnight Commander is a text based file manager](http://www.midnight-commander.org) with adb:// support
+ * [app-portage/gentoolkit](https://github.com/init6/init_6/tree/master/app-portage/gentoolkit) [Collection of administration scripts for Gentoo](http://www.gentoo.org/proj/en/portage/tools/index.xml) with my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [app-portage/ibashrc](https://github.com/init6/init_6/tree/master/app-portage/ibashrc) [Portage's intelligent bashrc](https://github.com/init6/ibashrc)
+ * [app-portage/udept](https://github.com/init6/init_6/tree/master/app-portage/udept) [Udept is a collection of Portage scripts, maintenance tools and analysis tools, written in bash and powered by the dep engine](https://github.com/init6/udept)
+ * [dev-lang/julia](https://github.com/init6/init_6/tree/master/dev-lang/julia) [High-level, high-performance dynamic programming language for technical computing](http://julialang.org/)
+ * [dev-libs/double-conversion](https://github.com/init6/init_6/tree/master/dev-libs/double-conversion) [Binary-decimal and decimal-binary routines forIEEE doubles](http://code.google.com/p/double-conversion/)
+ * [dev-libs/libgcrypt](https://github.com/init6/init_6/tree/master/dev-libs/libgcrypt) [General purpose crypto library based on the code used in GnuPG](http://www.gnupg.org/)
+ * [dev-libs/libgpg-error](https://github.com/init6/init_6/tree/master/dev-libs/libgpg-error) [Contains error handling functions used by GnuPG software](http://www.gnupg.org/related_software/libgpg-error)
+ * [dev-libs/shflags](https://github.com/init6/init_6/tree/master/dev-libs/shflags) [Simplified handling of command-line flags in Bourne based shells](http://code.google.com/p/shflags/)
+ * [dev-libs/utf8proc](https://github.com/init6/init_6/tree/master/dev-libs/utf8proc) [library for processing UTF-8 encoded Unicode strings](http://www.public-software-group.org/utf8proc)
+ * [dev-util/android-tools](https://github.com/init6/init_6/tree/master/dev-util/android-tools) [Android platform tools (adb and fastboot)](https://android.googlesource.com/platform/system/core.git/)
+ * [dev-vcs/git-flow-completion](https://github.com/init6/init_6/tree/master/dev-vcs/git-flow-completion) [git flow completion for bash and zsh](https://github.com/bobthecow/git-flow-completion)
+ * [dev-vcs/gitflow](https://github.com/init6/init_6/tree/master/dev-vcs/gitflow) [Git extensions supporting an advanced branching model](https://github.com/nvie/gitflow) fix for [bug #419943](https://bugs.gentoo.org/show_bug.cgi?id=419943)
+ * [dev-vcs/gitlab-shell](https://github.com/init6/init_6/tree/master/dev-vcs/gitlab-shell) [GitLab Shell is a free SSH access and repository management application](https://github.com/gitlabhq/gitlab-shell)
+ * [games-arcade/rocksndiamonds](https://github.com/init6/init_6/tree/master/games-arcade/rocksndiamonds) [A Boulderdash clone](http://www.artsoft.org/rocksndiamonds/)
+ * [games-engines/openjk](https://github.com/init6/init_6/tree/master/games-engines/openjk) [Open Source Jedi Academy and Jedi Outcast games engine](https://github.com/JACoders/OpenJK)
+ * [games-fps/quake2-groundzero-data](https://github.com/init6/init_6/tree/master/games-fps/quake2-groundzero-data) [Quake 2: Ground Zero data files](http://www.roguesoftware.com/)
+ * [games-fps/quake2-reckoning-data](https://github.com/init6/init_6/tree/master/games-fps/quake2-reckoning-data) [Quake 2: The Reckoning data files](http://www.gmistudios.com/)
+ * [games-fps/yamagi-quake2](https://github.com/init6/init_6/tree/master/games-fps/yamagi-quake2) [An enhanced client for id Software's Quake II with full 64-bit support](https://github.com/yquake2/yquake2)
+ * [games-fps/yamagi-quake2-ctf](https://github.com/init6/init_6/tree/master/games-fps/yamagi-quake2-ctf) [Three Wave Caputure The Flag](https://github.com/yquake2/yquake2)
+ * [games-fps/yamagi-quake2-rogue](https://github.com/init6/init_6/tree/master/games-fps/yamagi-quake2-rogue) [Quake II Mission Pack 2 - Ground Zero](https://github.com/yquake2/yquake2)
+ * [games-fps/yamagi-quake2-xatrix](https://github.com/init6/init_6/tree/master/games-fps/yamagi-quake2-xatrix) [Quake II Mission Pack 1 - The Reckoning](https://github.com/yquake2/yquake2)
+ * [media-fonts/iso_latin_1](https://github.com/init6/init_6/tree/master/media-fonts/iso_latin_1) [iso-latin-1 based linux console font](https://github.com/init6/iso-latin-1)
+ * [net-wireless/broadcom-sta](https://github.com/init6/init_6/tree/master/net-wireless/broadcom-sta) [Broadcom's IEEE 802.11a/b/g/n hybrid Linux device drive](http://www.broadcom.com/support/802.11/linux_sta.php) with fix for [bug #484676](https://bugs.gentoo.org/show_bug.cgi?id=484676)
+ * [sci-libs/openlibm](https://github.com/init6/init_6/tree/master/sci-libs/openlibm) [High quality system independent, open source libm](http://julialang.org/)
+ * [sys-apps/kmscon](https://github.com/init6/init_6/tree/master/sys-apps/kmscon) [KMS/DRM based virtual Console Emulator](http://www.freedesktop.org/wiki/Software/kmscon)
  * [sys-apps/squashed-portage](https://github.com/init6/init_6/tree/master/sys-apps/squashed-portage) [squashed-portage](https://github.com/init6/squashed-portage) by the old wiki [squashed portage tree](http://web.archive.org/web/20130412155603/http://en.gentoo-wiki.com/wiki/Squashed_Portage_Tree) or [mirror](https://github.com/init6/init_6/wiki/squashed-portage-tree). [project wiki](https://github.com/init6/init_6/wiki/squashed-portage-tree)
- * [sys-devel/binutils-config](https://github.com/init6/init_6/tree/master/sys-devel/binutils-config) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [sys-apps/util-linux](https://github.com/init6/init_6/tree/master/sys-apps/util-linux) [Various useful Linux utilities](http://www.kernel.org/pub/linux/utils/util-linux/)
+ * [sys-devel/binutils-config](https://github.com/init6/init_6/tree/master/sys-devel/binutils-config) [Utility to change the binutils version being used](http://www.gentoo.org/) with my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
  * [sys-devel/binutils-linaro](https://github.com/init6/init_6/tree/master/sys-devel/binutils-linaro) [Tools necessary to build programs](https://www.gnu.org/software/binutils) with [Linaro](http://www.linaro.org) patches
- * [sys-devel/gcc-config](https://github.com/init6/init_6/tree/master/sys-devel/gcc-config) my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [sys-devel/gcc-config](https://github.com/init6/init_6/tree/master/sys-devel/gcc-config) [utility to manage compilers](http://git.overlays.gentoo.org/gitweb/?p=proj/gcc-config.git) with my fix of [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
  * [sys-devel/gcc-linaro](https://github.com/init6/init_6/tree/master/sys-devel/gcc-linaro) [The GNU Compiler Collection](https://gcc.gnu.org) with [Linaro](http://www.linaro.org) patches
  * [sys-devel/gdb-linaro](https://github.com/init6/init_6/tree/master/sys-devel/gdb-linaro) [GNU debugger](https://www.gnu.org/software/gdb) with [Linaro](http://www.linaro.org) patches
- * [sys-firmware/intel-ucode](https://github.com/init6/init_6/tree/master/sys-firmware/intel-ucode) intel IA32 microcode update data
- * [sys-firmware/nouveau-firmware](https://github.com/init6/init_6/tree/master/sys-firmware/nouveau-firmware) fix for [bug #480832](https://bugs.gentoo.org/show_bug.cgi?id=480832)
+ * [sys-devel/ipatch](https://github.com/init6/init_6/tree/master/sys-apps/util-linux) [Intelligent patch wrapper](https://github.com/init6/ipatch)
+ * [sys-firmware/intel-ucode](https://github.com/init6/init_6/tree/master/sys-firmware/intel-ucode) [Intel IA32 microcode update data](http://downloadcenter.intel.com/SearchResult.aspx?lang=eng&keyword=%22microcode%22)
+ * [sys-firmware/nouveau-firmware](https://github.com/init6/init_6/tree/master/sys-firmware/nouveau-firmware) [Kernel and mesa firmware for nouveau (video accel and pgraph)](http://nouveau.freedesktop.org/wiki/VideoAcceleration/) my fix for [bug #480832](https://bugs.gentoo.org/show_bug.cgi?id=480832)
  * [sys-kernel/geek-sources](https://github.com/init6/init_6/tree/master/sys-kernel/geek-sources) [Full geek`s kernel linux sources including](https://github.com/init6/init_6/wiki/geek-sources):
      * **aufs** - [Another Union FS](http://aufs.sourceforge.net)
      * **bfq** - [Budget Fair Queueing Budget I/O Scheduler](http://algo.ing.unimo.it/people/paolo/disk_sched/sources.php)
@@ -80,10 +92,13 @@ In this overlay you will find
      * **uksm** - [Use Ultra Kernel Samepage Merging patches](http://kerneldedup.org)
      * **zen** - [Use ZEN kernel patches](https://github.com/damentz/zen-kernel)
      * **zfs** - [The native Linux kernel port of the ZFS filesystem](http://zfsonlinux.org)
- * [sys-kernel/rh-sources](https://github.com/init6/init_6/tree/master/sys-kernel/rh-sources) Full sources including the Red Hat Enterprise Linux sources patchset for the 2.6 kernel tree
- * [sys-kernel/vanilla-sources](https://github.com/init6/init_6/blob/master/sys-kernel/vanilla-sources/vanilla-sources-9999.ebuild) live 9999 git ebuild
- * [sys-libs/core-functions](https://github.com/init6/init_6/tree/master/sys-libs/core-functions) provide alternative for /etc/init.d/functions.sh fix for [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
- * [www-apps/gitlabhq](https://github.com/init6/init_6/tree/master/www-apps/gitlabhq) GitLab is a free project and repository management application
+ * [sys-kernel/rh-sources](https://github.com/init6/init_6/tree/master/sys-kernel/rh-sources) [Full sources including the Red Hat Enterprise Linux sources patchset for the 2.6 kernel tree](http://www.redhat.com/)
+ * [sys-kernel/vanilla-sources](https://github.com/init6/init_6/tree/master/sys-kernel/vanilla-sources) [Full sources for the Linux kernel](http://www.kernel.org)
+ * [sys-libs/core-functions](https://github.com/init6/init_6/tree/master/sys-libs/core-functions) [provide alternative for /etc/init.d/functions.sh](https://github.com/init6/core-functions) my fix for [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
+ * [sys-libs/libtsm](https://github.com/init6/init_6/tree/master/sys-libs/libtsm) [A state machine for DEC VT100-VT520 compatible terminal emulators](http://www.freedesktop.org/wiki/Software/kmscon)
+ * [www-apps/gitlabhq](https://github.com/init6/init_6/tree/master/www-apps/gitlabhq) [GitLab is a free project and repository management application](https://github.com/gitlabhq/gitlabhq)
+ * [x11-misc/urxvt-vtwheel](https://github.com/init6/init_6/tree/master/x11-misc/urxvt-vtwheel) [Scroll wheel support for urxvt](https://aur.archlinux.org/packages/urxvt-vtwheel/)
+ * [x11-terms/rxvt-unicode](https://github.com/init6/init_6/tree/master/x11-terms/rxvt-unicode) [rxvt clone with xft and unicode support](http://software.schmorp.de/pkg/rxvt-unicode.html)
 
 and many fixes and patches…
 
