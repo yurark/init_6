@@ -13,10 +13,10 @@ MY_PV=${PV/_/-}
 MY_P=${PN}-${MY_PV}
 
 if [[ ${PV} == 9999 ]] ; then
-	inherit git-2
+	inherit git-2 autotools
 	EGIT_REPO_URI="git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git"
 else
-	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-linux ~arm-linux ~x86-linux"
+	KEYWORDS="alpha amd64 arm arm64 hppa ia64 m68k ~mips ppc ppc64 s390 sh sparc x86 ~amd64-linux ~arm-linux ~x86-linux"
 	SRC_URI="mirror://kernel/linux/utils/util-linux/v${PV:0:4}/${MY_P}.tar.xz"
 fi
 
@@ -39,7 +39,7 @@ RDEPEND="!sys-process/schedutils
 	ncurses? ( >=sys-libs/ncurses-5.2-r2 )
 	pam? ( sys-libs/pam )
 	python? ( ${PYTHON_DEPS} )
-	selinux? ( sys-libs/libselinux[${MULTILIB_USEDEP}] )
+	selinux? ( >=sys-libs/libselinux-2.2.2-r4[${MULTILIB_USEDEP}] )
 	slang? ( sys-libs/slang )
 	udev? ( virtual/udev )
 	abi_x86_32? (
@@ -63,8 +63,12 @@ pkg_setup() {
 src_prepare() {
 	if [[ ${PV} == 9999 ]] ; then
 		po/update-potfiles
+		eautoreconf
 	fi
+	epatch "${FILESDIR}"/${PN}-2.24-skip-last-tests.patch #491742
 	epatch "${FILESDIR}"/${PN}-2.24-last-tests.patch #501408
+	# http://thread.gmane.org/gmane.linux.utilities.util-linux-ng/9237
+	epatch "${FILESDIR}"/${PN}-2.24-fix-fdisk-on-alpha.patch
 	if use prefix; then
 		epatch "${FILESDIR}"/${P}-eprefixify-magic-libdir.patch #DOABUG
 		eprefixify configure.ac
@@ -96,6 +100,7 @@ want_libuuid() {
 }
 
 multilib_src_configure() {
+	lfs_fallocate_test
 	export ac_cv_header_security_pam_misc_h=$(multilib_native_usex pam) #485486
 	local myconf=(
 		--docdir="${EPREFIX}/usr/share/doc/${PF}"

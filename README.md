@@ -38,7 +38,7 @@ In this overlay you will find
  * [dev-libs/utf8proc](https://github.com/init6/init_6/tree/master/dev-libs/utf8proc) [library for processing UTF-8 encoded Unicode strings](http://www.public-software-group.org/utf8proc)
  * [dev-util/android-tools](https://github.com/init6/init_6/tree/master/dev-util/android-tools) [Android platform tools (adb and fastboot)](https://android.googlesource.com/platform/system/core.git/)
  * [dev-vcs/git-flow-completion](https://github.com/init6/init_6/tree/master/dev-vcs/git-flow-completion) [git flow completion for bash and zsh](https://github.com/bobthecow/git-flow-completion)
- * [dev-vcs/gitflow](https://github.com/init6/init_6/tree/master/dev-vcs/gitflow) [Git extensions supporting an advanced branching model](https://github.com/nvie/gitflow) fix for [bug #419943](https://bugs.gentoo.org/show_bug.cgi?id=419943)
+ * [dev-vcs/git-flow](https://github.com/init6/init_6/tree/master/dev-vcs/git-flow) [Git extensions to provide high-level repository operations for Vincent Driessen's branching model](https://github.com/nvie/gitflow) fix for [bug #419943](https://bugs.gentoo.org/show_bug.cgi?id=419943)
  * [dev-vcs/gitlab-shell](https://github.com/init6/init_6/tree/master/dev-vcs/gitlab-shell) [GitLab Shell is a free SSH access and repository management application](https://github.com/gitlabhq/gitlab-shell)
  * [games-arcade/rocksndiamonds](https://github.com/init6/init_6/tree/master/games-arcade/rocksndiamonds) [A Boulderdash clone](http://www.artsoft.org/rocksndiamonds/)
  * [games-engines/openjk](https://github.com/init6/init_6/tree/master/games-engines/openjk) [Open Source Jedi Academy and Jedi Outcast games engine](https://github.com/JACoders/OpenJK)
