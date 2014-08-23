@@ -18,7 +18,7 @@ IUSE="+bash zsh"
 
 RDEPEND="app-shells/bash
 	zsh? ( app-shells/zsh )
-	dev-vcs/gitflow
+	dev-vcs/git-flow
 	${DEPEND}"
 
 S="${WORKDIR}/${GITHUB_USER}-${PN}-${SRC_HASH}"
