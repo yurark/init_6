@@ -4,11 +4,18 @@
 
 EAPI=5
 
+if [[ ${PV} == "9999" ]] ; then
+	inherit git-2
+	EGIT_REPO_URI="https://github.com/init6/${PN}.git"
+	SRC_URI=""
+else
+	SRC_URI="https://github.com/init6/${PN}/archive/${PV}.tar.gz -> ${PN}-${PV}.tar.gz"
+fi
+
 inherit bash-completion-r1 eutils
 
 DESCRIPTION="A Portage analysis toolkit"
-HOMEPAGE="https://github.com/init6/udept/wiki"
-SRC_URI="https://github.com/init6/${PN}/archive/${PV}.tar.gz -> ${PN}-${PV}.tar.gz"
+HOMEPAGE="https://github.com/init6/udept"
 
 LICENSE="GPL-3"
 SLOT="0"
