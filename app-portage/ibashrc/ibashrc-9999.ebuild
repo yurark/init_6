@@ -4,18 +4,24 @@
 
 EAPI=5
 
-inherit git-2
+if [[ ${PV} == "9999" ]] ; then
+	inherit git-2
+	EGIT_REPO_URI="https://github.com/init6/${PN}.git"
+	SRC_URI=""
+else
+	SRC_URI="https://github.com/init6/${PN}/archive/${PV}.tar.gz -> ${PN}-${PV}.tar.gz"
+fi
 
 DESCRIPTION="Portage's intelligent bashrc."
 HOMEPAGE="https://github.com/init6/ibashrc"
 
-EGIT_REPO_URI="https://github.com/init6/ibashrc.git"
 KEYWORDS="~amd64 ~x86"
 LICENSE="GPL-3"
 SLOT="0"
 IUSE=""
 
-DEPEND=""
+DEPEND="sys-apps/portage
+	sys-devel/ipatch::init6"
 RDEPEND="${DEPEND}"
 
 src_install() {
