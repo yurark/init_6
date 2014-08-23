@@ -11,9 +11,8 @@ DESCRIPTION="High-level, high-performance dynamic programming language for techn
 HOMEPAGE="http://julialang.org/"
 
 if [[ ${PV/9999} != ${PV} ]] ; then
-	SRC_URI=""
 	EGIT_REPO_URI="https://github.com/JuliaLang/julia.git"
-	inherit git-2
+	inherit git-3
 	KEYWORDS="~amd64 ~x86"
 else
 	SRC_URI="https://github.com/JuliaLang/julia/archive/v${PV}.tar.gz -> ${P}.tar.gz"
