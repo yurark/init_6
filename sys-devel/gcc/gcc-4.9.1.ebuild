@@ -4,7 +4,13 @@
 
 EAPI="5"
 
+PATCH_VER="1.0"
+UCLIBC_VER="1.0"
+
 # Hardened gcc 4 stuff
+PIE_VER="0.6.0"
+SPECS_VER="0.2.0"
+SPECS_GCC_VER="4.4.3"
 # arch/libc configurations known to be stable with {PIE,SSP}-by-default
 PIE_GLIBC_STABLE="x86 amd64 mips ppc ppc64 arm ia64"
 PIE_UCLIBC_STABLE="x86 arm amd64 mips ppc ppc64"
@@ -24,29 +30,23 @@ KEYWORDS="amd64 amd64-linux ~x86 ~x86-linux"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-	elibc_glibc? ( >=sys-libs/glibc-2.12 )
-	amd64? ( multilib? ( gcj? ( app-emulation/emul-linux-x86-xlibs ) ) )
+	elibc_glibc? ( >=sys-libs/glibc-2.8 )
 	>=${CATEGORY}/binutils-2.20"
 
 if [[ ${CATEGORY} != cross-* ]] ; then
-	PDEPEND="${PDEPEND} elibc_glibc? ( >=sys-libs/glibc-2.12 )"
+	PDEPEND="${PDEPEND} elibc_glibc? ( >=sys-libs/glibc-2.8 )"
 fi
 
 src_prepare() {
-	export BRANDING_GCC_PKGVERSION="Gentoo Blitznote"
+	if has_version '<sys-libs/glibc-2.12' ; then
+		ewarn "Your host glibc is too old; disabling automatic fortify."
+		ewarn "Please rebuild gcc after upgrading to >=glibc-2.12 #362315"
+		EPATCH_EXCLUDE+=" 10_all_default-fortify-source.patch"
+	fi
 
 	toolchain_src_prepare
 
 	use vanilla && return 0
 	#Use -r1 for newer piepatchet that use DRIVER_SELF_SPECS for the hardened specs.
 	[[ ${CHOST} == ${CTARGET} ]] && epatch "${FILESDIR}"/gcc-spec-env-r1.patch
-}
-
-pkg_postinst() {
-	toolchain_pkg_postinst
-	echo
-	einfo "This GCC ebuild is provided for your convenience, and the use"
-	einfo "of this compiler is not supported by the Gentoo Developers."
-	einfo "Please report bugs to upstream at http://gcc.gnu.org/bugzilla/"
-	echo
 }
