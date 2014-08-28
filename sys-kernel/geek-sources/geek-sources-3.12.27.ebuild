@@ -15,7 +15,7 @@ CK_VER="3.12-ck2"
 FEDORA_VER="f19"
 # GRSEC_VER="3.0-3.12.8-201401191015" # 01/19/14 10:28
 # GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
-ICE_VER="for-linux-3.12.20-2014-06-02"
+ICE_VER="for-linux-3.12.26-2014-08-07"
 # LQX_VER="3.12.11-1" # LQX_VER="${KSV}-1"
 MAGEIA_VER="releases/3.12.13/2.mga5"
 PAX_VER="3.12.8-test15"
