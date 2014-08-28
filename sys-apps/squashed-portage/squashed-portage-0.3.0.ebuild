@@ -5,7 +5,7 @@
 EAPI=5
 
 if [[ ${PV} == "9999" ]] ; then
-	inherit git-3
+	inherit git-r3
 	EGIT_REPO_URI="https://github.com/init6/${PN}.git"
 else
 	SRC_URI="https://github.com/init6/${PN}/archive/${PV}.tar.gz -> ${PN}-${PV}.tar.gz"

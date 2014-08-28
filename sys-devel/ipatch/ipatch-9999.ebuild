@@ -5,7 +5,7 @@
 EAPI=5
 
 if [[ ${PV} == "9999" ]] ; then
-	inherit git-3
+	inherit git-r3
 	EGIT_REPO_URI="https://github.com/init6/${PN}.git"
 else
 	SRC_URI="https://github.com/init6/${PN}/archive/${PV}.tar.gz -> ${PN}-${PV}.tar.gz"
@@ -19,7 +19,7 @@ LICENSE="GPL-3"
 SLOT="0"
 IUSE=""
 
-DEPEND="|| ( sys-libs/core-functions::init6 sys-apps/gentoo-functions )
+DEPEND="|| ( sys-libs/core-functions sys-apps/gentoo-functions )
 	sys-apps/coreutils
 	dev-perl/File-MimeInfo
 	sys-devel/patch
@@ -31,15 +31,5 @@ DEPEND="|| ( sys-libs/core-functions::init6 sys-apps/gentoo-functions )
 RDEPEND="${DEPEND}"
 
 src_install() {
-	test -d "${D}/etc/portage" >/dev/null 2>&1 && cd "${D}/etc/portage" || mkdir -p "${D}/etc/portage"; cd "${D}/etc/portage"
-	cp "${S}/bashrc" "${D}/etc/portage/ibashrc" || die
-}
-
-pkg_postinst() {
-	echo
-	einfo
-	einfo "In order to enable ibashrc go to /etc/portage and do:"
-	einfo "ln -s ibashrc bashrc"
-	einfo
-	echo
+	dobin ipatch || die "dobin failed"
 }

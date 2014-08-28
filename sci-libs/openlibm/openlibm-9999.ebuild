@@ -11,7 +11,7 @@ HOMEPAGE="http://julialang.org/"
 
 if [[ ${PV/9999} != ${PV} ]] ; then
     EGIT_REPO_URI="git://github.com/JuliaLang/openlibm.git"
-    inherit git-3
+    inherit git-r3
     KEYWORDS="~amd64 ~x86"
 else
     SRC_URI="https://github.com/JuliaLang/openlibm/archive/v${PV}.tar.gz -> ${P}.tar.gz"
