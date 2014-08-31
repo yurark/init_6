@@ -32,3 +32,9 @@ change-default-console-loglevel.patch
 # https://git.kernel.org/cgit/linux/kernel/git/iwlwifi/iwlwifi-fixes.git/commit/?id=12f853a89e29f50b17698e17e73c328a35f1498d
 # FS#39815
 0010-iwlwifi-mvm-delay-enabling-smart-FIFO-until-after-be.patch
+
+# #41458 fix hwmon for compal-laptop module
+compal-laptop-hwmon-fix.patch
+
+# FS#41683 fix ring initialization with intel video
+unfuck_intel_video.patch

@@ -22,6 +22,20 @@ index 01d1c18..2a02d82 100644
  {
  	while (*s && n-- > 0) {
  		if (*s == '\n')
+diff --git a/arch/x86/platform/efi/early_printk.c b/arch/x86/platform/efi/early_printk.c
+index 5241421..5eb772c 100644
+--- a/arch/x86/platform/efi/early_printk.c
++++ b/arch/x86/platform/efi/early_printk.c
+@@ -124,7 +124,8 @@ static void early_efi_write_char(u32 *dst, unsigned char c, unsigned int h)
+ }
+ 
+ static void
+-early_efi_write(struct console *con, const char *str, unsigned int num)
++early_efi_write(struct console *con, const char *str, unsigned int num,
++		unsigned int loglevel)
+ {
+ 	struct screen_info *si;
+ 	unsigned int len;
 diff --git a/drivers/accessibility/braille/braille_console.c b/drivers/accessibility/braille/braille_console.c
 index dc34a5b..020118b 100644
 --- a/drivers/accessibility/braille/braille_console.c
@@ -39,7 +53,7 @@ diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
 index ba2f5e7..b649820 100644
 --- a/drivers/net/netconsole.c
 +++ b/drivers/net/netconsole.c
-@@ -728,7 +728,8 @@ static int netconsole_netdev_event(struct notifier_block *this,
+@@ -728,7 +728,8 @@ static struct notifier_block netconsole_netdev_notifier = {
  	.notifier_call  = netconsole_netdev_event,
  };
  
@@ -50,7 +64,7 @@ index ba2f5e7..b649820 100644
  	int frag, left;
  	unsigned long flags;
 diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
-index 978db34..63e7160 100644
+index b24aa01..3a7753a 100644
 --- a/drivers/tty/Kconfig
 +++ b/drivers/tty/Kconfig
 @@ -75,6 +75,111 @@ config VT_CONSOLE_SLEEP
@@ -166,10 +180,10 @@ index 978db34..63e7160 100644
  	bool
  	depends on VT && !UML
 diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index e33d38cb..d73fdfb 100644
+index 2d4bd39..8260485 100644
 --- a/drivers/tty/serial/8250/8250_core.c
 +++ b/drivers/tty/serial/8250/8250_core.c
-@@ -2850,7 +2850,8 @@ static void serial8250_console_putchar(struct uart_port *port, int ch)
+@@ -2876,7 +2876,8 @@ static void serial8250_console_putchar(struct uart_port *port, int ch)
   *	The console_lock must be held when we get here.
   */
  static void
@@ -193,7 +207,7 @@ index c100d63..bb28b49 100644
  	struct uart_port *port = &early_device.port;
  	unsigned int ier;
 diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 61b1137..f1fa906 100644
+index 3ad0b61..f6e8310 100644
 --- a/drivers/tty/vt/vt.c
 +++ b/drivers/tty/vt/vt.c
 @@ -71,6 +71,7 @@
@@ -204,7 +218,7 @@ index 61b1137..f1fa906 100644
  #include <linux/types.h>
  #include <linux/sched.h>
  #include <linux/tty.h>
-@@ -2430,16 +2431,44 @@ int vt_kmsg_redirect(int new)
+@@ -2438,16 +2439,44 @@ int vt_kmsg_redirect(int new)
  		return kmsg_con;
  }
  
@@ -251,7 +265,7 @@ index 61b1137..f1fa906 100644
  	static DEFINE_SPINLOCK(printing_lock);
  	const ushort *start;
  	ushort cnt = 0;
-@@ -2475,11 +2504,20 @@ static void vt_console_print(struct console *co, const char *b, unsigned count)
+@@ -2483,11 +2512,20 @@ static void vt_console_print(struct console *co, const char *b, unsigned count)
  
  	start = (ushort *)vc->vc_pos;
  
@@ -272,7 +286,7 @@ index 61b1137..f1fa906 100644
  			if (cnt > 0) {
  				if (CON_IS_VISIBLE(vc))
  					vc->vc_sw->con_putcs(vc, start, cnt, vc->vc_y, vc->vc_x);
-@@ -2492,6 +2530,7 @@ static void vt_console_print(struct console *co, const char *b, unsigned count)
+@@ -2500,6 +2538,7 @@ static void vt_console_print(struct console *co, const char *b, unsigned count)
  				bs(vc);
  				start = (ushort *)vc->vc_pos;
  				myx = vc->vc_x;
@@ -280,7 +294,7 @@ index 61b1137..f1fa906 100644
  				continue;
  			}
  			if (c != 13)
-@@ -2499,6 +2538,7 @@ static void vt_console_print(struct console *co, const char *b, unsigned count)
+@@ -2507,6 +2546,7 @@ static void vt_console_print(struct console *co, const char *b, unsigned count)
  			cr(vc);
  			start = (ushort *)vc->vc_pos;
  			myx = vc->vc_x;
@@ -288,7 +302,7 @@ index 61b1137..f1fa906 100644
  			if (c == 10 || c == 13)
  				continue;
  		}
-@@ -2521,6 +2561,7 @@ static void vt_console_print(struct console *co, const char *b, unsigned count)
+@@ -2529,6 +2569,7 @@ static void vt_console_print(struct console *co, const char *b, unsigned count)
  			vc->vc_need_wrap = 1;
  		}
  	}
@@ -309,11 +323,33 @@ index 7571a16..af01c35 100644
  	int	(*read)(struct console *, char *, unsigned);
  	struct tty_driver *(*device)(struct console *, int *);
  	void	(*unblank)(void);
+diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+index 14ff484..dfde96e 100644
+--- a/kernel/debug/kdb/kdb_io.c
++++ b/kernel/debug/kdb/kdb_io.c
+@@ -703,7 +703,7 @@ int vkdb_printf(const char *fmt, va_list ap)
+ 			}
+ 		}
+ 		while (c) {
+-			c->write(c, kdb_buffer, retlen);
++			c->write(c, kdb_buffer, retlen, 7); /* 7 == KERN_DEBUG */
+ 			touch_nmi_watchdog();
+ 			c = c->next;
+ 		}
+@@ -764,7 +764,7 @@ int vkdb_printf(const char *fmt, va_list ap)
+ 			}
+ 		}
+ 		while (c) {
+-			c->write(c, moreprompt, strlen(moreprompt));
++			c->write(c, moreprompt, strlen(moreprompt), 7); /* 7 == KERN_DEBUG */
+ 			touch_nmi_watchdog();
+ 			c = c->next;
+ 		}
 diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index be7c86b..8517cbe 100644
+index 7228258..0f52947 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -1282,7 +1282,7 @@ static void call_console_drivers(int level, const char *text, size_t len)
+@@ -1277,7 +1277,7 @@ static void call_console_drivers(int level, const char *text, size_t len)
  		if (!cpu_online(smp_processor_id()) &&
  		    !(con->flags & CON_ANYTIME))
  			continue;
@@ -322,7 +358,7 @@ index be7c86b..8517cbe 100644
  	}
  }
  
-@@ -1732,7 +1732,7 @@ void early_vprintk(const char *fmt, va_list ap)
+@@ -1733,7 +1733,7 @@ void early_vprintk(const char *fmt, va_list ap)
  		char buf[512];
  		int n = vscnprintf(buf, sizeof(buf), fmt, ap);
  
