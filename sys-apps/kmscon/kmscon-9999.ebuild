@@ -5,7 +5,7 @@
 EAPI=5
 
 if [[ $PV = *9999* ]]; then
-	scm_eclass=git-2
+	scm_eclass=git-r3
 	EGIT_REPO_URI="
 				git://people.freedesktop.org/~dvdhrm/${PN}
 				git://github.com/dvdhrm/${PN}.git
