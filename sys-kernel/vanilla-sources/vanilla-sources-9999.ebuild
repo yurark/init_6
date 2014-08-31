@@ -16,7 +16,7 @@ K_SECURITY_UNSUPPORTED="1"
 if [[ ${PV} == "9999" ]] ; then
 	CKV=`date +%F`
 	K_DEBLOB_AVAILABLE="0"
-	inherit git-2
+	inherit git-r3
 	EGIT_REPO_URI="git://github.com/torvalds/linux.git"
 	EGIT_PROJECT="linux"
 	SRC_URI=""
