@@ -111,12 +111,12 @@ case "${PR}" in
 			fi
 		;;
 		3)	extension="xz"
-			kurl="mirror://kernel/linux/kernel/v${VERSION}.0/testing"
+			kurl="mirror://kernel/linux/kernel/v${VERSION}.0"
 			kversion="${VERSION}.$((${PATCHLEVEL} - 1))"
 			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
 				pversion="${PVR//r/rc}"
 				pname="patch-${pversion}.${extension}"
-				SRC_URI="${SRC_URI} ${kurl}/${pname}"
+				SRC_URI="${SRC_URI} ${kurl}/testing/${pname}"
 			fi
 		;;
 		esac

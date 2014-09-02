@@ -8,7 +8,7 @@ DEBLOB_AVAILABLE="0"
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
-# AUFS_VER="3.x-rcN"
+AUFS_VER="3.x-rcN"
 # BFQ_VER="${KSV}-v7r5"
 # BLD_VER="3.16"
 # CK_VER="3.16-ck1"
@@ -25,11 +25,11 @@ SUSE_VER="linux-next"
 # UKSM_VER="0.1.2.3"
 # UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.1"
 
-SUPPORTED_USES="brand -build -deblob fedora suse symlink"
+SUPPORTED_USES="aufs brand -build -deblob fedora gentoo suse symlink zfs"
 
 inherit geek-sources
 
 HOMEPAGE="https://github.com/init6/init_6/wiki/${PN}"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS=""
 
 DESCRIPTION="Full sources for the Linux kernel including: fedora, grsecurity, mageia and other patches"
