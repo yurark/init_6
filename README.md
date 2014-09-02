@@ -90,7 +90,6 @@ In this overlay you will find
      * **zen** - [Use ZEN kernel patches](https://github.com/damentz/zen-kernel)
      * **zfs** - [The native Linux kernel port of the ZFS filesystem](http://zfsonlinux.org)
  * [sys-kernel/rh-sources](https://github.com/init6/init_6/tree/master/sys-kernel/rh-sources) [Full sources including the Red Hat Enterprise Linux sources patchset for the 2.6 kernel tree](http://www.redhat.com/)
- * [sys-kernel/vanilla-sources](https://github.com/init6/init_6/tree/master/sys-kernel/vanilla-sources) [Full sources for the Linux kernel](http://www.kernel.org)
  * [sys-libs/core-functions](https://github.com/init6/init_6/tree/master/sys-libs/core-functions) [provide alternative for /etc/init.d/functions.sh](https://github.com/init6/core-functions) my fix for [bug #373219](https://bugs.gentoo.org/show_bug.cgi?id=373219)
  * [sys-libs/libtsm](https://github.com/init6/init_6/tree/master/sys-libs/libtsm) [A state machine for DEC VT100-VT520 compatible terminal emulators](http://www.freedesktop.org/wiki/Software/kmscon)
  * [www-apps/gitlabhq](https://github.com/init6/init_6/tree/master/www-apps/gitlabhq) [GitLab is a free project and repository management application](https://github.com/gitlabhq/gitlabhq)
