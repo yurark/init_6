@@ -127,23 +127,23 @@ Static sets:
 	@toolchain	= Only toolchain
 	@wireless	= wireless stuff set
 	@X		= X stuff set
-	@kde-4.13	= Custom Kde set
+	@kde-4.14	= Custom Kde set
 
 	Kde sub sets:
 	----------
 
-	@kdeadmin-4.13
-	@kdeartwork-4.13
-	@kdebase-4.13
-	@kde-baseapps-4.13
-	@kdebase-runtime-4.13
-	@kdebase-workspace-4.13
-	@kdegraphics-4.13
-	@kdelibs-4.13
-	@kdemultimedia-4.13
-	@kdenetwork-4.13
-	@kdepim-4.13
-	@kdeutils-4.13
+	@kdeadmin-4.14
+	@kdeartwork-4.14
+	@kdebase-4.14
+	@kde-baseapps-4.14
+	@kdebase-runtime-4.14
+	@kdebase-workspace-4.14
+	@kdegraphics-4.14
+	@kdelibs-4.14
+	@kdemultimedia-4.14
+	@kdenetwork-4.14
+	@kdepim-4.14
+	@kdeutils-4.14
 
 Developer sets:
 ---------------
