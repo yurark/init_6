@@ -36,7 +36,7 @@ case ${PV} in
 	inherit git-r3
 	SRC_URI=""
 	;;
-*.*.*_p*)
+*_p*)
 	# Linaro
 	GDB_RELEASE_VER=${PV}
 	GDB_VER="${PV/_p*/}"
@@ -45,7 +45,7 @@ case ${PV} in
 	DATE_YEAR_L="${DATE_VERSION:2:2}"
 	DATE_MONTH="${DATE_VERSION:4:6}"
 	LINARO_VER="${GDB_VER}-${DATE_YEAR}.${DATE_MONTH}"
-	SRC_URI="http://releases.linaro.org/${DATE_YEAR_L}.${DATE_MONTH}/components/toolchain/gdb-linaro/gdb-linaro-${LINARO_VER}-1.tar.bz2"
+	SRC_URI="http://releases.linaro.org/${DATE_YEAR_L}.${DATE_MONTH}/components/toolchain/gdb-linaro/gdb-linaro-${LINARO_VER}.tar.bz2"
 	RESTRICT="mirror"
 	;;
 *)
@@ -56,10 +56,10 @@ case ${PV} in
 esac
 
 case ${PV} in
-*.*.*_p*)
+*_p*)
 	DESCRIPTION="GNU debugger with Linaro patches"
 	HOMEPAGE="http://www.linaro.org"
-	S=${WORKDIR}/${PN}-${LINARO_VER}-1
+	S=${WORKDIR}/${PN}-${LINARO_VER}
 	PATCH_VER=""
 	;;
 *)
