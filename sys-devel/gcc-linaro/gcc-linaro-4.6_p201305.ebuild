@@ -2,23 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
-
-#PATCH_VER="1.0"
-#UCLIBC_VER="1.0"
-
-# Hardened gcc 4 stuff
-#PIE_VER="0.6.0"
-SPECS_VER="0.2.0"
-SPECS_GCC_VER="4.4.3"
-# arch/libc configurations known to be stable with {PIE,SSP}-by-default
-PIE_GLIBC_STABLE="x86 amd64 mips ppc ppc64 arm ia64"
-PIE_UCLIBC_STABLE="x86 arm amd64 mips ppc ppc64"
-SSP_STABLE="amd64 x86 mips ppc ppc64 arm"
-# uclibc need tls and nptl support for SSP support
-# uclibc need to be >= 0.9.33
-SSP_UCLIBC_STABLE="x86 amd64 mips ppc ppc64 arm"
-#end Hardened stuff
+EAPI="5"
 
 inherit eutils toolchain
 
@@ -32,18 +16,19 @@ LINARO_VER="${GCC_VER}-${DATE_YEAR}.${DATE_MONTH}"
 
 DESCRIPTION="The GNU Compiler Collection with Linaro patches"
 HOMEPAGE="http://www.linaro.org"
-SRC_URI="http://releases.linaro.org/${DATE_YEAR_L}.${DATE_MONTH}/components/toolchain/gcc-linaro/${GCC_VER}/gcc-linaro-${LINARO_VER}-1.tar.xz"
+SRC_URI="http://releases.linaro.org/${DATE_YEAR_L}.${DATE_MONTH}/components/toolchain/gcc-linaro/${GCC_VER}/gcc-linaro-${LINARO_VER}.tar.bz2
+gcj? ( ftp://sourceware.org/pub/java/ecj-4.5.jar )"
 RESTRICT="mirror"
 LICENSE="GPL-3+ LGPL-3+ || ( GPL-3+ libgcc libstdc++ gcc-runtime-library-exception-3.1 ) FDL-1.3+"
 
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~m68k ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd"
+KEYWORDS="alpha amd64 arm hppa ia64 ~m68k ~mips ppc ppc64 ~s390 ~sh ~sparc x86 ~amd64-fbsd ~x86-fbsd"
 
 IUSE="cxx altivec awt doc fixed-point fortran gcj go graphite hardened libssp multilib objc objc++ objc-gc openmp"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
 	elibc_glibc? ( >=sys-libs/glibc-2.8 )
-	>=${CATEGORY}/binutils-2.20"
+	>=${CATEGORY}/binutils-2.18"
 
 if [[ ${CATEGORY} != cross-* ]] ; then
 	PDEPEND="${PDEPEND} elibc_glibc? ( >=sys-libs/glibc-2.8 )"
