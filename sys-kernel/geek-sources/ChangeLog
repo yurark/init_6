@@ -65,7 +65,7 @@
   16 May 2013; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
   +geek-sources-3.9.2.ebuild:
   The release of "big update".
-  All ebuid`s with a version less than 3.9 removed.
+  All ebuild`s with a version less than 3.9 removed.
   Drop USE flags: debian, imq, pardus, phc, pld, rifs, rtai, scst, vserver, xenomai, zen.
   Rename USE flags: genpatches --> gentoo, grsecurity --> grsec.
   The following USE flags: aufs, bfq, fedora, gentoo, grsec, ice, mageia, suse - from now works like 9999 ebuild`s.
