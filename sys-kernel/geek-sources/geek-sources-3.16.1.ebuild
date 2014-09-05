@@ -17,7 +17,7 @@ GRSEC_VER="3.0-${KSV}-201409021826" # 09/03/14 09:41
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 ICE_VER="for-linux-head-3.16.0-2014-08-07"
 LQX_VER="3.16.1-1"
-# MAGEIA_VER="releases/${KSV}/1.mga5"
+MAGEIA_VER="releases/3.15.6/1.mga5"
 PAX_VER="3.16.1-test3"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 # REISER4_VER="3.14.1"
@@ -26,7 +26,7 @@ SUSE_VER="stable"
 UKSM_VER="0.1.2.3"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.1"
 
-SUPPORTED_USES="aufs brand -build ck -deblob exfat fedora grsec ice lqx pax suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs brand -build ck -deblob exfat fedora grsec ice lqx mageia pax suse symlink uksm zen zfs"
 
 inherit geek-sources
 
