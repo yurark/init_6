@@ -19,9 +19,9 @@ LICENSE="Apache-2.0 BSD"
 SLOT="0"
 IUSE=""
 
-#RDEPEND="virtual/udev"
+RDEPEND="virtual/udev"
 
-#DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}"
 
 S="${WORKDIR}/system/core"
 
