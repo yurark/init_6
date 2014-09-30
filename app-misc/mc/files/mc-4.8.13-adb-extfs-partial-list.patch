@@ -1,6 +1,6 @@
-diff -urN mc-4.8.12.old/src/vfs/extfs/extfs.c mc-4.8.12/src/vfs/extfs/extfs.c
---- mc-4.8.12.old/src/vfs/extfs/extfs.c	2014-07-01 02:33:40.000000000 +0400
-+++ mc-4.8.12/src/vfs/extfs/extfs.c	2014-07-01 02:36:58.000000000 +0400
+diff -urN mc-4.8.13.old/src/vfs/extfs/extfs.c mc-4.8.13/src/vfs/extfs/extfs.c
+--- mc-4.8.13.old/src/vfs/extfs/extfs.c	2014-07-01 02:33:40.000000000 +0400
++++ mc-4.8.13/src/vfs/extfs/extfs.c	2014-07-01 02:36:58.000000000 +0400
 @@ -83,6 +83,7 @@
      nlink_t nlink;
      struct entry *first_in_subdir;      /* only used if this is a directory */
