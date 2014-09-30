@@ -17,7 +17,7 @@ DATE_MONTH="${DATE_VERSION:4:6}"
 LINARO_VER="${BINUTILS_VER}-${DATE_YEAR}.${DATE_MONTH}"
 
 DESCRIPTION="Tools necessary to build programs with Linaro patches"
-SRC_URI="http://releases.linaro.org/${DATE_YEAR_L}.${DATE_MONTH}/components/toolchain/binutils-linaro/binutils-linaro-${LINARO_VER}.tar.bz2"
+SRC_URI="http://releases.linaro.org/${DATE_YEAR_L}.${DATE_MONTH}/components/toolchain/binutils-linaro/binutils-linaro-${LINARO_VER}.tar.xz"
 
 RESTRICT="mirror"
 
