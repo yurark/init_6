@@ -45,7 +45,7 @@ case ${PV} in
 	DATE_YEAR_L="${DATE_VERSION:2:2}"
 	DATE_MONTH="${DATE_VERSION:4:6}"
 	LINARO_VER="${GDB_VER}-${DATE_YEAR}.${DATE_MONTH}"
-	SRC_URI="http://releases.linaro.org/${DATE_YEAR_L}.${DATE_MONTH}/components/toolchain/gdb-linaro/gdb-linaro-${LINARO_VER}.tar.bz2"
+	SRC_URI="http://releases.linaro.org/${DATE_YEAR_L}.${DATE_MONTH}/components/toolchain/gdb-linaro/gdb-linaro-${LINARO_VER}.tar.xz"
 	RESTRICT="mirror"
 	;;
 *)
