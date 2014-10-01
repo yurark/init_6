@@ -19,9 +19,8 @@ LICENSE="GPL-3"
 SLOT="0"
 IUSE=""
 
-DEPEND="|| ( sys-libs/core-functions sys-apps/gentoo-functions )
-	sys-apps/coreutils
-	dev-perl/File-MimeInfo
+DEPEND="sys-apps/coreutils
+	sys-apps/file
 	sys-devel/patch
 	app-arch/bzip2
 	app-arch/gzip
