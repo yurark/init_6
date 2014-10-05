@@ -31,4 +31,6 @@ RDEPEND="${DEPEND}"
 
 src_install() {
 	dobin ipatch || die "dobin failed"
+	insinto /usr/share/man/man1
+	doins ipatch.1 || die "doins failed"
 }
