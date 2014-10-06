@@ -21,7 +21,7 @@ MAGEIA_VER="releases/3.17.0/0.rc3.1.mga5"
 # PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 # REISER4_VER="3.14.1"
 # RT_VER="${KSV}-rt17"
-SUSE_VER="linux-next"
+SUSE_VER="stable"
 # UKSM_VER="0.1.2.3"
 # UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.1"
 
