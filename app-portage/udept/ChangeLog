@@ -2,6 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+  07 Nov 2010; Zac Medico <zmedico@gentoo.org>
+  -files/bash-completion-install.diff:
+
   Bug #344167 - Remove unused bash-completion-install.diff.
 
   07 Apr 2010; Jeremy Olexa <darkside@gentoo.org>

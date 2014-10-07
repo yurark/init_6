@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
+
 MY_PN="${PN/-/}"
 COMP_PN="${PN}-completion"
 COMP_PV="0.4.2.2"

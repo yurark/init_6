@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
+
 DESCRIPTION="Utility to change the binutils version being used"
 HOMEPAGE="http://www.gentoo.org/"
 SRC_URI=""

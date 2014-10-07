@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
+inherit git-r3 systemd
 
 KEYWORDS="~amd64 ~x86 ~arm-linux ~x86-linux"
 DESCRIPTION="Android platform tools (adb and fastboot)"

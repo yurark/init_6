@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
+
 inherit eutils fortran-2
 
 DESCRIPTION="High quality system independent, open source libm"

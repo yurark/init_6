@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
+
 inherit scons-utils eutils
 
 DESCRIPTION="Binary-decimal and decimal-binary routines forIEEE doubles"

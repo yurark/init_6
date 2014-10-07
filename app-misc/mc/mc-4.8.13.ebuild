@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
+
 inherit eutils flag-o-matic
 
 MY_P=${P/_/-}

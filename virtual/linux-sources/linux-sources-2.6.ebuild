@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
+
 DESCRIPTION="Virtual for Linux kernel sources"
 HOMEPAGE=""
 SRC_URI=""

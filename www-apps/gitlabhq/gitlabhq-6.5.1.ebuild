@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
+
 # Mainteiner notes:
 # - This ebuild uses Bundler to download and install all gems in deployment mode
 #   (i.e. into isolated directory inside application). That's not Gentoo way how

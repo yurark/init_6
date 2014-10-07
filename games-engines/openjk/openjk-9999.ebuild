@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
+inherit eutils games
 
 DESCRIPTION="Open Source Jedi Academy and Jedi Outcast games engine"
 HOMEPAGE="https://github.com/JACoders/OpenJK"

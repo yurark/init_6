@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
+
 USE_RUBY="ruby19 ruby20"
 
 inherit eutils ruby-ng user

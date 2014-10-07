@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
+
 MY_PN="iso-latin-1"
 
 if [[ ${PV} = 9999* ]]; then
