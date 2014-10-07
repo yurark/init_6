@@ -2,8 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=5
-
 # Maintainer notes:
 # GitLab has own fork of Gitolite with their patches, see
 # https://github.com/gitlabhq/gitolite. It's just few lines changes so I

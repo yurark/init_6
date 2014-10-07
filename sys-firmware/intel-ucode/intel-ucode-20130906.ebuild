@@ -2,8 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=5
-
 inherit linux-info toolchain-funcs
 
 # Find updates by searching and clicking the first link (hopefully it's the one):

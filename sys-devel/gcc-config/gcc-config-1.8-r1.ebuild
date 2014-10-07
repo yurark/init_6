@@ -2,8 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=5
-
 inherit unpacker toolchain-funcs multilib eutils
 
 # http://prefix.gentooexperimental.org:8000/gcc-config-prefix/graph/6d287a1709c6

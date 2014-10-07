@@ -2,8 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="5"
-DEBLOB_AVAILABLE="1"
 
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
@@ -11,7 +9,7 @@ KSV="$(echo $PV | cut -f 1-3 -d .)"
 BFQ_VER="3.2.0-v7r5"
 CK_VER="${KMV}-ck1"
 FEDORA_VER="8959a0e95fa1ab409603d38059342e7a99668418" # 3.2
-GRSEC_VER="3.0-${KSV}-201409180857" # 09/18/14 08:59
+GRSEC_VER="3.0-${KSV}-201410062032" # 10/06/14 20:36
 ICE_VER="for-linux-3.2.62-2014-08-07"
 LQX_VER="3.2.28-1"
 LQX_SRC="http://liquorix.net/sources/legacy/${LQX_VER}.patch.gz"

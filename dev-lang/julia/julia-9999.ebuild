@@ -2,8 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=5
-
 inherit git-r3 elisp-common eutils multilib pax-utils
 
 DESCRIPTION="High-level, high-performance dynamic programming language for technical computing"

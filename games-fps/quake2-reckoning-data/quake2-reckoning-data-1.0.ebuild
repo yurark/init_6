@@ -2,8 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-
-DESCRIPTION="Quake 2: The Reckoning data files"
 # Grey Matter Interactive is the former Xatrix Entertainment
 HOMEPAGE="http://www.gmistudios.com/"
 SRC_URI=""

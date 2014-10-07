@@ -2,8 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-
-DESCRIPTION="Quake 2: Ground Zero data files"
 HOMEPAGE="http://www.roguesoftware.com/"
 SRC_URI=""
 

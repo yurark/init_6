@@ -2,8 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="5"
-
 if [[ $PV = *9999* ]]; then
 	scm_eclass=git-2
 	EGIT_REPO_URI="

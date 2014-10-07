@@ -2,8 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="5"
-inherit flag-o-matic eutils games
 
 DESCRIPTION="A Boulderdash clone"
 HOMEPAGE="http://www.artsoft.org/rocksndiamonds/"

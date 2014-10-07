@@ -2,8 +2,6 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="5"
-
 PYTHON_COMPAT=( python2_7 python3_{2,3,4} )
 
 inherit eutils toolchain-funcs libtool flag-o-matic bash-completion-r1 \
