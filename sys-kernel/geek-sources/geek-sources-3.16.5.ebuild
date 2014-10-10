@@ -13,7 +13,7 @@ BFQ_VER="${KMV}.0-v7r5"
 BLD_VER="3.16"
 CK_VER="3.16-ck2"
 FEDORA_VER="f21"
-GRSEC_VER="3.0-${KSV}-201410062041" # 10/06/14 20:45
+GRSEC_VER="3.0-${KSV}-201410092056" # 10/09/14 21:01
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 ICE_VER="for-linux-head-3.16.0-2014-08-07"
 LQX_VER="3.16.4-1"
@@ -26,7 +26,7 @@ SUSE_VER="stable"
 UKSM_VER="0.1.2.3"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.1"
 
-SUPPORTED_USES="aufs bfq brand -build ck -deblob fedora grces ice lqx mageia pax pf suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq brand -build ck -deblob fedora grsec ice lqx mageia pax pf suse symlink uksm zen zfs"
 
 inherit geek-sources
 
