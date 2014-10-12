@@ -20,13 +20,13 @@ LQX_VER="3.16.4-1"
 MAGEIA_VER="releases/3.15.6/1.mga5"
 PAX_VER="3.16.4-test11"
 # PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
-# REISER4_VER="3.14.1"
+REISER4_VER="3.16.1"
 # RT_VER="${KSV}-rt17"
 SUSE_VER="stable"
 UKSM_VER="0.1.2.3"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.1"
 
-SUPPORTED_USES="aufs bfq brand -build ck -deblob fedora grsec ice lqx mageia pax pf suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq brand -build ck -deblob fedora grsec ice lqx mageia pax pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 
