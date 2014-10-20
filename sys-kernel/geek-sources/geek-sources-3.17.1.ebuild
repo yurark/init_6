@@ -9,7 +9,7 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
 AUFS_VER="3.x-rcN"
-# BFQ_VER="${KSV}-v7r5"
+BFQ_VER="${KSV}-v7r6"
 # BLD_VER="3.16"
 # CK_VER="3.16-ck1"
 FEDORA_VER="master"
@@ -25,7 +25,7 @@ SUSE_VER="linux-next"
 # UKSM_VER="0.1.2.3"
 # UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.1"
 
-SUPPORTED_USES="aufs brand -build -deblob fedora gentoo grsec mageia pax suse symlink zfs"
+SUPPORTED_USES="aufs brand bfq -build -deblob fedora gentoo grsec mageia pax suse symlink zfs"
 
 inherit geek-sources
 
