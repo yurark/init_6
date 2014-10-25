@@ -8,7 +8,7 @@ DEBLOB_AVAILABLE="1"
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
-BFQ_VER="3.2.0-v7r5"
+BFQ_VER="3.2.0-v7r6"
 CK_VER="${KMV}-ck1"
 FEDORA_VER="8959a0e95fa1ab409603d38059342e7a99668418" # 3.2
 GRSEC_VER="3.0-${KSV}-201410062032" # 10/06/14 20:36

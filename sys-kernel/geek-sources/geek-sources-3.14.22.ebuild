@@ -9,7 +9,7 @@ KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
 AUFS_VER="${KMV}"
-BFQ_VER="3.14.0-v7r5"
+BFQ_VER="3.14.0-v7r6"
 # # BLD_VER="3.13-rc1"
 CK_VER="3.14-ck1"
 FEDORA_VER="f19"
