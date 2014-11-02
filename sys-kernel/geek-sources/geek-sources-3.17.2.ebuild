@@ -25,7 +25,7 @@ SUSE_VER="linux-next"
 # UKSM_VER="0.1.2.3"
 # UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.1"
 
-SUPPORTED_USES="aufs brand bfq -build -deblob fedora gentoo grsec mageia pax reiser4 suse symlink zfs"
+SUPPORTED_USES="aufs brand bfq -build -deblob fedora gentoo grsec mageia pax reiser4 suse symlink zen zfs"
 
 inherit geek-sources
 
