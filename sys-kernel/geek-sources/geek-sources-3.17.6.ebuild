@@ -23,7 +23,7 @@ REISER4_VER="3.17.2"
 # RT_VER="${KSV}-rt17"
 SUSE_VER="stable"
 UKSM_VER="0.1.2.3"
-UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.beta"
+UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.2"
 
 SUPPORTED_USES="aufs bfq brand -build ck -deblob fedora gentoo grsec lqx mageia pax reiser4 suse symlink uksm zen zfs"
 
