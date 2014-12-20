@@ -16,16 +16,16 @@ FEDORA_VER="master"
 # GRSEC_VER="3.0-${KSV}-201407072046" # 07/07/14 20:47
 # GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 # LQX_VER="${KSV}-1"
-# MAGEIA_VER="releases/${KSV}/1.mga5"
+MAGEIA_VER="releases/${KSV}/1.mga5"
 PAX_VER="3.18-test1"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 # REISER4_VER="3.14.1"
 # RT_VER="${KSV}-rt17"
-SUSE_VER="linux-next"
+SUSE_VER="stable"
 # UKSM_VER="0.1.2.3"
 # UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.1"
 
-SUPPORTED_USES="bfq brand -build ck -deblob fedora pax suse symlink"
+SUPPORTED_USES="bfq bfs brand -build ck -deblob fedora mageia pax suse symlink zen"
 
 inherit geek-sources
 
