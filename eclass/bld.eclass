@@ -41,8 +41,8 @@ bld_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${BLD_VER:=${BLD_VER:-"${KMV}"}} # Patchset version
-	: ${BLD_SRC:=${BLD_SRC:-"https://bld.googlecode.com/files/BLD-${BLD_VER}.patch"}} # Patchset sources url
-	: ${BLD_URL:=${BLD_URL:-"http://code.google.com/p/bld"}} # Patchset url
+	: ${BLD_SRC:=${BLD_SRC:-"https://raw.githubusercontent.com/rmullick/bld-patches/master/BLD-${BLD_VER}.patch"}} # Patchset sources url
+	: ${BLD_URL:=${BLD_URL:-"https://github.com/rmullick/bld-patches"}} # Patchset url
 	: ${BLD_INF:=${BLD_INF:-"${YELLOW}Alternate CPU load distribution technique for Linux kernel scheduler version ${GREEN}${BLD_VER}${YELLOW} from ${GREEN}${BLD_URL}${NORMAL}"}}
 
 	debug-print "${FUNCNAME}: BLD_VER=${BLD_VER}"
