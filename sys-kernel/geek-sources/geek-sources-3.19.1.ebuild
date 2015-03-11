@@ -8,25 +8,24 @@ DEBLOB_AVAILABLE="0"
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
-AUFS_VER="3.18.1+"
+AUFS_VER="${KMV}"
 BFQ_VER="${KMV}.0-v7r7"
 BLD_VER="${KMV}"
 CK_VER="${KMV}-ck1"
-ICE_VER="for-linux-${KMV}.7-2015-02-14"
-FEDORA_VER="f21"
-GRSEC_VER="3.1-${KSV}-201502271843" # 27/02/15 18:43
+FEDORA_VER="f22"
+GRSEC_VER="3.1-${KSV}-201503092204" # 09/03/15 22:04
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
-LQX_VER="${KMV}.7-2"
-MAGEIA_VER="releases/${KMV}.3/2.mga5"
-PAX_VER="${KSV}-test15"
+#LQX_VER="${KSV}-1"
+MAGEIA_VER="releases/${KSV}/1.mga5"
+PAX_VER="${KSV}-test7"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
-REISER4_VER="${KMV}.6"
+# REISER4_VER="3.14.1"
 # RT_VER="${KSV}-rt17"
 SUSE_VER="stable"
-UKSM_VER="0.1.2.3"
-UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}"
+#UKSM_VER="0.1.2.3"
+#UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}"
 
-SUPPORTED_USES="aufs bfq bfs bld brand -build ck -deblob ice fedora gentoo grsec lqx mageia pax reiser4 suse symlink uksm zen"
+SUPPORTED_USES="aufs bfq bld brand -build -deblob ck fedora gentoo grsec pax suse symlink zen"
 
 inherit geek-sources
 
