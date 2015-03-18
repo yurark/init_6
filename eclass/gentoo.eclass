@@ -68,15 +68,22 @@ gentoo_src_unpack() {
 	local CWD="${T}/gentoo"
 	local CTD="${T}/gentoo"$$
 	shift
-	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
-	if [ -d ${CSD} ]; then
-		cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
-		if [ -e ".svn" ]; then # git
-			svn up
+	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"; cd "${CWD}"
+	if [ -d "${CSD}/master" ]; then
+		cd "${CSD}/master" || die "${RED}cd ${CSD} failed${NORMAL}"
+		if [ -e ".git" ]; then # git
+			git pull >/dev/null 2>&1
 		fi
 	else
-		svn co "${GENTOO_SRC}" "${CSD}" > /dev/null 2>&1
+		git clone "${GENTOO_SRC}" "${CSD}/master" > /dev/null 2>&1
+		cd "${CSD}/master"
 	fi
+	git branch -a | grep -v master | while read name; do
+		branch="${name##*/}"
+		mkdir ../"${branch}"
+		git checkout "${branch}" >/dev/null 2>&1
+		cp -a * ../"${branch}"
+	done
 
 	copy "${CSD}" "${CTD}"
 	cd "${CTD}"/${KMV} || die "${RED}cd ${CTD}/${KMV} failed${NORMAL}"
