@@ -36,5 +36,6 @@ change-default-console-loglevel.patch
 # #41458 fix hwmon for compal-laptop module
 compal-laptop-hwmon-fix.patch
 
-# FS#41683 fix ring initialization with intel video
+# fix initialization with intel video
+0011-drm-i915-Disallow-pin-ioctl-completely-for-kms-drive.patch
 unfuck_intel_video.patch
