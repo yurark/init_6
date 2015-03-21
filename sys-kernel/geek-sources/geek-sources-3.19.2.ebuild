@@ -25,7 +25,7 @@ SUSE_VER="stable"
 UKSM_VER="0.1.2.3"
 UKSM_NAME="uksm-${UKSM_VER}-for-v3.18"
 
-SUPPORTED_USES="aufs bfq bld bfs brand -build -deblob ck fedora gentoo grsec pax pf suse symlink zen"
+SUPPORTED_USES="aufs bfq bld bfs brand -build -deblob ck fedora gentoo grsec pax pf suse symlink uksm zen"
 
 inherit geek-sources
 
