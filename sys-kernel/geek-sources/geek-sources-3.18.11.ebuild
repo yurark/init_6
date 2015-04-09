@@ -3,33 +3,34 @@
 # $Header: $
 
 EAPI="5"
-DEBLOB_AVAILABLE="1"
+DEBLOB_AVAILABLE="0"
 
 KMV="$(echo $PV | cut -f 1-2 -d .)"
 KSV="$(echo $PV | cut -f 1-3 -d .)"
 
-AUFS_VER="3.x-rcN"
-BFQ_VER="${KMV}.0-v7r6"
-# BLD_VER="3.16"
-CK_VER="3.17-ck2"
-FEDORA_VER="master"
-#GRSEC_VER="3.0-${KSV}-201412170700" # 20/12/2014 17:08
+AUFS_VER="3.18.1+"
+BFQ_VER="${KMV}.0-v7r7"
+BLD_VER="${KMV}"
+CK_VER="${KMV}-ck1"
+ICE_VER="for-linux-${KMV}.7-2015-02-14"
+FEDORA_VER="f21"
+#GRSEC_VER="3.1-${KSV}-201502271843" # 27/02/15 18:43
 #GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
-LQX_VER="${KMV}.7-2"
-MAGEIA_VER="releases/3.17.0/3.mga5"
-PAX_VER="${KMV}.7-test11"
+LQX_VER="${KMV}.9-1"
+MAGEIA_VER="releases/${KMV}.3/2.mga5"
+PAX_VER="${KMV}.9-test15"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
-REISER4_VER="3.17.2"
+REISER4_VER="${KMV}.6"
 # RT_VER="${KSV}-rt17"
 SUSE_VER="stable"
 UKSM_VER="0.1.2.3"
-UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.2"
+UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}"
 
-SUPPORTED_USES="aufs bfq bfs brand -build ck -deblob fedora gentoo lqx mageia pax reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bfs bld brand -build ck -deblob ice fedora gentoo lqx mageia pax reiser4 suse symlink uksm zen"
 
 inherit geek-sources
 
 HOMEPAGE="https://github.com/init6/init_6/wiki/${PN}"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 
 DESCRIPTION="Full sources for the Linux kernel including: fedora, grsecurity, mageia and other patches"
