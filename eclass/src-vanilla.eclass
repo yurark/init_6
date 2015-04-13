@@ -89,6 +89,15 @@ case "${PR}" in
 				SRC_URI="${SRC_URI} ${kurl}/${pname}"
 			fi
 		;;
+		4)	extension="xz"
+			kurl="mirror://kernel/linux/kernel/v${VERSION}.x"
+			kversion="${KMV}"
+			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
+				pversion="${PV}"
+				pname="patch-${pversion}.${extension}"
+				SRC_URI="${SRC_URI} ${kurl}/${pname}"
+			fi
+		;;
 		esac
 	;;
 	*)	case "${VERSION}" in
