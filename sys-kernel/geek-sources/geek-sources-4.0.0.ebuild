@@ -11,7 +11,7 @@ KSV="$(echo $PV | cut -f 1-3 -d .)"
 #AUFS_VER="${KMV}"
 #BFQ_VER="${KMV}.0-v7r7"
 #BLD_VER="${KMV}"
-#CK_VER="${KMV}-ck1"
+CK_VER="${KMV}-ck1"
 FEDORA_VER="master"
 #GRSEC_VER="3.1-${KSV}-201504021826" # 02/04/15 18:26
 #GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
@@ -25,7 +25,7 @@ SUSE_VER="stable"
 #UKSM_VER="0.1.2.3"
 #UKSM_NAME="uksm-${UKSM_VER}-for-v3.18"
 
-SUPPORTED_USES="brand -build -deblob fedora gentoo suse symlink"
+SUPPORTED_USES="brand -build ck -deblob fedora gentoo suse symlink"
 
 inherit geek-sources
 
