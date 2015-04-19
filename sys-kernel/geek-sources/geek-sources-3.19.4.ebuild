@@ -12,6 +12,7 @@ AUFS_VER="${KMV}"
 BFQ_VER="${KMV}.0-v7r7"
 BLD_VER="${KMV}"
 CK_VER="${KMV}-ck1"
+BFS_VER="461"
 FEDORA_VER="f22"
 GRSEC_VER="3.1-${KMV}.3-201504021826" # 02/04/15 18:26
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"

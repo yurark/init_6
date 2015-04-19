@@ -12,6 +12,7 @@ AUFS_VER="${KMV}"
 BFQ_VER="3.12.0-v7r6"
 #BLD_VER="3.12.0"
 CK_VER="3.12-ck2"
+BFS_VER="444"
 FEDORA_VER="f19"
 # GRSEC_VER="3.0-3.12.8-201401191015" # 01/19/14 10:28
 # GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
@@ -25,7 +26,7 @@ REISER4_VER="3.12.6"
 UKSM_VER="0.1.2.3"
 UKSM_NAME="uksm-${UKSM_VER}-for-v3.12.ge.23"
 
-SUPPORTED_USES="aufs bfq brand -build ck deblob exfat fedora gentoo ice mageia openwrt pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bfs brand -build ck deblob exfat fedora gentoo ice mageia openwrt pax pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 

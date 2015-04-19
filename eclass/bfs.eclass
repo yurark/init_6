@@ -37,11 +37,11 @@ EXPORT_FUNCTIONS src_prepare pkg_postinst
 # Internal function initializing all variables.
 # We define it in function scope so user can define
 # all the variables before and after inherit.
-BFS_init_variables() {
+bfs_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${BFS_VER:=${BFS_VER:-"462"}} # Patchset version
-	: ${BFS_SRC:=${BFS_SRC:-"http://ck.kolivas.org/patches/bfs/$(echo ${KMV} | cut -f 1 -d .)/${KMV}/${KMV}-sched-bfs-${BFS_VER}.patch"}} # Patchset sources url
+	: ${BFS_SRC:=${BFS_SRC:-"http://ck.kolivas.org/patches/bfs/$(echo ${KMV} | cut -f 1 -d .).0/${KMV}/${KMV}-sched-bfs-${BFS_VER}.patch"}} # Patchset sources url
 	: ${BFS_URL:=${BFS_URL:-"http://users.on.net/~ckolivas/kernel"}} # Patchset url
 	: ${BFS_INF:=${BFS_INF:-"${YELLOW}Con Kolivas' kernel scheduler to improve multitasking in low performance PCs version ${GREEN}${BFS_VER}${YELLOW} from ${GREEN}${BFS_URL}${NORMAL}"}}
 
@@ -51,7 +51,7 @@ BFS_init_variables() {
 	debug-print "${FUNCNAME}: BFS_INF=${BFS_INF}"
 }
 
-BFS_init_variables
+bfs_init_variables
 
 HOMEPAGE="${HOMEPAGE} ${BFS_URL}"
 
@@ -61,7 +61,7 @@ SRC_URI="${SRC_URI}
 # @FUNCTION: src_prepare
 # @USAGE:
 # @DESCRIPTION: Prepare source packages and do any necessary patching or fixes.
-BFS_src_prepare() {
+bfs_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	ApplyPatch "${PORTAGE_ACTUAL_DISTDIR:-${DISTDIR}}/patch-${BFS_VER}.patch" "${BFS_INF}"
@@ -71,7 +71,7 @@ BFS_src_prepare() {
 # @FUNCTION: pkg_postinst
 # @USAGE:
 # @DESCRIPTION: Called after image is installed to ${ROOT}
-BFS_pkg_postinst() {
+bfs_pkg_postinst() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	einfo "${BFS_INF}"

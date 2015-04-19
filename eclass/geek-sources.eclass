@@ -57,6 +57,7 @@ for use_flag in ${IUSE}; do
 	case ${use_flag} in
 		aufs		)	inherit aufs ;;
 		bfq		)	inherit bfq ;;
+		bfs		)	inherit bfs ;;
 		bld		)	inherit bld ;;
 		brand		)	inherit brand ;;
 		build		)	inherit build ;;

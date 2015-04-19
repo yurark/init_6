@@ -13,6 +13,7 @@ BFQ_VER="3.10.8+-v7r6"
 BLD_VER="3.10.0"
 BLD_SRC="https://bld.googlecode.com/files/bld-${BLD_VER}.patch"
 CK_VER="3.10-ck1"
+BFS_VER="440"
 # HARDENED_VER="3.10.11"
 ICE_VER="for-linux-3.10.51-2014-08-07"
 # LQX_VER="3.10.22-1"
@@ -25,7 +26,7 @@ RSBAC_NAME="patch-linux-3.10.7-rsbac-${RSBAC_VER}.diff.xz"
 UKSM_VER="0.1.2.3"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.46"
 
-SUPPORTED_USES="aufs bfq bld brand -build cjktty ck deblob fedora gentoo ice mageia openwrt pax pf reiser4 rsbac suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bfs bld brand -build cjktty ck deblob fedora gentoo ice mageia openwrt pax pf reiser4 rsbac suse symlink uksm zen zfs"
 
 inherit geek-sources
 
