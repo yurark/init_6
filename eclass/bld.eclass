@@ -41,8 +41,19 @@ bld_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${BLD_VER:=${BLD_VER:-"${KMV}"}} # Patchset version
-	: ${BLD_SRC:=${BLD_SRC:-"https://raw.githubusercontent.com/rmullick/bld-patches/master/BLD-${BLD_VER}.patch"}} # Patchset sources url
-	: ${BLD_URL:=${BLD_URL:-"https://github.com/rmullick/bld-patches"}} # Patchset url
+	if [[ $( echo ${KMV} | cut -f 1 -d . ) -eq 3  && $( echo ${KMV} | cut -f 2 -d . ) -lt 16 ]]; then
+		if [[ $( echo ${KMV} | cut -f 2 -d . ) -lt 10 ]]; then
+			: ${BLD_SRC:=${BLD_SRC:-"https://bld.googlecode.com/files/bld-${BLD_VER}.tar.bz2"}} # Patchset sources url
+		elif [[ $( echo ${KMV} | cut -f 2 -d . ) -eq 10 ]]; then
+			: ${BLD_SRC:=${BLD_SRC:-"https://bld.googlecode.com/files/bld-${BLD_VER}.patch"}} # Patchset sources url
+		else
+			: ${BLD_SRC:=${BLD_SRC:-"https://bld.googlecode.com/files/BLD-${BLD_VER}.patch"}} # Patchset sources url
+		fi
+		: ${BLD_URL:=${BLD_URL:-"https://github.com/rmullick/bld-patches"}} # Patchset url
+	else
+		: ${BLD_SRC:=${BLD_SRC:-"https://raw.githubusercontent.com/rmullick/bld-patches/master/BLD-${BLD_VER}.patch"}} # Patchset sources url
+		: ${BLD_URL:=${BLD_URL:-"https://github.com/rmullick/bld-patches"}} # Patchset url
+	fi
 	: ${BLD_INF:=${BLD_INF:-"${YELLOW}Alternate CPU load distribution technique for Linux kernel scheduler version ${GREEN}${BLD_VER}${YELLOW} from ${GREEN}${BLD_URL}${NORMAL}"}}
 
 	debug-print "${FUNCNAME}: BLD_VER=${BLD_VER}"
