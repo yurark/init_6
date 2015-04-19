@@ -16,7 +16,7 @@ BFS_VER="444"
 FEDORA_VER="f19"
 # GRSEC_VER="3.0-3.12.8-201401191015" # 01/19/14 10:28
 # GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
-ICE_VER="for-linux-${KMV}.26-2014-08-07"
+ICE_VER="for-linux-${KMV}.37-2015-02-02"
 # LQX_VER="3.12.11-1" # LQX_VER="${KSV}-1"
 MAGEIA_VER="releases/${KMV}.13/2.mga5"
 PAX_VER="${KMV}.8-test15"
