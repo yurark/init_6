@@ -24,8 +24,8 @@ case ${EAPI} in
 	*)	die "bfs.eclass: unsupported EAPI=${EAPI:-0}" ;;
 esac
 
-if [[ ${___ECLASS_ONCE_CK} != "recur -_+^+_- spank" ]]; then
-___ECLASS_ONCE_CK="recur -_+^+_- spank"
+if [[ ${___ECLASS_ONCE_BFS} != "recur -_+^+_- spank" ]]; then
+___ECLASS_ONCE_BFS="recur -_+^+_- spank"
 
 inherit patch utils vars
 
