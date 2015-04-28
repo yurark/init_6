@@ -14,7 +14,6 @@ BLD_VER="${KMV}"
 CK_VER="${KMV}-ck1"
 BFS_VER="461"
 ICE_VER="for-linux-head-${KMV}.0-2015-02-10"
-#ICE_VER="for-linux-3.18.7-2015-02-14"
 FEDORA_VER="f22"
 GRSEC_VER="3.1-${KSV}-201504190814" # 19/04/15 08:14
 GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
@@ -28,7 +27,7 @@ SUSE_VER="stable"
 UKSM_VER="0.1.2.3"
 UKSM_NAME="uksm-${UKSM_VER}-for-v3.18"
 
-SUPPORTED_USES="aufs bfq bld bfs brand -build -deblob ck fedora ice gentoo grsec pax reiser4 suse symlink zen"
+SUPPORTED_USES="aufs bfq bld bfs brand -build -deblob ck fedora ice gentoo grsec pax pf reiser4 suse symlink uksm zen"
 
 inherit geek-sources
 
