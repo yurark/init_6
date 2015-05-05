@@ -15,19 +15,19 @@ BFS_VER="462"
 CK_VER="${KMV}-ck1"
 #ICE_VER="for-linux-head-${KMV}.0-2015-02-10"
 FEDORA_VER="master"
-#GRSEC_VER="3.1-${KSV}-201504021826" # 02/04/15 18:26
-#GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
-#LQX_VER="${KSV}-1"
+GRSEC_VER="3.1-${KSV}-201505042053" # 04/05/15 20:53
+GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
+LQX_VER="${KSV}-2"
 MAGEIA_VER="releases/${KSV}/1.mga5"
-#PAX_VER="${KSV}-test15"
-#PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
+PAX_VER="${KSV}-test7"
+PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 # REISER4_VER="3.14.1"
 # RT_VER="${KSV}-rt17"
 SUSE_VER="stable"
 UKSM_VER="beta"
 UKSM_NAME="uksm-0.1.2.4-${UKSM_VER}-for-linux-v${KMV}"
 
-SUPPORTED_USES="aufs bfq bfs brand -build ck -deblob fedora gentoo mageia pf suse symlink uksm zen"
+SUPPORTED_USES="aufs bfq bfs brand -build ck -deblob fedora gentoo grsec lqx mageia pax pf suse symlink uksm zen"
 
 inherit geek-sources
 
