@@ -40,8 +40,8 @@ EXPORT_FUNCTIONS src_unpack src_prepare pkg_postinst
 gentoo_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	: ${GENTOO_VER:=${GENTOO_VER:-"${KMV}"}} # Patchset version
-	: ${GENTOO_SRC:=${GENTOO_SRC:-"svn://anonsvn.gentoo.org/linux-patches/genpatches-2.6/trunk"}} # Patchset sources url
+	: ${GENTOO_VER:=${GENTOO_VER:-"${KMV}-${SUBLEVEL}"}} # Patchset version
+	: ${GENTOO_SRC:=${GENTOO_SRC:-"git://anongit.gentoo.org/proj/linux-patches"}} # Patchset sources url
 	: ${GENTOO_URL:=${GENTOO_URL:-"http://dev.gentoo.org/~mpagano/genpatches"}} # Patchset url
 	: ${GENTOO_INF:=${GENTOO_INF:-"${YELLOW}Gentoo patches version ${GREEN}${GENTOO_VER}${YELLOW} from ${GREEN}${GENTOO_URL}${NORMAL}"}}
 
@@ -68,33 +68,29 @@ gentoo_src_unpack() {
 	local CWD="${T}/gentoo"
 	local CTD="${T}/gentoo"$$
 	shift
-	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"; cd "${CWD}"
-	if [ -d "${CSD}/master" ]; then
-		cd "${CSD}/master" || die "${RED}cd ${CSD} failed${NORMAL}"
-		if [ -e ".git" ]; then # git
-			git pull >/dev/null 2>&1
-		fi
+
+	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
+	cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
+
+	test -d "${GENTOO_VER}" >/dev/null 2>&1 || mkdir -p "${GENTOO_VER}"
+	cd "${GENTOO_VER}" || die "${RED}cd ${GENTOO_VER} failed${NORMAL}"
+
+	if [ -e ".git" ]; then
+		git pull >/dev/null 2>&1
 	else
-		git clone "${GENTOO_SRC}" "${CSD}/master" > /dev/null 2>&1
-		cd "${CSD}/master"
+		git clone --branch "$GENTOO_VER" --depth=1 "${GENTOO_SRC}" . 1>/dev/null 2>&1
 	fi
-	git branch -a | grep -v master | while read name; do
-		branch="${name##*/}"
-		mkdir ../"${branch}"
-		git checkout "${branch}" >/dev/null 2>&1
-		cp -a * ../"${branch}"
-	done
 
-	copy "${CSD}" "${CTD}"
-	cd "${CTD}"/${KMV} || die "${RED}cd ${CTD}/${KMV} failed${NORMAL}"
+	copy "${CSD}"/"${GENTOO_VER}" "${CTD}"/"${GENTOO_VER}"
+	cd "${CTD}"/"${GENTOO_VER}" || die "${RED}cd ${CTD}/${GENTOO_VER} failed${NORMAL}"
 
-	find -name .svn -type d -exec rm -rf {} \ > /dev/null 2>&1
+	find -name .git -type d -exec rm -rf {} \ > /dev/null 2>&1
 	find -type d -empty -delete
 
 	ls -1 | grep "linux" | xargs -I{} rm -rf "{}"
 	ls -1 | grep ".patch" > "$CWD"/patch_list
 
-	copy "${CTD}/${KMV}" "${CWD}"
+	copy "${CTD}/${GENTOO_VER}" "${CWD}"
 
 	rm -rf "${CTD}" || die "${RED}rm -rf ${CTD} failed${NORMAL}"
 }
