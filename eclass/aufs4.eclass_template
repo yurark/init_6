@@ -42,7 +42,7 @@ aufs_init_variables() {
 
 	: ${AUFS_VER:=${AUFS_VER:-"${KMV}"}} # Patchset version
 	: ${AUFS_SRC:=${AUFS_SRC:-"https://github.com/sfjro/aufs4-standalone"}} # Patchset sources url
-	: ${AUFS_URL:=${AUFS_URL:-"https://github.com/sfjro/aufs4-standalone"}} # Patchset url
+	: ${AUFS_URL:=${AUFS_URL:-"http://aufs.sourceforge.net"}} # Patchset url
 	: ${AUFS_INF:="${YELLOW}Another UnionFS version ${GREEN}${AUFS_VER}${YELLOW} from ${GREEN}${AUFS_URL}${NORMAL}"}
 # cd /usersrc https://github.com/sfjro/aufs4-standalone.git && cdaufs4 && git checkout origin/aufs4.0 # by hand..
 	debug-print "${FUNCNAME}: AUFS_VER=${AUFS_VER}"
