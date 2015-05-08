@@ -70,6 +70,7 @@ gentoo_src_unpack() {
 	shift
 
 	test -d "${CWD}" >/dev/null 2>&1 || mkdir -p "${CWD}"
+	test -d "${CSD}" >/dev/null 2>&1 || mkdir -p "${CSD}"
 	cd "${CSD}" || die "${RED}cd ${CSD} failed${NORMAL}"
 
 	test -d "${GENTOO_VER}" >/dev/null 2>&1 || mkdir -p "${GENTOO_VER}"
