@@ -17,7 +17,7 @@ ICE_VER="for-linux-${KMV}.7-2015-02-14"
 FEDORA_VER="f21"
 #GRSEC_VER="3.1-${KSV}-201502271843" # 27/02/15 18:43
 #GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
-LQX_VER="${KMV}.9-1"
+#LQX_VER="${KMV}.9-1"
 MAGEIA_VER="releases/${KMV}.3/2.mga5"
 PAX_VER="${KMV}.9-test15"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
@@ -27,7 +27,7 @@ SUSE_VER="stable"
 UKSM_VER="0.1.2.3"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}"
 
-SUPPORTED_USES="aufs bfq bfs bld brand -build ck -deblob ice fedora gentoo lqx mageia pax reiser4 suse symlink uksm zen"
+SUPPORTED_USES="aufs bfq bfs bld brand -build ck -deblob ice fedora gentoo mageia pax reiser4 suse symlink uksm zen"
 
 inherit geek-sources
 
