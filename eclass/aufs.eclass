@@ -40,10 +40,18 @@ EXPORT_FUNCTIONS pkg_setup src_unpack src_prepare pkg_postinst
 aufs_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
+	# The URL changes from version 3 to version 4 from sourceforge to github
+	local KBaseV=${KMV:0:1}
+
 	: ${AUFS_VER:=${AUFS_VER:-"${KMV}"}} # Patchset version
-	: ${AUFS_SRC:=${AUFS_SRC:-"git://git.code.sf.net/p/aufs/aufs3-standalone"}} # Patchset sources url
+	if [ "x$KBaseV" = "x4" ] ; then
+		: ${AUFS_SRC:=${AUFS_SRC:-"https://github.com/sfjro/aufs4-standalone.git"}} # Patchset sources url
+	else
+		: ${AUFS_SRC:=${AUFS_SRC:-"git://git.code.sf.net/p/aufs/aufs3-standalone"}} # Patchset sources url
+	fi
 	: ${AUFS_URL:=${AUFS_URL:-"http://aufs.sourceforge.net"}} # Patchset url
 	: ${AUFS_INF:="${YELLOW}Another UnionFS version ${GREEN}${AUFS_VER}${YELLOW} from ${GREEN}${AUFS_URL}${NORMAL}"}
+
 
 	debug-print "${FUNCNAME}: AUFS_VER=${AUFS_VER}"
 	debug-print "${FUNCNAME}: AUFS_SRC=${AUFS_SRC}"
