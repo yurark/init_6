@@ -41,7 +41,7 @@ rt_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${RT_VER:=${RT_VER:-"${KMV}"}} # Patchset version
-	: ${RT_SRC:=${RT_SRC:-"mirror://kernel/linux/kernel/projects/rt/${KMV}/patch-${RT_VER/KMV/$KMV}.patch.xz"}} # Patchset sources url
+	: ${RT_SRC:=${RT_SRC:-"mirror://kernel/linux/kernel/projects/rt/${KMV}/patch-${RT_VER}.patch.xz"}} # Patchset sources url
 	: ${RT_URL:=${RT_URL:-"http://www.kernel.org/pub/linux/kernel/projects/rt"}} # Patchset url
 	: ${RT_INF:=${RT_INF:-"${YELLOW}Ingo Molnar"\'"s realtime preempt patches version ${GREEN}${RT_VER}${YELLOW} from ${GREEN}${RT_URL}${NORMAL}"}}
 
