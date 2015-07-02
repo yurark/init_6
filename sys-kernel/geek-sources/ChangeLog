@@ -2,6 +2,14 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+*geek-sources-4.0.7-r1 (02 Jul 2015)
+
+  02 Jul 2015; Sven Eden <yamakuzure@gmx.net> : +geek-sources-4.0.7-r1.ebuild,
+  -geek-sources-4.0.7.ebuild :
+  Updated and enabled ice, reiser4 and rt.
+  Updated grsec version.
+  Enabled zfs, it supports up to 4.0 now.
+
 *geek-sources-4.1.1 (01 Jul 2015)
 
   01 Jul 2015; Sven Eden <yamakuzure@gmx.net> : +geek-sources-4.1.1.ebuild

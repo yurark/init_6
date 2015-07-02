@@ -10,24 +10,28 @@ KSV="$(echo $PV | cut -f 1-3 -d .)"
 
 AUFS_VER="${KMV}"
 BFQ_VER="${KMV}.0-v7r8"
+
+# 2015-07-02 : Supports up to 3.19
+# URL to check: https://github.com/rmullick/bld-patches
 #BLD_VER="${KMV}"
+
 BFS_VER="462"
 CK_VER="${KMV}-ck1"
-#ICE_VER="for-linux-head-${KMV}.0-2015-02-10"
+ICE_VER="for-linux-head-${KMV}.0-rc6-2015-04-06"
 FEDORA_VER="master"
-GRSEC_VER="3.1-${KMV}.6-201506232104" # 23/06/15 21:04
-GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
+GRSEC_VER="3.1-4.0.7-201506300712"
+GRSEC_SRC="https://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 LQX_VER="${KMV}.6-1"
 MAGEIA_VER="releases/${KSV}/1.mga5"
 PAX_VER="${KSV}-test20"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
-# REISER4_VER="3.14.1"
-# RT_VER="${KSV}-rt17"
+REISER4_VER="4.0.4"
+RT_VER="${KMV}.5-rt4"
 SUSE_VER="stable"
 UKSM_VER="beta"
 UKSM_NAME="uksm-0.1.2.4-${UKSM_VER}-for-linux-v${KMV}"
 
-SUPPORTED_USES="aufs bfq bfs brand -build ck -deblob fedora gentoo grsec lqx mageia pax pf suse symlink uksm zen"
+SUPPORTED_USES="aufs bfq bfs brand -build ck -deblob fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zen zfs"
 
 inherit geek-sources
 
