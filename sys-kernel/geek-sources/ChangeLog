@@ -2,6 +2,24 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+*geek-sources-4.0.7-r1 (02 Jul 2015)
+
+  02 Jul 2015; Sven Eden <yamakuzure@gmx.net> : +geek-sources-4.0.7-r1.ebuild,
+  -geek-sources-4.0.7.ebuild :
+  Updated and enabled ice, reiser4 and rt.
+  Updated grsec version.
+  Enabled zfs, it supports up to 4.0 now.
+
+*geek-sources-4.1.1 (01 Jul 2015)
+
+  01 Jul 2015; Sven Eden <yamakuzure@gmx.net> : +geek-sources-4.1.1.ebuild
+  Version bump; Supported USE flags:
+  aufs bfq brand fedora ice gentoo pf suse symlink uksm zen
+  USE flags bfs, bld, ck, pax, reiser4 not supported, these do not
+  have support for the 4.1 kernel, yet.
+  aufs.eclass patched for different path to kernel-4 patches
+  sys-kernel profile patched, 4.1 is now mainline.
+
 *Rename geek-<some name>.eclass --> <some name>.eclass (11 Apr 2014)
   11 Apr 2014; Andrey Ovcharov (init_6) <sudormrfhalt@gmail.com>
   Rename geek-<some name>.eclass --> <some name>.eclass
