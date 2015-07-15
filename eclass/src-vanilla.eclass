@@ -128,6 +128,15 @@ case "${PR}" in
 				SRC_URI="${SRC_URI} ${kurl}/testing/${pname}"
 			fi
 		;;
+		4)	extension="xz"
+			kurl="mirror://kernel/linux/kernel/v${VERSION}.x"
+			kversion="${VERSION}.$((${PATCHLEVEL} - 1))"
+			if [ "${SUBLEVEL}" != "0" ] || [ "${PV}" != "${KMV}" ]; then
+				pversion="${PVR//r/rc}"
+				pname="patch-${pversion}.${extension}"
+				SRC_URI="${SRC_URI} ${kurl}/testing/${pname}"
+			fi
+		;;
 		esac
 	;;
 esac

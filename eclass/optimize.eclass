@@ -41,7 +41,7 @@ optimize_init_variables() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	: ${OPTIMIZATION_VER:=${OPTIMIZATION_VER:-""}} # Patchset version
-	: ${OPTIMIZATION_SRC:=${OPTIMIZATION_SRC:-"https://github.com/graysky2/kernel_gcc_patch/raw/master/enable_additional_cpu_optimizations_for_gcc.patch"}} # Patchset sources url
+	: ${OPTIMIZATION_SRC:=${OPTIMIZATION_SRC:-"https://github.com/graysky2/kernel_gcc_patch/raw/master/enable_additional_cpu_optimizations_for_gcc_v4.9+_kernel_v3.15+.patch"}} # Patchset sources url
 	: ${OPTIMIZATION_URL:=${OPTIMIZATION_URL:-"https://github.com/graysky2/kernel_gcc_patch"}} # Patchset url
 	: ${OPTIMIZATION_INF:=${OPTIMIZATION_INF:-"${YELLOW}Kernel patch enables gcc optimizations for additional CPUs version ${GREEN}${OPTIMIZATION_VER}${YELLOW} from ${GREEN}${OPTIMIZATION_URL}${NORMAL}"}}
 
@@ -68,7 +68,7 @@ optimize_src_unpack() {
 	local CWD="${T}/optimize"
 	shift
 	test -d "${CWD}" >/dev/null 2>&1 && cd "${CWD}" || mkdir -p "${CWD}"; cd "${CWD}"
-	dest="${CWD}"/enable_additional_cpu_optimizations_for_gcc.patch
+	dest="${CWD}"/enable_additional_cpu_optimizations_for_gcc_v4.9+_kernel_v3.15+.patch
 	wget "${OPTIMIZATION_SRC}" -O "${dest}" > /dev/null 2>&1
 	cd "${CWD}" || die "${RED}cd ${CWD} failed${NORMAL}"
 	ls -1 "${CWD}" | grep ".patch" > "${CWD}"/patch_list

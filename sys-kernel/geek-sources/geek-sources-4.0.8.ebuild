@@ -31,7 +31,7 @@ SUSE_VER="stable"
 UKSM_VER="beta"
 UKSM_NAME="uksm-0.1.2.4-${UKSM_VER}-for-linux-v${KMV}"
 
-SUPPORTED_USES="aufs bfq bfs brand -build ck -deblob fedora gentoo grsec ice lqx mageia pax pf reiser4 rt suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bfs brand -build ck -deblob fedora gentoo grsec ice lqx mageia optimize pax pf reiser4 rt suse symlink uksm zen zfs"
 
 inherit geek-sources
 
