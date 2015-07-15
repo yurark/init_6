@@ -33,7 +33,7 @@ SUSE_VER="stable"
 UKSM_VER="beta"
 UKSM_NAME="uksm-0.1.2.4-${UKSM_VER}-for-linux-v4.0"
 
-SUPPORTED_USES="aufs bfq brand -build -deblob fedora ice gentoo optimize pax pf suse symlink uksm zen"
+SUPPORTED_USES="aufs bfq bld brand -build -deblob fedora ice gentoo optimize pax pf suse symlink uksm zen"
 
 inherit geek-sources
 
