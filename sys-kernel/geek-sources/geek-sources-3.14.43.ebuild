@@ -28,7 +28,7 @@ SUSE_VER="stable"
 UKSM_VER="0.1.2.3"
 UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.10"
 
-SUPPORTED_USES="aufs bfq bfs brand -build ck deblob exfat fedora gentoo grsec ice openelec pax pf reiser4 suse symlink uksm zen zfs"
+SUPPORTED_USES="aufs bfq bfs brand -build ck deblob exfat fedora gentoo ice openelec pf reiser4 suse symlink uksm zen zfs"
 
 inherit geek-sources
 
