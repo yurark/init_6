@@ -17,11 +17,11 @@ BLD_VER="${KMV}"
 #BFS_VER="462"
 ICE_VER="for-linux-head-${KMV}.0-rc8-2015-06-17"
 FEDORA_VER="f22"
-#GRSEC_VER="3.1-${KSV}-201504190814" # 19/04/15 08:14
-#GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
+GRSEC_VER="3.1-${KSV}-201507261932" # 26/07/15 19:32
+GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
 LQX_VER="${KSV}-1"
 MAGEIA_VER="releases/${KSV}/1.mga5"
-PAX_VER="${KSV}-test2"
+PAX_VER="${KSV}-test10"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 # reiser4 has a new subdirectory at:
 # https://sourceforge.net/projects/reiser4/files/reiser4-for-linux-4.x/
