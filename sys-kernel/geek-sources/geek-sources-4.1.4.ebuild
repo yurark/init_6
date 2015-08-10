@@ -13,8 +13,8 @@ BFQ_VER="${KMV}.0-v7r8"
 BLD_VER="${KMV}"
 # 2015-07-01 :
 # Currently no 4.1 support.
-CK_VER="${KMV}-ck1"
-BFS_VER="463"
+CK_VER="${KMV}-ck2"
+BFS_VER="464"
 ICE_VER="for-linux-${KMV}.3-2015-07-23"
 FEDORA_VER="f22"
 GRSEC_VER="3.1-${KSV}-201507261932" # 26/07/15 19:32
@@ -33,7 +33,7 @@ SUSE_VER="stable"
 UKSM_VER="beta"
 UKSM_NAME="uksm-0.1.2.4-${UKSM_VER}-for-linux-v4.0"
 
-SUPPORTED_USES="aufs bfq bld brand -build ck -deblob fedora ice gentoo optimize pax pf reiser4 suse symlink uksm zen"
+SUPPORTED_USES="aufs bfs bfq bld brand -build ck -deblob fedora ice gentoo optimize pax pf reiser4 suse symlink uksm zen"
 
 inherit geek-sources
 
