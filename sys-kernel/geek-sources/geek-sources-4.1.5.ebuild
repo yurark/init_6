@@ -11,8 +11,6 @@ KSV="$(echo $PV | cut -f 1-3 -d .)"
 AUFS_VER="${KMV}"
 BFQ_VER="${KMV}.0-v7r8"
 BLD_VER="${KMV}"
-# 2015-07-01 :
-# Currently no 4.1 support.
 CK_VER="${KMV}-ck2"
 BFS_VER="464"
 ICE_VER="for-linux-${KMV}.3-2015-07-23"
@@ -23,11 +21,7 @@ LQX_VER="${KSV}-1"
 MAGEIA_VER="releases/${KSV}/1.mga5"
 PAX_VER="${KMV}.3-test10"
 PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
-# reiser4 has a new subdirectory at:
-# https://sourceforge.net/projects/reiser4/files/reiser4-for-linux-4.x/
-# 2015-07-01 :
-# It only supports up to 4.0.4, yet.
-REISER4_VER="${KSV}"
+REISER4_VER="${KMV}.4"
 # RT_VER="${KSV}-rt17"
 SUSE_VER="stable"
 UKSM_VER="beta"
