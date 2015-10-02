@@ -24,10 +24,10 @@ PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
 REISER4_VER="${KMV}.2"
 #RT_VER="${KSV}-rt17"
 #SUSE_VER="next"
-UKSM_VER="0.1.2.4"
-UKSM_NAME="uksm-${UKSM_VER}-beta-for-linux-v4.0"
+#UKSM_VER="0.1.2.4"
+#UKSM_NAME="uksm-${UKSM_VER}-beta-for-linux-v4.0"
 
-SUPPORTED_USES="aufs bfq bld brand -build -deblob fedora gentoo ice lqx mageia pax reiser4 symlink uksm"
+SUPPORTED_USES="aufs bfq bld brand -build -deblob fedora gentoo ice lqx mageia pax reiser4 symlink"
 
 inherit geek-sources
 
