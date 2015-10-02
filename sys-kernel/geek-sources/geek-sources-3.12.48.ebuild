@@ -1,0 +1,36 @@
+# Copyright 2009-2014 Andrey Ovcharov <sudormrfhalt@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+EAPI="5"
+DEBLOB_AVAILABLE="1"
+
+KMV="$(echo $PV | cut -f 1-2 -d .)"
+KSV="$(echo $PV | cut -f 1-3 -d .)"
+
+AUFS_VER="${KMV}"
+BFQ_VER="${KMV}.0-v7r8"
+BLD_VER="${KMV}.0"
+CK_VER="${KMV}-ck2"
+BFS_VER="444"
+FEDORA_VER="f19"
+# GRSEC_VER="3.0-3.12.8-201401191015" # 01/19/14 10:28
+# GRSEC_SRC="http://grsecurity.net/test/grsecurity-${GRSEC_VER}.patch"
+ICE_VER="for-linux-${KMV}.48-2015-09-23"
+# LQX_VER="3.12.11-1" # LQX_VER="${KSV}-1"
+MAGEIA_VER="releases/${KMV}.13/2.mga5"
+PAX_VER="${KMV}.8-test15"
+PAX_SRC="http://www.grsecurity.net/~paxguy1/pax-linux-${PAX_VER}.patch"
+REISER4_VER="${KMV}.6"
+# RT_VER="3.12.22-rt35-rc1"
+UKSM_VER="0.1.2.3"
+UKSM_NAME="uksm-${UKSM_VER}-for-v${KMV}.ge.23"
+
+SUPPORTED_USES="aufs bfq bfs bld brand -build ck deblob exfat fedora gentoo ice mageia openwrt pax pf reiser4 suse symlink uksm zen zfs"
+
+inherit geek-sources
+
+HOMEPAGE="https://github.com/init6/init_6/wiki/${PN}"
+KEYWORDS="amd64 x86"
+
+DESCRIPTION="Full sources for the Linux kernel including: fedora, grsecurity, mageia and other patches"
